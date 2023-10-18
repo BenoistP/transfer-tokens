@@ -1,0 +1,925 @@
+/* 
+declare enum RealtTokenLoadStatus {
+  notLoaded = 'notLoaded',
+  loading = 'loading',
+  balanceLoaded = 'balanceLoaded',
+  balanceError = 'balanceError',
+  loaded = 'loaded',
+  error = 'error',
+}
+ */
+
+
+type AddressString = `0x${string}` ;
+type Address = AddressString | undefined ;
+// type TokenContractAddress = Address | null;
+type TokenContractAddress = AddressString;
+type TokenContractNullableAddress = TokenContractAddress|null;
+
+type AddressList = string[]|undefined|null;
+
+// type AddressList<Address> = [Address, ...Address[]] | undefined | null | [];
+// type NonEmptyArray<T> = [T]
+// type AddressList = NonEmptyArray<AddressString>|[]|undefined|null;
+
+// type ChainId = number | undefined | null;
+type ChainId = number;
+
+// type UndefNullableNumber = number|undefined|null;
+type UndefNullableString = string|undefined|null;
+
+type Index = number;//UndefNullableNumber;
+
+type UUID = string;
+type LastUpdateDate = string; // '2023-07-30 20:18:04.000000'
+type Timezone_type =  number; // 3
+type Timezone = string; // 'UTC'
+
+type RealTokenID = string;
+
+type RealTokenBalance = {
+  value: TTokenAmount;
+  error: boolean;
+}
+
+// OLD type used in /app/ui/RealToken.tsx
+// type RealTokenData = {
+//   error: boolean;
+//   balance: RealTokenBalance|undefined;
+//   decimals: number;
+//   symbol: string;
+//   name: string;
+// }
+
+interface IGetContractAddress {
+  (realtToken:IRealTokenReferenceData, chainId:number) : TokenContractNullableAddress;
+}
+interface IGetRealTokenKey {
+  (realtToken:IRealTokenReferenceData, chainId:number) : string;
+}
+
+interface IUpdateRealTokenList {
+  // (index:number, propertyName:string, value:any) : void;
+  (index:number, value:any) : void;
+} 
+
+interface IListRealTokensAddressContext {
+  accountAddress: AddressString;
+}
+
+interface ITransferTokens {
+  // (subString: string): Promise<number>;
+  (tokensTransferFromList: ITokensTransferSourceList): Promise<number>;
+}
+
+interface ITokenTransferFrom {
+  tokenAddress: TokenContractAddress;
+  amount: TTokenAmount;
+  // realtTokenData:IRealTokenReferenceData|null|undefined
+}
+
+interface ITokensTransferSourceList {
+  sourceAddress: AddressString;
+  tokensTransferFromList: ITokenTransferFrom[]|null|undefined;
+}
+
+interface ITokensTransfer {
+  chainId: ChainId;
+  tokensTransferSource: ITokensTransferSourceList
+  destinationAddress: AddressString;
+}
+
+interface ITokenTransfer {
+  sourceAddress: AddressString;
+  tokenAddress: TokenContractAddress;
+  amount: TTokenAmount;
+  destinationAddress: AddressString;
+}
+
+// interface RefRealTokensListTableProps {
+//   // getSelectedTokensTransfersfer: () => void
+//   // getSelectedTokensList: () => ITokensTransferSourceList
+//   getSelectedTokensTransfer: () => ITokensTransferSourceList
+// }
+
+type TRealTokenReferenceDataNullableArray = IRealTokenReferenceData[]|null|undefined
+
+interface IRealTokensListTableProps {
+  // realtTokensAddressList:AddressList;
+  // realtTokensList:any;
+  // realtTokensDataCompleteList:any;
+  // realtTokensDataCompleteList:IRealTokenReferenceData[]|null|undefined;
+  realtTokensDataCompleteList:TRealTokenReferenceDataNullableArray;
+  accountAddress:AddressString;
+  chainId: ChainId;
+  // transferTokens: ITransferTokens | null;
+  enableCheckboxes: boolean;
+}
+
+// interface RealTokensProps {
+//   index:number|undefined;
+//   realtTokensAddress:Address;
+//   accountAddress:Address
+// }
+
+
+
+// ------------------------------
+
+type tokenListUri = string|undefined;
+
+type tokensListsType = {
+  name: string,
+  uri: tokenListUri,
+  count: number,
+  selected: boolean,
+  tokens: TokenChainDataArray,
+}
+
+type TokenChainDataArray = TokenChainData[]|null|undefined;
+
+type TokenBasicData = {
+  name: TTokenName;
+  symbol: TTokenSymbol;
+  decimals: TTokenDecimals;
+  totalSupply: TTokenSupply;
+}
+
+type TokenChainData = {
+  chainId: ChainId;
+  address: TokenContractAddress;
+  basicData: TokenBasicData;
+}
+
+type TokenInstance = {
+  chainData: TokenChainData;
+  contract: any; // Wagmi contract
+}
+
+type UserTokenInstance = {
+  tokenInstance: TokenInstance;
+  userAddress: AddressString
+  balance: TTokenAmount;
+}
+
+type InterfaceUserTokenInstance = {
+  userTokenInstance: UserTokenInstance;
+  selected: boolean;
+}
+
+
+// ------------------------------
+
+
+
+interface ITokenData {
+  list: TTokenDataNullable[];
+}
+
+type TTokenDataNullable = ITokenData|null|undefined;
+interface ITokenData {
+
+
+}
+
+interface ITokenChainData {
+  
+
+}
+
+interface IRealTokenReferenceData {
+  fullName: string,
+  shortName: string,
+  symbol: string,
+  tokenPrice: number,
+  currency: string,
+  uuid: UUID,
+  ethereumContract: TokenContractNullableAddress,
+  xDaiContract: TokenContractNullableAddress,
+  gnosisContract: TokenContractNullableAddress,
+  lastUpdate: {
+    date: LastUpdateDate,
+    timezone_type: Timezone_type,
+    timezone: Timezone,
+  }
+}
+
+interface IRealTokenInstanceUserData {
+    address: AddressString;
+    // user interface data
+    selected: boolean;
+    // user data
+    amount: TTokenAmount;
+}
+
+type TRealtTokenLoadStatus = number;
+interface IRealTokenInstance {
+  id: RealTokenID;
+
+  chainId: ChainId;
+  address: TokenContractNullableAddress;// TokenContractAddress;
+  contract: any; // Wagmi contract
+  decimals: TTokenDecimals;
+  name: TTokenName;
+  symbol: TTokenSymbol;
+
+  status: TRealtTokenLoadStatus;
+
+  realTokenReferenceData: IRealTokenReferenceData;
+
+
+  // TODO
+  userData: IRealTokenInstanceUserData;
+    // // user interface data
+    // selected: boolean;
+    // // user data
+    // amount: TTokenAmount;
+
+}
+
+type RealTokenInstanceArrayNullable = IRealTokenInstance[]|null|undefined;
+type RealTokenList = IRealTokenInstance[]|null|undefined;
+
+interface IRealTokenList {
+  realTokensInstancesArray: RealTokenInstanceArrayNullable;
+  chainId: ChainId;
+  accountAddress: AddressString;
+  // setrealtTokensList: (realtTokensList: RealTokenListNullable) => void;
+  // updateRealTokenList: IUpdateRealTokenList;
+  changeCheckboxStatus: IChangeCheckboxStatus|null;
+}
+
+interface IChangeCheckboxStatus {
+  (id: RealTokenID) : void;
+}
+interface IRealTokenProps {
+  // id : RealTokenID;
+  realTokenInstance : IRealTokenInstance
+  // totalCount: Index;
+  // chainId: ChainId;
+  // realtTokensList: IRealTokenInstance[];
+  // realtToken: IRealTokenReferenceData;
+  // realtToken: IRealTokenInstance;
+  // realtTokenAddress: TokenContractAddress;
+  // accountAddress: AddressString;
+  // selected: boolean;
+  // setrealtTokensList: (realtTokensList: RealTokenListNullable) => void;
+  // updateRealTokenList: IUpdateRealTokenList;
+  changeCheckboxStatus: IChangeCheckboxStatus|null;
+  // listSize: number;
+  index: Index;
+  // status: TRealtTokenLoadStatus;
+}
+
+
+// OLD app context
+
+type TAppContext = {
+  appData: TAppDataContext,
+  appDataHandlers:TAppDataHandlersContext,
+}
+
+type TAppDataContext = {
+    step:             number,
+    minStep:          number,
+    maxStep:          number,
+    language:         string,
+}
+
+type TAppDataHandlersContext = {
+  nextStep: () => void,
+  prevStep: () => void,
+  getLanguage: () => void,
+  setlanguage: (lang:string) => void,
+}
+
+
+// ========================================================
+// New types
+// ========================================================
+
+// Loaders
+type RootLoaderData = {
+  PUBLICENV: TPublicEnv,
+  PRIVATEENV: TPrivateEnv,
+  locale: string[]
+};
+
+
+
+type TAvatarComponent = any;
+type TAvatarImgUri = string|undefined;
+type TAvatarSvg = any;
+
+type TPublicEnv = {
+  publicKeys: {
+    PUBLIC_ENABLE_TESTNETS?: string,
+    PUBLIC_APPNAME?: string,
+    PUBLIC_REALT_API_BASE_URL?: string,
+    PUBLIC_REALT_API_LIST_ALL_TOKENS?: string,
+    PUBLIC_MULTICALL_MAX_BATCH_SIZE?: string,
+  }
+};
+type TPrivateEnv = {
+  privateKeys: {
+    ALCHEMY_APIKEY?: string,
+    INFURA_APIKEY?: string,
+    WALLET_CONNECT_APIKEY?: string
+  }
+};
+
+interface iLanguage {
+  key: string;
+  name: string;
+  flagIconCountryCode: string; // corresponding flag-icons library code (https://www.npmjs.com/package/flag-icons , https://github.com/lipis/flag-icons)
+}
+
+interface FlagIconProps {
+  flagIconCountryCode: string;
+}
+
+
+type TAddressString = `0x${string}` ;
+type TAddressNullUndef = TAddressString | TNullUndef ;
+type TAddressEmpty = TAddressString | "" ;
+type TAddressEmptyNullUndef = TAddressNullUndef | "" ;
+// type TAddressNull = TAddressString | null ;
+type TAddressUndef = TAddressString | undefined ;
+
+type TTokenContractAddress = TAddressString;
+type TTokenContractAddressNullUndef = TTokenContractAddress | TNullUndef ;
+
+type TTokenContractNullableAddress = TokenContractAddress|null;
+
+
+
+type TGlobalAppContext = {
+  globalAppData: TGlobalAppDataContext,
+  globalAppDataHandlers:TGlobalAppDataHandlersContext,
+}
+
+type TGlobalAppDataContext = {
+  language:         string,
+  address:          TAddressUndef,
+}
+
+type TGlobalAppDataHandlersContext = {
+  getLanguage: () => void,
+  setLanguage: (lang:string) => void,
+  getAvatarComponent: () => TAvatarComponent,
+  getAddress: () => Address,
+  setAddress: (address:Address) => void,
+}
+
+type TMoveTokensAppContext = {
+  moveTokensAppData: TMoveTokensAppDataContext,
+  moveTokensAppDataHandlers:TMoveTokensAppDataHandlersContext,
+}
+
+type TMoveTokensAppDataContext = {
+    step:             number,
+    minStep:          number,
+    maxStep:          number,
+    tokensLists: TTokensLists|null|undefined
+    // language:         string,
+}
+
+type TMoveTokensAppDataHandlersContext = {
+  nextStep: () => void,
+  prevStep: () => void,
+}
+
+// Tokens list
+
+
+type TNullUndef = null|undefined;
+type TStringNullUndef = string|TNullUndef;
+type TTimeStamp = TStringNullUndef|number;
+
+type TTokenName = TStringNullUndef;
+type TTokenSymbol = TStringNullUndef;
+type TTokenDecimals = number;
+type TTokenAmount = bigint;
+type TTokenSupply = number|null|undefined;
+
+
+type TNullableStringArray = string[]|TNullUndef;
+type TTokensListKeywords = TNullableStringArray|TNullUndef;
+
+type TTokensLists = TTokensList[]|TNullUndef;
+type TTokensListType = "URI"|"META-URI"|"API"
+type TChainIdArray = TChainId[]|TNullUndef;
+// type TTokensListChainIds = TChainId|TChainId[]|"auto-detect"|TNullUndef;
+// type TTokensListChainIds = TChainIdArray // |"auto-detect"|TNullUndef;
+type TChainId = number;
+type TChainIdNullUndef = TChainId|TNullUndef;
+
+type TTokensListStatus = "notLoaded"|"notFound"|"loadedError"|"ok"|"error"|"unsupported"|"unprocessed"|TNullUndef;
+type TTokensListError = TStringNullUndef;
+
+type TTokensListId = string;
+
+type TI18NString = string;
+
+// export enum EnumTokensListStatus {
+//   Orange = "Orange",
+//   Apple  = "Apple",
+//   Banana = "Banana"
+// }
+
+type TtokenCount = number;
+
+type TTokensListVersion = {
+  major: number,
+  minor: number,
+  patch: number,
+}
+
+
+type TSelectableTokensLists = TSelectableTokensList[]|TNullUndef;
+
+type TSelectableTokensList = {
+  tokensList: TTokensList,
+  chainId: TChainId,
+  selectable: boolean,
+  selected: boolean,
+  currentChainTokensCount: TtokenCount,
+  // filteredTokensList: TFilteredTokensList,
+}
+
+// type TChainTokensList = {
+//   tokensList: TTokensList,
+//   chainId: TChainId,
+// }
+
+
+// type TTokensListMetaLists = TTokensLists
+
+// type TTokensListMeta = {
+//   lists: TTokensListMetaLists,
+// }
+
+type TTokensListMetaInfoGenerationMethod = string;
+
+type TTokensListMetaInfo = {
+  metadata: {
+    supportedChains: TChainIdArray,
+    generationMethod: TTokensListMetaInfoGenerationMethod,
+  }
+}
+
+type TMetaTokensListUriCommit = {
+  sha: TSha,
+}
+
+type TTokensMetaLists = TTokensMetaList[]|TNullUndef;
+
+type TTokensMetaList = TTokensList & TTokensListMetaInfo;
+
+type TSha = string;
+
+type TTokensListNullUndef = TTokensList | TNullUndef;
+
+type TTokensList = {
+  id: TTokensListId,
+  name: TStringNullUndef, // RealTokens, Coingecko Ethereum, Coingecko Gnosis
+  description: TStringNullUndef,
+  version?: TTokensListVersion,
+  timestamp: TTimeStamp,
+  sha?: TSha,
+  fetchLen?: number,
+  source?: TStringNullUndef, // Coingecko, RealT
+  keywords?: TTokensListKeywords, // [ "default", "list", "cowswap" ]
+  type: TTokensListType,
+  // tokenCount?: TtokenCount,
+  tokensCount?: TtokenCount,
+  // chains: TTokensListChainIds,
+  chains: TChainIdArray,
+  URI: TTokenListUri,
+  summaryURI?: TTokenListUri,
+  status: TTokensListStatus,
+  error?: TTokensListError,
+  
+  // metaUri: TTokenListUri,
+  logoURI?: TTokenList_TokensListImageUri,
+  allTokensChainData?: TTokenChainDataArray, // for temporary data: hold all tokens for all chains before dipatching them in chainsTokenLists
+  // tokens: TTokensList_TokenData
+  lists?: TTokensMetaLists,
+  listsCount?: number,
+  chainsTokenLists?: TChainsTokensListArrayNullUndef,
+}
+
+type TChainsTokensListArrayNullUndef = TChainsTokensListNullUndef[]|TNullUndef;
+
+type TChainsTokensListNullUndef = TChainTokensList|TNullUndef;
+
+type TChainTokensList = {
+  chainId: TChainId,
+  tokensCount: TtokenCount,
+  tokens: TTokenChainDataArray,
+}
+
+
+
+/*
+type TFilteredTokensListsNullUndef = TFilteredTokensList[]|TNullUndef;
+
+type TFilteredTokensList = {
+  id: TTokensListId,
+  name: TStringNullUndef, // RealTokens, Coingecko Ethereum, Coingecko Gnosis
+  description: TStringNullUndef,
+  version?: TTokensListVersion,
+  timestamp: TTimeStamp,
+  source?: TStringNullUndef, // Coingecko, RealT
+  keywords?: TTokensListKeywords, // [ "default", "list", "cowswap" ]
+  type: TTokensListType,
+  // chains: TTokensListChainIds,
+  chainId: TChainId,
+  chainTokenCount?: TtokenCount, // total for chain
+  URI: TTokenListUri,
+  // summaryURI?: TTokenListUri,
+  // status: TTokensListStatus,
+  // error?: TTokensListError,
+  
+  // // metaUri: TTokenListUri,
+  logoURI?: TTokenList_TokensListImageUri,
+  tokens: TTokenChainDataArray,
+  // // tokens: TTokensList_TokenData
+  // lists?: TTokensMetaLists,
+  listCount?: number, // total all chains included
+}
+*/
+type TMetaTokensListUri = {
+  URI: TTokenListUri,
+  sha: TSha,
+}
+
+type TTokenListUri = TStringNullUndef;
+// type TTokenListImageUri = TStringNullUndef;
+type TTokenList_TokensListImageUri = TStringNullUndef;
+type TTokenList_TokenImageUri = TStringNullUndef;
+
+type TTokenChainDataArray = TTokenChainData[]|TNullUndef;
+
+type TTokenChainData = {
+  chainId: TChainId;
+  address: TTokenContractAddressNullUndef;
+  basicData: TTokenBasicData;
+  extraData: TTokenExtraData;
+  contract: any; // Wagmi contract
+} | TNullUndef
+
+type TTokenBasicData = {
+  name: TTokenName;
+  symbol: TTokenSymbol;
+  decimals: TTokenDecimals;
+}
+
+type TTokenType = "ERC20"|"COINBRIDGE" // |"ERC721"|"ERC1155"|"ERC777"|"ERC721Deprecated"|"E
+type TTokenExtraData = {
+  type: TTokenType;
+  totalSupply: TTokenSupply;
+  // ...
+}
+
+type TTokensList_TokenData = TTokenList_TokenData[]|TNullUndef;
+
+type TTokenList_TokenData = {
+  chainId: TChainId,
+  address: TTokenContractAddressNullUndef,
+  name: TTokenName,
+  symbol: TTokenSymbol,
+  decimals: TTokenDecimals,
+  logoURI: TTokenList_TokenImageUri
+}
+
+type TRealTokenReferenceData = {
+  fullName: string,
+  shortName: string,
+  symbol: string,
+  tokenPrice: number,
+  currency: string,
+  uuid: UUID,
+  ethereumContract: TokenContractNullableAddress,
+  xDaiContract: TokenContractNullableAddress,
+  gnosisContract: TokenContractNullableAddress,
+  lastUpdate: {
+    date: LastUpdateDate,
+    timezone_type: Timezone_type,
+    timezone: Timezone,
+  }
+}
+
+type TTokensListsLoaderStatus = "notLoaded"|"loadedError"|"ok"|"error"|TNullUndef;
+
+type TokensListsLoaderData = {
+  tokensLists: TTokensLists,
+  status: TTokensListsLoaderStatus,
+  error?: TI18NString
+  errorDetails?: string
+}
+
+interface IAppMoveTokens2Props {
+  // tokensLists: TTokensLists|null|undefined,
+  // chainId: TChainId
+  // changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
+}
+
+
+interface IContentProps {
+  // tokensLists: TTokensLists|null|undefined,
+  // chainId: TChainId
+  // changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
+}
+
+type TsetPreviousDisabled = React.Dispatch<React.SetStateAction<boolean>>;
+type TsetNextDisabled = React.Dispatch<React.SetStateAction<boolean>>;
+
+// type TsetSelectedTokensChainDataArray = React.Dispatch<React.SetStateAction<TTokenChainDataArray>>;
+
+type TsetSelectableTokensLists = React.Dispatch<React.SetStateAction<TSelectableTokensLists>>;
+type TsetTokensInstances = React.Dispatch<React.SetStateAction<TTokensInstances>>;
+// type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressString>>
+type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressEmpty>>
+
+
+type TsetShowProgressBar = React.Dispatch<React.SetStateAction<boolean>>
+type TsetProgressBarPercentage = React.Dispatch<React.SetStateAction<number>>
+
+type TTokenLoadStatus = number;
+
+
+type TTokensInstances = TTokenInstance[]|TNullUndef;
+
+type TDisplayId = number
+
+type TTokenInstance = {
+
+  chainId: ChainId;
+  address: TokenContractNullableAddress;// TokenContractAddress;
+  type: TTokenType;
+  contract: any; // Wagmi contract
+  decimals: TTokenDecimals;
+  name: TTokenName;
+  symbol: TTokenSymbol;
+
+  status: TTokenLoadStatus;
+  displayed: boolean;
+  displayId: TDisplayId;
+  selectable: boolean;
+  // TODO
+  // userData: TTokenInstanceUserData;
+  userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings
+
+}
+
+
+type TTokenInstanceUserData = {
+  // user interface data
+  selected: boolean;
+  // user data
+  balance: TTokenAmount | null// | undefined;
+  transferAmount: TTokenAmount;
+  canTransfer: boolean;
+}
+
+interface ITF_ProgressBar {
+  showProgressBar: boolean;
+  progressPercentage: number;
+}
+
+interface ITF_ProgressBarColor {
+  progressPercentage: number;
+}
+
+interface ITF_ProgressContainer {
+  previousDisabled: boolean;
+  nextDisabled: boolean;
+  showProgressBar: boolean;
+  progressBarPercentage: number;
+}
+interface IAddressInputProps {
+  sourceAddress: TAddressNullUndef,
+  // targetAddress: TAddressString,
+  targetAddress: TAddressEmpty,
+  settargetAddress:TsettargetAddress
+}
+
+
+interface IStepsContainerProps {
+  tokensLists: TTokensLists|null|undefined,
+  // chainId: TChainId
+  setpreviousDisabled: TsetPreviousDisabled,
+  setNextDisabled: TsetNextDisabled,
+  setShowProgressBar: TsetShowProgressBar
+  setProgressBarPercentage: TsetProgressBarPercentage
+}
+
+interface IStepErrorProps {
+  setpreviousDisabled: TsetPreviousDisabled,
+  setNextDisabled: TsetNextDisabled,
+}
+
+type TChangeSortOrderCallback = () => void;
+
+interface IStep0Props {
+  tokensLists: TTokensLists|null|undefined,
+  setNextDisabled: TsetNextDisabled,
+  selectableTokensLists: TSelectableTokensLists,
+  setselectableTokensLists: TsetSelectableTokensLists,
+  setShowProgressBar: TsetShowProgressBar,
+
+  accountAddress: TAddressNullUndef,
+  targetAddress: TAddressEmpty,
+  tokensInstances: TTokensInstances,
+  // settokensInstances: TsetTokensInstances,
+  chainId: ChainId;
+  isError: boolean,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
+}
+
+interface IStep1Props {
+  setNextDisabled: TsetNextDisabled,
+  accountAddress: TAddressNullUndef,
+  tokensInstances: TTokensInstances,
+  // settokensInstances: TsetTokensInstances,
+  // chainId: TChainId,
+  targetAddress: TAddressEmpty,
+  settargetAddress:TsettargetAddress
+  chainId: ChainId;
+  isError: boolean,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
+}
+
+interface IStep2Props {
+  setNextDisabled: TsetNextDisabled,
+  tokensInstances: TTokensInstances,
+  settokensInstances: TsetTokensInstances,
+  setShowProgressBar: TsetShowProgressBar
+  setProgressBarPercentage: TsetProgressBarPercentage,
+  accountAddress: TAddressNullUndef,
+  chainId: ChainId;
+  targetAddress: TAddressEmpty,
+  isError: boolean,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
+}
+
+interface IStep3Props {
+  setShowProgressBar: TsetShowProgressBar
+  setProgressBarPercentage: TsetProgressBarPercentage
+}
+
+interface IChangeTokensListCheckboxStatus {
+  (id: string) : void;
+ }
+
+interface ITokensListsSelectProps {
+  tokensLists: TTokensLists|null|undefined,
+  // chainId: TChainId
+  // setNextDisabled: TsetNextDisabled,
+  selectableTokensLists: TSelectableTokensLists,
+  setselectableTokensLists: TsetSelectableTokensLists,
+}
+
+interface ISelectableTokensListsProps
+{
+  selectableTokensLists: TSelectableTokensLists,
+  changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
+}
+
+interface ISelectableTokensListProps
+{
+//  chainId: TChainId,
+  selectableTokensList: TSelectableTokensList,
+  changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
+}
+
+type TsortOrder = number;
+
+interface ISortOrderParams {
+  displayId: TsortOrder,
+  tokenName: TsortOrder,
+  tokenBalance: TsortOrder,
+}
+
+type TfilterTokenInstance = (filter: ITokenInstanceListFilterStates, tokenInstance: TTokenInstance) => boolean;
+
+interface ITokenInstanceListFilterStates {
+  name: string,
+  balance: string,
+  balanceGt0: boolean,
+  address: string,
+}
+
+type TsortTokensInstances = any;
+
+interface ITokenListProps {
+  tokensInstances: TTokensInstances,
+  // chainId: ChainId;
+  accountAddress: TAddressNullUndef,
+  targetAddress: TAddressEmpty,
+  sortTokensInstances: TsortTokensInstances,
+}
+
+interface ITokenListFilteredProps {
+  tokensInstances: TTokensInstances,
+  // chainId: ChainId;
+  accountAddress: TAddressNullUndef,
+  targetAddress: TAddressEmpty,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
+}
+
+interface ITokenProps {
+  tokenInstance : TTokenInstance;
+  accountAddress: TAddressNullUndef;
+  changeCheckboxStatus: IChangeCheckboxStatus|null;
+  targetAddress: TAddressEmpty,
+  editable: boolean,
+}
+
+
+type Tsetamount = React.Dispatch<React.SetStateAction<TTokenAmount | null>>
+
+interface ITokenInstanceAmountProps {
+  selectable: boolean,
+  balance: TTokenAmount,
+  amount: TTokenAmount,
+  setamount: Tsetamount,
+  decimals: number,
+  unSelect: (/* tokenInstance: TTokenInstance */) => void,
+}
+
+interface IsortTokensInstancesOrdersStates {
+  sortOrderTokenDisplayId: TsortOrder,
+  sortOrderTokenName: TsortOrder,
+  sortOrderTokenBalance: TsortOrder,
+}
+
+interface IsortTokensInstancesMethods {
+  sortByTokenDisplayId: TChangeSortOrderCallback
+  sortByTokenName: TChangeSortOrderCallback,
+  sortByTokenBalance: TChangeSortOrderCallback,
+  sortTokensInstances: TsortTokensInstances
+}
+
+interface IselectTokensInstancesMethods {
+  handleCheckSelectAll: () => void,
+  handleInvertAllChecks: () => void,
+  changeCheckboxStatus: IChangeCheckboxStatus
+}
+
+interface IselectTokensInstancesStates {
+  selectAll: boolean,
+  invertAll: boolean,
+}
+
+interface IfilterTokenInstanceMethods {
+  tokenInstanceFilterParamsUpdaters: ItokenInstanceFilterParamsUpdaters,
+  filterTokenInstance: IfilterTokenInstance,
+}
+
+interface ITokensInstancesListTableStatesHandlers {
+  sortStates: IsortTokensInstancesOrdersStates,
+  sortHandlers: IsortTokensInstancesMethods,
+  selectStates: IselectTokensInstancesStates,
+  selectHandlers: IselectTokensInstancesMethods,
+  filterStates: ITokenInstanceListFilterStates,
+  filterHandlers: IfilterTokenInstanceMethods,
+}
+
+interface ITokensInstancesListTableProps {
+  tokensInstances:TTokensInstances;
+  accountAddress:TAddressNullUndef;
+  chainId: ChainId;
+  targetAddress: TAddressEmpty,
+  isError: boolean,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
+}
+
+interface ISortIconProps {
+  sortOrder: TsortOrder,
+  changeSortFnCb: TChangeSortOrderCallback
+}
+
+interface IfilterTokenInstance {
+  (tokenInstance: TTokenInstance) : boolean;
+}
+
+interface ItokenInstanceFilterParamsUpdaters {
+  updateNameFilter: (e: React.FormEvent<HTMLInputElement>) => void,
+  updateBalanceFilter: (e: React.FormEvent<HTMLInputElement>) => void,
+  switchBalanceGt0Filter: () => void,
+  updateAddressFilter: (e: React.FormEvent<HTMLInputElement>) => void,
+}
+
+interface ITokensListTableFilteredProps {
+  tokensInstances:TTokensInstances;
+  accountAddress:TAddressNullUndef;
+  chainId: ChainId;
+  enableCheckboxes: boolean;
+  targetAddress: TAddressEmpty,
+  isError: boolean,
+
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
+
+}
