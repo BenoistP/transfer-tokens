@@ -1,0 +1,99 @@
+{
+  "test": "Ceci est un test",
+  "test2": {
+    "test2": "Ceci est un test2"
+  }
+  ,
+
+  "moveTokens" :
+  {
+    "warnings": {
+      "connectawallet": "Connecter un wallet",
+      "wrongchain": "Les chaînes supportées sont: Ethereum ou Gnosis"
+    },
+    "common": {
+      "notAvailable": "Non disponible"
+
+    },
+
+    "progress": {
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+
+    "stepZero": {
+      "title": "Choisir des listes de tokens",
+      "titleStep": "Listes de tokens",
+      "tokensListsTable": {
+        "listName": "Nom",
+        "listDescription": "Description",
+        "emptyList": "Aucune liste de tokens trouvée",
+        "errorLoadingList": "Le chargement de la liste a échoué"
+      }
+    },
+
+    "stepOne": {
+      "title": "Sélectionner une adresse destinataire",
+      "titleStep": "Destinataire",
+      "destination": "Destinataire",
+      "destinationPlaceholder": "0x...",
+      "detinationEmpty":"Saisir l'adresse destinataire",
+      "destinationError": "Addresse invalide",
+      "destinationErrorSame": "L'adresse de destination ne peut pas être la même que l'adresse source",
+      "destinationOk": "Addresse valide"
+    },
+    
+    "stepTwo": {
+      "title": "Choisir des tokens",
+      "titleStep": "Tokens",
+      "tokensTable" : {
+        "search" : {
+          "name": "Nom",
+          "balance": "Solde",
+          "balanceGt0": "> 0",
+          "selectAll": "Tout",
+          "invertSelection": "Inverser",
+          "additional": {
+            "title": "Critères supplémentaires",
+            "address": "Adresse"
+          }
+        },
+        "results": {
+          "found": {
+            "selected": "Sélectionné(s)",
+            "visible": "Visible(s)",
+            "hidden": "Caché(s)",
+            "total": "Total"
+          },
+          "titles" : {
+            "tokenId": "Id.",
+            "tokenName": "Nom",
+            "tokenBalance": "Quantité",
+            "selected": "",
+            "tokenAmount": "Montant",
+            "tokenInfo": "Info."
+          }
+        },
+        "errorLoadingTokens": "Erreur lors du chargement",
+        "empty": "Aucun token trouvé"
+      },
+      "token": {
+        "noTransferTo": "Can't transfer to this address"
+      }
+    },
+
+    "stepThree": {
+      "title": "Confirmation",
+      "titleStep": "Confirmation"
+    },
+
+    "Footer": {
+      "info": {
+        "title": "©",
+        "text": "Soon Soon Research Laboratories"
+      },
+      "center": ""
+    }
+
+  }
+}

@@ -4,10 +4,10 @@
     "baseUrl": ".",
     "paths": {
       "~/*": [
-        "./app/*"
+        "./src/app/*"
       ],
-      "@Providers/*": ["./app/js/providers/*"],
-      "@js/*": ["./app/js/*"],
+      "@Providers/*": ["./src/app/js/providers/*"],
+      "@js/*": ["./src/app/js/*"],
 
       // "@components/*": ["components/*"],
       // "@hooks/*": ["components/hooks/*"],

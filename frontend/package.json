@@ -23,7 +23,9 @@
     "react-cookie": "^6.1.1",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.3.0",
+    "react-router-dom": "^6.17.0",
     "react-scripts": "5.0.1",
+    "viem": "^1.16.6",
     "wagmi": "^1.4.4",
     "web-vitals": "^2.1.4",
     "zod": "^3.22.4"
