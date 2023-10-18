@@ -2,13 +2,23 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    // "baseUrl": "./src/app/",
     "paths": {
       "~/*": [
         "./src/app/*"
       ],
+      "@App/*": [
+        "./src/app/*"
+      ],
+      "@utils/*": [
+        "./src/app/utils/*"
+      ],
+      "@styles/*": [
+        "./src/app/styles/*"
+      ],
       "@Providers/*": ["./src/app/js/providers/*"],
       "@js/*": ["./src/app/js/*"],
-
+      "@css/*": ["./src/app/styles/*"],
       // "@components/*": ["components/*"],
       // "@hooks/*": ["components/hooks/*"],
       // "@Tailwind/*": ["components/Tailwind/*"],

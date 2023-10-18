@@ -3,6 +3,7 @@
   "include": [
     "**/*.ts", "**/*.tsx",
     "src", "src/custom.d.ts",
+    "**/*.css",
   ],
   "exclude": [
     // "node_modules", "**/node_modules/*", "build"
