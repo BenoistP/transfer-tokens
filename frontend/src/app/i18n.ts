@@ -1,4 +1,4 @@
-export default {
+const i18nConfig = {
   // This is the list of languages your application supports
   supportedLngs: ["en", "fr"],
   // This is the language you want to use in case
@@ -13,3 +13,5 @@ export default {
     useSuspense: false
   },
 };
+
+export default i18nConfig;
