@@ -31,7 +31,9 @@
     "zod": "^3.22.4"
   },
   "scripts": {
-    "start": "BROWSER=none craco start --verbose",
+    "start": "BROWSER=none craco start",
+    "startB": "craco start",
+    "startV": "BROWSER=none craco start --verbose",
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject"
