@@ -22,3 +22,28 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+
+/.cache
+/build
+/public/build
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+#.env.*
+!env.MD
+
+.secret
+
+# local parameters
+params-local.env
+pnpm-lock.yaml
+
+**/bak/*/
+
+# temp exclude for migration
+/app/*
