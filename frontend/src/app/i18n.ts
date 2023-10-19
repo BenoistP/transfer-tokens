@@ -3,8 +3,6 @@ import { initReactI18next } from 'react-i18next';
 
 import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
-// import { resolve } from 'node:path';
-// import { resolve } from 'path';
 // don't want to use this?
 // have a look at the Quick start guide 
 // for passing in lng and translations on init
@@ -24,13 +22,9 @@ i18n
   .init({
     fallbackLng: 'en',
     debug: true,
-    // backend: { loadPath: resolve("./public/locales/translation-{{ns}}-{{lng}}.json") },
-
-
     backend: {
       loadPath: '/locales/{{ns}}-common-{{lng}}.json'
     },
-    
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     }
