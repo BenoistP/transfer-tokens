@@ -15,7 +15,7 @@ type PageProps = {
 const TransferTokensAppPageLayout = ( { children, }: PageProps ) =>
 {
 return (
-  <div className="" >
+  <div className="bg-blue-500" >
 
     {/* Navbar */}
 

@@ -4,6 +4,9 @@ import React from 'react'
 // Components
 // ...
 import TransferTokensAppPageLayout from './TransferTokensAppPageLayout';
+import TestPage from './TestPage';
+
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 // Translation
 import { I18nextProvider } from "react-i18next";
@@ -12,10 +15,11 @@ import './i18n';
 
 // Styles
 import './styles/global.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import TestPage from './TestPage';
+import './styles/tailwind.css'
 // import '@styles/global.css'
 // import '@css/global.css'
+
+
 
 const TransferTokensApp = ( /* {  } */ ) =>
 {

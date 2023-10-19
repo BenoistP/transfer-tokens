@@ -4,12 +4,17 @@ import React from 'react'
 // Components
 // ...
 
+// Translation
+// import { useTranslation } from 'react-i18next';
+
 const TestPage = ( ) =>
 {
-return (
-  <div className="" >
-    <h2>TestPage</h2>
-  </div>
+  // const { t } = useTranslation();
+  return (
+    <div className="" >
+      <h2>TestPage</h2>
+      {/* {t("moveTokens.stepOne.destinationPlaceholder")} */}
+    </div>
   )
 } // App
 

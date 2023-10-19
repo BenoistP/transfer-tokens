@@ -1,6 +1,6 @@
 /* tailwind.config.ts */
 
-import { darkTheme, lightTheme } from '@rainbow-me/rainbowkit';
+// import { darkTheme, lightTheme } from '@rainbow-me/rainbowkit';
 import type { Config } from 'tailwindcss'
 
 const defaultTheme = require("tailwindcss/defaultTheme");
@@ -9,7 +9,7 @@ const plugin = require('tailwindcss/plugin')
 /* todo: opacity https://tailwindcss.com/blog/tailwindcss-v3-1#easier-css-variable-color-configuration */
 
 export default {
-  content: ['./app/**/*.{js,jsx,ts,tsx}'],
+  content: ['./src/app/**/*.{js,jsx,ts,tsx}'],
   theme: {
     /* --- theme START --- */
     extend: {
