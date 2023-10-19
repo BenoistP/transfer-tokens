@@ -824,7 +824,7 @@ const StepsContainer = ( {
         console.error(`loadTokensContracts error: ${error}`);
       } // catch (error)
     },
-    [/* tokens */, chainId]
+    [/* tokens *//* , chainId */]
   ); // loadTokensContracts
 
   // ---
@@ -839,12 +839,13 @@ const StepsContainer = ( {
           ? Number.parseInt(val, 10)
           : defaultBatchSize;
         }
-    } catch (error) {
+        return MAXBATCHSIZE
+      } catch (error) {
       console.error(`StepsContainer.tsx getMaxBatchSize error: ${error}`);
+      return MAXBATCHSIZE
     }
     finally {
       console.debug(`StepsContainer.tsx getMaxBatchSize MAXBATCHSIZE: ${MAXBATCHSIZE}`);
-      return MAXBATCHSIZE
     }
   }
 
@@ -860,8 +861,8 @@ const StepsContainer = ( {
 
     try {
       // console.debug(`StepsContainer.tsx fetchOnChainDataWrapper multicallInput.length: ${multicallInput.length}`);
-      let multicallInputCall = [] as any[] // contains real multicall inputs
-      let inputRes = [] as any[] // contains inputs
+      const multicallInputCall = [] as any[] // contains real multicall inputs
+      const inputRes = [] as any[] // contains inputs
 
       for (let i = 0; i < multicallInput.length; i++) {
         const element = multicallInput[i];
@@ -893,12 +894,13 @@ const StepsContainer = ( {
       } else {
         multicallRes = multicallFetchRes;
       }
+      return multicallRes;
     } catch (error) {
       console.error(`StepsContainer.tsx fetchOnChainDataWrapper error: ${error}`);
-    }
-    finally {
       return multicallRes;
     }
+    // finally {
+    // }
   }
 
   // ---
@@ -965,7 +967,8 @@ const StepsContainer = ( {
               break;
             // Step 1: get tokens source user balances
             case EStepsLoadTokensData.stepLoadSourceBalances:
-              const balancesSourceMulticallArray = tokensInstances.map( async (token) => {
+              // const balancesSourceMulticallArray = tokensInstances.map( async (token) => {
+              multicallArray = tokensInstances.map( async (token) => {
                 if (token?.contract) {
                   return {
                     ...token.contract,
@@ -975,13 +978,14 @@ const StepsContainer = ( {
                 }
                 return null;
               });
-              multicallArray = balancesSourceMulticallArray;
+              // multicallArray = balancesSourceMulticallArray;
               progress = 33
               break;
 
             // Step 2: get token decimals
             case EStepsLoadTokensData.stepLoadDecimals:
-              const decimalsMulticallArray = tokensInstances.map( async (token) => {
+              // const decimalsMulticallArray = tokensInstances.map( async (token) => {
+                multicallArray = tokensInstances.map( async (token) => {
                 if (token?.contract) {
                   return {
                     ...token.contract,
@@ -990,13 +994,14 @@ const StepsContainer = ( {
                 }
                 return null;
               });
-              multicallArray = decimalsMulticallArray;
+              // multicallArray = decimalsMulticallArray;
               progress = 55
               break;
 
             // Step 3: get token name
             case EStepsLoadTokensData.stepLoadNames:
-              const nameMulticallArray = tokensInstances.map( async (token) => {
+              // const nameMulticallArray = tokensInstances.map( async (token) => {
+              multicallArray = tokensInstances.map( async (token) => {
                 if (token?.contract) {
                   return {
                     ...token.contract,
@@ -1005,13 +1010,14 @@ const StepsContainer = ( {
                 }
                 return null;
               });
-              multicallArray = nameMulticallArray;
+              // multicallArray = nameMulticallArray;
               progress = 77
               break;
 
             // Step 4: get token symbol
             case EStepsLoadTokensData.stepLoadSymbols:
-              const symbolMulticallArray = tokensInstances.map( async (token) => {
+              // const symbolMulticallArray = tokensInstances.map( async (token) => {
+              multicallArray = tokensInstances.map( async (token) => {
                 if (token?.contract) {
                   return {
                     ...token.contract,
@@ -1020,14 +1026,15 @@ const StepsContainer = ( {
                 }
                 return null;
               });
-              multicallArray = symbolMulticallArray;
+              // multicallArray = symbolMulticallArray;
               progress = 90
               break;
 
 
             // Step 5: get tokens target user balances
             case EStepsLoadTokensData.stepLoadTargetBalances:
-              const balancesTargetMulticallArray = tokensInstances.map( async (token) => {
+              // const balancesTargetMulticallArray = tokensInstances.map( async (token) => {
+              multicallArray = tokensInstances.map( async (token) => {
                 if (token?.contract) {
                   return {
                     ...token.contract,
@@ -1038,13 +1045,14 @@ const StepsContainer = ( {
                 }
                 return null;
               });
-              multicallArray = balancesTargetMulticallArray;
+              // multicallArray = balancesTargetMulticallArray;
               progress = 50
               break;
 
             // Step 6: get canTransfer token from address to address
             case EStepsLoadTokensData.stepLoadTransferAbility:
-              const canTransferMulticallArray = tokensInstances.map( async (token) => {
+              // const canTransferMulticallArray = tokensInstances.map( async (token) => {
+              multicallArray = tokensInstances.map( async (token) => {
 
                 if (token?.contract) {
                   if (token?.type == "COINBRIDGE" as TTokenType) { // TEST
@@ -1071,7 +1079,7 @@ const StepsContainer = ( {
                 } // if (token?.contract)
                 return null;
               });
-              multicallArray = canTransferMulticallArray;
+              // multicallArray = canTransferMulticallArray;
               progress = 100
               break;
 
@@ -1356,7 +1364,7 @@ const StepsContainer = ( {
               <Step2
                 setNextDisabled={setNextDisabled}
                 tokensInstances={tokensInstances}
-                settokensInstances={settokensInstances}
+                // settokensInstances={settokensInstances}
                 setShowProgressBar={setShowProgressBar}
                 setProgressBarPercentage={setProgressBarPercentage}
                 accountAddress={connectedAddress}

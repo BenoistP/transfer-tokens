@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react";
+// React
 
 import { LanguageSelector } from "./LanguageSelector";
 import { ThemeSwitch } from "./ThemeSwitch";

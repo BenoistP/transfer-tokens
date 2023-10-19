@@ -34,9 +34,9 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
       console.debug(`TokenInstance.tsx setZeroAmount editableAmountString:${editableAmountString} `)
       seteditableAmountString("0.0");
       setamount(0n);
-      if (unSelect) {unSelect()};
+      if (unSelect) {unSelect()}
     },
-    [] // eslint-disable-line react-hooks/exhaustive-deps
+    [editableAmountString, setamount, unSelect] // Xeslint-disable-line react-hooks/exhaustive-deps
   );
 
   // ---
@@ -47,7 +47,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
       // setamount(max);
       setlock(true);
     },
-    [] // eslint-disable-line react-hooks/exhaustive-deps
+    [] // Xeslint-disable-line react-hooks/exhaustive-deps
   );
 
   // ---
@@ -58,7 +58,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
       // setamount(0n);
       setlock(false);
     },
-    [] // eslint-disable-line react-hooks/exhaustive-deps
+    [] // Xeslint-disable-line react-hooks/exhaustive-deps
   );
 
   // ---
@@ -67,7 +67,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
       // console.debug(`TokenInstance.tsx useEffect  selectable:${selectable}`)
       seteditable(selectable)
     },
-    [selectable] // eslint-disable-line react-hooks/exhaustive-deps
+    [selectable] // Xeslint-disable-line react-hooks/exhaustive-deps
   );
 
   // ---
@@ -164,7 +164,8 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
     if (amount) {
       const amountValue = amount.valueOf();// + 1n;
       // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} `)
-      const intValue = ( amountValue / (10n**BigInt(decimals)) );
+      // const intValue = ( amountValue / (10n**BigInt(decimals)) );
+      const intValue = ( amountValue / (10n**(Decimals)) );
       // console.debug(`TokenInstance.tsx useEffect balance:${balance} decimals:${decimals} intValue:${intValue} `)
       // console.dir(intValue)
       const decimalValue = (amountValue - intValue * (10n**(Decimals)));
@@ -183,7 +184,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
     }
 
     return () => { };
-  }, [decimals, amount]);
+  }, [decimals, amount, Decimals]);
 
   // ---
 /* 
@@ -207,10 +208,10 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
     // if (editableAmountString == "0") {
     if (amount == 0n) {
       // seteditable(false);
-      if (unSelect) {unSelect()};
+      if (unSelect) {unSelect()}
     }
   },
-  [  amount ]
+  [  amount, unSelect ]
   );
   // ---
 

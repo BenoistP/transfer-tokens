@@ -619,18 +619,15 @@ type TokensListsLoaderData = {
   errorDetails?: string
 }
 
-interface IAppMoveTokens2Props {
-  // tokensLists: TTokensLists|null|undefined,
-  // chainId: TChainId
-  // changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
-}
+// interface IAppMoveTokens2Props {
+//   // tokensLists: TTokensLists|null|undefined,
+//   // chainId: TChainId
+//   // changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
+// }
 
 
-interface IContentProps {
-  // tokensLists: TTokensLists|null|undefined,
-  // chainId: TChainId
-  // changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
-}
+// interface IContentProps {
+// }
 
 type TsetPreviousDisabled = React.Dispatch<React.SetStateAction<boolean>>;
 type TsetNextDisabled = React.Dispatch<React.SetStateAction<boolean>>;
@@ -754,7 +751,7 @@ interface IStep1Props {
 interface IStep2Props {
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
-  settokensInstances: TsetTokensInstances,
+  // settokensInstances: TsetTokensInstances,
   setShowProgressBar: TsetShowProgressBar
   setProgressBarPercentage: TsetProgressBarPercentage,
   accountAddress: TAddressNullUndef,

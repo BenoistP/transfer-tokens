@@ -6,7 +6,8 @@ import TokenInstanceListTableFiltered from "./TokenInstanceListTableFiltered";
 
 const Step2 = ( {
   setNextDisabled,
-  tokensInstances, settokensInstances,
+  tokensInstances,
+  // settokensInstances,
   // setShowProgressBar, setProgressBarPercentage,
   accountAddress, chainId,
   targetAddress, isError,
@@ -31,7 +32,7 @@ const Step2 = ( {
 
     setNextDisabled(!someSelected || isError)
 
-  }, [tokensInstances, accountAddress, isError] )
+  }, [tokensInstances, accountAddress, isError, setNextDisabled] )
 
   // ---
 

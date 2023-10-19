@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import { QuestionMarkCircleIcon  } from '@heroicons/react/24/solid'
 import { useTranslation } from "react-i18next"
@@ -21,7 +21,7 @@ const SelectableTokensList = ( { selectableTokensList, changeTokensListCheckboxS
       const id:TTokensListId = selectableTokensList.tokensList?.id;
       changeTokensListCheckboxStatus(id);
     },
-    [changeTokensListCheckboxStatus]
+    [changeTokensListCheckboxStatus, selectableTokensList.tokensList?.id]
   );
 
   // ------------------------------

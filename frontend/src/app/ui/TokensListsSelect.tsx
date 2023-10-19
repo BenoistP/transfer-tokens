@@ -145,28 +145,9 @@ const TokensListsSelect = ( {
       } // if (!selectableTokensLists||selectableTokensLists.length<=0)
 
     },
-    [tokensLists, chain?.id]
-  )
-
-  // ---
-
-  const changeTokensListCheckboxStatus:IChangeTokensListCheckboxStatus = useCallback(
-    (id) =>
-    {
-      // console.debug(`TokensListsSelect.tsx changeTokensListCheckboxStatus() id="${id}"`)
-      if (selectableTokensLists) {
-        const new_selectableTokensLists = [...selectableTokensLists];
-        selectableTokensLists.map((selectableTokensList) => {
-          if (selectableTokensList.tokensList?.id === id)
-            selectableTokensList.selected = !selectableTokensList.selected;
-        });
-        updateCheckAll(new_selectableTokensLists);
-        setselectableTokensLists(new_selectableTokensLists);
-      }
-    },
-    [selectableTokensLists,
-      // chain?.id
-    ],
+    [
+      // tokensLists, chain?.id
+      tokensLists, chain?.id, selectableTokensLists, setselectableTokensLists]
   )
 
   // ---
@@ -195,7 +176,25 @@ const TokensListsSelect = ( {
         console.error(`TokensListsSelect.tsx: updateCheckAll: error=${error}`);
       }
     },
-    [selectableTokensLists]); // updateCheckAll
+    [/* selectableTokensLists */ isAllChecked]); // updateCheckAll
+  // ---
+
+  const changeTokensListCheckboxStatus:IChangeTokensListCheckboxStatus = useCallback(
+    (id) =>
+    {
+      // console.debug(`TokensListsSelect.tsx changeTokensListCheckboxStatus() id="${id}"`)
+      if (selectableTokensLists) {
+        const new_selectableTokensLists = [...selectableTokensLists];
+        selectableTokensLists.map((selectableTokensList) => {
+          if (selectableTokensList.tokensList?.id === id)
+            selectableTokensList.selected = !selectableTokensList.selected;
+        });
+        updateCheckAll(new_selectableTokensLists);
+        setselectableTokensLists(new_selectableTokensLists);
+      }
+    },
+    [selectableTokensLists, setselectableTokensLists, updateCheckAll],
+  )
 
   // ---
 
@@ -215,7 +214,7 @@ const TokensListsSelect = ( {
         console.error(`TokensListsSelect.tsx: handleInvertAllChecks: error=${error}`);
       }
     },
-    [selectableTokensLists]
+    [selectableTokensLists, setselectableTokensLists, updateCheckAll]
   ); // handleInvertAllChecks
 
   // ---
@@ -234,13 +233,13 @@ const TokensListsSelect = ( {
           });
           setselectableTokensLists(new_selectableTokensLists);
           updateCheckAll(new_selectableTokensLists);
-        };
+        }
         setCheckAll(newCheckAll);
       } catch (error) {
         console.error(`TokensListsSelect.tsx: handleCheckSelectAll: error=${error}`);
       }
     },
-    [selectableTokensLists]
+    [checkAll, selectableTokensLists, setselectableTokensLists, updateCheckAll]
   ); // handleCheckSelectAll
 
   // ---

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { /* useAccount , */ useNetwork, /* useBalance */ } from 'wagmi'
 import { isChainSupported } from "~/utils/blockchainUtils";
@@ -9,7 +9,7 @@ import MainContentContainer from "./MainContentContainer";
 
 // import { useRouteLoaderData } from "@remix-run/react";
 
-export const MainContent = ( { } :IContentProps ) => {
+export const MainContent = ( /* { } :IContentProps */ ) => {
 
     const { t } = useTranslation();
     const { chain } = useNetwork()
@@ -19,6 +19,7 @@ export const MainContent = ( { } :IContentProps ) => {
     // const { tokensLists: loaderTokensLists } = useRouteLoaderData("routes/moveTokens2._index");
     // const [tokensLists, setTokensLists] = useState<TTokensLists>(loaderTokensLists)
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [tokensLists, setTokensLists] = useState<TTokensLists>(null)
 
     const [previousDisabled, setpreviousDisabled] = useState<boolean>(false);

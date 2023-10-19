@@ -10,7 +10,7 @@ import { ContentBottomPadding } from "./ContentBottomPadding";
 // ------------------------------
 
 // const MoveTokensApp2 = ( /* {children}: any */ ) => {
-const AppMoveTokens2 = ( { }: IAppMoveTokens2Props /* { Component, pageProps } */ ) => {
+const AppMoveTokens2 = ( /* { }: IAppMoveTokens2Props */ /* { Component, pageProps } */ ) => {
 
   // console.info(`AppMoveTokens2.tsx render`)
   // console.debug(`AppMoveTokens2.tsx: render: tokensLists=${tokensLists}}`);

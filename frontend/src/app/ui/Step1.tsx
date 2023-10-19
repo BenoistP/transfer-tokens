@@ -33,7 +33,7 @@ const Step1 = ( {
       // console.debug(`Step1 useEffect [targetAddress]: targetAddress=${targetAddress}`)
       setNextDisabled(! isValidAddress(targetAddress) || targetAddress == accountAddress || isError)
     },
-    [accountAddress, targetAddress, isError]
+    [accountAddress, targetAddress, isError, setNextDisabled]
   )
 
   // ---

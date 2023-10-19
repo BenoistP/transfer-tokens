@@ -34,8 +34,7 @@ const Step0 = (  {
       // setpreviousDisabled(true)
       setNextDisabled(true)
     },
-    [ // setpreviousDisabled,
-      /* setNextDisabled */]
+    [setNextDisabled]
   )
 
     // ---

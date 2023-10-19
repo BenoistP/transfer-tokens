@@ -1,10 +1,11 @@
-import { useCallback, useMemo, useState, } from "react";
+import { useMemo } from "react";
 
 import TokenInstanceListFiltered from "./TokenInstanceListFiltered";
+import SortIcon from "./SortIcon";
+
 import { useTranslation } from "react-i18next";
 
 import { ArrowPathRoundedSquareIcon, FunnelIcon } from '@heroicons/react/24/solid'
-import SortIcon from "./SortIcon";
 
 // import { ErrorBoundary } from "react-error-boundary";
 
@@ -16,7 +17,8 @@ const TokenInstanceListTableFiltered = (
     targetAddress,
     isError,
     tokensInstancesListTablePropsHandlers
-  }: ITokensListTableFilteredProps )  => {
+  }: ITokensListTableFilteredProps )  =>
+  {
 
   // console.log(`TokenInstanceListTableFiltered.tsx render chainId: ${chainId} accountAddress: ${accountAddress}`);
 
@@ -56,16 +58,18 @@ const TokenInstanceListTableFiltered = (
     {
       let selectedCount = 0;
       try {
-      // console.debug(`TokenInstanceListTableFiltered.tsx countSelected tokensInstances.length: ${tokensInstances?.length} accountAddress: ${accountAddress}`);
-      if (tokensInstances && tokensInstances.length>0 && accountAddress && typeof accountAddress == "string") {
-        selectedCount = tokensInstances.reduce( (selectedCount,tokensInstance) => selectedCount + ((tokensInstance.userData[accountAddress as any].selected==true)?1:0),0 )
-      }
-      // console.debug(`TokenInstanceListTableFiltered.tsx countSelected = ${selectedCount}`);
+        // console.debug(`TokenInstanceListTableFiltered.tsx countSelected tokensInstances.length: ${tokensInstances?.length} accountAddress: ${accountAddress}`);
+        if (tokensInstances && tokensInstances.length>0 && accountAddress && typeof accountAddress == "string") {
+          selectedCount = tokensInstances.reduce( (selectedCount,tokensInstance) => selectedCount + ((tokensInstance.userData[accountAddress as any].selected==true)?1:0),0 )
+        }
+        // console.debug(`TokenInstanceListTableFiltered.tsx countSelected = ${selectedCount}`);
+        return selectedCount;
       } catch (error) {
         console.error(`countSelected error: ${error}`);
-      } finally {
         return selectedCount;
       }
+      // finally {
+      // }
       
     }
   //   ,
@@ -80,15 +84,18 @@ const TokenInstanceListTableFiltered = (
     {
       let displayedCount = 0;
       try {
-      if (tokensInstances && tokensInstances.length>0) {
-        displayedCount = tokensInstances.filter(tokensInstancesListTablePropsHandlers.filterHandlers.filterTokenInstance).length
-      }
-      // console.debug(`TokenInstanceListTableFiltered.tsx countDisplayed = ${displayedCount}`);
+        if (tokensInstances && tokensInstances.length>0) {
+          displayedCount = tokensInstances.filter(tokensInstancesListTablePropsHandlers.filterHandlers.filterTokenInstance).length
+        }
+        // console.debug(`TokenInstanceListTableFiltered.tsx countDisplayed = ${displayedCount}`);
+        return displayedCount;
       } catch (error) {
         console.error(`countDisplayed error: ${error}`);
-      } finally {
         return displayedCount;
       }
+      // finally {
+        // return displayedCount;
+      // }
       
     }
   //   ,
@@ -148,7 +155,7 @@ const TokenInstanceListTableFiltered = (
                     {/* Select ALL checkbox */}
                     <input type="checkbox" className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
                       checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
-                      onChange={(e)=>{tokensInstancesListTablePropsHandlers.selectHandlers.handleCheckSelectAll()}}
+                      onChange={(/* e */)=>{tokensInstancesListTablePropsHandlers.selectHandlers.handleCheckSelectAll()}}
                       disabled={!tokensInstances?.length}
                       />
                   </label>
@@ -213,7 +220,7 @@ const TokenInstanceListTableFiltered = (
             </div>
 
             <div className="flex-grow text-center">
-              {t("moveTokens.stepTwo.tokensTable.results.found.hidden")}: { (tokensInstances? tokensInstances.length-countDisplayed(tokensInstances) : 0 ) }
+              {t("moveTokens.stepTwo.tokensTable.results.found.hidden")}: { (tokensInstances? (tokensInstances?.length||0)-countDisplayed(tokensInstances) : 0 ) }
             </div>
 
             <div className="flex-grow text-center">

@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from "react";
-import { useTranslation } from "react-i18next";
+import {useCallback, useEffect, useState} from "react";
+// import { useTranslation } from "react-i18next";
 import { SunIcon, MoonIcon, HomeIcon } from '@heroicons/react/24/solid'
 
 import { useTheme } from 'next-themes'
@@ -8,7 +8,7 @@ import { useTheme } from 'next-themes'
 
 export const ThemeSwitch = () => {
 
-    const { t } = useTranslation();
+    // const { t } = useTranslation();
     const { theme, setTheme, themes } = useTheme()
 
     const findThemeId = () => themes.findIndex((aTheme) => aTheme == theme);
@@ -36,9 +36,9 @@ export const ThemeSwitch = () => {
 
   const iconCls = "fill-base-content w-6 h-6 sm:w-10 sm:h-10 transition-all duration-300 ease-in-out ";
 
-  const [Icon_0_Cls, setIcon_0_Cls] = useState<String>(hiddenCls);
-  const [Icon_1_Cls, setIcon_1_Cls] = useState<String>(hiddenCls);
-  const [Icon_2_Cls, setIcon_2_Cls] = useState<String>(hiddenCls);
+  const [Icon_0_Cls, setIcon_0_Cls] = useState<string>(hiddenCls);
+  const [Icon_1_Cls, setIcon_1_Cls] = useState<string>(hiddenCls);
+  const [Icon_2_Cls, setIcon_2_Cls] = useState<string>(hiddenCls);
 
   useEffect(() => {
     // console.debug(`ThemeSwitch.tsx: useEffect:themeId="${themeId}"`);

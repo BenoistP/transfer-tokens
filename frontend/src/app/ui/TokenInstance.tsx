@@ -290,19 +290,19 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
 
 // ------------------------------
 
-const TokenError = (  ) => {
-  return (
-  <>
-    <td>❌ID</td>
-    <td>❌Token Address</td>
-    <td>❌Token Name</td>
-    <td>❌Status</td>
-    <td>❌Amount</td>
-    <td>❌Selected</td>
-    <td>❌Name</td>
-  </>
-  );
-}
+// const TokenError = (  ) => {
+//   return (
+//   <>
+//     <td>❌ID</td>
+//     <td>❌Token Address</td>
+//     <td>❌Token Name</td>
+//     <td>❌Status</td>
+//     <td>❌Amount</td>
+//     <td>❌Selected</td>
+//     <td>❌Name</td>
+//   </>
+//   );
+// }
 
 const Loading = (  ) => {
   return (

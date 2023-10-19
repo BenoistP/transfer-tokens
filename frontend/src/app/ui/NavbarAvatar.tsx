@@ -20,11 +20,11 @@ export const Avatar = () => {
     if (connectedAddress!=getAddress()) {
       setAddress(connectedAddress);
     }
-  }, [connectedAddress])
+  }, [connectedAddress, getAddress, setAddress])
 
   useEffect(() => {
     setavatarComponent(getAvatarComponent());
-  }, [globalAddress])
+  }, [getAvatarComponent, globalAddress])
 
   // ---
 

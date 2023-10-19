@@ -1,18 +1,18 @@
-import { useEffect, useState} from "react";
+// React
 
 // Context
-import { useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
+// import { useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
 
 // Translation
 // import { useTranslation } from 'react-i18next';
 
-import { useAccount , useNetwork, useBlockNumber, useEnsAvatar,/* useBalance */ 
-useBalance} from 'wagmi'
+// import { useAccount , useNetwork, useBlockNumber, useEnsAvatar,/* useBalance */ 
+// useBalance} from 'wagmi'
 
 // import { fetchBlockNumber } from 'wagmi/actions'
 // import { fetchBalance } from '@wagmi/core'
 
-import { watchBlockNumber, watchAccount } from '@wagmi/core'
+// import { watchBlockNumber, watchAccount } from '@wagmi/core'
 
 
 export const Status = () => {
