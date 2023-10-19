@@ -1,0 +1,98 @@
+{
+  "test": "This is a test",
+  "test2": {
+    "test2": "This is a test2"
+  }
+  ,
+
+  "moveTokens": {
+
+    "warnings": {
+      "connectawallet": "Please connect a wallet",
+      "wrongchain": "Please switch to a supported chain: Ethereum or Gnosis"
+    },
+    "common": {
+      "notAvailable": "Unavailable"
+
+    },
+    "progress": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "stepZero": {
+      "title": "Select token lists",
+      "titleStep": "Token lists",
+      "tokensListsTable": {
+        "listName": "Name",
+        "listDescription": "Description",
+        "emptyList": "No tokens list found",
+        "errorLoadingList": "Error loading tokens list"
+      }
+    },
+
+    "stepOne": {
+      "title": "Select destination",
+      "titleStep": "Destination",
+      "destination": "Destination",
+      "destinationPlaceholder": "0x...",
+      "detinationEmpty":"Please input destination address",
+      "destinationError": "Invalid address",
+      "destinationErrorSame": "Destination address cannot be the same as the source address",
+      "destinationOk": "Address is valid"
+    },
+    
+    "stepTwo": {
+      "title": "Select tokens",
+      "titleStep": "Tokens",
+      "tokensTable" : {
+        "search" : {
+          "name": "Name",
+          "balance": "Balance",
+          "balanceGt0": "> 0",
+          "selectAll": "Select all",
+          "invertSelection": "Invert",
+          "additional": {
+            "title": "Additional filters",
+            "address": "Address"
+          }
+        },
+        "results": {
+          "found": {
+            "selected": "Selected",
+            "visible": "Visible",
+            "hidden": "Hidden",
+            "total": "Total"
+          },
+          "titles" : {
+            "tokenId": "Id.",
+            "tokenName": "Name",
+            "tokenBalance": "Balance",
+            "selected": "",
+            "tokenAmount": "Amount",
+            "tokenInfo": "Info."
+          }
+        },
+        "errorLoadingTokens": "Error loading tokens",
+        "empty": "No tokens found"
+      },
+      "token": {
+        "noTransferTo": "Can't transfer to this address"
+      }
+    },
+
+    "stepThree": {
+      "title": "Confirm",
+      "titleStep": "Confirm"
+    },
+
+    "Footer": {
+      "info": {
+        "title": "©",
+        "text": "Soon Soon Research Laboratories"
+      },
+      "center": ""
+    }
+  
+  }
+
+}
