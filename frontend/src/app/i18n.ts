@@ -25,6 +25,12 @@ i18n
     fallbackLng: 'en',
     debug: true,
     // backend: { loadPath: resolve("./public/locales/translation-{{ns}}-{{lng}}.json") },
+
+
+    backend: {
+      loadPath: '/locales/{{ns}}-common-{{lng}}.json'
+    },
+    
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     }

@@ -14,7 +14,7 @@ const TestPage = ( ) =>
   return (
     <div className="" >
       <h2>TestPage</h2>
-      {t("moveTokens.stepOne.destinationPlaceholder")}
+      {t("test2.test2")}
     </div>
   )
 } // App

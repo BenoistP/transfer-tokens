@@ -25,7 +25,7 @@ const TransferTokensApp = ( /* {  } */ ) =>
 {
 return (
   <BrowserRouter>
-    <I18nextProvider i18n={i18next}>
+    <I18nextProvider i18n={i18next} /* defaultNS={'translation'} */ >
 
       <h1>TransferTokensApp</h1>
 
