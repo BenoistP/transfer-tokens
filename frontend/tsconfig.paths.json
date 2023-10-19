@@ -13,12 +13,10 @@
       "@utils/*": [
         "./src/app/utils/*"
       ],
-      "@styles/*": [
-        "./src/app/styles/*"
-      ],
+      "@styles/*": ["./src/app/styles/*"],
+      "@css/*": ["./app/styles/*"],
       "@Providers/*": ["./src/app/js/providers/*"],
       "@js/*": ["./src/app/js/*"],
-      "@css/*": ["./src/app/styles/*"],
       // "@components/*": ["components/*"],
       // "@hooks/*": ["components/hooks/*"],
       // "@Tailwind/*": ["components/Tailwind/*"],
