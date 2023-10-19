@@ -1,32 +1,25 @@
 {
-  "extends": "./tsconfig.paths.json",
-  "include": [
-    "**/*.ts", "**/*.tsx",
-    "src", "src/custom.d.ts",
-    "**/*.css",
-  ],
-  "exclude": [
-    // "node_modules", "**/node_modules/*", "build"
-  ]
-  ,
   "compilerOptions": {
-    "module": "es2022",
-    "lib": ["DOM", "DOM.Iterable", "ES2019"],
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    // "target": "ES2019",
     "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
     "strict": true,
-    "allowJs": true,
-    "forceConsistentCasingInFileNames": true,
-    // "baseUrl": ".",
-    "typeRoots": ["./node_modules/@types",
-    // "./src/types"
-    ],
-    // Remix takes care of building everything in `remix build`.
-    "noEmit": true
-  }
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
