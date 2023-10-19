@@ -18,11 +18,11 @@ export const isValidAddress = (address:string) : boolean  => {
     const addressLC = address?.toLowerCase()
     if (addressLC) {
       if (addressLC.startsWith('0x')) {
-        if (addressLC.length == 42) {
+        if (addressLC.length === 42) {
           return isAddress(addressLC)
         }
       } else {
-        if (addressLC.length == 40) {
+        if (addressLC.length === 40) {
           return isAddress('0x'+addressLC)
         }
       }
@@ -56,7 +56,7 @@ try {
 
 export const isChainSupported = (chainId:ChainId|undefined|null) : boolean => {
   if (chainId) {
-    if (chainId == ETHEREUM_CHAIN_ID || chainId == XDAI_CHAIN_ID) {
+    if (chainId === ETHEREUM_CHAIN_ID || chainId === XDAI_CHAIN_ID) {
       return true;
     }
   }
