@@ -43,6 +43,7 @@ const TokenInstanceListTableFiltered = (
         // nameFilter, balanceGt0Filter, balanceFilter, addressFilter,
         // tokenInstanceFilterParams.name, tokenInstanceFilterParams.balanceGt0, tokenInstanceFilterParams.balance, tokenInstanceFilterParams.address,
         // sortOrderTokenDisplayId, sortOrderTokenName, sortOrderTokenBalance,
+        // tokensInstancesListTablePropsHandlers,
         tokensInstancesListTablePropsHandlers.filterStates.name, tokensInstancesListTablePropsHandlers.filterStates.balanceGt0, tokensInstancesListTablePropsHandlers.filterStates.balance, tokensInstancesListTablePropsHandlers.filterStates.address,
         tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenDisplayId, tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenName, tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenBalance,
         tokensInstancesListTablePropsHandlers.selectStates.selectAll,

@@ -3,7 +3,7 @@
 // Components
 // ...
 import TransferTokensAppPageLayout from './TransferTokensAppPageLayout';
-import TestPage from './TestPage';
+// import TestPage from './TestPage';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -36,10 +36,12 @@ return (
           <Route
             path={"/"}
               element={
-                      <Suspense fallback="loading">
-                        <TestPage/>
-                      </Suspense>
-                  }
+                <Suspense fallback="loading">
+                  {/* <TestPage/> */}
+
+
+                </Suspense>
+              }
           ></Route>
 
         </Routes>

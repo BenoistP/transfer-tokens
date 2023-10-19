@@ -15,6 +15,8 @@
       ],
       "@styles/*": ["./src/app/styles/*"],
       "@css/*": ["./app/styles/*"],
+      "@ui/*": ["./src/app/ui/*"],
+
       "@Providers/*": ["./src/app/js/providers/*"],
       "@js/*": ["./src/app/js/*"],
       // "@components/*": ["components/*"],
