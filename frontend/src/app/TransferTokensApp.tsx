@@ -5,6 +5,8 @@
 import TransferTokensAppPageLayout from './TransferTokensAppPageLayout';
 import TestPage from './TestPage';
 
+import { MoveTokensAppProvider } from './js/providers/MoveTokensAppProvider/MoveTokensAppContext';
+
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 // Translation
@@ -23,28 +25,31 @@ const TransferTokensApp = ( /* {  } */ ) =>
 return (
   <BrowserRouter>
     <I18nextProvider i18n={i18next} /* defaultNS={'translation'} */ >
+      <MoveTokensAppProvider>
 
-      <h1>TransferTokensApp</h1>
+        <h1>TransferTokensApp</h1>
 
-      <TransferTokensAppPageLayout>
+        <TransferTokensAppPageLayout>
 
-        <Routes>
+          <Routes>
 
-          <Route
-            path={"/"}
-              element={
-                <Suspense fallback="loading">
+            <Route
+              path={"/"}
+                element={
+                  <Suspense fallback="loading">
 
-                  <TestPage/>
+                    <TestPage/>
 
-                </Suspense>
-              }
-          ></Route>
+                  </Suspense>
+                }
+            ></Route>
 
-        </Routes>
+          </Routes>
 
-      </TransferTokensAppPageLayout>
-    </I18nextProvider>
+        </TransferTokensAppPageLayout>
+
+        </MoveTokensAppProvider>
+      </I18nextProvider>
   </BrowserRouter>
 
 )
