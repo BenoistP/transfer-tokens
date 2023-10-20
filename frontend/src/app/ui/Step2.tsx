@@ -9,7 +9,8 @@ const Step2 = ( {
   tokensInstances,
   // settokensInstances,
   // setShowProgressBar, setProgressBarPercentage,
-  accountAddress, chainId,
+  accountAddress,
+  // chainId,
   targetAddress, isError,
   tokensInstancesListTablePropsHandlers,
 }: IStep2Props ) => {
@@ -45,7 +46,7 @@ const Step2 = ( {
             tokensInstances={tokensInstances}
             // settokensInstances={settokensInstances}
             accountAddress={accountAddress}
-            chainId={chainId}
+            // chainId={chainId}
             enableCheckboxes={true}
             targetAddress={targetAddress}
             isError={isError}

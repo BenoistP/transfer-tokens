@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 const TokenInstanceListTable = (
    {tokensInstances, // settokensInstances,
     accountAddress,
-    chainId,
+    // chainId,
     targetAddress,
     isError,
     tokensInstancesListTablePropsHandlers,
@@ -31,12 +31,7 @@ const TokenInstanceListTable = (
         targetAddress={targetAddress}
         sortTokensInstances={tokensInstancesListTablePropsHandlers.sortHandlers.sortTokensInstances}
       />
-    , [ tokensInstances,
-        chainId,
-        accountAddress, targetAddress,
-        tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenDisplayId, tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenName, tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenBalance,
-        isError,
-      ]
+    , [tokensInstances, accountAddress, targetAddress, tokensInstancesListTablePropsHandlers.sortHandlers.sortTokensInstances]
   );
 
   // ----------------------------

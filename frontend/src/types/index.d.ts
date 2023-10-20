@@ -755,7 +755,7 @@ interface IStep2Props {
   setShowProgressBar: TsetShowProgressBar
   setProgressBarPercentage: TsetProgressBarPercentage,
   accountAddress: TAddressNullUndef,
-  chainId: ChainId;
+  // chainId: ChainId;
   targetAddress: TAddressEmpty,
   isError: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
@@ -887,7 +887,7 @@ interface ITokensInstancesListTableStatesHandlers {
 interface ITokensInstancesListTableProps {
   tokensInstances:TTokensInstances;
   accountAddress:TAddressNullUndef;
-  chainId: ChainId;
+  // chainId: ChainId;
   targetAddress: TAddressEmpty,
   isError: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
@@ -912,7 +912,7 @@ interface ItokenInstanceFilterParamsUpdaters {
 interface ITokensListTableFilteredProps {
   tokensInstances:TTokensInstances;
   accountAddress:TAddressNullUndef;
-  chainId: ChainId;
+  // chainId: ChainId;
   enableCheckboxes: boolean;
   targetAddress: TAddressEmpty,
   isError: boolean,

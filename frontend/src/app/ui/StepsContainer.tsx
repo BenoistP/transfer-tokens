@@ -154,12 +154,12 @@ const StepsContainer = ( {
   {
     try {
       
-      // console.debug(`TokenInstanceListTableFiltered.tsx filterTokenInstanceWithFilterProps filter.name=${filter.name} accountAddress: ${accountAddress}`);
+      // console.debug(`StepsContainer.tsx filterTokenInstanceWithFilterProps filter.name=${filter.name} accountAddress: ${accountAddress}`);
       const nameFilter = filter.name && token.name ? token.name.toLowerCase().includes(filter.name.toLowerCase()) : true ;
-      // console.debug(`TokenInstanceListTableFiltered.tsx filterTokenInstanceWithFilterProps nameFilter=${nameFilter} accountAddress: ${accountAddress} nameFilter=${nameFilter}`);
+      // console.debug(`StepsContainer.tsx filterTokenInstanceWithFilterProps nameFilter=${nameFilter} accountAddress: ${accountAddress} nameFilter=${nameFilter}`);
       if (!nameFilter) return false ;
       const balanceGt0Filter = filter.balanceGt0 ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) > 0 : true ;
-      // console.debug(`TokenInstanceListTableFiltered.tsx filterTokenInstanceWithFilterProps nameFilter=${nameFilter} accountAddress: ${accountAddress} balanceGt0Filter=${balanceGt0Filter} token.userData[accountAddress as any]?.amount=${token.userData[accountAddress as any]?.amount} filter.balanceGt0=${filter.balanceGt0}`);
+      // console.debug(`StepsContainer.tsx filterTokenInstanceWithFilterProps nameFilter=${nameFilter} accountAddress: ${accountAddress} balanceGt0Filter=${balanceGt0Filter} token.userData[accountAddress as any]?.amount=${token.userData[accountAddress as any]?.amount} filter.balanceGt0=${filter.balanceGt0}`);
       // return balanceGt0Filter;
       if (!balanceGt0Filter) return false ;
 
@@ -201,12 +201,12 @@ const StepsContainer = ( {
       // console.log (`filterValue=${filterValue} filterValueInt=${filterValueInt} filterValueFlo=${filterValueFloat} leadingZeros=${leadingZeros} floatValue.toString.length=${floatValue.toString().length} token.decimals-(1+leadingZeros+floatValue.toString.length)=${token.decimals-(1+leadingZeros+floatValue.toString.length)}`)
       const balanceFilter = filter.balance && token.decimals ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) >= filterValue : true ;
 
-      // console.debug(`TokenInstanceListTableFiltered.tsx filterTokenInstanceWithFilterProps nameFilter=${nameFilter} accountAddress: ${accountAddress} balanceFilter=${balanceFilter} token.userData[accountAddress as any]?.amount=${token.userData[accountAddress as any]?.amount} filter.balance=${filter.balance}`);
+      // console.debug(`StepsContainer.tsx filterTokenInstanceWithFilterProps nameFilter=${nameFilter} accountAddress: ${accountAddress} balanceFilter=${balanceFilter} token.userData[accountAddress as any]?.amount=${token.userData[accountAddress as any]?.amount} filter.balance=${filter.balance}`);
       // return balanceFilter;
       if (!balanceFilter) return false ;
 
       const addressFilter = filter.address && token.address ? token.address.toLowerCase().includes(filter.address.toLowerCase()) : true ;
-      // console.debug(`TokenInstanceListTableFiltered.tsx filterTokenInstanceWithFilterProps nameFilter=${nameFilter} accountAddress: ${accountAddress} addressFilter=${addressFilter}`);
+      // console.debug(`StepsContainer.tsx filterTokenInstanceWithFilterProps nameFilter=${nameFilter} accountAddress: ${accountAddress} addressFilter=${addressFilter}`);
       return addressFilter;
     } catch (error) {
       console.error(`StepsContainer.tsx filterTokenInstanceWithFilterProps error: ${error}`);
@@ -342,7 +342,7 @@ const StepsContainer = ( {
   const updateCheckAll = useCallback(  (tokensInstances:TTokensInstances) => {
     try {
       
-      // console.debug(`TokenInstanceListTableFiltered.tsx x realTokensList: ${realTokensList}`);
+      // console.debug(`StepsContainer.tsx x realTokensList: ${realTokensList}`);
       if (tokensInstances && /*accountAddress*/ connectedAddress) {
         const isAllChecked = tokensInstances.every(
           (tokensInstance) => {
@@ -1395,7 +1395,7 @@ const StepsContainer = ( {
                 setShowProgressBar={setShowProgressBar}
                 setProgressBarPercentage={setProgressBarPercentage}
                 accountAddress={connectedAddress}
-                chainId={chainId}
+                // chainId={chainId}
                 targetAddress={targetAddress}
                 isError={isError}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}

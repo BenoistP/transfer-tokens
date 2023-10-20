@@ -17,9 +17,11 @@ export const ThemeSwitch = () => {
 
     const themesCount = themes.length;
 
-    const nextTheme = () => {
+    const nextTheme = useCallback( () => {
       setthemeId( () => { return ( (themeId + 1)%themesCount ) });
-    };
+    },
+    [themeId, themesCount]
+    );
 
 
   const swapDefaultChecked = (themeId % 2 != 0);
@@ -50,7 +52,7 @@ export const ThemeSwitch = () => {
     // return () => {
     //   // cleanup
     // }
-  }, [themeId])
+  }, [setTheme, swapDefaultChecked, themeId, themes])
 
   const switchTheme = useCallback(() => {
       // console.log("----------------------switchTheme----------------------");
@@ -58,7 +60,7 @@ export const ThemeSwitch = () => {
       // setTheme(theme === 'dark' ? 'realOrange' : 'dark');
 
       // console.log(`switchTheme:themeId="${themeId}"`);
-  }, [theme]);
+  }, [nextTheme]);
 
   // ------------------------------
 

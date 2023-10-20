@@ -89,14 +89,19 @@ const AddressInput = ({
   }, [addressInput] )
 /*   , [] ); // eslint-disable-next-line react-hooks/exhaustive-deps */
 
-  useEffect( () => {
-    // console.debug(`AddressInput.tsx useEffect`)
-    if (addressInput && isValidAddress(addressInput) && sourceAddress!=addressInput) {
-        settargetAddress(addressInput as TAddressString)
-      } else {
-        settargetAddress("")
-    }
-  }, [addressInput] )
+  useEffect( () =>
+    {
+      // console.debug(`AddressInput.tsx useEffect`)
+      if (addressInput && isValidAddress(addressInput) && sourceAddress!=addressInput) {
+          settargetAddress(addressInput as TAddressString)
+        } else {
+          settargetAddress("")
+      }
+    },
+    [
+      // addressInput
+      addressInput, settargetAddress, sourceAddress]
+  )
 
   // ------------------------------
 /*

@@ -1,4 +1,5 @@
-import React /* , {useEffect, useState} */ from "react";
+// React
+
 import { FooterStatus } from "./FooterStatus";
 
 import { useTranslation } from "react-i18next";

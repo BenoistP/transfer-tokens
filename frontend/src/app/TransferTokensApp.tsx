@@ -3,7 +3,7 @@
 // Components
 // ...
 import TransferTokensAppPageLayout from './TransferTokensAppPageLayout';
-// import TestPage from './TestPage';
+import TestPage from './TestPage';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -16,9 +16,6 @@ import './i18n';
 import './styles/global.css'
 import './styles/tailwind.css'
 import { Suspense } from 'react';
-// import '@styles/global.css'
-// import '@css/global.css'
-
 
 
 const TransferTokensApp = ( /* {  } */ ) =>
@@ -37,8 +34,8 @@ return (
             path={"/"}
               element={
                 <Suspense fallback="loading">
-                  {/* <TestPage/> */}
 
+                  <TestPage/>
 
                 </Suspense>
               }
