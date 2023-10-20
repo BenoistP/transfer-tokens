@@ -3,7 +3,7 @@
 import { LanguageSelector } from "./LanguageSelector";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Avatar } from "./NavbarAvatar";
+// import { Avatar } from "./NavbarAvatar";
 import { Status } from "./NavbarStatus";
 
 export const Navbar = () => {
@@ -30,7 +30,7 @@ export const Navbar = () => {
 
           <div className="navbar-end">
             <Status/>
-            <Avatar/>
+            {/* <Avatar/> */}
           </div>
 
 

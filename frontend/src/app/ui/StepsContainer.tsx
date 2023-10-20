@@ -22,7 +22,7 @@ import { getContract, multicall } from '@wagmi/core'
 // ABIs
 import { erc20ABI } from 'wagmi'
 import CoinBridgeToken from "~/abis/CoinBridgeToken.json";
-import { getPublicEnv } from "./public-env";
+// import { getPublicEnv } from "./public-env";
 import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT } from "~/utils/constants/misc";
 
 // import { DEFAULT_TARGET_ADDRESS } from "~/utils/constants/addresses";
@@ -651,7 +651,8 @@ const StepsContainer = ( {
   {
    let MAXBATCHSIZE = defaultBatchSize;
    try {
-     const val = getPublicEnv("PUBLIC_MULTICALL_MAX_BATCH_SIZE")
+     const val = // getPublicEnv("PUBLIC_MULTICALL_MAX_BATCH_SIZE")
+      import.meta.env.PUBLIC_MULTICALL_MAX_BATCH_SIZE
      if (val) {
        MAXBATCHSIZE = Number.isSafeInteger(Number.parseFloat(val))
          ? Number.parseInt(val, 10)

@@ -12,8 +12,8 @@ const TestPage = ( ) =>
 
 
   return (
-    <div className="" >
-      <h2>TestPage</h2>
+    <div className="text-accent bg-primary" >
+      <h2 className='text-center text-base text-primary-content'>TestPage</h2>
       {t("test2.test2")}
     </div>
   )

@@ -26,7 +26,7 @@ return (
   <BrowserRouter>
     <I18nextProvider i18n={i18next} /* defaultNS={'translation'} */ >
 
-        <h1>TransferTokensApp</h1>
+        <h1 className='text-info text-4xl'>TransferTokensApp</h1>
 
         <TransferTokensAppPageLayout>
 
