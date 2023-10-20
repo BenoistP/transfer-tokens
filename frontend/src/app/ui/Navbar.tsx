@@ -3,7 +3,7 @@
 import { LanguageSelector } from "./LanguageSelector";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-// import { Avatar } from "./NavbarAvatar";
+import { Avatar } from "./NavbarAvatar";
 import { Status } from "./NavbarStatus";
 
 export const Navbar = () => {
@@ -21,16 +21,18 @@ export const Navbar = () => {
 
           <div className="navbar-center border border-neutral rounded-box p-2 bg-base-100">
             <div className="flex-auto justify-end ">
+
               <ConnectButton
                 accountStatus={{ smallScreen: 'address', largeScreen: 'address', }}
                 showBalance={true}
               />
+
             </div> 
           </div> {/* navbar-center */}
 
           <div className="navbar-end">
             <Status/>
-            {/* <Avatar/> */}
+            <Avatar/>
           </div>
 
 

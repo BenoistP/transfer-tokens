@@ -174,32 +174,39 @@ const testnetChains = [
           {/* <div className="w-full bg-neutral" > */}
           <div className="flex flex-col w-full h-screen pt-0 bg-base-100">
 
-            {/* Navbar */}
-            {/* <Navbar/> */}
 
             {/* Pages */}
             {config && chains ? (
                 <WagmiConfig config={config}>
 
+                  <GlobalAppProvider>
 
-                  <ThemeProvider enableSystem={false} themes={THEMES_NAMES}>
-                    <GlobalAppProvider>
+                    <ThemeProvider enableSystem={false} themes={THEMES_NAMES}>
+
+                      {/* Navbar */}
 
                       <RainbowOutletWrapper 
-                        children={children}
+                        children={
+
+                          <>
+                          <Navbar/>
+                          {children}
+                          </>
+
+                        }
                         chains={chains}
                       />
 
                       {/* {children} */}
 
-                    </GlobalAppProvider>
-                  </ThemeProvider>
+                    </ThemeProvider>
+
+                  </GlobalAppProvider>
 
                 </WagmiConfig>
               ) : null}
 
             <ContentBottomPadding/>
-            {/* Footer */}
             <Footer/>
 
           </div>
@@ -271,8 +278,9 @@ return (
     }}
     >
     {/* <CookiesProvider> */}
-        {children}
+        {/* {children} */}
     {/* </CookiesProvider> */}
+    <Navbar/>
   </RainbowKitProvider>
   </>
   );
