@@ -278,9 +278,9 @@ return (
     }}
     >
     {/* <CookiesProvider> */}
-        {/* {children} */}
+        {children}
     {/* </CookiesProvider> */}
-    <Navbar/>
+    {/* <Navbar/> */}
   </RainbowKitProvider>
   </>
   );

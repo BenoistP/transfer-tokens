@@ -297,7 +297,7 @@ const TokensListsSelect = ( {
                   </label>
                 </th>
                 <td colSpan={2}>
-                  <div className="font-bold">
+                  <div className="font-semibold text-md sm:text-base md:text-xl">
                    {t('moveTokens.stepZero.tokensListsTable.emptyList')}
                   </div>
                 </td>
