@@ -23,7 +23,7 @@ const TOKENS_LIST_REALT_API_LOGO = 'https://yt3.googleusercontent.com/ytc/AOPola
 // `https://raw.githubusercontent.com/Migratooor/tokenLists/${sha}/lists/summary.json`
 
 
-const TOKENS_LISTS: TTokensLists = [
+const TOKENS_LISTS_SOURCES: TTokensLists = [
   /* 
   {
     // Intentionnaly broken list
@@ -119,4 +119,4 @@ const TOKENS_LISTS: TTokensLists = [
  */
 ]
 
-export default TOKENS_LISTS;
+export default TOKENS_LISTS_SOURCES;
