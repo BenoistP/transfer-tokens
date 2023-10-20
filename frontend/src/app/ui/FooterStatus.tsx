@@ -3,16 +3,9 @@ import { useEffect, useState} from "react";
 // Context
 // import { useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
 
-// Translation
-// import { useTranslation } from 'react-i18next';
-
-import { useAccount , useNetwork, useBlockNumber, useEnsAvatar,/* useBalance */ 
-useBalance} from 'wagmi'
-
 // import { fetchBlockNumber } from 'wagmi/actions'
-// import { fetchBalance } from '@wagmi/core'
-
-import { watchBlockNumber/* , watchAccount */ } from '@wagmi/core'
+// import { useAccount , useNetwork, useBlockNumber, useEnsAvatar, useBalance} from 'wagmi'
+import { watchBlockNumber/* , watchAccount, fetchBalance */ } from '@wagmi/core'
 
 
 export const FooterStatus = () => {
@@ -74,12 +67,19 @@ export const FooterStatus = () => {
   // }
 
 
-    const unwatchBlockNumber = watchBlockNumber(
-      {// chainId: 1,
-        listen: true
-      },
-      (blockNumber) => blockNumberUpdate(blockNumber.toString()),
-    )
+  const unwatchBlockNumber = watchBlockNumber(
+    {// chainId: 1,
+      listen: true
+    },
+    (blockNumber) => blockNumberUpdate(blockNumber.toString()),
+  )
+
+  useEffect(() => {
+    return () => {
+      unwatchBlockNumber()
+    }
+  }, [unwatchBlockNumber])
+    
 
     // const unwatchAccount = watchAccount(
     //   (account) => accountUpdate(account),
