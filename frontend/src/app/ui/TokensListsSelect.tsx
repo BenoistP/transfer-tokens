@@ -202,7 +202,7 @@ const TokensListsSelect = ( {
     {
       try {
         // console.debug(`TokensListsSelect.tsx: handleInvertAllChecks`);
-        if (selectableTokensLists) {
+        if (selectableTokensLists && selectableTokensLists.length > 0) {
           const new_selectableTokensLists = [...selectableTokensLists];
           selectableTokensLists.map((selectableTokensList) => {
             selectableTokensList.selected = (selectableTokensList.selectable?!selectableTokensList.selected:false)
