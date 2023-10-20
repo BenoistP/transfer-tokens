@@ -12,12 +12,11 @@ import { useNetwork } from 'wagmi'
 // ------------------------------
 
 const TokensListsSelect = ( { 
-  // selectableTokensLists,
   tokensLists,
   // chainId,
   selectableTokensLists,
-  setselectableTokensLists,
-  }: ITokensListsSelectProps ) => {
+  setselectableTokensLists,  }: ITokensListsSelectProps ) =>
+  {
 
   // console.debug(`TokenListSelect.tsx render`)
   // console.debug(`TokenListSelect.tsx render: selectableTokensLists=${JSON.stringify(selectableTokensLists)}`)

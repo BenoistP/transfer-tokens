@@ -2,9 +2,9 @@
 
 // Coingecko 
 // Ethereum Mainnet
-const TOKENS_LIST__COINGECKO__ETHEREUM = 'https://tokens.coingecko.com/ethereum/all.json'
+// const TOKENS_LIST__COINGECKO__ETHEREUM = 'https://tokens.coingecko.com/ethereum/all.json'
 // Gnosis (xDAI)
-const TOKENS_LIST__COINGECKO__GNOSIS = 'https://tokens.coingecko.com/xdai/all.json'
+// const TOKENS_LIST__COINGECKO__GNOSIS = 'https://tokens.coingecko.com/xdai/all.json'
 
 // RealT API
 // BASE URL
@@ -14,12 +14,12 @@ const API__REALT_PUBLIC__LIST_ALL_TOKENS='v1/token'
 const TOKENS_LIST_REALT_API_LOGO = 'https://yt3.googleusercontent.com/ytc/AOPolaQLI9Vbm8mEvFilGnLm0wcbiKNF6RQxkKXJt9n5=s176-c-k-c0x00ffffff-no-rj'
 
 // Tokenlistooor Token List
-const TOKENS_LIST__TOKENLISTOOOR = 'https://raw.githubusercontent.com/Migratooor/tokenLists/main/lists/tokenlistooor.json'
+// const TOKENS_LIST__TOKENLISTOOOR = 'https://raw.githubusercontent.com/Migratooor/tokenLists/main/lists/tokenlistooor.json'
 
-const TOKENS_LIST__1INCH = 'https://raw.githubusercontent.com/SmolDapp/tokenLists/main/lists/1inch.json'
+// const TOKENS_LIST__1INCH = 'https://raw.githubusercontent.com/SmolDapp/tokenLists/main/lists/1inch.json'
 
 
-const META_TOKENS_LIST__TOKENLISTOOOR =  'https://api.github.com/repos/migratooor/tokenlists/commits?sha=main&per_page=1'
+// const META_TOKENS_LIST__TOKENLISTOOOR =  'https://api.github.com/repos/migratooor/tokenlists/commits?sha=main&per_page=1'
 // `https://raw.githubusercontent.com/Migratooor/tokenLists/${sha}/lists/summary.json`
 
 

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { /* useAccount , */ useNetwork, /* useBalance */ } from 'wagmi'
 import { isChainSupported } from "~/utils/blockchainUtils";
 import ProgressContainer from "./ProgressContainer";
 import StepsContainer from "./StepsContainer";
 import MainContentContainer from "./MainContentContainer";
+import { tokenLists as tokensLists_TokenData } from '@utils/tokensLists';
 // import { useMoveTokensAppContext } from "~/js/providers/MoveTokensAppProvider/MoveTokensAppContext";
 
 // import { useRouteLoaderData } from "@remix-run/react";
@@ -28,6 +29,11 @@ export const MainContent = ( /* { } :IContentProps */ ) => {
     const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
 
     // const [tokensLists, setTokensLists] = useState<TTokensLists>(tokensListsAppContext)
+
+    useEffect(() => {
+      setTokensLists(tokensLists_TokenData)
+    
+    }, [tokensLists_TokenData])
 
     // useEffect( () => {
     //   console.debug(`MainContent.tsx useEffect`)
