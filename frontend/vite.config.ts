@@ -8,4 +8,8 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
   ],
+  server: {
+    port: 3001,
+    open: "/public/index.html"
+  }
 })
