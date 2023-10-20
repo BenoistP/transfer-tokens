@@ -49,7 +49,7 @@ const TokensListsSelect = ( {
   const [checkAll, setCheckAll] = useState<boolean>(isAllChecked);
 
   // ---
-  
+
 /* 
   const SelectableTokensListsListMemo = useMemo(
     () =>
@@ -116,6 +116,7 @@ const TokensListsSelect = ( {
           selectable,
           currentChainTokensCount
         } // as TSelectableTokensList
+
         filteredSelectableTokensLists.push(selectableTokensList)
 
 
