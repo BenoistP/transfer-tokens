@@ -56,10 +56,6 @@ export const FooterStatus = () => {
 
   // ------------------------------
 
-  const blockNumberUpdate = (blockNumber:string) => {
-    // console.log('blockNumber', blockNumber);
-    setBlockNumber(blockNumber);
-  }
 
   // const accountUpdate = (account:string) => {
   //   console.log('account', account);
@@ -67,18 +63,26 @@ export const FooterStatus = () => {
   // }
 
 
-  const unwatchBlockNumber = watchBlockNumber(
-    {// chainId: 1,
-      listen: true
-    },
-    (blockNumber) => blockNumberUpdate(blockNumber.toString()),
-  )
 
   useEffect(() => {
+
+    const blockNumberUpdate = (blockNumber:string) => {
+      // console.log('blockNumber', blockNumber);
+      setBlockNumber(blockNumber);
+    }
+
+    const unwatchBlockNumber = watchBlockNumber(
+      {// chainId: 1,
+        listen: true
+      },
+      (blockNumber) => blockNumberUpdate(blockNumber.toString()),
+    )
+  
+
     return () => {
       unwatchBlockNumber()
     }
-  }, [unwatchBlockNumber])
+  }, [/* unwatchBlockNumber */])
     
 
     // const unwatchAccount = watchAccount(
