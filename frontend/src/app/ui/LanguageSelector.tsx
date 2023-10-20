@@ -1,5 +1,4 @@
-import React,
- {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import { useCookies } from "react-cookie";
 import { COOKIE_LANGUAGE } from "~/utils/constants/misc";
