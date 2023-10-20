@@ -7,7 +7,7 @@ import TransferTokensAppPageLayout from './TransferTokensAppPageLayout';
 import { MainContent } from './ui/MainContent';
 
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 // Translation
 import { I18nextProvider } from "react-i18next";
@@ -32,8 +32,7 @@ return (
 
           <Routes>
 
-            <Route
-              path={"/"}
+            <Route path={"/"}
                 element={
                   <Suspense fallback="loading">
 
@@ -43,6 +42,9 @@ return (
                   </Suspense>
                 }
             ></Route>
+
+            {/* default redirect to home page */}
+            <Route path="*" element={<Navigate to="/" />} />
 
           </Routes>
 
