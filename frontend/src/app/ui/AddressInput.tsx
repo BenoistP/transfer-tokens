@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState} from "react";
 import { checkAndFixAddress0xFormat, isValidAddress, checksumAddress } from "@jsutils/blockchainUtils";
-import { /* ADDRESS_MIN_SIZE, */ ADDRESS_MAX_SIZE, /* DEFAULT_TARGET_ADDRESS, */ NULL_ADDRESS } from "@jsutils/constants/addresses";
+import { /* ADDRESS_MIN_SIZE, */ ADDRESS_MAX_SIZE, /* DEFAULT_TARGET_ADDRESS, */ NULL_ADDRESS } from "~/js/constants/addresses";
 import { BackspaceIcon, CheckIcon, ExclamationTriangleIcon, InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
 // Context

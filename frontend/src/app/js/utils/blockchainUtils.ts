@@ -1,5 +1,5 @@
 // import { ETHEREUM_CHAIN_ID, XDAI_CHAIN_ID } from '~/utils/constants/chainIds';
-import { ETHEREUM_CHAIN_ID, XDAI_CHAIN_ID } from '@jsconsts/chainIds';
+import { ETHEREUM_CHAIN_ID, XDAI_CHAIN_ID } from '~/js/constants/chainIds';
 import { isAddress, getAddress } from 'viem'
 
 export const checkAndFixAddress0xFormat = (address:string|undefined) : AddressString  => {

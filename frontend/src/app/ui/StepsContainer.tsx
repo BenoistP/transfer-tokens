@@ -23,7 +23,7 @@ import { getContract, multicall } from '@wagmi/core'
 import { erc20ABI } from 'wagmi'
 import CoinBridgeToken from "@abis/CoinBridgeToken.json";
 // import { getPublicEnv } from "./public-env";
-import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT } from "@jsconsts/misc";
+import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT } from "~/js/constants/misc";
 
 // import { DEFAULT_TARGET_ADDRESS } from "~/utils/constants/addresses";
 // import { /* useAccount , */ useNetwork, /* useBalance */ } from 'wagmi'

@@ -1,5 +1,5 @@
 
-import TOKENS_LISTS_SOURCES from '@jsutils/constants/tokensLists'
+import TOKENS_LISTS_SOURCES from '~/js/constants/tokensLists'
 import { getTokensLists_TokenData } from '@jsutils/tokensListsUtils';
 
 // console.debug(`tokensLists.ts`)
