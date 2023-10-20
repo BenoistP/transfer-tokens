@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNetwork } from 'wagmi'
-import { isChainSupported } from "~/utils/blockchainUtils";
+import { isChainSupported } from "@jsutils/blockchainUtils";
 import ProgressContainer from "./ProgressContainer";
 import StepsContainer from "./StepsContainer";
 import MainContentContainer from "./MainContentContainer";
-import { tokenListsData } from '@utils/tokensLists';
+import { tokenListsData } from '@jsutils/tokensLists';
 
 export const MainContent = ( ) => {
 

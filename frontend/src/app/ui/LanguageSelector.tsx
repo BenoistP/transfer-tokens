@@ -1,9 +1,9 @@
 import {useCallback, useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import { useCookies } from "react-cookie";
-import { COOKIE_LANGUAGE } from "~/utils/constants/misc";
-import SUPPORTED_LANGUAGES from "~/js/ui/i18n/languages";
-import { useGlobalAppContext } from "~/js/providers/GlobalAppProvider/GlobalAppContext";
+import { COOKIE_LANGUAGE } from "@jsconsts/misc";
+import SUPPORTED_LANGUAGES from "@i18n/languages";
+import { useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
 
 // ---
 

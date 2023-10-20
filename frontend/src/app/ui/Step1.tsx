@@ -3,7 +3,7 @@ import { useEffect, /* useCallback,  useState */ } from "react";
 import AddressInput from "./AddressInput";
 import TokenInstanceListTable from "./TokenInstanceListTable";
 
-import { isValidAddress } from "~/utils/blockchainUtils";
+import { isValidAddress } from "@jsutils/blockchainUtils";
 
 // ------------------------------
 

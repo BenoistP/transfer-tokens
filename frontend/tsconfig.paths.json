@@ -10,15 +10,16 @@
       "@App/*": [
         "./src/app/*"
       ],
-      "@utils/*": [
-        "./src/app/utils/*"
-      ],
+      "@js/*": ["./src/app/js/*"],
+      "@jsutils/*": ["./src/app/js/utils/*"],
+      "@jsconsts/*": ["./src/app/js/utils/constants/*"],
       "@styles/*": ["./src/app/styles/*"],
       "@css/*": ["./app/styles/*"],
       "@ui/*": ["./src/app/ui/*"],
+      "@i18n/*": ["./src/app/js/ui/i18n/*"],
+      "@abis/*": ["./src/app/abis/*"],
 
       "@Providers/*": ["./src/app/js/providers/*"],
-      "@js/*": ["./src/app/js/*"],
       // "@components/*": ["components/*"],
       // "@hooks/*": ["components/hooks/*"],
       // "@Tailwind/*": ["components/Tailwind/*"],

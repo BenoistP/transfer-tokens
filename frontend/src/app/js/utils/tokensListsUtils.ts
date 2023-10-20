@@ -1,5 +1,4 @@
-import { t } from "i18next";
-import { forEach } from "lodash";
+// tokensListsUtils.ts
 
 const isValidUri = async( URI:TStringNullUndef ):Promise<boolean> => {
   try {
@@ -32,12 +31,13 @@ const getTokenListLogoUri = async(fetchedTokensList_logoURI:TStringNullUndef, to
         logoUriFetched = tokensList_logoURI;
       }
     }
+    return logoUriFetched;
   } catch (error) {
     console.error('moveTokens2._index.tsx: getTokenListLogo: error=', error);
-  }
-  finally {
     return logoUriFetched;
   }
+  // finally {
+  // }
   } // getTokenListLogoUri
 
 // ---
@@ -74,7 +74,7 @@ const getTokensList_TokenDataAsTokenChainDataArray = async(tokensList: any):Prom
     const newTokensListPromises = tokensList?.map( async(token:any) =>
     {
       try {
-        const { chainId, address, name, symbol, decimals, logoURI } = token
+        const { chainId, address, name, symbol, decimals/* , logoURI */ } = token
         // let {logoURI_} = token
         // const logoURI = await isValidUri(logoURI_)?logoURI_:null
         const tokenChainData = {
@@ -177,7 +177,7 @@ const getTokenChainDataArray_from_tokensLists = (tokensLists: TTokensLists):TTok
   {
     const tokenChainDataArray: TTokenChainDataArray = []
     // First Loop: for each list
-    tokensLists?.forEach( (tokensList:TTokensList, index:number) =>
+    tokensLists?.forEach( (tokensList:TTokensList/* , index:number */) =>
     {
       countForEachTokensLists++
       const { allTokensChainData } = tokensList
@@ -811,21 +811,25 @@ const getTokensList_TokenData_FromJsonLists = async(tokensListsJson: any):Promis
 
       const tokensLists = await Promise.all(tokensListsPromises as Promise<TTokensList>[]);
 
-      tokensLists.forEach( (tokensList:TTokensList) => {
-        // console.debug(`getTokensList_FromJsonLists: tokensList name=${tokensList.name} id=${tokensList.id} description=${tokensList.description} allTokensChainData?.length=${tokensList.allTokensChainData?.length} status=${tokensList.status} URI=${tokensList.URI}` );
-      })
+      // tokensLists.forEach( (tokensList:TTokensList) => {
+      //   // console.debug(`getTokensList_FromJsonLists: tokensList name=${tokensList.name} id=${tokensList.id} description=${tokensList.description} allTokensChainData?.length=${tokensList.allTokensChainData?.length} status=${tokensList.status} URI=${tokensList.URI}` );
+      // })
 
       return tokensLists
 
     } // if (uriTokensLists)
+    const elapsedLoop = Date.now() - startLoop
+    console.debug(`getTokensList_FromJsonLists: elapsedLoop=${elapsedLoop} DONE` );
 
   } catch (error) {
     console.debug(`getTokensList_FromJsonLists: error=${error}` );
-  }
-  finally {
-    var elapsedLoop = Date.now() - startLoop
+    const elapsedLoop = Date.now() - startLoop
     console.debug(`getTokensList_FromJsonLists: elapsedLoop=${elapsedLoop} DONE` );
   }
+  // finally {
+  //   var elapsedLoop = Date.now() - startLoop
+  //   console.debug(`getTokensList_FromJsonLists: elapsedLoop=${elapsedLoop} DONE` );
+  // }
 } // getTokensList_TokenData_FromJsonLists
 
 // ---
