@@ -79,3 +79,4 @@ Bugs :
 🚧 Migration fixes:
 🚧 - frontend/src/app/js/providers/MoveTokensAppProvider/MoveTokensAppContext.tsx
       Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.
+   - remove api keys
