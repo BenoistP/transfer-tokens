@@ -1222,7 +1222,8 @@ const StepsContainer = ( {
     },
     [
       // selectableTokensLists, chainId
-      selectableTokensLists, chainId, loadTokensOnChainData, EStepsLoadTokensData.stepLoadContracts, EStepsLoadTokensData.stepLoadNames, EStepsLoadTokensData.stepLoadSourceBalances, EStepsLoadTokensData.stepLoadDecimals, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility, connectedAddress, targetAddress, initTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar]
+      selectableTokensLists, chainId, loadTokensOnChainData, EStepsLoadTokensData.stepLoadContracts, EStepsLoadTokensData.stepLoadNames, EStepsLoadTokensData.stepLoadSourceBalances, EStepsLoadTokensData.stepLoadDecimals, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility, connectedAddress, targetAddress, initTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar
+    ]
   )
 
   /**
@@ -1276,7 +1277,6 @@ const StepsContainer = ( {
         }
         // await loadTokensOnChainData(tokens);
       } // loadOnChainDataAdditionalData
-      
 
       // ---
       try {
