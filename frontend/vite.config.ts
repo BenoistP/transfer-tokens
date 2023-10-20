@@ -9,7 +9,7 @@ export default defineConfig({
     tsconfigPaths(),
   ],
   server: {
-    port: 3001,
+    port: 8000,
     open: "/public/index.html"
   }
 })
