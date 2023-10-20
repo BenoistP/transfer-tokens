@@ -6,7 +6,6 @@ import TransferTokensAppPageLayout from './TransferTokensAppPageLayout';
 import TestPage from './TestPage';
 // import { MainContent } from './ui/MainContent';
 
-// import { MoveTokensAppProvider } from './js/providers/MoveTokensAppProvider/MoveTokensAppContext';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -26,7 +25,6 @@ const TransferTokensApp = ( /* {  } */ ) =>
 return (
   <BrowserRouter>
     <I18nextProvider i18n={i18next} /* defaultNS={'translation'} */ >
-{/*       <MoveTokensAppProvider> */}
 
         <h1>TransferTokensApp</h1>
 
@@ -50,7 +48,6 @@ return (
 
         </TransferTokensAppPageLayout>
 
-        {/* </MoveTokensAppProvider> */}
       </I18nextProvider>
   </BrowserRouter>
 
