@@ -105,7 +105,7 @@ const TokensListsSelect = ( {
         const chainTokensList = getChainTokensList(tokensList, chainId)
         // console.debug(`TokensListsSelect: useEffect: chainTokensList=`);
         // console.dir(chainTokensList);
-        
+
         const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
         const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
         // console.debug(`TokensListsSelect: useEffect: chainTokensList?.tokensCount=${chainTokensList?.tokensCount} tokensList.status=${tokensList.status} currentChainTokensCount=${currentChainTokensCount} selectable=${selectable}`);
@@ -147,7 +147,9 @@ const TokensListsSelect = ( {
     },
     [
       // tokensLists, chain?.id
-      tokensLists, chain?.id, selectableTokensLists, setselectableTokensLists]
+      // tokensLists, chain?.id, selectableTokensLists, setselectableTokensLists
+      tokensLists, chain?.id, 
+    ]
   )
 
   // ---
