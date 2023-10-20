@@ -70,7 +70,7 @@ export const MainContent = ( ) => {
               }
 
             </div>
-              {/* CONTENT ------------------- */}
+
           </div>
         </>
     );
