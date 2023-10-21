@@ -10,37 +10,37 @@ declare enum RealtTokenLoadStatus {
  */
 
 
-type AddressString = `0x${string}` ;
-type Address = AddressString | undefined ;
+// type AddressString = `0x${string}` ;
+// type Address = AddressString | undefined ;
 // type TokenContractAddress = Address | null;
-type TokenContractAddress = AddressString;
-type TokenContractNullableAddress = TokenContractAddress|null;
+// type TokenContractAddress = AddressString;
+// type TokenContractNullableAddress = TokenContractAddress|null;
 
-type AddressList = string[]|undefined|null;
+// type AddressList = string[]|undefined|null;
 
 // type AddressList<Address> = [Address, ...Address[]] | undefined | null | [];
 // type NonEmptyArray<T> = [T]
 // type AddressList = NonEmptyArray<AddressString>|[]|undefined|null;
 
 // type ChainId = number | undefined | null;
-type ChainId = number;
+// type ChainId = number;
 
 // type UndefNullableNumber = number|undefined|null;
-type UndefNullableString = string|undefined|null;
+// type UndefNullableString = string|undefined|null;
 
-type Index = number;//UndefNullableNumber;
+// type Index = number;//UndefNullableNumber;
 
-type UUID = string;
-type LastUpdateDate = string; // '2023-07-30 20:18:04.000000'
-type Timezone_type =  number; // 3
-type Timezone = string; // 'UTC'
+// type UUID = string;
+// type LastUpdateDate = string; // '2023-07-30 20:18:04.000000'
+// type Timezone_type =  number; // 3
+// type Timezone = string; // 'UTC'
 
-type RealTokenID = string;
+// type RealTokenID = string;
 
-type RealTokenBalance = {
-  value: TTokenAmount;
-  error: boolean;
-}
+// type RealTokenBalance = {
+//   value: TTokenAmount;
+//   error: boolean;
+// }
 
 // OLD type used in /app/ui/RealToken.tsx
 // type RealTokenData = {
@@ -51,6 +51,7 @@ type RealTokenBalance = {
 //   name: string;
 // }
 
+/*
 interface IGetContractAddress {
   (realtToken:IRealTokenReferenceData, chainId:number) : TokenContractNullableAddress;
 }
@@ -292,18 +293,21 @@ type TAppDataHandlersContext = {
   getLanguage: () => void,
   setlanguage: (lang:string) => void,
 }
+*/
 
 
 // ========================================================
 // New types
 // ========================================================
 
+/*
 // Loaders
 type RootLoaderData = {
   PUBLICENV: TPublicEnv,
   PRIVATEENV: TPrivateEnv,
   locale: string[]
 };
+*/
 
 
 
@@ -338,7 +342,7 @@ interface FlagIconProps {
   flagIconCountryCode: string;
 }
 
-
+type TUUID = string;
 type TAddressString = `0x${string}` ;
 type TAddressNullUndef = TAddressString | TNullUndef ;
 type TAddressEmpty = TAddressString | "" ;
@@ -599,7 +603,7 @@ type TRealTokenReferenceData = {
   symbol: string,
   tokenPrice: number,
   currency: string,
-  uuid: UUID,
+  uuid: TUUID,
   ethereumContract: TokenContractNullableAddress,
   xDaiContract: TokenContractNullableAddress,
   gnosisContract: TokenContractNullableAddress,
@@ -680,6 +684,11 @@ type TTokenInstanceUserData = {
   canTransfer: boolean;
 }
 
+type TokenID = string;
+
+interface IChangeCheckboxStatus {
+  (id: TokenID) : void;
+}
 interface ITF_ProgressBar {
   showProgressBar: boolean;
   progressPercentage: number;
