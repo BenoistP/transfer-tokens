@@ -46,6 +46,12 @@ https://play.tailwindcss.com/OPAsySKNCd
 ☑️ 🚧 Move tokens 🏠🏡
 🗒 🚧 progressive list loading
 
+
+All Steps : 🚧 
+- 🚧 Handle chain change
+
+
+
 Step 1: 🚧 
 - Watch for balances changes 👀
 
