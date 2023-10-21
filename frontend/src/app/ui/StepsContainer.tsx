@@ -663,9 +663,9 @@ const StepsContainer = ( {
      console.error(`StepsContainer.tsx getMaxBatchSize error: ${error}`);
      return MAXBATCHSIZE
    }
-   finally {
-     console.debug(`StepsContainer.tsx getMaxBatchSize MAXBATCHSIZE: ${MAXBATCHSIZE}`);
-   }
+  //  finally {
+  //    console.debug(`StepsContainer.tsx getMaxBatchSize MAXBATCHSIZE: ${MAXBATCHSIZE}`);
+  //  }
   }
 
   const MAXBATCHSIZE:number = useMemo( () =>
@@ -1222,7 +1222,10 @@ const StepsContainer = ( {
     },
     [
       // selectableTokensLists, chainId
-      selectableTokensLists, chainId, loadTokensOnChainData, EStepsLoadTokensData.stepLoadContracts, EStepsLoadTokensData.stepLoadNames, EStepsLoadTokensData.stepLoadSourceBalances, EStepsLoadTokensData.stepLoadDecimals, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility, connectedAddress, targetAddress, initTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar
+      selectableTokensLists, chainId, loadTokensOnChainData,
+      EStepsLoadTokensData.stepLoadContracts, EStepsLoadTokensData.stepLoadNames, EStepsLoadTokensData.stepLoadSourceBalances,
+      EStepsLoadTokensData.stepLoadDecimals, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
+      connectedAddress, targetAddress, initTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar
     ]
   )
 
