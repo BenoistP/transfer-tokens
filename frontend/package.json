@@ -1,43 +1,66 @@
 {
-  "name": "transfer-tokens",
-  "version": "0.1.0",
+  "name": "my-vue-app",
   "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/react": "^18.2.28",
-    "@types/react-dom": "^18.2.13",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "serve": "vite preview",
+    "cleanAll": "npm run cleanBuildDir && npm run npm:cleanCache && npm run cleanNodeModules",
+    "cleanBuildDir": "del-cli ./dist",
+    "cleanNodeModules": "del-cli ./node_modules",
+    "npm:cleanCache": "npm cache clean -f",
+    "pnpm:installOrUpdate": "pnpm add -g pnpm"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "@dicebear/collection": "^7.0.1",
+    "@dicebear/core": "^7.0.1",
+    "@heroicons/react": "^2.0.18",
+    "@rainbow-me/rainbowkit": "^1.1.2",
+    "@wagmi/core": "^1.4.4",
+    "exiftool-vendored": "^23.3.0",
+    "flag-icons": "^6.11.1",
+    "i18next": "^23.6.0",
+    "i18next-browser-languagedetector": "^7.1.0",
+    "i18next-http-backend": "^2.2.2",
+    "jsonata": "^2.0.3",
+    "lodash": "^4.17.21",
+    "next-themes": "^0.2.1",
+    "react": "^18.2.0",
+    "react-cookie": "^6.1.1",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^13.3.1",
+    "react-router-dom": "^6.17.0",
+    "viem": "^1.16.6",
+    "wagmi": "^1.4.4",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "tailwindcss": "^3.3.3"
-  }
+    "@types/lodash": "^4.14.200",
+    "@types/node": "^20.8.7",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.16",
+    "daisyui": "^3.9.3",
+    "del-cli": "^5.1.0",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "postcss": "^8.4.31",
+    "tailwind-scrollbar": "^3.0.5",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vite-tsconfig-paths": "^4.2.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "pnpm@8.6.11"
 }
