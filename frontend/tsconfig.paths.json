@@ -12,10 +12,11 @@
       ],
       "@js/*": ["./src/app/js/*"],
       "@jsutils/*": ["./src/app/js/utils/*"],
-      "@jsconsts/*": ["./src/app/js/utils/constants/*"],
+      "@jsconsts/*": ["./src/app/js/constants/*"],
       "@styles/*": ["./src/app/styles/*"],
-      "@css/*": ["./app/styles/*"],
+      "@css/*": ["./src/app/styles/*"],
       "@ui/*": ["./src/app/ui/*"],
+      "@jsui/*": ["./src/app/js/ui/*"],
       "@i18n/*": ["./src/app/js/ui/i18n/*"],
       "@abis/*": ["./src/app/abis/*"],
 

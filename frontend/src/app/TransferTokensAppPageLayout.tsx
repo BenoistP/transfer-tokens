@@ -5,7 +5,6 @@ import { Navbar } from './ui/Navbar'
 import { Footer } from './ui/Footer'
 import { MoveTokensAppProvider } from './js/providers/MoveTokensAppProvider/MoveTokensAppContext'
 import { ContentBottomPadding } from './ui/ContentBottomPadding'
-// import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 
 // Components
 
@@ -13,10 +12,10 @@ import { ContentBottomPadding } from './ui/ContentBottomPadding'
 import { ThemeProvider, useTheme } from "next-themes";
 import { GlobalAppProvider, useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
 
+import { DEFAULT_GNOSIS_ICON_URL } from '@jsui/uiConsts';
 // Cookies
 import { CookiesProvider } from "react-cookie";
 // import { useCookies } from "react-cookie";
-
 
 import { configureChains, createConfig, WagmiConfig, Chain  } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
@@ -26,13 +25,11 @@ import { alchemyProvider } from 'wagmi/providers/alchemy'
 import THEMES_NAMES from "./js/ui/themes/themes";
 
 import {
-  mainnet,
-  gnosis,
+  // Mainnets
+  mainnet, gnosis,
   // polygon, optimism, arbitrum,
-  // zora,
   // Testnets
-  goerli, sepolia,
-  gnosisChiado
+  goerli, sepolia, gnosisChiado
 } from 'wagmi/chains';
 
 import { RainbowKitProvider, connectorsForWallets,
@@ -59,13 +56,9 @@ type PageProps = {
 // console.debug(`(root)(App) import.meta.env.APIKEY_INFURA:`, import.meta.env.APIKEY_INFURA)
 // console.debug(`(root)(App) import.meta.env.APIKEY_WALLET_CONNECT:`, import.meta.env.APIKEY_WALLET_CONNECT)
 
-
-
 const TransferTokensAppPageLayout = ( { children, }: PageProps ) =>
 {
   // ---
-  const DEFAULT_GNOSIS_ICON_URL='https://gnosisscan.io/images/svg/brands/main.svg'
-
   const mainnetChains = [
   mainnet,
   // polygon, optimism, arbitrum,
