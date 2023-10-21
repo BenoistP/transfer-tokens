@@ -1232,7 +1232,7 @@ const StepsContainer = ( {
       EStepsLoadTokensData.stepLoadContracts, EStepsLoadTokensData.stepLoadNames, EStepsLoadTokensData.stepLoadSourceBalances,
       EStepsLoadTokensData.stepLoadDecimals, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
       connectedAddress,
-      // targetAddress,
+      targetAddress,
       loadTokensOnChainData, initTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar
     ]
   ) // useEffect loadOnChainData
@@ -1241,7 +1241,7 @@ const StepsContainer = ( {
    * useEffect: complete onchain data loading
    *  - targetAddress and canTransfer
    */
-
+/*
   useEffect( () =>
     {
 
@@ -1317,7 +1317,8 @@ const StepsContainer = ( {
       }
     },
     [
-      // targetAddress, isLoading/* tokensInstances */
+      // targetAddress, isLoading
+      // , tokensInstances,
       connectedAddress, targetAddress,
       isLoading,
       // tokensInstances,
@@ -1325,8 +1326,7 @@ const StepsContainer = ( {
       loadTokensOnChainData, decreaseAndHideProgressBar
     ]
   ) // useEffect loadOnChainDataAdditionalData
-
- 
+*/ 
 
   // ---------------------------------------------------
 
