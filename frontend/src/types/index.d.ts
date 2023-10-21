@@ -448,7 +448,6 @@ type TSelectableTokensList = {
   selectable: boolean,
   selected: boolean,
   currentChainTokensCount: TtokenCount,
-  // filteredTokensList: TFilteredTokensList,
 }
 
 // type TChainTokensList = {
@@ -521,6 +520,7 @@ type TChainTokensList = {
   chainId: TChainId,
   tokensCount: TtokenCount,
   tokens: TTokenChainDataArray,
+  tokensInstances: TTokensInstances,
 }
 
 
