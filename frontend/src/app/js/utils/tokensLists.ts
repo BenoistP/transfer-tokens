@@ -5,7 +5,7 @@ import { getTokensLists_TokenData } from '@jsutils/tokensListsUtils';
 // console.debug(`tokensLists.ts`)
 
 const getTokenLists = async(tokenLists:TTokensLists) => {
-  const tokensLists_TokenData = await getTokensLists_TokenData(tokenLists)
+  const tokensLists_TokenData = await getTokensLists_TokenData(tokenLists) // Load token data from token lists
   return tokensLists_TokenData;
 }
 
