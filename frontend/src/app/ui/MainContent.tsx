@@ -21,7 +21,7 @@ export const MainContent = ( ) => {
     // ---
 
     useEffect(() => {
-      setTokensLists(tokenListsData)
+      setTokensLists(tokenListsData) // Set inital token list data
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tokenListsData])
 
