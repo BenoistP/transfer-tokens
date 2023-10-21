@@ -54,6 +54,7 @@ All Steps : 🚧
 
 Step 1: 🚧 
 - Watch for balances changes 👀
+- Ethereum data is not loaded ?
 
 Step 3: 🚧 
 - ☑️ Fix list loading bug/missing icons (all/none & lock)
