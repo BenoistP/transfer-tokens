@@ -2,13 +2,13 @@
 import { ETHEREUM_CHAIN_ID, XDAI_CHAIN_ID } from '~/js/constants/chainIds';
 import { isAddress, getAddress } from 'viem'
 
-export const checkAndFixAddress0xFormat = (address:string|undefined) : AddressString  => {
+export const checkAndFixAddress0xFormat = (address:string|undefined) : TAddressString  => {
 
   if (address) {
     if (address.startsWith('0x')) {
-      return address as AddressString;
+      return address as TAddressString;
     }
-    return '0x' + address as AddressString;
+    return '0x' + address as TAddressString;
   }
   return '0x';
 }
@@ -33,7 +33,7 @@ export const isValidAddress = (address:string) : boolean  => {
   return false;
 }
 
-export const checksumAddress = (address:AddressString) : AddressString  => {
+export const checksumAddress = (address:TAddressString) : TAddressString  => {
 let addressChecksummed = address;
 try {
   let checksummed = "";
@@ -45,7 +45,7 @@ try {
       console.error('checksumAddress getAddress error', error);
     }
     if (checksummed.startsWith('0x') ) {
-      addressChecksummed = checksummed as AddressString;
+      addressChecksummed = checksummed as TAddressString;
     }
   }
 } catch (error) {
@@ -54,7 +54,7 @@ try {
   return addressChecksummed;
 }
 
-export const isChainSupported = (chainId:ChainId|undefined|null) : boolean => {
+export const isChainSupported = (chainId:TChainIdNullUndef) : boolean => {
   if (chainId) {
     if (chainId === ETHEREUM_CHAIN_ID || chainId === XDAI_CHAIN_ID) {
       return true;

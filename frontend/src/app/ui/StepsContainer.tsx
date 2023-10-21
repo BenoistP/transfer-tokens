@@ -557,27 +557,27 @@ const StepsContainer = ( {
 
   // ---------------------------------------------------
 
-  const initTokensInstances = useCallback( (chainId:TChainId, selectableTokensLists:TSelectableTokensLists):TTokensInstances =>
+  const getTokensInstances = useCallback( (chainId:TChainId, selectableTokensLists:TSelectableTokensLists):TTokensInstances =>
     {
       try {
         // setisLoading(true)
-        console.debug(`StepsContainer.tsx initTokensInstances`)
+        console.debug(`StepsContainer.tsx getTokensInstances`)
 
 
         const chainsTokensLists:TChainsTokensListArrayNullUndef = [];
         const tokensInstances:TTokensInstances = [];
-        // console.debug(`StepsContainer.tsx initTokensInstances: tokensLists=${tokensLists}`)
-        // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensLists=${selectableTokensLists}`)
+        // console.debug(`StepsContainer.tsx getTokensInstances: tokensLists=${tokensLists}`)
+        // console.debug(`StepsContainer.tsx getTokensInstances: selectableTokensLists=${selectableTokensLists}`)
 
         // selectableTokensLists?.forEach( (selectableTokensList:TSelectableTokensList) => {
-        //   // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensList=${selectableTokensList}`)
-        //   // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensList=${selectableTokensList}`)
+        //   // console.debug(`StepsContainer.tsx getTokensInstances: selectableTokensList=${selectableTokensList}`)
+        //   // console.debug(`StepsContainer.tsx getTokensInstances: selectableTokensList=${selectableTokensList}`)
         //   if (selectableTokensList.selected && selectableTokensList.chainId == chainId) {
-        //     // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensList.selected=${selectableTokensList.selected}`)
+        //     // console.debug(`StepsContainer.tsx getTokensInstances: selectableTokensList.selected=${selectableTokensList.selected}`)
         //     tokensLists?.forEach( (tokensList:TTokensList) => {
-        //       // console.debug(`StepsContainer.tsx initTokensInstances: tokensList.id=${tokensList.id}`)
+        //       // console.debug(`StepsContainer.tsx getTokensInstances: tokensList.id=${tokensList.id}`)
         //       if (tokensList.id == selectableTokensList.tokensList.id) {
-        //         // console.debug(`StepsContainer.tsx initTokensInstances: MATCH tokensList.id == selectableTokensList.tokensList.id  tokensList.id=${tokensList.id}`)
+        //         // console.debug(`StepsContainer.tsx getTokensInstances: MATCH tokensList.id == selectableTokensList.tokensList.id  tokensList.id=${tokensList.id}`)
         //         const chainTokensList = getChainTokensList(tokensList, chainId) // TChainsTokensListNullUndef
         //         chainsTokensLists.push(chainTokensList)
         //       }
@@ -587,13 +587,13 @@ const StepsContainer = ( {
 
         const selectedTokenLists = getSelectedTokenLists(selectableTokensLists);
         selectedTokenLists?.map( (selectedTokenList:TSelectableTokensList) => {
-          console.debug(`<StepsContain></StepsContain>er.tsx initTokensInstances: selectedTokenList=${selectedTokenList}`)
+          console.debug(`StepsContainer.tsx getTokensInstances: selectedTokenList=${selectedTokenList}`)
           // Find selected tokensList in all tokensLists
           
           tokensLists?.forEach( (tokensList:TTokensList) => {
-            // console.debug(`StepsContainer.tsx initTokensInstances: tokensList.id=${tokensList.id}`)
+            // console.debug(`StepsContainer.tsx getTokensInstances: tokensList.id=${tokensList.id}`)
             if (tokensList.id == selectedTokenList.tokensList.id) {
-              console.debug(`StepsContainer.tsx initTokensInstances: MATCH tokensList.id == selectedTokenList.tokensList.id  tokensList.id=${tokensList.id}`)
+              console.debug(`StepsContainer.tsx getTokensInstances: MATCH tokensList.id == selectedTokenList.tokensList.id  tokensList.id=${tokensList.id}`)
               const chainTokensList = getChainTokensList(tokensList, chainId) // TChainsTokensListNullUndef
               chainsTokensLists.push(chainTokensList)
             }
@@ -602,64 +602,77 @@ const StepsContainer = ( {
         })
         console.dir(chainsTokensLists)
 
-        // console.debug(`StepsContainer.tsx initTokensInstances: chainsTokensLists to TTokenChainDataArray`)
+        // console.debug(`StepsContainer.tsx getTokensInstances: chainsTokensLists to TTokenChainDataArray`)
         if (chainsTokensLists && chainsTokensLists?.length > 0) {
           let tokensCount = 0
           chainsTokensLists.forEach( (chainTokensList:TChainsTokensListNullUndef) => {
             if (chainTokensList) {
-              // console.debug(`StepsContainer.tsx initTokensInstances: chainTokensList.chainId=${chainTokensList.chainId} chainTokensList.tokensCount=${chainTokensList.tokensCount}`)
-              chainTokensList.tokens?.forEach( (token:TTokenChainData) => {
-                if (token?.address) {
-                  const tokenInstanceUserDataArray:TTokenInstanceUserData[] = new Array<TTokenInstanceUserData>()
-                  // console.debug(`StepsContainer.tsx initTokensInstances: typeof connectedAddress=${typeof connectedAddress}`)
-                  if (connectedAddress && typeof connectedAddress == 'string') {
-                    // const connectedAddressLC:any = connectedAddress.toLowerCase()
-                    tokenInstanceUserDataArray[connectedAddress as any] = ({
-                      selected: false,
-                      balance: null,
-                      transferAmount: 0n,
-                      canTransfer: false,
-                    } as TTokenInstanceUserData)
-                    }
-                  tokensInstances.push({
-                    chainId: chainId,
-                    type: (token.extraData && token.extraData.type ? token.extraData.type : "ERC20" as TTokenType),
-                    address: token.address,
-                    contract: null,
-                    decimals: 18,
-                    name: "",
-                    symbol: "",
-                    status: 0,
-                    displayed: true,
-                    displayId: ++tokensCount,
-                    selectable: false,
-                    userData: tokenInstanceUserDataArray,
-                  } as TTokenInstance )
-                }
-              })
-            }
+
+              if (chainTokensList.tokensCount != chainTokensList.tokensInstances?.length) {
+                // Init tokensInstances
+                console.debug(`StepsContainer.tsx getTokensInstances: (re)Init chainTokensList.tokensInstances chainTokensList.tokensCount=${chainTokensList.tokensCount} chainTokensList.tokensInstances?.length=${chainTokensList.tokensInstances?.length}`)
+                const chainTokensList_tokensInstances:TTokensInstances = [];
+                // console.debug(`StepsContainer.tsx getTokensInstances: chainTokensList.chainId=${chainTokensList.chainId} chainTokensList.tokensCount=${chainTokensList.tokensCount}`)
+                chainTokensList.tokens?.forEach( (token:TTokenChainData) => {
+                  if (token?.address) {
+                    const tokenInstanceUserDataArray:TTokenInstanceUserData[] = new Array<TTokenInstanceUserData>()
+                    // console.debug(`StepsContainer.tsx getTokensInstances: typeof connectedAddress=${typeof connectedAddress}`)
+                    if (connectedAddress && typeof connectedAddress == 'string') {
+                      // const connectedAddressLC:any = connectedAddress.toLowerCase()
+                      tokenInstanceUserDataArray[connectedAddress as any] = ({
+                        selected: false,
+                        balance: null,
+                        transferAmount: 0n,
+                        canTransfer: false,
+                      } as TTokenInstanceUserData)
+                      }
+                    chainTokensList_tokensInstances.push({
+                    // tokensInstances.push({
+                      chainId: chainId,
+                      type: (token.extraData && token.extraData.type ? token.extraData.type : "ERC20" as TTokenType),
+                      address: token.address,
+                      contract: null,
+                      decimals: 18,
+                      name: "",
+                      symbol: "",
+                      status: 0,
+                      displayed: true,
+                      displayId: ++tokensCount,
+                      selectable: false,
+                      userData: tokenInstanceUserDataArray,
+                    } as TTokenInstance )
+                  }
+                })
+                chainTokensList.tokensInstances = chainTokensList_tokensInstances;
+                
+              } // if (chainTokensList.tokensCount != chainTokensList.tokensInstances?.length)
+              else {
+                console.debug(`StepsContainer.tsx getTokensInstances: chainTokensList.tokensInstances ALREADY INITIALIZED chainTokensList.tokensCount=${chainTokensList.tokensCount} chainTokensList.tokensInstances?.length=${chainTokensList.tokensInstances?.length}`)
+              }
+              tokensInstances.push(...chainTokensList.tokensInstances)
+            } // if (chainTokensList && chainTokensList.tokensCount != chainTokensList.tokensInstances?.length)
+
           })
-          console.debug(`StepsContainer.tsx initTokensInstances: chainsTokensLists.length=${chainsTokensLists.length}`)
+          console.debug(`StepsContainer.tsx getTokensInstances: chainsTokensLists.length=${chainsTokensLists.length}`)
         }
         else {
           // settokensInstances(null)
-          console.debug(`StepsContainer.tsx initTokensInstances: chainsTokensLists.length <= 00`)
+          console.debug(`StepsContainer.tsx getTokensInstances: chainsTokensLists.length <= 00`)
           
         }
 
-        // console.debug(`StepsContainer.tsx initTokensInstances: tokensInstances.length=${tokensInstances.length}`)
+        // console.debug(`StepsContainer.tsx getTokensInstances: tokensInstances.length=${tokensInstances.length}`)
         // setisLoading(false)
         return tokensInstances // RETURN
       } catch (error) {
-        console.error(`StepsContainer.tsx initTokensInstances: error=${error}`)
+        console.error(`StepsContainer.tsx getTokensInstances: error=${error}`)
       }
 
       return null // RETURN
-
     },
     //     tokensLists, selectableTokensLists, chainId
     [tokensLists, connectedAddress, getSelectedTokenLists]
-  ) // initTokensInstances
+  ) // getTokensInstances
 
 
 /*
@@ -1237,7 +1250,7 @@ const StepsContainer = ( {
               }
               return tokenInstanceContract;
             })
-            // console.dir(tokensInstancesAllData)
+            console.dir(tokensInstancesAllData)
             setisLoading(false)
             return tokensInstancesAllData;
             } // if tokensInstancesCount > 0
@@ -1263,18 +1276,14 @@ const StepsContainer = ( {
 
         console.debug(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: chainId=${chainId} selectableTokensLists.length=${selectableTokensLists?.length} hasSomeTokenListSelected(selectableTokensLists)= ${hasSomeTokenListSelected(selectableTokensLists) }`)
 
+        // Are some token lists selected ?
         if (chainId && hasSomeTokenListSelected(selectableTokensLists)) {
           
-          // const tokenChainDataArray = getTokensCB(chainId, selectableTokensLists)
-          // settokens(tokenChainDataArray)
-
-
-          // vérifier si il y a des LISTES de tokens sélectionnées
-
           // vérifier si les tokens sont déjà chargés
+          
 
 
-          const _tokensInstances = initTokensInstances(chainId, selectableTokensLists)
+          const _tokensInstances = getTokensInstances(chainId, selectableTokensLists)
           // settokensDataState(EStepsLoadTokensData.stepLoadContracts)
           // settokensInstances(_tokensInstances)
           if (_tokensInstances &&_tokensInstances.length > 0) {
@@ -1321,7 +1330,7 @@ const StepsContainer = ( {
       EStepsLoadTokensData.stepLoadDecimals, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
       connectedAddress,
       targetAddress,
-      loadTokensOnChainData, initTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar,
+      loadTokensOnChainData, getTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar,
       
       hasSomeTokenListSelected
     ]
