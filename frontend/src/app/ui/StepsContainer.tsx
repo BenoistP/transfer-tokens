@@ -509,35 +509,101 @@ const StepsContainer = ( {
 
   // ---
 
+  const hasSomeTokenListSelected = useCallback( (_selectableTokensLists:TSelectableTokensLists):boolean =>
+    {
+      try {
+        console.debug(`StepsContainer.tsx hasSomeTokenListSelected _selectableTokensLists=`)
+        console.dir(_selectableTokensLists)
+        if (!_selectableTokensLists) return false
+        return _selectableTokensLists?.some( (selectableTokensList:TSelectableTokensList) => {
+        // console.debug(`StepsContainer.tsx hasSomeTokenListSelected _selectableTokensList=${_selectableTokensList}`)
+          console.debug(`StepsContainer.tsx hasSomeTokenListSelected selectableTokensList.selected = ${selectableTokensList.selected} selectableTokensList.chainId == ${selectableTokensList.chainId} chainId=${chainId} selectableTokensList.selected && selectableTokensList.chainId == chainId = ${selectableTokensList.selected && selectableTokensList.chainId == chainId}`)
+          return (selectableTokensList.selected && selectableTokensList.chainId == chainId)
+          // return (true)
+        })
+        // return res
+        // console.debug(`StepsContainer.tsx hasSomeTokenListSelected hasSelected=${hasSelected}`)
+      } catch (error) {
+        console.error(`StepsContainer.tsx hasSomeTokenListSelected error: ${error}`);
+      }
+      return false
+    },
+    [chainId/* , selectableTokensLists */]
+  ) // hasSomeTokenListSelected
+
+  // ---
+
+  const getSelectedTokenLists = useCallback( (selectableTokensLists:TSelectableTokensLists):TSelectableTokensLists =>
+    {
+      try {
+        // console.debug(`StepsContainer.tsx getSelectedTokenLists selectableTokensLists=${selectableTokensLists}`)
+        // let selectedTokenList:TSelectableTokensList = null
+        const selectedTokensLists = selectableTokensLists?.filter( (selectableTokensList:TSelectableTokensList) => {
+          // console.debug(`StepsContainer.tsx getSelectedTokenLists selectableTokensList=${selectableTokensList}`)
+          return selectableTokensList.selected && selectableTokensList.chainId == chainId
+        })
+        console.debug(`StepsContainer.tsx selectedTokensLists?.length = ${selectedTokensLists?.length} `)
+        console.dir(selectedTokensLists)
+        return selectedTokensLists;
+      } catch (error) {
+        console.error(`StepsContainer.tsx getSelectedTokenLists error: ${error}`);
+        return null;
+      }
+    },
+    [chainId]
+  ) // getSelectedTokenLists
+
+  // (selectableTokensList.selected && selectableTokensList.chainId == chainId)
+
   // ---------------------------------------------------
 
   const initTokensInstances = useCallback( (chainId:TChainId, selectableTokensLists:TSelectableTokensLists):TTokensInstances =>
     {
       try {
-        setisLoading(true)
-        // console.debug(`StepsContainer.tsx initTokensInstances`)
+        // setisLoading(true)
+        console.debug(`StepsContainer.tsx initTokensInstances`)
+
+
         const chainsTokensLists:TChainsTokensListArrayNullUndef = [];
         const tokensInstances:TTokensInstances = [];
         // console.debug(`StepsContainer.tsx initTokensInstances: tokensLists=${tokensLists}`)
         // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensLists=${selectableTokensLists}`)
-        selectableTokensLists?.forEach( (selectableTokensList:TSelectableTokensList) => {
-          // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensList=${selectableTokensList}`)
-          // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensList=${selectableTokensList}`)
-          if (selectableTokensList.selected && selectableTokensList.chainId == chainId) {
-            // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensList.selected=${selectableTokensList.selected}`)
-            tokensLists?.forEach( (tokensList:TTokensList) => {
-              // console.debug(`StepsContainer.tsx initTokensInstances: tokensList.id=${tokensList.id}`)
-              if (tokensList.id == selectableTokensList.tokensList.id) {
-                // console.debug(`StepsContainer.tsx initTokensInstances: MATCH tokensList.id == selectableTokensList.tokensList.id  tokensList.id=${tokensList.id}`)
-                const chainTokensList = getChainTokensList(tokensList, chainId) // TChainsTokensListNullUndef
-                chainsTokensLists.push(chainTokensList)
-              }
-            }) // tokensLists?.forEach
-          }
-        }) // selectableTokensLists?.forEach
+
+        // selectableTokensLists?.forEach( (selectableTokensList:TSelectableTokensList) => {
+        //   // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensList=${selectableTokensList}`)
+        //   // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensList=${selectableTokensList}`)
+        //   if (selectableTokensList.selected && selectableTokensList.chainId == chainId) {
+        //     // console.debug(`StepsContainer.tsx initTokensInstances: selectableTokensList.selected=${selectableTokensList.selected}`)
+        //     tokensLists?.forEach( (tokensList:TTokensList) => {
+        //       // console.debug(`StepsContainer.tsx initTokensInstances: tokensList.id=${tokensList.id}`)
+        //       if (tokensList.id == selectableTokensList.tokensList.id) {
+        //         // console.debug(`StepsContainer.tsx initTokensInstances: MATCH tokensList.id == selectableTokensList.tokensList.id  tokensList.id=${tokensList.id}`)
+        //         const chainTokensList = getChainTokensList(tokensList, chainId) // TChainsTokensListNullUndef
+        //         chainsTokensLists.push(chainTokensList)
+        //       }
+        //     }) // tokensLists?.forEach
+        //   }
+        // }) // selectableTokensLists?.forEach
+
+        const selectedTokenLists = getSelectedTokenLists(selectableTokensLists);
+        selectedTokenLists?.map( (selectedTokenList:TSelectableTokensList) => {
+          console.debug(`<StepsContain></StepsContain>er.tsx initTokensInstances: selectedTokenList=${selectedTokenList}`)
+          // Find selected tokensList in all tokensLists
+          
+          tokensLists?.forEach( (tokensList:TTokensList) => {
+            // console.debug(`StepsContainer.tsx initTokensInstances: tokensList.id=${tokensList.id}`)
+            if (tokensList.id == selectedTokenList.tokensList.id) {
+              console.debug(`StepsContainer.tsx initTokensInstances: MATCH tokensList.id == selectedTokenList.tokensList.id  tokensList.id=${tokensList.id}`)
+              const chainTokensList = getChainTokensList(tokensList, chainId) // TChainsTokensListNullUndef
+              chainsTokensLists.push(chainTokensList)
+            }
+          }) // tokensLists?.forEach
+          
+        })
+        console.dir(chainsTokensLists)
 
         // console.debug(`StepsContainer.tsx initTokensInstances: chainsTokensLists to TTokenChainDataArray`)
-        if (chainsTokensLists?.length > 0) {
+        if (chainsTokensLists && chainsTokensLists?.length > 0) {
           let tokensCount = 0
           chainsTokensLists.forEach( (chainTokensList:TChainsTokensListNullUndef) => {
             if (chainTokensList) {
@@ -573,12 +639,16 @@ const StepsContainer = ( {
               })
             }
           })
-        } else {
-          settokensInstances(null)
+          console.debug(`StepsContainer.tsx initTokensInstances: chainsTokensLists.length=${chainsTokensLists.length}`)
+        }
+        else {
+          // settokensInstances(null)
+          console.debug(`StepsContainer.tsx initTokensInstances: chainsTokensLists.length <= 00`)
+          
         }
 
         // console.debug(`StepsContainer.tsx initTokensInstances: tokensInstances.length=${tokensInstances.length}`)
-        setisLoading(false)
+        // setisLoading(false)
         return tokensInstances // RETURN
       } catch (error) {
         console.error(`StepsContainer.tsx initTokensInstances: error=${error}`)
@@ -588,7 +658,7 @@ const StepsContainer = ( {
 
     },
     //     tokensLists, selectableTokensLists, chainId
-    [tokensLists, connectedAddress]
+    [tokensLists, connectedAddress, getSelectedTokenLists]
   ) // initTokensInstances
 
 
@@ -1134,11 +1204,12 @@ const StepsContainer = ( {
       const loadOnChainData = async (tokensInstances:TTokensInstances):Promise<TTokensInstances> => {
         const start:number = Date.now()
         try {
+          console.debug(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: loadOnChainData`)
           const tokensInstancesCount = tokensInstances?.length||0;
           if (tokensInstancesCount > 0) {
 
             setisLoading(true)
-            // console.debug(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: loadOnChainData`)
+            console.debug(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: loadOnChainData tokensInstancesCount > 0`)
             // const targetAddress = ""
             const tokensInstancesContracts = await loadTokensOnChainData(tokensInstances,EStepsLoadTokensData.stepLoadContracts,true,null,"", true)
             settokensInstances(tokensInstancesContracts)
@@ -1170,6 +1241,9 @@ const StepsContainer = ( {
             setisLoading(false)
             return tokensInstancesAllData;
             } // if tokensInstancesCount > 0
+            else {
+              console.debug(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: loadOnChainData tokensInstancesCount = 0000`)
+            }
           } catch (error) {
             console.error(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: loadOnChainData error=${error}`)
           }
@@ -1185,13 +1259,26 @@ const StepsContainer = ( {
       
       try {
         // console.debug(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]`)
-        if (chainId && selectableTokensLists && selectableTokensLists.length > 0) {
+        // if (chainId && selectableTokensLists && selectableTokensLists.length > 0) {
+
+        console.debug(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: chainId=${chainId} selectableTokensLists.length=${selectableTokensLists?.length} hasSomeTokenListSelected(selectableTokensLists)= ${hasSomeTokenListSelected(selectableTokensLists) }`)
+
+        if (chainId && hasSomeTokenListSelected(selectableTokensLists)) {
+          
           // const tokenChainDataArray = getTokensCB(chainId, selectableTokensLists)
           // settokens(tokenChainDataArray)
+
+
+          // vérifier si il y a des LISTES de tokens sélectionnées
+
+          // vérifier si les tokens sont déjà chargés
+
+
           const _tokensInstances = initTokensInstances(chainId, selectableTokensLists)
           // settokensDataState(EStepsLoadTokensData.stepLoadContracts)
           // settokensInstances(_tokensInstances)
           if (_tokensInstances &&_tokensInstances.length > 0) {
+            setisLoading(true)
             // console.debug(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: setShowProgressBar(true)`)
             setProgressBarPercentage(1)
             setShowProgressBar(true)
@@ -1222,6 +1309,7 @@ const StepsContainer = ( {
       } catch (error) {
         console.error(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: error=${error}`)
       } finally {
+        setisLoading(false)
         const elapsed = Date.now() - start
         console.debug(`StepsContainer useEffect 1 targetAddress loadOnChainData elapsed=${elapsed}`)
       }
@@ -1233,7 +1321,9 @@ const StepsContainer = ( {
       EStepsLoadTokensData.stepLoadDecimals, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
       connectedAddress,
       targetAddress,
-      loadTokensOnChainData, initTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar
+      loadTokensOnChainData, initTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar,
+      
+      hasSomeTokenListSelected
     ]
   ) // useEffect loadOnChainData
 
