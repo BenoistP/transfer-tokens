@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 // import { CheckIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
 import { NoSymbolIcon } from '@heroicons/react/24/solid'
+import { ERC20_DECIMALS_DEFAULT } from "~/js/constants/misc";
 
 // ------------------------------
 
@@ -14,7 +15,7 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
   // console.debug(`TokenInstance.tsx (${index}) RealToken render realTokenInstance.userData.address=${realTokenInstance.userData.address} realTokenInstance.address=${realTokenInstance.address} realTokenInstance.userData.amount=${realTokenInstance.userData.amount}`)
   const { t } = useTranslation()
 
-  const [decimals, setdecimals] = useState<bigint>(BigInt(tokenInstance.decimals)) as [bigint, (balance:bigint) => void];
+  const [decimals, setdecimals] = useState<bigint>(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT))) as [bigint, (balance:bigint) => void];
 
   // const [balance, setbalance] = useState<BigInt>(tokenInstance.userData[accountAddress as any]?.amount) as [BigInt, (balance:BigInt) => void];
   // const [balance, setbalance] = useState<BigInt>(tokenInstance.userData[accountAddress as any]?.balance) as [BigInt, (balance:BigInt) => void];
@@ -84,7 +85,7 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
     // {
     //   console.debug(`TokenInstance.tsx useEffect decimals`)
     // }
-    setdecimals(BigInt(tokenInstance.decimals));
+    setdecimals(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT)));
   }, [tokenInstance.decimals]);
 
   // ---
