@@ -884,13 +884,15 @@ const StepsContainer = ( {
                 if (token?.contract) {
                   if (token?.type == "COINBRIDGE" as TTokenType) { // TEST
                   // if (token?.type == "ERC20" as TTokenType) {
-                    const amount = token.userData && token.userData[connectedAddress as any]?.balance || 1
+                    // const amount = token.userData && token.userData[connectedAddress as any]?.balance || 1
+                    const amount = token.userData && token.userData[_from as any]?.balance || 1
                     // console.debug(`StepsContainer.tsx loadTokensOnChainData StepsContainer canTransfer from=${connectedAddress} to=${targetAddress} amount=${amount}`)
                     return {
                       ...token.contract,
                       functionName: 'canTransfer',
                       // query: From address, To address , Amount uint256 ;  response: bool, uint256, uint256
-                      args: [connectedAddress, targetAddress, amount],
+                      // args: [connectedAddress, targetAddress, amount],
+                      args: [_from, _to, amount],
                       // functionName: 'transfer',
                       // // To, Amount
                       // args: [targetAddress, amount],
@@ -1114,7 +1116,10 @@ const StepsContainer = ( {
       // /* tokens, */ chainId, /* fetchOnChainData */ fetchOnChainDataWrapper, connectedAddress, targetAddress
       EStepsLoadTokensData.stepLoadContracts, EStepsLoadTokensData.stepLoadSourceBalances, EStepsLoadTokensData.stepLoadDecimals,
       EStepsLoadTokensData.stepLoadNames, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
-      loadTokensContracts, connectedAddress, targetAddress, fetchOnChainDataWrapper, setProgressBarPercentage]
+      loadTokensContracts, fetchOnChainDataWrapper, setProgressBarPercentage
+      // connectedAddress,
+      // targetAddress,
+      ]
   ); // loadTokensOnChainData
 
   // ---
@@ -1125,6 +1130,7 @@ const StepsContainer = ( {
   useEffect( () =>
     {
       const start:number = Date.now()
+
       const loadOnChainData = async (tokensInstances:TTokensInstances):Promise<TTokensInstances> => {
         const start:number = Date.now()
         try {
@@ -1222,12 +1228,14 @@ const StepsContainer = ( {
     },
     [
       // selectableTokensLists, chainId
-      selectableTokensLists, chainId, loadTokensOnChainData,
+      selectableTokensLists, chainId, 
       EStepsLoadTokensData.stepLoadContracts, EStepsLoadTokensData.stepLoadNames, EStepsLoadTokensData.stepLoadSourceBalances,
       EStepsLoadTokensData.stepLoadDecimals, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
-      connectedAddress, targetAddress, initTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar
+      connectedAddress,
+      // targetAddress,
+      loadTokensOnChainData, initTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar
     ]
-  )
+  ) // useEffect loadOnChainData
 
   /**
    * useEffect: complete onchain data loading
@@ -1310,10 +1318,13 @@ const StepsContainer = ( {
     },
     [
       // targetAddress, isLoading/* tokensInstances */
-      targetAddress, isLoading, loadTokensOnChainData, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
-      connectedAddress, tokensInstances, decreaseAndHideProgressBar
+      connectedAddress, targetAddress,
+      isLoading,
+      // tokensInstances,
+      EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
+      loadTokensOnChainData, decreaseAndHideProgressBar
     ]
-  )
+  ) // useEffect loadOnChainDataAdditionalData
 
  
 
