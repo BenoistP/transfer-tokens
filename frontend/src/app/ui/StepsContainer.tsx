@@ -44,16 +44,27 @@ const StepsContainer = ( {
   const { address: connectedAddress, /* status, isConnected ,  isConnecting,  isDisconnected*/ } = useAccount()
 
   enum EStepsLoadTokensData {
-    stepLoadContracts = 0,
-    stepLoadSourceBalances = 1,
-    stepLoadDecimals = 2,
-    stepLoadNames = 3,
-    stepLoadSymbols = 4,
-    stepLoadTargetBalances = 5,
-    stepLoadTransferAbility = 6,
-    // stepWatchTransfers = 7, // TODO
+    contracts = 0,
+    sourceBalances = 1,
+    decimals = 2,
+    names = 3,
+    symbols = 4,
+    targetBalances = 5,
+    transferAbility = 6,
+    // watchTransfers = 7, // TODO
   }
 
+  enum ESLoadtate {
+    notLoaded = 0,
+    contracts = 1,
+    sourceBalances = 2,
+    decimals = 3,
+    names = 4,
+    symbols = 5,
+    targetBalances = 6,
+    transferAbility = 7,
+    // watchTransfers = 8, // TODO
+  }
 // ------------------------------
 
   const { moveTokensAppData: { step = -1 } } = useMoveTokensAppContext()
@@ -64,6 +75,7 @@ const StepsContainer = ( {
   const [targetAddress, settargetAddress] = useState<TAddressEmpty>("")
 
   const [isLoading, setisLoading] = useState<boolean>(false)
+  const [loadStep, setloadStep] = useState<ESLoadtate>(ESLoadtate.notLoaded)
   const [isError, setisError] = useState(false)
 
   // Sorting
@@ -871,12 +883,12 @@ const StepsContainer = ( {
 
           switch (step) {
             // Step 0: get tokens contracts
-            case EStepsLoadTokensData.stepLoadContracts:
+            case EStepsLoadTokensData.contracts:
               tokensInstancesUpdated = await loadTokensContracts(tokensInstances)
               progress = 11
               break;
             // Step 1: get tokens source user balances
-            case EStepsLoadTokensData.stepLoadSourceBalances:
+            case EStepsLoadTokensData.sourceBalances:
               // const balancesSourceMulticallArray = tokensInstances.map( async (token) => {
               multicallArray = tokensInstances.map( async (token) => {
                 if (token?.contract) {
@@ -893,7 +905,7 @@ const StepsContainer = ( {
               break;
 
             // Step 2: get token decimals
-            case EStepsLoadTokensData.stepLoadDecimals:
+            case EStepsLoadTokensData.decimals:
               // const decimalsMulticallArray = tokensInstances.map( async (token) => {
                 multicallArray = tokensInstances.map( async (token) => {
                 if (token?.contract) {
@@ -909,7 +921,7 @@ const StepsContainer = ( {
               break;
 
             // Step 3: get token name
-            case EStepsLoadTokensData.stepLoadNames:
+            case EStepsLoadTokensData.names:
               // const nameMulticallArray = tokensInstances.map( async (token) => {
               multicallArray = tokensInstances.map( async (token) => {
                 if (token?.contract) {
@@ -925,7 +937,7 @@ const StepsContainer = ( {
               break;
 
             // Step 4: get token symbol
-            case EStepsLoadTokensData.stepLoadSymbols:
+            case EStepsLoadTokensData.symbols:
               // const symbolMulticallArray = tokensInstances.map( async (token) => {
               multicallArray = tokensInstances.map( async (token) => {
                 if (token?.contract) {
@@ -942,7 +954,7 @@ const StepsContainer = ( {
 
 
             // Step 5: get tokens target user balances
-            case EStepsLoadTokensData.stepLoadTargetBalances:
+            case EStepsLoadTokensData.targetBalances:
               // const balancesTargetMulticallArray = tokensInstances.map( async (token) => {
               multicallArray = tokensInstances.map( async (token) => {
                 if (token?.contract) {
@@ -960,7 +972,7 @@ const StepsContainer = ( {
               break;
 
             // Step 6: get canTransfer token from address to address
-            case EStepsLoadTokensData.stepLoadTransferAbility:
+            case EStepsLoadTokensData.transferAbility:
               // const canTransferMulticallArray = tokensInstances.map( async (token) => {
               multicallArray = tokensInstances.map( async (token) => {
 
@@ -1008,8 +1020,8 @@ const StepsContainer = ( {
             // const onchainData = await fetchOnChainData(multicallData);
             const onchainData = await fetchOnChainDataWrapper(multicallData);
 
-            // if (step == EStepsLoadTokensData.stepLoadSourceBalances) {
-            //   console.debug(`StepsContainer.tsx loadTokensOnChainData ProgressBar stepLoadSourceBalances from=${connectedAddress} to=${targetAddress} onchainData.length=${onchainData?.length}`)
+            // if (step == EStepsLoadTokensData.sourceBalances) {
+            //   console.debug(`StepsContainer.tsx loadTokensOnChainData ProgressBar sourceBalances from=${connectedAddress} to=${targetAddress} onchainData.length=${onchainData?.length}`)
             //   console.dir(onchainData)
             // }
   
@@ -1017,7 +1029,7 @@ const StepsContainer = ( {
             if (onchainData?.length > 0) {
               const tokensInstancesWithOnchainData = tokensInstances.map( async (tokenInstance, index) => {
                 // Step 1: get tokens source user balances
-                if (step == EStepsLoadTokensData.stepLoadSourceBalances) {
+                if (step == EStepsLoadTokensData.sourceBalances) {
                   // tokens balances
                   // let tokenInstanceUserDataArray:TTokenInstanceUserData[] = new Array<TTokenInstanceUserData>()
                   let tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
@@ -1047,7 +1059,7 @@ const StepsContainer = ( {
                   } as TTokenInstance;
                 }
                 // Step 2: get token decimals
-                if (step == EStepsLoadTokensData.stepLoadDecimals) {
+                if (step == EStepsLoadTokensData.decimals) {
                   // decimals
                   if (resultOnly) {
                     return {
@@ -1061,7 +1073,7 @@ const StepsContainer = ( {
                   } as TTokenInstance;
                 }
                 // Step 3: get token name
-                if (step == EStepsLoadTokensData.stepLoadNames) {
+                if (step == EStepsLoadTokensData.names) {
                   // name
                   if (resultOnly) {
                     return {
@@ -1075,7 +1087,7 @@ const StepsContainer = ( {
                   } as TTokenInstance;
                 }
                 // Step 4: get token symbol
-                if (step == EStepsLoadTokensData.stepLoadSymbols) {
+                if (step == EStepsLoadTokensData.symbols) {
                   // symbol
                   if (resultOnly) {
                     return {
@@ -1089,7 +1101,7 @@ const StepsContainer = ( {
                   } as TTokenInstance;
                 }
                 // Step 5: get tokens target user balances
-                if (step == EStepsLoadTokensData.stepLoadTargetBalances) {
+                if (step == EStepsLoadTokensData.targetBalances) {
                   // tokens balances
                   // let tokenInstanceUserDataArray = tokenInstance.userData;
                   let tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
@@ -1120,7 +1132,7 @@ const StepsContainer = ( {
                   } as TTokenInstance;
                 }
                 // Step 6: get canTransfer token from address to address
-                if (step == EStepsLoadTokensData.stepLoadTransferAbility) {
+                if (step == EStepsLoadTokensData.transferAbility) {
                   // can transfer from to
                   // console.debug(`StepsContainer.tsx loadTokensOnChainData ProgressBar canTransfer from=${connectedAddress} to=${targetAddress} result=${onchainData[index]?.result}`)
                   // const tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
@@ -1197,8 +1209,8 @@ const StepsContainer = ( {
     },
     [
       // /* tokens, */ chainId, /* fetchOnChainData */ fetchOnChainDataWrapper, connectedAddress, targetAddress
-      EStepsLoadTokensData.stepLoadContracts, EStepsLoadTokensData.stepLoadSourceBalances, EStepsLoadTokensData.stepLoadDecimals,
-      EStepsLoadTokensData.stepLoadNames, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
+      EStepsLoadTokensData.contracts, EStepsLoadTokensData.sourceBalances, EStepsLoadTokensData.decimals,
+      EStepsLoadTokensData.names, EStepsLoadTokensData.symbols, EStepsLoadTokensData.targetBalances, EStepsLoadTokensData.transferAbility,
       loadTokensContracts, fetchOnChainDataWrapper, setProgressBarPercentage
       // connectedAddress,
       // targetAddress,
@@ -1224,14 +1236,14 @@ const StepsContainer = ( {
             setisLoading(true)
             console.debug(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: loadOnChainData tokensInstancesCount > 0`)
             // const targetAddress = ""
-            const tokensInstancesContracts = await loadTokensOnChainData(tokensInstances,EStepsLoadTokensData.stepLoadContracts,true,null,"", true)
+            const tokensInstancesContracts = await loadTokensOnChainData(tokensInstances,EStepsLoadTokensData.contracts,true,null,"", true)
             settokensInstances(tokensInstancesContracts)
-            const names = loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.stepLoadNames,true,null,"", true)
-            const sourceBalances = loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.stepLoadSourceBalances,true,connectedAddress,"", true)
-            const decimals = loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.stepLoadDecimals,true,null,"", true)
-            const symbols = loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.stepLoadSymbols,true,null,"", true)
-            const targetBalances = targetAddress ? loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.stepLoadTargetBalances,true,"", targetAddress, true) : null ;
-            const canTransfer = targetAddress ? loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.stepLoadTransferAbility,true,connectedAddress,targetAddress, true) : null ;
+            const names = loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.names,true,null,"", true)
+            const sourceBalances = loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.sourceBalances,true,connectedAddress,"", true)
+            const decimals = loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.decimals,true,null,"", true)
+            const symbols = loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.symbols,true,null,"", true)
+            const targetBalances = targetAddress ? loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true) : null ;
+            const canTransfer = targetAddress ? loadTokensOnChainData(tokensInstancesContracts,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true) : null ;
             const promises = targetAddress ? await Promise.all([names, sourceBalances, decimals, symbols, targetBalances, canTransfer]) : await Promise.all([names, sourceBalances, decimals, symbols]) ;
             // Merge promises results
             const tokensInstancesAllData = tokensInstancesContracts?.map( (tokenInstanceContract:TTokenInstance, index:number) => {
@@ -1279,19 +1291,27 @@ const StepsContainer = ( {
         // Are some token lists selected ?
         if (chainId && hasSomeTokenListSelected(selectableTokensLists)) {
           
-          // vérifier si les tokens sont déjà chargés
-          
+          let _tokensInstances:TTokensInstances = [] // new Array<TTokenInstance>()
+          // Check current load step
+          if (loadStep == ESLoadtate.notLoaded) {
+            // Get tokens instances
+            setisLoading(true)
+            console.debug(`StepsContainer useEffect 1 GETTOKENSINSTANCES`)
+            _tokensInstances = getTokensInstances(chainId, selectableTokensLists)
+            setloadStep(ESLoadtate.contracts)
+          } // if (loadStep == ESLoadtate.notLoaded)
+          else {
+            console.debug(`StepsContainer useEffect 1 SKIP GETTOKENSINSTANCES`)
+            _tokensInstances = tokensInstances
+          }
 
-
-          const _tokensInstances = getTokensInstances(chainId, selectableTokensLists)
-          // settokensDataState(EStepsLoadTokensData.stepLoadContracts)
+          // settokensDataState(EStepsLoadTokensData.contracts)
           // settokensInstances(_tokensInstances)
           if (_tokensInstances &&_tokensInstances.length > 0) {
-            setisLoading(true)
             // console.debug(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: setShowProgressBar(true)`)
             setProgressBarPercentage(1)
             setShowProgressBar(true)
-            // loadContracts(_tokensInstances)
+            // contracts(_tokensInstances)
             loadOnChainData(_tokensInstances)
               .then( (tokensInstancesWithData) => {
                 setisLoading(false)
@@ -1304,7 +1324,7 @@ const StepsContainer = ( {
                 }, 1_000)
               })
             /*
-             .then( () => {
+            .then( () => {
               setProgressBarPercentage(0)
               setTimeout( () => {
                 console.debug(`StepsContainer useEffect 1 ProgressBar settimeout`)
@@ -1313,7 +1333,11 @@ const StepsContainer = ( {
               console.debug(`StepsContainer useEffect 1 ProgressBar after loadOnChainData`)
             })
             */
-          }
+          } // if (_tokensInstances &&_tokensInstances.length > 0)
+
+        } // if (chainId && selectableTokensLists && selectableTokensLists.length > 0)
+        else {
+          setloadStep(ESLoadtate.notLoaded)
         }
       } catch (error) {
         console.error(`StepsContainer useEffect 1 [selectableTokensLists, chain?.id]: error=${error}`)
@@ -1326,13 +1350,15 @@ const StepsContainer = ( {
     [
       // selectableTokensLists, chainId
       selectableTokensLists, chainId, 
-      EStepsLoadTokensData.stepLoadContracts, EStepsLoadTokensData.stepLoadNames, EStepsLoadTokensData.stepLoadSourceBalances,
-      EStepsLoadTokensData.stepLoadDecimals, EStepsLoadTokensData.stepLoadSymbols, EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
+      EStepsLoadTokensData.contracts, EStepsLoadTokensData.names, EStepsLoadTokensData.sourceBalances,
+      EStepsLoadTokensData.decimals, EStepsLoadTokensData.symbols, EStepsLoadTokensData.targetBalances, EStepsLoadTokensData.transferAbility,
       connectedAddress,
       targetAddress,
       loadTokensOnChainData, getTokensInstances, setProgressBarPercentage, setShowProgressBar, decreaseAndHideProgressBar,
       
-      hasSomeTokenListSelected
+      hasSomeTokenListSelected, setloadStep, loadStep,
+      ESLoadtate.contracts, ESLoadtate.notLoaded,
+      // tokensInstances <- never
     ]
   ) // useEffect loadOnChainData
 
@@ -1352,14 +1378,14 @@ const StepsContainer = ( {
           // console.debug(`StepsContainer useEffect 2 targetAddress loadOnChainDataAdditionalData targetAddress=${targetAddress}`)
           // console.dir(_tokensInstances)
           if (targetAddress && _tokensInstances && _tokensInstances.length > 0) {
-            // const tokensInstancesTargetBalances = await loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.stepLoadTargetBalances,true,"", targetAddress, false)
-            // const tokensInstancesCanTransfer = await loadTokensOnChainData(tokensInstancesTargetBalances,EStepsLoadTokensData.stepLoadTransferAbility,true,connectedAddress,targetAddress, false)
+            // const tokensInstancesTargetBalances = await loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, false)
+            // const tokensInstancesCanTransfer = await loadTokensOnChainData(tokensInstancesTargetBalances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, false)
             // console.dir(tokensInstancesCanTransfer)
-            // settokensDataState(EStepsLoadTokensData.stepLoadTransferAbility)
+            // settokensDataState(EStepsLoadTokensData.transferAbility)
             // return tokensInstancesCanTransfer
 
-            const tokensInstancesTargetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.stepLoadTargetBalances,true,"", targetAddress, true)
-            const tokensInstancesCanTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.stepLoadTransferAbility,true,connectedAddress,targetAddress, true)
+            const tokensInstancesTargetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true)
+            const tokensInstancesCanTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true)
             const promises = await Promise.all([tokensInstancesTargetBalances, tokensInstancesCanTransfer]) ;
 
             if (promises && promises[0] && promises[1]) {
@@ -1394,7 +1420,7 @@ const StepsContainer = ( {
         // console.debug(`StepsContainer useEffect 2 [targetAddress]: selectableTokensLists?.length=${selectableTokensLists?.length}}`)
         // console.debug(`StepsContainer useEffect 2 [targetAddress]: tokensInstances?.length=${tokensInstances?.length} targetAddress=${targetAddress}`)
           if (!isLoading && tokensInstances && tokensInstances.length > 0) {
-            // if (tokensDataState < EStepsLoadTokensData.stepLoadTargetBalances) {
+            // if (tokensDataState < EStepsLoadTokensData.targetBalances) {
               if (targetAddress) {
                 loadOnChainDataAdditionalData(tokensInstances)
                     .then( (tokensInstancesWithData) => {
@@ -1407,7 +1433,7 @@ const StepsContainer = ( {
                       }, 1_000)
                     })
               } // if (targetAddress)
-            // } // if (tokensDataState < EStepsLoadTokensData.stepLoadTargetBalances)
+            // } // if (tokensDataState < EStepsLoadTokensData.targetBalances)
           } // if (_tokensInstances &&_tokensInstances.length > 0)
 
         // } // if (chainId && selectableTokensLists && selectableTokensLists.length > 0)
@@ -1421,7 +1447,7 @@ const StepsContainer = ( {
       connectedAddress, targetAddress,
       isLoading,
       // tokensInstances,
-      EStepsLoadTokensData.stepLoadTargetBalances, EStepsLoadTokensData.stepLoadTransferAbility,
+      EStepsLoadTokensData.targetBalances, EStepsLoadTokensData.transferAbility,
       loadTokensOnChainData, decreaseAndHideProgressBar
     ]
   ) // useEffect loadOnChainDataAdditionalData
