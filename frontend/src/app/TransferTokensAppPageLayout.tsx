@@ -81,8 +81,12 @@ const testnetChains = [
     const mainnetChainsProviders:any = [
       infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA_APIKEY||"" }), // Ethereum
       alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY_APIKEY||"" }), // Gnosis
+      publicProvider(),
      ];
-    const testnetChainsProviders:any = [ publicProvider() ];
+    // const testnetChainsProviders:any = [ publicProvider() ];
+
+    console.dir(mainnetChains)
+    console.dir(mainnetChainsProviders)
 
     const { chains, publicClient } = configureChains(
       [ ...mainnetChains,
@@ -90,13 +94,14 @@ const testnetChains = [
       ],
       [
         ...mainnetChainsProviders, // Mainnets
-        ...testnetChainsProviders, // Testnets
+        // ...testnetChainsProviders, // Testnets
       ],
       {
         batch: { multicall: true },
         stallTimeout: 5_000,
-        rank: true,
+        rank: false,
         retryCount: 3,
+        pollingInterval: 10_000,
         // stallTimeout: 60_000
       },
     )
