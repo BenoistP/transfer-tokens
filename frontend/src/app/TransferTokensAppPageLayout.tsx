@@ -85,8 +85,8 @@ const testnetChains = [
      ];
     // const testnetChainsProviders:any = [ publicProvider() ];
 
-    console.dir(mainnetChains)
-    console.dir(mainnetChainsProviders)
+    // console.dir(mainnetChains)
+    // console.dir(mainnetChainsProviders)
 
     const { chains, publicClient } = configureChains(
       [ ...mainnetChains,
