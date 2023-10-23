@@ -59,7 +59,7 @@ export const MainContent = ( ) => {
                     <div className="w-full p-0 m-0 mt-1 base-100 text-primary-content" >
                       <StepsContainer
                         tokensLists={tokensLists}
-                        // chainId={chain?.id}
+                        chainId={chain?.id}
                         setpreviousDisabled={setpreviousDisabled} setNextDisabled={setNextDisabled}
                         setShowProgressBar={setshowProgressBar} setProgressBarPercentage={setprogressBarPercentage}
                       />

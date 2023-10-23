@@ -1,5 +1,7 @@
 // tokensListsUtils.ts
 
+import { EChainTokensListLoadState } from "../constants/enums";
+
 const isValidUri = async( URI:TStringNullUndef ):Promise<boolean> => {
   try {
       // console.log('isValidUri');
@@ -327,11 +329,11 @@ const getTokensList_TokenData_fromJsonTokensList = async(tokensList: TTokensList
     // console.debug(`getTokensList_TokenData_fromJsonTokensList: tokensList_TokenData?.length=${tokensList_TokenData?.length} tokenCountSum=${tokenCountSum}` );
     // console.debug('-------------------------------------')
 
-    const chainsTokenLists = await getChainsTokenListsArray(tokensList_TokenData, chainsFromTokens)
+    const id = `${initialId}${index>0?'-'+index+'-':''}[${chainsFromTokens}]-${timestampFetched}`
+    const chainsTokenLists = await getChainsTokenListsArray(tokensList_TokenData, chainsFromTokens, id)
 
     // console.debug(`getTokensList_TokenData_fromJsonTokensList: tokensList.URI=${tokensList.URI} tokensList_TokenData?.length=${tokensList_TokenData?.length}` );
 
-    const id = `${initialId}${index>0?'-'+index+'-':''}[${chainsFromTokens}]-${timestampFetched}`
     const status = (tokensList_TokenData && tokensList_TokenData?.length>0 ? 'ok' as TTokensListStatus : 'loadedError' as TTokensListStatus)
     const error = (tokensList_TokenData && tokensList_TokenData?.length>0 ? null : "Error parsing tokens" )// TODO: i18n error.message
 
@@ -602,8 +604,8 @@ const getTokensList_TokenData_fromMetaUri = async(tokensList: TTokensList, index
           const tokenCountSum:number = allTokensChainData?allTokensChainData.length:0
           const listsCount = fetchTokensMetaListUri_json.lists?fetchTokensMetaListUri_json.lists.length:0
 
-          const chainsTokenLists = await getChainsTokenListsArray(allTokensChainData, chainsFromAllTokensListsTokens)
           const id = `${initialId}${index>0?'-'+index+'-':''}[${chainsFromAllTokensListsTokens}]-${timestampFetched}`
+          const chainsTokenLists = await getChainsTokenListsArray(allTokensChainData, chainsFromAllTokensListsTokens, id)
           const status = (tokenCountSum ? 'ok' as TTokensListStatus : 'loadedError' as TTokensListStatus)
           const error = (tokenCountSum ? null : "Error parsing meta-uri tokens" )// TODO: i18n error.message
 
@@ -965,10 +967,9 @@ const getTokensList_TokenData_fromJsonAPI = async(tokensList: TTokensList, fetch
       tokensListGNO_TokenData = tokensListGNO_TokenData.filter( (tokenChainData:TTokenChainData) => tokenChainData!=null )
       const tokensList_TokenData = tokensListETH_TokenData.concat(tokensListGNO_TokenData)
       const chainsFromTokens = getChainArray_from_tokensChainDataArray(tokensList_TokenData)
-      const chainsTokenLists = await getChainsTokenListsArray(tokensList_TokenData, chainsFromTokens)
-      const tokenCountSum = tokensList_TokenData?.length||0
-
       const id = `${initialId}${index>0?'-'+index+'-':''}[${chainsFromTokens}]-${timestamp}`
+      const chainsTokenLists = await getChainsTokenListsArray(tokensList_TokenData, chainsFromTokens, id)
+      const tokenCountSum = tokensList_TokenData?.length||0
 
       return {
         ...tokensList,
@@ -1141,7 +1142,7 @@ const filterTokensListByChain = (tokens:TTokenChainDataArray, chainId:TChainIdNu
   // ---
 
 // const filteredTokensListsFromTokensLists = async(tokensLists:TTokensLists, chainId:TChainIdNullUndef):Promise<TFilteredTokensListsNullUndef>  =>
-const getChainsTokenListsArray = async(tokens: TTokenChainDataArray, chains: TChainIdArray/* tokensList:TTokensList */):Promise<TChainsTokensListArrayNullUndef>  =>
+const getChainsTokenListsArray = async(tokens: TTokenChainDataArray, chains: TChainIdArray/* tokensList:TTokensList */, _tokensListId:TTokensListId):Promise<TChainsTokensListArrayNullUndef>  =>
 {
   try {
     // console.debug(`getChainsTokenListsArray: tokensList.URI=${tokensList.URI}` )
@@ -1175,10 +1176,13 @@ const getChainsTokenListsArray = async(tokens: TTokenChainDataArray, chains: TCh
       //   console.debug(`getChainsTokenListsArray: chainId=${chainId} filteredTokenChainDataArray.length=${filteredTokenChainDataArray?.length}`)
       // }
       return { // RETURN
+        tokensListId: _tokensListId,
         chainId,
         tokens: filteredTokenChainDataArray,
         tokensCount: (filteredTokenChainDataArray?filteredTokenChainDataArray.length:0),
-      } as TChainTokensList
+        tokensInstances: null,
+        loadState: EChainTokensListLoadState.notLoaded,
+      } // as TChainTokensList
     }) // tokensLists?.map
 
     // console.debug(`getChainsTokenListsArray: chainTokensLists.length=${chainTokensLists?.length}` )
@@ -1334,10 +1338,13 @@ const getTokensLists_TokenData_Stripped = (tokensLists:TTokensLists):TTokensList
     {
       const chainsTokenListsStripped = tokensList.chainsTokenLists?.map( (chainTokensList) => {
         return {
+          tokensListId: chainTokensList?.tokensListId,
           chainId: chainTokensList?.chainId,
           tokensCount: chainTokensList?.tokensCount,
           tokens: null,
-        } as TChainTokensList
+          tokensInstances: null,
+          loadState: EChainTokensListLoadState.notLoaded,
+        } // as TChainTokensList
       })
       const tokensListStripped = {
         id: tokensList.id,

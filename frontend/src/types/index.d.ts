@@ -1,315 +1,17 @@
-/* 
-declare enum RealtTokenLoadStatus {
-  notLoaded = 'notLoaded',
-  loading = 'loading',
-  balanceLoaded = 'balanceLoaded',
-  balanceError = 'balanceError',
-  loaded = 'loaded',
-  error = 'error',
-}
- */
-
-
-// type AddressString = `0x${string}` ;
-// type Address = AddressString | undefined ;
-// type TokenContractAddress = Address | null;
-// type TokenContractAddress = AddressString;
-// type TokenContractNullableAddress = TokenContractAddress|null;
-
-// type AddressList = string[]|undefined|null;
-
-// type AddressList<Address> = [Address, ...Address[]] | undefined | null | [];
-// type NonEmptyArray<T> = [T]
-// type AddressList = NonEmptyArray<AddressString>|[]|undefined|null;
-
-// type ChainId = number | undefined | null;
-// type ChainId = number;
-
-// type UndefNullableNumber = number|undefined|null;
-// type UndefNullableString = string|undefined|null;
-
-// type Index = number;//UndefNullableNumber;
-
-// type UUID = string;
-// type LastUpdateDate = string; // '2023-07-30 20:18:04.000000'
-// type Timezone_type =  number; // 3
-// type Timezone = string; // 'UTC'
-
-// type RealTokenID = string;
-
-// type RealTokenBalance = {
-//   value: TTokenAmount;
-//   error: boolean;
-// }
-
-// OLD type used in /app/ui/RealToken.tsx
-// type RealTokenData = {
-//   error: boolean;
-//   balance: RealTokenBalance|undefined;
-//   decimals: number;
-//   symbol: string;
-//   name: string;
-// }
-
-/*
-interface IGetContractAddress {
-  (realtToken:IRealTokenReferenceData, chainId:number) : TokenContractNullableAddress;
-}
-interface IGetRealTokenKey {
-  (realtToken:IRealTokenReferenceData, chainId:number) : string;
+// Enums defined in frontend/src/app/js/constants/enums.ts
+enum EChainTokensListLoadState {
+  notLoaded = 0,
+  contracts = 1,
+  sourceBalances = 2,
+  decimals = 3,
+  names = 4,
+  symbols = 5,
+  targetBalances = 6,
+  transferAbility = 7,
+  // watchTransfers = 8, // TODO
 }
 
-interface IUpdateRealTokenList {
-  // (index:number, propertyName:string, value:any) : void;
-  (index:number, value:any) : void;
-} 
-
-interface IListRealTokensAddressContext {
-  accountAddress: AddressString;
-}
-
-interface ITransferTokens {
-  // (subString: string): Promise<number>;
-  (tokensTransferFromList: ITokensTransferSourceList): Promise<number>;
-}
-
-interface ITokenTransferFrom {
-  tokenAddress: TokenContractAddress;
-  amount: TTokenAmount;
-  // realtTokenData:IRealTokenReferenceData|null|undefined
-}
-
-interface ITokensTransferSourceList {
-  sourceAddress: AddressString;
-  tokensTransferFromList: ITokenTransferFrom[]|null|undefined;
-}
-
-interface ITokensTransfer {
-  chainId: ChainId;
-  tokensTransferSource: ITokensTransferSourceList
-  destinationAddress: AddressString;
-}
-
-interface ITokenTransfer {
-  sourceAddress: AddressString;
-  tokenAddress: TokenContractAddress;
-  amount: TTokenAmount;
-  destinationAddress: AddressString;
-}
-
-// interface RefRealTokensListTableProps {
-//   // getSelectedTokensTransfersfer: () => void
-//   // getSelectedTokensList: () => ITokensTransferSourceList
-//   getSelectedTokensTransfer: () => ITokensTransferSourceList
-// }
-
-type TRealTokenReferenceDataNullableArray = IRealTokenReferenceData[]|null|undefined
-
-interface IRealTokensListTableProps {
-  // realtTokensAddressList:AddressList;
-  // realtTokensList:any;
-  // realtTokensDataCompleteList:any;
-  // realtTokensDataCompleteList:IRealTokenReferenceData[]|null|undefined;
-  realtTokensDataCompleteList:TRealTokenReferenceDataNullableArray;
-  accountAddress:AddressString;
-  chainId: ChainId;
-  // transferTokens: ITransferTokens | null;
-  enableCheckboxes: boolean;
-}
-
-// interface RealTokensProps {
-//   index:number|undefined;
-//   realtTokensAddress:Address;
-//   accountAddress:Address
-// }
-
-
-
-// ------------------------------
-
-type tokenListUri = string|undefined;
-
-type tokensListsType = {
-  name: string,
-  uri: tokenListUri,
-  count: number,
-  selected: boolean,
-  tokens: TokenChainDataArray,
-}
-
-type TokenChainDataArray = TokenChainData[]|null|undefined;
-
-type TokenBasicData = {
-  name: TTokenName;
-  symbol: TTokenSymbol;
-  decimals: TTokenDecimals;
-  totalSupply: TTokenSupply;
-}
-
-type TokenChainData = {
-  chainId: ChainId;
-  address: TokenContractAddress;
-  basicData: TokenBasicData;
-}
-
-type TokenInstance = {
-  chainData: TokenChainData;
-  contract: any; // Wagmi contract
-}
-
-type UserTokenInstance = {
-  tokenInstance: TokenInstance;
-  userAddress: AddressString
-  balance: TTokenAmount;
-}
-
-type InterfaceUserTokenInstance = {
-  userTokenInstance: UserTokenInstance;
-  selected: boolean;
-}
-
-
-// ------------------------------
-
-
-
-interface ITokenData {
-  list: TTokenDataNullable[];
-}
-
-type TTokenDataNullable = ITokenData|null|undefined;
-interface ITokenData {
-
-
-}
-
-interface ITokenChainData {
-  
-
-}
-
-interface IRealTokenReferenceData {
-  fullName: string,
-  shortName: string,
-  symbol: string,
-  tokenPrice: number,
-  currency: string,
-  uuid: UUID,
-  ethereumContract: TokenContractNullableAddress,
-  xDaiContract: TokenContractNullableAddress,
-  gnosisContract: TokenContractNullableAddress,
-  lastUpdate: {
-    date: LastUpdateDate,
-    timezone_type: Timezone_type,
-    timezone: Timezone,
-  }
-}
-
-interface IRealTokenInstanceUserData {
-    address: AddressString;
-    // user interface data
-    selected: boolean;
-    // user data
-    amount: TTokenAmount;
-}
-
-type TRealtTokenLoadStatus = number;
-interface IRealTokenInstance {
-  id: RealTokenID;
-
-  chainId: ChainId;
-  address: TokenContractNullableAddress;// TokenContractAddress;
-  contract: any; // Wagmi contract
-  decimals: TTokenDecimals;
-  name: TTokenName;
-  symbol: TTokenSymbol;
-
-  status: TRealtTokenLoadStatus;
-
-  realTokenReferenceData: IRealTokenReferenceData;
-
-
-  // TODO
-  userData: IRealTokenInstanceUserData;
-    // // user interface data
-    // selected: boolean;
-    // // user data
-    // amount: TTokenAmount;
-
-}
-
-type RealTokenInstanceArrayNullable = IRealTokenInstance[]|null|undefined;
-type RealTokenList = IRealTokenInstance[]|null|undefined;
-
-interface IRealTokenList {
-  realTokensInstancesArray: RealTokenInstanceArrayNullable;
-  chainId: ChainId;
-  accountAddress: AddressString;
-  // setrealtTokensList: (realtTokensList: RealTokenListNullable) => void;
-  // updateRealTokenList: IUpdateRealTokenList;
-  changeCheckboxStatus: IChangeCheckboxStatus|null;
-}
-
-interface IChangeCheckboxStatus {
-  (id: RealTokenID) : void;
-}
-interface IRealTokenProps {
-  // id : RealTokenID;
-  realTokenInstance : IRealTokenInstance
-  // totalCount: Index;
-  // chainId: ChainId;
-  // realtTokensList: IRealTokenInstance[];
-  // realtToken: IRealTokenReferenceData;
-  // realtToken: IRealTokenInstance;
-  // realtTokenAddress: TokenContractAddress;
-  // accountAddress: AddressString;
-  // selected: boolean;
-  // setrealtTokensList: (realtTokensList: RealTokenListNullable) => void;
-  // updateRealTokenList: IUpdateRealTokenList;
-  changeCheckboxStatus: IChangeCheckboxStatus|null;
-  // listSize: number;
-  index: Index;
-  // status: TRealtTokenLoadStatus;
-}
-
-
-// OLD app context
-
-type TAppContext = {
-  appData: TAppDataContext,
-  appDataHandlers:TAppDataHandlersContext,
-}
-
-type TAppDataContext = {
-    step:             number,
-    minStep:          number,
-    maxStep:          number,
-    language:         string,
-}
-
-type TAppDataHandlersContext = {
-  nextStep: () => void,
-  prevStep: () => void,
-  getLanguage: () => void,
-  setlanguage: (lang:string) => void,
-}
-*/
-
-
-// ========================================================
-// New types
-// ========================================================
-
-/*
-// Loaders
-type RootLoaderData = {
-  PUBLICENV: TPublicEnv,
-  PRIVATEENV: TPrivateEnv,
-  locale: string[]
-};
-*/
-
-
+// Types & Interfaces
 
 type TAvatarComponent = any;
 type TAvatarImgUri = string|undefined;
@@ -517,13 +219,25 @@ type TChainsTokensListArrayNullUndef = TChainsTokensListNullUndef[]|TNullUndef;
 type TChainsTokensListNullUndef = TChainTokensList|TNullUndef;
 
 type TChainTokensList = {
+  tokensListId: TTokensListId,
   chainId: TChainId,
   tokensCount: TtokenCount,
   tokens: TTokenChainDataArray,
   tokensInstances: TTokensInstances,
+  loadState: EChainTokensListLoadState,
 }
 
-
+// enum EChainTokensListLoadState {
+//   notLoaded = 0,
+//   contracts = 1,
+//   sourceBalances = 2,
+//   decimals = 3,
+//   names = 4,
+//   symbols = 5,
+//   targetBalances = 6,
+//   transferAbility = 7,
+//   // watchTransfers = 8, // TODO
+// }
 
 /*
 type TFilteredTokensListsNullUndef = TFilteredTokensList[]|TNullUndef;
@@ -714,7 +428,7 @@ interface IAddressInputProps {
 
 interface IStepsContainerProps {
   tokensLists: TTokensLists|null|undefined,
-  // chainId: TChainId
+  chainId: TChainId
   setpreviousDisabled: TsetPreviousDisabled,
   setNextDisabled: TsetNextDisabled,
   setShowProgressBar: TsetShowProgressBar

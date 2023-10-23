@@ -15,5 +15,8 @@ module.exports = {
       { allowConstantExport: true },
     ],
     "@typescript-eslint/no-explicit-any": "off",
+    'no-fallthrough': [
+      'error', {'commentPattern': 'fallthrough'}
+    ],
   },
 }
