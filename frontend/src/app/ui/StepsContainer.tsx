@@ -1059,18 +1059,18 @@ const StepsContainer = ( {
 
             // Step 0: get tokens contracts
             case EStepsLoadTokensData.contracts:
-              console.debug(`StepsContainer.tsx loadTokensOnChainData Step 0: GET TOKENS CONTRACTS`)
-              console.debug(`StepsContainer.tsx loadTokensOnChainData Step 0: GET TOKENS CONTRACTS _tokensInstances.length=${_tokensInstances.length} _tokensInstances=`)
-              console.dir(_tokensInstances)
+              console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.contracts: GET TOKENS CONTRACTS`)
+              // console.debug(`StepsContainer.tsx loadTokensOnChainData Step 0: GET TOKENS CONTRACTS _tokensInstances.length=${_tokensInstances.length} _tokensInstances=`)
+              // console.dir(_tokensInstances)
               tokensInstancesUpdated = await loadTokensContracts(_tokensInstances)
               progress = 11
               break;
 
-              // Step 1: get tokens source user balances
+            // Step 1: get tokens source user balances
             case EStepsLoadTokensData.sourceBalances:
-              console.debug(`StepsContainer.tsx loadTokensOnChainData Step 0: GET USER TOKENS BALANCES`)
-              console.debug(`StepsContainer.tsx loadTokensOnChainData Step 0: GET USER TOKENS BALANCES _tokensInstances.length=${_tokensInstances.length} _tokensInstances=`)
-              console.dir(_tokensInstances)
+              console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.sourceBalances: GET USER TOKENS BALANCES`)
+              // console.debug(`StepsContainer.tsx loadTokensOnChainData Step 0: GET USER TOKENS BALANCES _tokensInstances.length=${_tokensInstances.length} _tokensInstances=`)
+              // console.dir(_tokensInstances)
               // const balancesSourceMulticallArray = _tokensInstances.map( async (token) => {
               multicallArray = _tokensInstances.map( async (token) => {
                 if (token?.contract) {
@@ -1088,6 +1088,7 @@ const StepsContainer = ( {
 
             // Step 2: get token decimals
             case EStepsLoadTokensData.decimals:
+              console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.decimals: GET TOKENS DECIMALS`)
               // const decimalsMulticallArray = _tokensInstances.map( async (token) => {
                 multicallArray = _tokensInstances.map( async (token) => {
                 if (token?.contract) {
@@ -1104,6 +1105,7 @@ const StepsContainer = ( {
 
             // Step 3: get token name
             case EStepsLoadTokensData.names:
+              console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.names: GET TOKENS NAMES`)
               // const nameMulticallArray = _tokensInstances.map( async (token) => {
               multicallArray = _tokensInstances.map( async (token) => {
                 if (token?.contract) {
@@ -1120,6 +1122,7 @@ const StepsContainer = ( {
 
             // Step 4: get token symbol
             case EStepsLoadTokensData.symbols:
+              console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.symbols: GET TOKENS SYMBOLS`)
               // const symbolMulticallArray = _tokensInstances.map( async (token) => {
               multicallArray = _tokensInstances.map( async (token) => {
                 if (token?.contract) {
@@ -1137,6 +1140,7 @@ const StepsContainer = ( {
 
             // Step 5: get tokens target user balances
             case EStepsLoadTokensData.targetBalances:
+              console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.targetBalances: GET TARGET USER TOKENS BALANCES`)
               // const balancesTargetMulticallArray = _tokensInstances.map( async (token) => {
               multicallArray = _tokensInstances.map( async (token) => {
                 if (token?.contract) {
@@ -1155,6 +1159,7 @@ const StepsContainer = ( {
 
             // Step 6: get canTransfer token from address to address
             case EStepsLoadTokensData.transferAbility:
+              console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.transferAbility: GET TOKENS TRANSFER ABILITY`)
               // const canTransferMulticallArray = _tokensInstances.map( async (token) => {
               multicallArray = _tokensInstances.map( async (token) => {
 
