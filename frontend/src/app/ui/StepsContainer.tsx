@@ -1546,14 +1546,17 @@ const StepsContainer = ( {
             console.dir(_tokensInstances)
 
             if (chainTokensList.loadState == EChainTokensListLoadState.notLoaded) {
+              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EStepsLoadTokensData == NOTLOADED`)
               // Load contracts
               _tokensInstances = await loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.contracts,true,null,"", true)
+              chainTokensList.loadState = EChainTokensListLoadState.contracts
               console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EStepsLoadTokensData.contracts _tokensInstances =`)
               console.dir(_tokensInstances)
-              chainTokensList.loadState = EChainTokensListLoadState.contracts
             }
 
             if (chainTokensList.loadState == EChainTokensListLoadState.contracts) {
+
+              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState.CONTRACTS`)
               // Load everything else : sourceBalances, decimals, names, symbols
               // tokens names
               const names = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.names,true,null,"", true)
@@ -1597,10 +1600,13 @@ const StepsContainer = ( {
               // update chainTokensList
               chainTokensList.tokensInstances = tokensInstancesAllData;
               if (!targetAddress) {
+                console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances (names, user balances, decimals, symbols) targetAddress is NOT SET`)
                 // Everything up to symbols included is loaded
                 chainTokensList.loadState = EChainTokensListLoadState.symbols
               } else {
                 // Everything up to transferAbility included is loaded
+                console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances (names, user balances, decimals, symbols, target balances, cantransfer) targetAddress IS SET`)
+                
                 chainTokensList.loadState = EChainTokensListLoadState.transferAbility
               }
 
@@ -1608,13 +1614,22 @@ const StepsContainer = ( {
 
             } // if (chainTokensList.loadState == EChainTokensListLoadState.contracts)
             else {
+              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState. <> CONTRACTS`)
               // Contracts, names, sourceBalances, decimals, symbols already loaded
 
               // Check if targetAddress is set
+              // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+              // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+              // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+              // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+
               if (targetAddress) {
+
+                console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState. <> CONTRACTS targetAddress is set`)
 
                 // Load State : Symbol = load targetBalances, transferAbility
                 if (chainTokensList.loadState == EChainTokensListLoadState.symbols) {
+                  console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState == SYMBOLS targetAddress is set`)
                   // Load target balances
                   // tokens target user balances
                   const targetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true);
@@ -1645,6 +1660,14 @@ const StepsContainer = ( {
                   chainTokensList.loadState = EChainTokensListLoadState.transferAbility
                   
                 } // if (chainTokensList.loadState == EChainTokensListLoadState.symbols)
+                else {
+                  console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState <> SYMBOLS targetAddress is set`)
+                  // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+                  // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+                  // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+                  // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+                  console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState=${chainTokensList.loadState} TARGETADDRESS is set, nothing to do`)
+                }
                 // // Load State : targetBalances = load transferAbility
                 // if (chainTokensList.loadState == EChainTokensListLoadState.targetBalances) {
                 //   // Load transfer ability
