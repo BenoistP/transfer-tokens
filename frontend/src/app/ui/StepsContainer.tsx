@@ -988,8 +988,8 @@ const StepsContainer = ( {
       let multicallRes : any[] = [];
 
       try {
-        console.debug(`StepsContainer.tsx fetchOnChainDataWrapper multicallInput.length: ${multicallInput.length} multicallInput=`);
-        console.dir(multicallInput);
+        // console.debug(`StepsContainer.tsx fetchOnChainDataWrapper multicallInput.length: ${multicallInput.length} multicallInput=`);
+        // console.dir(multicallInput);
         const multicallInputCall = [] as any[] // contains real multicall inputs
         const inputRes = [] as any[] // contains inputs
 
@@ -1656,7 +1656,7 @@ const StepsContainer = ( {
               } // if (targetAddress)
               else {
 
-                console.warn(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState=${chainTokensList.loadState} BUT TARGETADDRESS is NOT YET set`)
+                console.info(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState=${chainTokensList.loadState} BUT TARGETADDRESS is NOT YET set, nothing to do`)
               }
 
             } // else
@@ -1786,39 +1786,25 @@ const StepsContainer = ( {
         // setisLoading(false)
         // return tokensInstances // RETURN
 
-        // TODO: update newSelectedChainsTokensList tokensInstances
+        const updatedTokensInstancesArray = getUpdatedTokensInstancesArray(newSelectedChainsTokensList)
+        updatedTokensInstancesArray.then( (updatedTokensInstancesArray:TTokensInstances[]) => {
 
-          // // For each chain tokens list, get/update its tokens instances
-          // const tokenInstancesPromises = newSelectedChainsTokensList?.map( (chainTokensList:TChainsTokensListNullUndef) => {
-          //   // console.dir(chainTokensList)
-          //   const t = getUpdatedChainTokensListTokensInstances(chainTokensList)
-          //   console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: getUpdatedChainTokensListTokensInstances t=`)
-          //   console.dir(t)
-          //   // update
-          //   // chainTokensList.tokensInstances = t
-          //   return t
-          // })
+          if (updatedTokensInstancesArray && updatedTokensInstancesArray.length) {
+            newSelectedChainsTokensList.forEach( (newSelectedChainsTokensList:TChainsTokensListNullUndef, index) => {
+              // Update each newSelectedChainsTokensList with updated tokensInstances
+              if (newSelectedChainsTokensList && updatedTokensInstancesArray[index] ) {
+                console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: updatedTokensInstancesArray[${index}]=`)
+                console.dir(updatedTokensInstancesArray[index])
+                newSelectedChainsTokensList.tokensInstances = updatedTokensInstancesArray[index]
+              }
+            })
+    
+          } // if (_tokenInstancesArray)
+          else {
+            console.warn(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: updatedTokensInstancesArray.length <= 00`)
+          }
 
-          // const _tokenInstances = await Promise.all(tokenInstancesPromises  as Promise<TTokensInstances>[])
-          const updatedTokensInstancesArray = getUpdatedTokensInstancesArray(newSelectedChainsTokensList)
-          updatedTokensInstancesArray.then( (updatedTokensInstancesArray:TTokensInstances[]) => {
-
-            if (updatedTokensInstancesArray && updatedTokensInstancesArray.length) {
-              newSelectedChainsTokensList.forEach( (newSelectedChainsTokensList:TChainsTokensListNullUndef, index) => {
-                // Update each newSelectedChainsTokensList with updated tokensInstances
-                if (newSelectedChainsTokensList && updatedTokensInstancesArray[index] ) {
-                  console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: updatedTokensInstancesArray[${index}]=`)
-                  console.dir(updatedTokensInstancesArray[index])
-                  newSelectedChainsTokensList.tokensInstances = updatedTokensInstancesArray[index]
-                }
-              })
-      
-            } // if (_tokenInstancesArray)
-            else {
-              console.warn(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: updatedTokensInstancesArray.length <= 00`)
-            }
-
-          })
+        }) // updatedTokensInstancesArray.then
 
 
 
@@ -1830,8 +1816,6 @@ const StepsContainer = ( {
         
       }
 
-
-      
       setselectedChainsTokensList(newSelectedChainsTokensList)
 
     } catch (error) {
@@ -1852,10 +1836,21 @@ const StepsContainer = ( {
   )
 
   useEffect(() => {
-    console.debug(`StepsContainer.tsx useEffect [SELECTEDCHAINSTOKENSLIST]`)
-    
+    // console.debug(`StepsContainer.tsx useEffect [SELECTEDCHAINSTOKENSLIST]`)
     console.debug(`StepsContainer.tsx useEffect [SELECTEDCHAINSTOKENSLIST] = selectedChainsTokensList[]=`)
     console.dir(selectedChainsTokensList)
+
+    const tokensInstancesFromSelectedTokensLists: TTokensInstances = []
+    if (selectedChainsTokensList && selectedChainsTokensList.length) {
+      selectedChainsTokensList.forEach( (selectedChainsTokensList:TChainsTokensListNullUndef) => {
+      
+        if (selectedChainsTokensList && selectedChainsTokensList.tokensInstances && selectedChainsTokensList.tokensInstances.length) {
+          tokensInstancesFromSelectedTokensLists.push(...selectedChainsTokensList.tokensInstances)
+        }
+        })
+
+      settokensInstances(tokensInstancesFromSelectedTokensLists)
+    }
   
   }, [selectedChainsTokensList])
   
