@@ -2,13 +2,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 // Components
-import MainContentContainer from "./MainContentContainer";
+import MainContentContainer from "@components/MainContentContainer";
 
-import StepError from "./StepError";
-import Step0 from "./Step0";
-import Step1 from "./Step1";
-import Step2 from "./Step2";
-import Step3 from "./Step3";
+import StepError from "@components/StepError";
+import Step0 from "@components/Step0";
+import Step1 from "@components/Step1";
+import Step2 from "@components/Step2";
+import Step3 from "@components/Step3";
 
 // Context Hooks
 import { useMoveTokensAppContext } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
