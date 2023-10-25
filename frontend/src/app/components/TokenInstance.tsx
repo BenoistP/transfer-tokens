@@ -15,9 +15,9 @@ import { NoSymbolIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
-const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddress, changeCheckboxStatus, editable }: ITokenProps ) => {
+const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddress, changeCheckboxStatus, enableEditable }: ITokenProps ) => {
 
-  // console.debug(`TokenInstance.tsx (${index}) RealToken render realTokenInstance.userData.address=${realTokenInstance.userData.address} realTokenInstance.address=${realTokenInstance.address} realTokenInstance.userData.amount=${realTokenInstance.userData.amount}`)
+  // console.debug(`TokenInstance.tsx render`)
   const { t } = useTranslation()
 
   const [decimals, setdecimals] = useState<bigint>(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT))) as [bigint, (balance:bigint) => void];
@@ -137,7 +137,6 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
         changeCheckboxStatus(id);
       } /* else {
         console.debug(`TokenInstance.tsx: handleCheckboxClick( id:${id} ) balance:${balance}`)
-        console.dir(realToken);
       } */
     },
     [
@@ -212,7 +211,6 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
           changeCheckboxStatus(id);
         } /* else {
           console.debug(`TokenInstance.tsx: handleCheckboxClick( id:${id} ) balance:${balance}`)
-          console.dir(realToken);
         } */
       }
     },
@@ -239,12 +237,18 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
   const clsTextPaddingLeft = "pl-2 "
   const clsText = clsTextPaddingLeft + (balance && balance.valueOf() > 0n ? clsTextReadable : clsTextLight)
   const clsTooltipLeft = "tooltip tooltip-left " + clsTextReadable
-  
+
 
   // const showCanTransfer = targetAddress && tokenInstance.userData[targetAddress as any]
   // const cantTransfer = !tokenInstance.userData[accountAddress as any]?.canTransfer
-  const cantTransfer = (targetAddress && tokenInstance.userData[targetAddress as any]) ? !tokenInstance.userData[accountAddress as any]?.canTransfer : false
+  // const cantTransfer = (targetAddress && (tokenInstance.userData[targetAddress as any] != undefined)) ? !tokenInstance.userData[accountAddress as any]?.canTransfer : false
   // typeof accountAddress == "string" && tokenInstance.userData[accountAddress as any] && !tokenInstance.userData[accountAddress as any].canTransfer
+  const canTransfer = (targetAddress && (tokenInstance.userData[targetAddress as any] )) ? tokenInstance.userData[accountAddress as any]?.canTransfer : false
+
+  // console.debug(`TokenInstance.tsx render cantTransfer=${cantTransfer} (targetAddress && (tokenInstance.userData[targetAddress as any] != undefined))=${(targetAddress && (tokenInstance.userData[targetAddress as any] != undefined))} tokenInstance.userData[targetAddress as any]=`)
+  console.debug(`TokenInstance.tsx render canTransfer=${canTransfer} ; if(targetAddress && (tokenInstance.userData[targetAddress as any] ))="${(targetAddress && (tokenInstance.userData[targetAddress as any] ))?true:false }" ; tokenInstance.userData[targetAddress as any]=`)
+  // console.dir(tokenInstance.userData[targetAddress as any])
+
 
   return (
     <>
@@ -262,29 +266,37 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
       <td className={clsText + " text-right pr-2"}>
         {balanceString ? balanceString : <Loading/>}
       </td>
-      { editable && changeCheckboxStatus ?
+      { enableEditable ?
         <td className="">
-          <input
-            type="checkbox"
-            className="checkbox checkbox-xs sm:checkbox-md md:checkbox-md mt-1 "
-            checked={isSelected}
-            onChange={(/* e */) => handleCheckboxClick(/* e, index,*/  /* tokenInstance */)}
-            disabled={isDisabled}
-          />
+          { canTransfer && changeCheckboxStatus ?
+              <input
+                type="checkbox"
+                className="checkbox checkbox-xs sm:checkbox-md md:checkbox-md mt-1 "
+                checked={isSelected}
+                onChange={(/* e */) => handleCheckboxClick(/* e, index,*/  /* tokenInstance */)}
+                disabled={isDisabled}
+              />
+              :
+              null
+          }
         </td>
-          :
-        null
+        :
+          null
       }
-       {editable ?
-        <td className={"p-1 "}>
-          <TokenInstanceEditableAmount selectable={tokenInstance.selectable} balance={(balance && balance.valueOf()?balance.valueOf(): 0n)} amount={(amount && amount.valueOf()?amount.valueOf():0n)} setamount={setamount} decimals={Number(decimals)/* tokenInstance.decimals */} unSelect={unSelect} />
-        </td>
-      :
-        null
+      { enableEditable ?
+          <td className={"p-1 "}>
+            { canTransfer ?
+              <TokenInstanceEditableAmount selectable={tokenInstance.selectable} balance={(balance && balance.valueOf()?balance.valueOf(): 0n)} amount={(amount && amount.valueOf()?amount.valueOf():0n)} setamount={setamount} decimals={Number(decimals)/* tokenInstance.decimals */} unSelect={unSelect} />
+              :
+              null
+            }
+          </td>
+        :
+          null
       }
       <td className={"min-h-full items-center justify-center" /* + clsText */ }>
         <div className="md:flex">
-        { cantTransfer
+        { targetAddress && !canTransfer // cantTransfer
           &&
           <div className={clsTooltipLeft + " tooltip-warning"} data-tip={t("moveTokens.stepTwo.token.noTransferTo")} >
             <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
@@ -294,7 +306,7 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
           (tokenInstance.symbol || tokenInstance.address) &&
           <div className={clsTooltipLeft + " tooltip-info text-base-content tracking-tight"} data-tip={tokenInstance.symbol + "\n" + tokenInstance.address} >
             <span className="badge badge-ghost badge-sm bg-neutral text-neutral-content border border-neutral-content">
-            Details
+              {t("moveTokens.stepTwo.token.details")}
             </span>
           </div>
         }

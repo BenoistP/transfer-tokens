@@ -33,9 +33,8 @@ const TokenInstanceList = ( {
                 tokenInstance={tokenInstance}
                 accountAddress={accountAddress}
                 changeCheckboxStatus={null}
-                // index={index+1}
                 targetAddress={targetAddress}
-                editable={false}
+                enableEditable={false}
               />
             </tr>
           )

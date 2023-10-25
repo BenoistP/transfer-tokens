@@ -78,7 +78,8 @@
         "empty": "Aucun token trouvé"
       },
       "token": {
-        "noTransferTo": "Can't transfer to this address"
+        "noTransferTo": "Can't transfer to this address",
+        "details": "Détails"
       }
     },
 

@@ -550,7 +550,7 @@ interface ITokenProps {
   accountAddress: TAddressNullUndef;
   changeCheckboxStatus: IChangeCheckboxStatus|null;
   targetAddress: TAddressEmpty,
-  editable: boolean,
+  enableEditable: boolean,
 }
 
 
