@@ -491,7 +491,6 @@ const StepsContainer = ( {
     [chainId, selectableTokensLists]
   ) // hasSomeTokenListSelected
 
-
   // ---
 
   const getSelectedTokenLists = useCallback( (selectableTokensLists:TSelectableTokensLists):TSelectableTokensLists =>
@@ -513,8 +512,6 @@ const StepsContainer = ( {
     },
     [chainId]
   ) // getSelectedTokenLists
-
-  // (selectableTokensList.selected && selectableTokensList.chainId == chainId)
 
   // ------------------------------
 
@@ -582,6 +579,32 @@ const StepsContainer = ( {
 
   // ------------------------------
 
+  const getMaxBatchSize = ( defaultBatchSize: number ) =>
+  {
+   let MAXBATCHSIZE = defaultBatchSize;
+   try {
+     const val = // getPublicEnv("PUBLIC_MULTICALL_MAX_BATCH_SIZE")
+      import.meta.env.PUBLIC_MULTICALL_MAX_BATCH_SIZE
+     if (val) {
+       MAXBATCHSIZE = Number.isSafeInteger(Number.parseFloat(val))
+         ? Number.parseInt(val, 10)
+         : defaultBatchSize;
+       }
+       return MAXBATCHSIZE
+     } catch (error) {
+     console.error(`StepsContainer.tsx getMaxBatchSize error: ${error}`);
+     return MAXBATCHSIZE
+   }
+  } // getMaxBatchSize
+
+  const MAXBATCHSIZE:number = useMemo( () =>
+    {
+      return getMaxBatchSize(PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT)
+    },
+    []
+  ) // MAXBATCHSIZE
+
+  // ---
 
   const loadTokensContracts = useCallback( async(tokensInstances:TTokensInstances/* TTokenChainDataArray */):Promise<TTokensInstances> =>
     {
@@ -611,36 +634,6 @@ const StepsContainer = ( {
   ); // loadTokensContracts
 
   // ---
-
-  const getMaxBatchSize = ( defaultBatchSize: number ) =>
-  {
-   let MAXBATCHSIZE = defaultBatchSize;
-   try {
-     const val = // getPublicEnv("PUBLIC_MULTICALL_MAX_BATCH_SIZE")
-      import.meta.env.PUBLIC_MULTICALL_MAX_BATCH_SIZE
-     if (val) {
-       MAXBATCHSIZE = Number.isSafeInteger(Number.parseFloat(val))
-         ? Number.parseInt(val, 10)
-         : defaultBatchSize;
-       }
-       return MAXBATCHSIZE
-     } catch (error) {
-     console.error(`StepsContainer.tsx getMaxBatchSize error: ${error}`);
-     return MAXBATCHSIZE
-   }
-  //  finally {
-  //    console.debug(`StepsContainer.tsx getMaxBatchSize MAXBATCHSIZE: ${MAXBATCHSIZE}`);
-  //  }
-  }
-
-  const MAXBATCHSIZE:number = useMemo( () =>
-    {
-      return getMaxBatchSize(PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT)
-    },
-    []
-  )
-
- // ---
 
   const fetchOnChainData = useCallback( async(multicallInput : any[] ) :  Promise<any[]>  =>
    {
@@ -678,7 +671,7 @@ const StepsContainer = ( {
     [MAXBATCHSIZE]
   ); // fetchOnChainData
 
- // ---
+  // ---
 
   const fetchOnChainDataWrapper = useCallback( async(multicallInput : any[] ) : Promise<any[]> =>
     {
@@ -733,8 +726,10 @@ const StepsContainer = ( {
 
   // ---
 
-  const loadTokensOnChainData = useCallback( async(_tokensInstances: TTokensInstances  /* TTokenInstance[] */ /* tokens:TTokenChainDataArray */
-  , step:number, _showProgressBar:boolean, _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef, resultOnly:boolean ):Promise<TTokensInstances> =>
+  const loadTokensOnChainData = useCallback( async(
+    _tokensInstances: TTokensInstances, step:number, _showProgressBar:boolean,
+    _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef, _resultOnly:boolean 
+    ): Promise<TTokensInstances> =>
     {
       try {
         // console.debug(`StepsContainer.tsx loadTokensOnChainData ProgressBar _tokensInstances?.length=${_tokensInstances?.length}}, step=${step}`)
@@ -928,7 +923,7 @@ const StepsContainer = ( {
                       // canTransfer: false,
                     } as TTokenInstanceUserData)
                   } // if (_from && typeof _from == 'string')
-                  if (resultOnly) {
+                  if (_resultOnly) {
                     return {
                       userData: tokenInstanceUserDataArray,
                     };
@@ -944,7 +939,7 @@ const StepsContainer = ( {
                 // Step 2: get token decimals
                 if (step == EStepsLoadTokensData.decimals) {
                   // decimals
-                  if (resultOnly) {
+                  if (_resultOnly) {
                     return {
                       decimals: onchainData[index]?.result, // Token decimals
                     };
@@ -958,7 +953,7 @@ const StepsContainer = ( {
                 // Step 3: get token name
                 if (step == EStepsLoadTokensData.names) {
                   // name
-                  if (resultOnly) {
+                  if (_resultOnly) {
                     return {
                       name: onchainData[index]?.result, // Token name
                     };
@@ -972,7 +967,7 @@ const StepsContainer = ( {
                 // Step 4: get token symbol
                 if (step == EStepsLoadTokensData.symbols) {
                   // symbol
-                  if (resultOnly) {
+                  if (_resultOnly) {
                     return {
                       symbol: onchainData[index]?.result, // Token symbol
                     };
@@ -1001,7 +996,7 @@ const StepsContainer = ( {
                     } as TTokenInstanceUserData)
 
                   } // if (_to && typeof _to == 'string')
-                  if (resultOnly) {
+                  if (_resultOnly) {
                     return {
                       userData: tokenInstanceUserDataArray,
                     };
@@ -1049,7 +1044,7 @@ const StepsContainer = ( {
                   //     canTransfer: onchainData[index]?.result, // can transfer from to
                   //   } as TTokenInstanceUserData)
                   // } // if (_to && typeof _to == 'string')
-                  if (resultOnly) {
+                  if (_resultOnly) {
                     return {
                       userData: tokenInstanceUserDataArray,
                     };
@@ -1071,7 +1066,7 @@ const StepsContainer = ( {
               // setProgressBarPercentage(100)
               // console.debug(`loadTokensOnChainData connectedAddress:${connectedAddress} allPromiseResolved.length: ${allPromiseResolved.length}`);
               // console.dir(allPromiseResolved);
-              tokensInstancesUpdated = allPromiseResolved as TTokensInstances; // FORCE type for resultOnly results
+              tokensInstancesUpdated = allPromiseResolved as TTokensInstances; // FORCE type for _resultOnly results
               // settokensInstances(allPromiseResolved);
   
             } // if (onchainData?.length > 0
@@ -1109,337 +1104,335 @@ const StepsContainer = ( {
 
   useEffect( () =>
   {
-
-    /**
-     * 
-     * @param chainTokensList
-     * on chain data loading must be done in order
-     * @returns Promise<TTokensInstances>
-     */
-
-    const getUpdatedChainTokensListTokensInstances = async( chainTokensList:TChainsTokensListNullUndef ) : Promise<TTokensInstances> =>
-    {
-      try {
-        
-        console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.chainId=${chainTokensList?.chainId} chainTokensList.tokensCount=${chainTokensList?.tokensCount} chainTokensList.tokensInstances?.length=${chainTokensList?.tokensInstances?.length}`)
-        
-        let _tokensInstances:TTokensInstances;
-        if (chainTokensList && chainTokensList.tokensInstances && chainTokensList.tokensInstances.length) {
-          // let tmp: TTokensInstances = []
-          _tokensInstances = chainTokensList.tokensInstances;
-          console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances _tokensInstances =`)
-          console.dir(_tokensInstances)
-
-          if (chainTokensList.loadState == EChainTokensListLoadState.notLoaded) {
-            console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EStepsLoadTokensData == NOTLOADED`)
-            // Load contracts
-            _tokensInstances = await loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.contracts,true,null,"", true)
-            chainTokensList.loadState = EChainTokensListLoadState.contracts
-            console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EStepsLoadTokensData.contracts _tokensInstances =`)
+      /**
+       * 
+       * @param chainTokensList
+       * on chain data loading must be done in order
+       * @returns Promise<TTokensInstances>
+       */
+      const getUpdatedChainTokensListTokensInstances = async( chainTokensList:TChainsTokensListNullUndef ) : Promise<TTokensInstances> =>
+      {
+        try {
+          
+          console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.chainId=${chainTokensList?.chainId} chainTokensList.tokensCount=${chainTokensList?.tokensCount} chainTokensList.tokensInstances?.length=${chainTokensList?.tokensInstances?.length}`)
+          
+          let _tokensInstances:TTokensInstances;
+          if (chainTokensList && chainTokensList.tokensInstances && chainTokensList.tokensInstances.length) {
+            // let tmp: TTokensInstances = []
+            _tokensInstances = chainTokensList.tokensInstances;
+            console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances _tokensInstances =`)
             console.dir(_tokensInstances)
-          }
 
-          if (chainTokensList.loadState == EChainTokensListLoadState.contracts) {
-
-            console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState.CONTRACTS`)
-            // Load everything else : sourceBalances, decimals, names, symbols
-            // tokens names
-            const names = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.names,true,null,"", true)
-            // tokens connected user (source) balances
-            const sourceBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.sourceBalances,true,connectedAddress,"", true)
-            // tokens decimals
-            const decimals = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.decimals,true,null,"", true)
-            // tokens symbols
-            const symbols = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.symbols,true,null,"", true)
-
-            // If targetAddress is set, Load Additionnal data: targetBalances, transferAbility
-            // tokens target user balances
-            const targetBalances = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true) : null ;
-            // tokens transfer ability
-            const canTransfer = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true) : null ;
-
-            // Wait for all promises to resolve
-            const loadTokensOnChainDataPromises = targetAddress ? await Promise.all([names, sourceBalances, decimals, symbols, targetBalances, canTransfer]) : await Promise.all([names, sourceBalances, decimals, symbols]) ;
-
-            // Merge loadTokensOnChainDataPromises results
-            const tokensInstancesAllData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
-              if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] && loadTokensOnChainDataPromises[2] && loadTokensOnChainDataPromises[3] ) {
-                _tokenInstance.name = loadTokensOnChainDataPromises[0][index].name // tokens names
-                _tokenInstance.userData = loadTokensOnChainDataPromises[1][index].userData // user balances
-                _tokenInstance.decimals = loadTokensOnChainDataPromises[2][index].decimals // tokens decimals
-                _tokenInstance.symbol = loadTokensOnChainDataPromises[3][index].symbol // tokens symbols
-                if (loadTokensOnChainDataPromises[4] && loadTokensOnChainDataPromises[5]) {
-                  _tokenInstance.userData = {
-                    ..._tokenInstance.userData,
-                    ...loadTokensOnChainDataPromises[4][index].userData, // target balances
-                    ...loadTokensOnChainDataPromises[5][index].userData, // can transfer
-                  }
-                }
-              }
-              return _tokenInstance;
-            })
-
-            console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER MERGE promises (names, user balances, decimals, symbols, [target balances, cantransfer]) tokensInstancesAllData =`)
-            console.dir(tokensInstancesAllData)
-
-            // update chainTokensList
-            chainTokensList.tokensInstances = tokensInstancesAllData;
-            if (!targetAddress) {
-              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances (names, user balances, decimals, symbols) targetAddress is NOT SET`)
-              // Everything up to symbols included is loaded
-              chainTokensList.loadState = EChainTokensListLoadState.symbols
-            } else {
-              // Everything up to transferAbility included is loaded
-              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances (names, user balances, decimals, symbols, target balances, cantransfer) targetAddress IS SET`)
-              
-              chainTokensList.loadState = EChainTokensListLoadState.transferAbility
+            if (chainTokensList.loadState == EChainTokensListLoadState.notLoaded) {
+              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EStepsLoadTokensData == NOTLOADED`)
+              // Load contracts
+              _tokensInstances = await loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.contracts,true,null,"", true)
+              chainTokensList.loadState = EChainTokensListLoadState.contracts
+              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EStepsLoadTokensData.contracts _tokensInstances =`)
+              console.dir(_tokensInstances)
             }
 
+            if (chainTokensList.loadState == EChainTokensListLoadState.contracts) {
 
+              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState.CONTRACTS`)
+              // Load everything else : sourceBalances, decimals, names, symbols
+              // tokens names
+              const names = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.names,true,null,"", true)
+              // tokens connected user (source) balances
+              const sourceBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.sourceBalances,true,connectedAddress,"", true)
+              // tokens decimals
+              const decimals = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.decimals,true,null,"", true)
+              // tokens symbols
+              const symbols = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.symbols,true,null,"", true)
 
-          } // if (chainTokensList.loadState == EChainTokensListLoadState.contracts)
-          else {
-            console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState. <> CONTRACTS`)
-            // Contracts, names, sourceBalances, decimals, symbols already loaded
+              // If targetAddress is set, Load Additionnal data: targetBalances, transferAbility
+              // tokens target user balances
+              const targetBalances = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true) : null ;
+              // tokens transfer ability
+              const canTransfer = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true) : null ;
 
-            // Check if targetAddress is set
-            // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
-            // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
-            // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
-            // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+              // Wait for all promises to resolve
+              const loadTokensOnChainDataPromises = targetAddress ? await Promise.all([names, sourceBalances, decimals, symbols, targetBalances, canTransfer]) : await Promise.all([names, sourceBalances, decimals, symbols]) ;
 
-            if (targetAddress) {
-
-              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState. <> CONTRACTS targetAddress is set`)
-
-              // Load State : Symbol = load targetBalances, transferAbility
-              if (chainTokensList.loadState == EChainTokensListLoadState.symbols) {
-                console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState == SYMBOLS targetAddress is set`)
-                // Load target balances
-                // tokens target user balances
-                const targetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true);
-                // tokens transfer ability
-                const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true);
-
-                // Wait for all promises to resolve
-                const loadTokensOnChainDataPromises = await Promise.all([targetBalances, canTransfer]);
-
-                // Merge loadTokensOnChainDataPromises results
-                const tokensInstancesAllData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
-                  if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] ) {
+              // Merge loadTokensOnChainDataPromises results
+              const tokensInstancesAllData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
+                if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] && loadTokensOnChainDataPromises[2] && loadTokensOnChainDataPromises[3] ) {
+                  _tokenInstance.name = loadTokensOnChainDataPromises[0][index].name // tokens names
+                  _tokenInstance.userData = loadTokensOnChainDataPromises[1][index].userData // user balances
+                  _tokenInstance.decimals = loadTokensOnChainDataPromises[2][index].decimals // tokens decimals
+                  _tokenInstance.symbol = loadTokensOnChainDataPromises[3][index].symbol // tokens symbols
+                  if (loadTokensOnChainDataPromises[4] && loadTokensOnChainDataPromises[5]) {
                     _tokenInstance.userData = {
                       ..._tokenInstance.userData,
-                      ...loadTokensOnChainDataPromises[0][index].userData, // target balances
-                      ...loadTokensOnChainDataPromises[1][index].userData, // can transfer
+                      ...loadTokensOnChainDataPromises[4][index].userData, // target balances
+                      ...loadTokensOnChainDataPromises[5][index].userData, // can transfer
                     }
                   }
-                  return _tokenInstance;
-                })
-
-                console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER MERGE promises (target balances, cantransfer) tokensInstancesAllData =`)
-                console.dir(tokensInstancesAllData)
-  
-                // update chainTokensList
-                chainTokensList.tokensInstances = tokensInstancesAllData;
-                // Everything up to transferAbility included is loaded
-                chainTokensList.loadState = EChainTokensListLoadState.transferAbility
-                
-              } // if (chainTokensList.loadState == EChainTokensListLoadState.symbols)
-              else {
-                console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState <> SYMBOLS targetAddress is set`)
-                // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
-                // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
-                // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
-                // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
-                console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState=${chainTokensList.loadState} TARGETADDRESS is set, NOTHING TO DO`)
-              }
-              // // Load State : targetBalances = load transferAbility
-              // if (chainTokensList.loadState == EChainTokensListLoadState.targetBalances) {
-              //   // Load transfer ability
-              //   _tokensInstances = await loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true)
-              //   chainTokensList.loadState = EChainTokensListLoadState.transferAbility
-
-              // }
-
-            } // if (targetAddress)
-            else {
-
-              console.info(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState=${chainTokensList.loadState} BUT TARGETADDRESS is NOT YET set, nothing to do`)
-            }
-
-          } // else
-
-          return chainTokensList.tokensInstances;
-        } // if (chainTokensList && chainTokensList.tokensInstances && chainTokensList.tokensInstances.length)
-        else {
-          console.warn(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList is NULL/UNDEF`)
-        }
-        // return undefined;
-      } catch (error) {
-        console.error(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances error: ${error}`);
-      }
-  
-    } // getUpdatedChainTokensListTokensInstances
-    
-
-    // const getUpdatedTokensInstancesArray = async (_chainsTokensList:TChainsTokensListArrayNullUndef):Promise<TTokensInstances[] | undefined> => {
-    const getUpdatedTokensInstancesArray = async (_chainsTokensList:TChainsTokensListArrayNullUndef):Promise<TTokensInstances[]/*  | undefined */> => {
-      let result:TTokensInstances[] = []
-      try {
-        console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray`)
-
-        // For each chain tokens list, get/update its tokens instances
-        const tokenInstancesPromises = _chainsTokensList?.map( (chainTokensList:TChainsTokensListNullUndef) => {
-          // console.dir(chainTokensList)
-          const t = getUpdatedChainTokensListTokensInstances(chainTokensList)
-          console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray: getUpdatedChainTokensListTokensInstances t=`)
-          console.dir(t)
-          // update
-          // chainTokensList.tokensInstances = t
-          return t
-        })
-
-        const tokenInstancesArrayUpdated = await Promise.all(tokenInstancesPromises  as Promise<TTokensInstances>[])
-
-        // return tokenInstancesArrayUpdated;
-        result = tokenInstancesArrayUpdated;
-
-
-      } catch (error) {
-        console.error(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray error: ${error}`);
-      }
-
-      console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray result=`)
-      console.dir(result)
-      return result
-      
-    } // getUpdatedTokensInstancesArray
-
-
-    try {
-      // setisLoading(true)
-      console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]`)
-
-
-      const newSelectedChainsTokensList:TChainsTokensListArrayNullUndef = [];
-      // const tokensInstances:TTokensInstances = [];
-
-      // console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: tokensLists=${tokensLists}`)
-
-      const selectedTokenLists = getSelectedTokenLists(selectableTokensLists);
-      console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: selectedTokenLists.length = ${selectedTokenLists?.length}, selectedTokenLists= `)
-      console.dir(selectedTokenLists)
-      selectedTokenLists?.map( (selectedTokenList:TSelectableTokensList) => {
-        console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: selectedTokenList=`)
-        console.dir(selectedTokenList)
-        // Find selected tokensList in all tokensLists
-        
-        tokensLists?.forEach( (tokensList:TTokensList) => {
-          console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: tokensList.id=${tokensList.id} (current) tokensList=`)
-          console.dir(tokensList)
-          if (tokensList.id == selectedTokenList.tokensList.id) {
-            console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: MATCH tokensList.id == selectedTokenList.tokensList.id  tokensList.id=${tokensList.id}`)
-            const chainTokensList = getChainTokensList(tokensList, chainId) // TChainsTokensListNullUndef
-            newSelectedChainsTokensList.push(chainTokensList)
-          }
-        }) // tokensLists?.forEach
-        
-      })
-      console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: newSelectedChainsTokensList.length = ${newSelectedChainsTokensList?.length}, newSelectedChainsTokensList[]=`)
-      console.dir(newSelectedChainsTokensList)
-
-      // console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: newSelectedChainsTokensList to TTokenChainDataArray`)
-      if (newSelectedChainsTokensList.length > 0) {
-        // let tokensCount = 0
-        newSelectedChainsTokensList.forEach( (selected_chainTokensList:TChainsTokensListNullUndef) => {
-          if (selected_chainTokensList) {
-            
-            if (selected_chainTokensList.tokensCount != selected_chainTokensList.tokensInstances?.length) {
-              // Init tokensInstances
-              console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: (RE)INIT selected_chainTokensList.tokensInstances selected_chainTokensList.tokensCount=${selected_chainTokensList.tokensCount} selected_chainTokensList.tokensInstances?.length=${selected_chainTokensList.tokensInstances?.length}`)
-              const selected_chainTokensList_tokensInstances:TTokensInstances = [];
-              // console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: selected_chainTokensList.chainId=${selected_chainTokensList.chainId} selected_chainTokensList.tokensCount=${selected_chainTokensList.tokensCount}`)
-              selected_chainTokensList.tokens?.forEach( (token:TTokenChainData, index) => {
-                const _tokenInstance = initTokenInstance(token, index+1)
-                if (_tokenInstance) selected_chainTokensList_tokensInstances.push(_tokenInstance);
+                }
+                return _tokenInstance;
               })
 
-              // Update selected ChainsTokensList tokensInstances
-              selected_chainTokensList.tokensInstances = selected_chainTokensList_tokensInstances;
-              // _selectedChainsTokensList.push(selected_chainTokensList)
-              
-            } // if (selected_chainTokensList.tokensCount != selected_chainTokensList.tokensInstances?.length)
+              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER MERGE promises (names, user balances, decimals, symbols, [target balances, cantransfer]) tokensInstancesAllData =`)
+              console.dir(tokensInstancesAllData)
+
+              // update chainTokensList
+              chainTokensList.tokensInstances = tokensInstancesAllData;
+              if (!targetAddress) {
+                console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances (names, user balances, decimals, symbols) targetAddress is NOT SET`)
+                // Everything up to symbols included is loaded
+                chainTokensList.loadState = EChainTokensListLoadState.symbols
+              } else {
+                // Everything up to transferAbility included is loaded
+                console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances (names, user balances, decimals, symbols, target balances, cantransfer) targetAddress IS SET`)
+                
+                chainTokensList.loadState = EChainTokensListLoadState.transferAbility
+              }
+
+            } // if (chainTokensList.loadState == EChainTokensListLoadState.contracts)
             else {
-              // Tokens instances already initialized
-              // TODO: check if tokensInstances are up to date : remove user data if user changed account
-              // TODO: check if tokensInstances are up to date : remove user data if user changed account
-              // TODO: check if tokensInstances are up to date : remove user data if user changed account
-              // TODO: check if tokensInstances are up to date : remove user data if user changed account
-              // TODO: check if tokensInstances are up to date : remove user data if user changed account
-              console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: selected_chainTokensList.tokensInstances ALREADY INITIALIZED selected_chainTokensList.tokensCount=${selected_chainTokensList.tokensCount} selected_chainTokensList.tokensInstances?.length=${selected_chainTokensList.tokensInstances?.length}`)
+              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState. <> CONTRACTS`)
+              // Contracts, names, sourceBalances, decimals, symbols already loaded
 
+              // Check if targetAddress is set
+              // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+              // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+              // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+              // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+
+              if (targetAddress) {
+
+                console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState. <> CONTRACTS targetAddress is set`)
+
+                // Load State : Symbol = load targetBalances, transferAbility
+                if (chainTokensList.loadState == EChainTokensListLoadState.symbols) {
+                  console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState == SYMBOLS targetAddress is set`)
+                  // Load target balances
+                  // tokens target user balances
+                  const targetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true);
+                  // tokens transfer ability
+                  const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true);
+
+                  // Wait for all promises to resolve
+                  const loadTokensOnChainDataPromises = await Promise.all([targetBalances, canTransfer]);
+
+                  // Merge loadTokensOnChainDataPromises results
+                  const tokensInstancesAllData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
+                    if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] ) {
+                      _tokenInstance.userData = {
+                        ..._tokenInstance.userData,
+                        ...loadTokensOnChainDataPromises[0][index].userData, // target balances
+                        ...loadTokensOnChainDataPromises[1][index].userData, // can transfer
+                      }
+                    }
+                    return _tokenInstance;
+                  })
+
+                  console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER MERGE promises (target balances, cantransfer) tokensInstancesAllData =`)
+                  console.dir(tokensInstancesAllData)
+    
+                  // update chainTokensList
+                  chainTokensList.tokensInstances = tokensInstancesAllData;
+                  // Everything up to transferAbility included is loaded
+                  chainTokensList.loadState = EChainTokensListLoadState.transferAbility
+                  
+                } // if (chainTokensList.loadState == EChainTokensListLoadState.symbols)
+                else {
+                  console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState <> SYMBOLS targetAddress is set`)
+                  // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+                  // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+                  // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+                  // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
+                  console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState=${chainTokensList.loadState} TARGETADDRESS is set, NOTHING TO DO`)
+                }
+                // // Load State : targetBalances = load transferAbility
+                // if (chainTokensList.loadState == EChainTokensListLoadState.targetBalances) {
+                //   // Load transfer ability
+                //   _tokensInstances = await loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true)
+                //   chainTokensList.loadState = EChainTokensListLoadState.transferAbility
+
+                // }
+
+              } // if (targetAddress)
+              else {
+
+                console.info(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState=${chainTokensList.loadState} BUT TARGETADDRESS is NOT YET set, nothing to do`)
+              }
+
+            } // else
+
+            return chainTokensList.tokensInstances;
+          } // if (chainTokensList && chainTokensList.tokensInstances && chainTokensList.tokensInstances.length)
+          else {
+            console.warn(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList is NULL/UNDEF`)
+          }
+          // return undefined;
+        } catch (error) {
+          console.error(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances error: ${error}`);
+        }
+    
+      } // getUpdatedChainTokensListTokensInstances
+      
+
+      // const getUpdatedTokensInstancesArray = async (_chainsTokensList:TChainsTokensListArrayNullUndef):Promise<TTokensInstances[] | undefined> => {
+      const getUpdatedTokensInstancesArray = async (_chainsTokensList:TChainsTokensListArrayNullUndef):Promise<TTokensInstances[]/*  | undefined */> => {
+        let result:TTokensInstances[] = []
+        try {
+          console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray`)
+
+          // For each chain tokens list, get/update its tokens instances
+          const tokenInstancesPromises = _chainsTokensList?.map( (chainTokensList:TChainsTokensListNullUndef) => {
+            // console.dir(chainTokensList)
+            const t = getUpdatedChainTokensListTokensInstances(chainTokensList)
+            console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray: getUpdatedChainTokensListTokensInstances t=`)
+            console.dir(t)
+            // update
+            // chainTokensList.tokensInstances = t
+            return t
+          })
+
+          const tokenInstancesArrayUpdated = await Promise.all(tokenInstancesPromises  as Promise<TTokensInstances>[])
+
+          // return tokenInstancesArrayUpdated;
+          result = tokenInstancesArrayUpdated;
+
+
+        } catch (error) {
+          console.error(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray error: ${error}`);
+        }
+
+        console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray result=`)
+        console.dir(result)
+        return result
+        
+      } // getUpdatedTokensInstancesArray
+
+
+      try {
+        // setisLoading(true)
+        console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]`)
+
+
+        const newSelectedChainsTokensList:TChainsTokensListArrayNullUndef = [];
+        // const tokensInstances:TTokensInstances = [];
+
+        // console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: tokensLists=${tokensLists}`)
+
+        const selectedTokenLists = getSelectedTokenLists(selectableTokensLists);
+        console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: selectedTokenLists.length = ${selectedTokenLists?.length}, selectedTokenLists= `)
+        console.dir(selectedTokenLists)
+        selectedTokenLists?.map( (selectedTokenList:TSelectableTokensList) => {
+          console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: selectedTokenList=`)
+          console.dir(selectedTokenList)
+          // Find selected tokensList in all tokensLists
+          
+          tokensLists?.forEach( (tokensList:TTokensList) => {
+            console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: tokensList.id=${tokensList.id} (current) tokensList=`)
+            console.dir(tokensList)
+            if (tokensList.id == selectedTokenList.tokensList.id) {
+              console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: MATCH tokensList.id == selectedTokenList.tokensList.id  tokensList.id=${tokensList.id}`)
+              const chainTokensList = getChainTokensList(tokensList, chainId) // TChainsTokensListNullUndef
+              newSelectedChainsTokensList.push(chainTokensList)
             }
-            // tokensInstances.push(...selected_chainTokensList.tokensInstances)
-            
-          } // if (selected_chainTokensList && selected_chainTokensList.tokensCount != selected_chainTokensList.tokensInstances?.length)
-
-        }) // newSelectedChainsTokensList.forEach
-        console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: newSelectedChainsTokensList.length=${newSelectedChainsTokensList.length} newSelectedChainsTokensList[]=`)
-        // debugger
+          }) // tokensLists?.forEach
+          
+        })
+        console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: newSelectedChainsTokensList.length = ${newSelectedChainsTokensList?.length}, newSelectedChainsTokensList[]=`)
         console.dir(newSelectedChainsTokensList)
 
+        // console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: newSelectedChainsTokensList to TTokenChainDataArray`)
+        if (newSelectedChainsTokensList.length > 0) {
+          // let tokensCount = 0
+          newSelectedChainsTokensList.forEach( (selected_chainTokensList:TChainsTokensListNullUndef) => {
+            if (selected_chainTokensList) {
+              
+              if (selected_chainTokensList.tokensCount != selected_chainTokensList.tokensInstances?.length) {
+                // Init tokensInstances
+                console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: (RE)INIT selected_chainTokensList.tokensInstances selected_chainTokensList.tokensCount=${selected_chainTokensList.tokensCount} selected_chainTokensList.tokensInstances?.length=${selected_chainTokensList.tokensInstances?.length}`)
+                const selected_chainTokensList_tokensInstances:TTokensInstances = [];
+                // console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: selected_chainTokensList.chainId=${selected_chainTokensList.chainId} selected_chainTokensList.tokensCount=${selected_chainTokensList.tokensCount}`)
+                selected_chainTokensList.tokens?.forEach( (token:TTokenChainData, index) => {
+                  const _tokenInstance = initTokenInstance(token, index+1)
+                  if (_tokenInstance) selected_chainTokensList_tokensInstances.push(_tokenInstance);
+                })
 
-        // setisLoading(false)
-        // return tokensInstances // RETURN
+                // Update selected ChainsTokensList tokensInstances
+                selected_chainTokensList.tokensInstances = selected_chainTokensList_tokensInstances;
+                // _selectedChainsTokensList.push(selected_chainTokensList)
+                
+              } // if (selected_chainTokensList.tokensCount != selected_chainTokensList.tokensInstances?.length)
+              else {
+                // Tokens instances already initialized
+                // TODO: check if tokensInstances are up to date : remove user data if user changed account
+                // TODO: check if tokensInstances are up to date : remove user data if user changed account
+                // TODO: check if tokensInstances are up to date : remove user data if user changed account
+                // TODO: check if tokensInstances are up to date : remove user data if user changed account
+                // TODO: check if tokensInstances are up to date : remove user data if user changed account
+                console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: selected_chainTokensList.tokensInstances ALREADY INITIALIZED selected_chainTokensList.tokensCount=${selected_chainTokensList.tokensCount} selected_chainTokensList.tokensInstances?.length=${selected_chainTokensList.tokensInstances?.length}`)
 
-        const updatedTokensInstancesArray = getUpdatedTokensInstancesArray(newSelectedChainsTokensList)
-        updatedTokensInstancesArray.then( (updatedTokensInstancesArray:TTokensInstances[]) => {
-
-          if (updatedTokensInstancesArray && updatedTokensInstancesArray.length) {
-            newSelectedChainsTokensList.forEach( (newSelectedChainsTokensList:TChainsTokensListNullUndef, index) => {
-              // Update each newSelectedChainsTokensList with updated tokensInstances
-              if (newSelectedChainsTokensList && updatedTokensInstancesArray[index] ) {
-                console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: updatedTokensInstancesArray[${index}]=`)
-                console.dir(updatedTokensInstancesArray[index])
-                newSelectedChainsTokensList.tokensInstances = updatedTokensInstancesArray[index]
               }
-            })
-    
-          } // if (_tokenInstancesArray)
-          else {
-            console.warn(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: updatedTokensInstancesArray.length <= 00`)
-          }
+              // tokensInstances.push(...selected_chainTokensList.tokensInstances)
+              
+            } // if (selected_chainTokensList && selected_chainTokensList.tokensCount != selected_chainTokensList.tokensInstances?.length)
 
-        }) // updatedTokensInstancesArray.then
-
-
+          }) // newSelectedChainsTokensList.forEach
+          console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: newSelectedChainsTokensList.length=${newSelectedChainsTokensList.length} newSelectedChainsTokensList[]=`)
+          // debugger
+          console.dir(newSelectedChainsTokensList)
 
 
+          // setisLoading(false)
+          // return tokensInstances // RETURN
+
+          const updatedTokensInstancesArray = getUpdatedTokensInstancesArray(newSelectedChainsTokensList)
+          updatedTokensInstancesArray.then( (updatedTokensInstancesArray:TTokensInstances[]) => {
+
+            if (updatedTokensInstancesArray && updatedTokensInstancesArray.length) {
+              newSelectedChainsTokensList.forEach( (newSelectedChainsTokensList:TChainsTokensListNullUndef, index) => {
+                // Update each newSelectedChainsTokensList with updated tokensInstances
+                if (newSelectedChainsTokensList && updatedTokensInstancesArray[index] ) {
+                  console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: updatedTokensInstancesArray[${index}]=`)
+                  console.dir(updatedTokensInstancesArray[index])
+                  newSelectedChainsTokensList.tokensInstances = updatedTokensInstancesArray[index]
+                }
+              })
+      
+            } // if (_tokenInstancesArray)
+            else {
+              console.warn(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: updatedTokensInstancesArray.length <= 00`)
+            }
+
+          }) // updatedTokensInstancesArray.then
+
+        }
+        else {
+          // settokensInstances(null)
+          console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: newSelectedChainsTokensList.length <= 00`)
+          
+        }
+
+        setselectedChainsTokensList(newSelectedChainsTokensList)
+
+      } catch (error) {
+        console.error(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: error=${error}`)
       }
-      else {
-        // settokensInstances(null)
-        console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: newSelectedChainsTokensList.length <= 00`)
-        
-      }
 
-      setselectedChainsTokensList(newSelectedChainsTokensList)
-
-    } catch (error) {
-      console.error(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS]: error=${error}`)
-    }
-
-
-
-  }
-  ,[
-    //     tokensLists, selectableTokensLists, chainId
-    tokensLists, /* connectedAddress, */ getSelectedTokenLists, initTokenInstance,
-    chainId, selectableTokensLists,
-    // getUpdatedChainTokensListTokensInstances,
-    targetAddress,
-    connectedAddress, loadTokensOnChainData
-  ]
+    },
+    [
+      //     tokensLists, selectableTokensLists, chainId
+      tokensLists, /* connectedAddress, */ getSelectedTokenLists, initTokenInstance,
+      chainId, selectableTokensLists,
+      // getUpdatedChainTokensListTokensInstances,
+      targetAddress,
+      connectedAddress, loadTokensOnChainData
+    ]
   )
+
+  // ---
+
+  /**
+   * useEffect: update tokens instances
+   * triggered by selectedChainsTokensList update
+   */
 
   useEffect(() => {
     // console.debug(`StepsContainer.tsx useEffect [SELECTEDCHAINSTOKENSLIST]`)
