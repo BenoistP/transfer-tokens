@@ -1,28 +1,28 @@
 // React
 import { ReactNode, useCallback, useState } from 'react'
 
+// Components
 import { Navbar } from '@components/Navbar'
 import { Footer } from '@components/Footer'
-import { MoveTokensAppProvider } from './js/providers/MoveTokensAppProvider/MoveTokensAppContext'
+import { MoveTokensAppProvider } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
 import { ContentBottomPadding } from '@components/ContentBottomPadding'
-
-// Components
 
 // Context
 import { ThemeProvider, useTheme } from "next-themes";
 import { GlobalAppProvider, useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
 
-import { DEFAULT_GNOSIS_ICON_URL } from '@jsui/uiConsts';
 // Cookies
 import { CookiesProvider } from "react-cookie";
-// import { useCookies } from "react-cookie";
 
+// Wagmi
 import { configureChains, createConfig, WagmiConfig, Chain  } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 import { infuraProvider } from 'wagmi/providers/infura'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 
-import THEMES_NAMES from "./js/ui/themes/themes";
+// Consts
+import THEMES_NAMES from "@uiconsts/themes";
+import { DEFAULT_GNOSIS_ICON_URL } from '@uiconsts/uiConsts';
 
 import {
   // Mainnets

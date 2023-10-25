@@ -6,7 +6,7 @@ import { useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppConte
 
 // Translation
 import { useTranslation } from "react-i18next";
-import SUPPORTED_LANGUAGES from "@i18n/languages";
+import SUPPORTED_LANGUAGES from "@uiconsts/languages";
 
 // Cookies
 import { useCookies } from "react-cookie";

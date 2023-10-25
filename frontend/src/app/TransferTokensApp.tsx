@@ -1,12 +1,11 @@
 // React
+import { Suspense } from 'react';
 
 // Components
-// ...
-import TransferTokensAppPageLayout from './TransferTokensAppPageLayout';
-// import TestPage from './TestPage';
-import { MainContent } from './ui/MainContent';
+import TransferTokensAppPageLayout from '@App/TransferTokensAppPageLayout';
+import { MainContent } from '@components/MainContent';
 
-
+// Router
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 // Translation
@@ -15,10 +14,10 @@ import i18next from "i18next";
 import './i18n';
 
 // Styles
-import './styles/global.css'
-import './styles/tailwind.css'
-import { Suspense } from 'react';
+import '@styles/global.css'
+import '@styles/tailwind.css'
 
+// ----------------------------------------------------------------------
 
 const TransferTokensApp = ( /* {  } */ ) =>
 {
@@ -52,8 +51,7 @@ return (
 
       </I18nextProvider>
   </BrowserRouter>
-
-)
+  )
 
 } // App
 

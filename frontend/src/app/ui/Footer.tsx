@@ -1,13 +1,18 @@
 // React
 
+// Components
 import { FooterStatus } from "@components/FooterStatus";
 
+// Translation
 import { useTranslation } from "react-i18next";
-// import { Link } from "@remix-run/react";
+
+// Router
 import { Link } from "react-router-dom";
 
-
+// Icons
 import { ChevronUpIcon, ChevronDownIcon, ChevronDoubleDownIcon, ChevronDoubleUpIcon } from '@heroicons/react/24/solid'
+
+// ----------------------------------------------------------------------
 
 export const Footer = () => {
 

@@ -1,10 +1,17 @@
+// React
 import { useCallback, useEffect, useState} from "react";
+
+// Utils
 import { checkAndFixAddress0xFormat, isValidAddress, checksumAddress } from "@jsutils/blockchainUtils";
 import { /* ADDRESS_MIN_SIZE, */ ADDRESS_MAX_SIZE, /* DEFAULT_TARGET_ADDRESS, */ NULL_ADDRESS } from "@jsconsts/addresses";
-import { BackspaceIcon, CheckIcon, ExclamationTriangleIcon, InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
 // Translation
 import { useTranslation } from 'react-i18next';
+
+// Icons
+import { BackspaceIcon, CheckIcon, ExclamationTriangleIcon, InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
+
+// ------------------------------
 
 const AddressInput = ({
   sourceAddress,

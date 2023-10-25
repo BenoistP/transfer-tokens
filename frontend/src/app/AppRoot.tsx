@@ -1,15 +1,16 @@
 // React
-// import React from 'react'
 
 // Components
-import TransferTokensApp from './TransferTokensApp'
+import TransferTokensApp from '@App/TransferTokensApp'
+
+// ----------------------------------------------------------------------
 
 const AppRoot = ( /* { } */ ) =>
 {
-return (
-  <>
-      <TransferTokensApp/>
-  </>
+  return (
+    <>
+        <TransferTokensApp/>
+    </>
 )
 
 } // App

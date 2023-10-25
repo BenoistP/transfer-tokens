@@ -1,6 +1,6 @@
 // tokensListsUtils.ts
 
-import { EChainTokensListLoadState } from "../constants/enums";
+import { EChainTokensListLoadState } from "@jsconsts/enums";
 
 const isValidUri = async( URI:TStringNullUndef ):Promise<boolean> => {
   try {
