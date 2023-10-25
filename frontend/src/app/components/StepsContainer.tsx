@@ -496,9 +496,7 @@ const StepsContainer = ( {
     {
       if (_token?.address) {
         const tokenInstanceUserDataArray:TTokenInstanceUserData[] = new Array<TTokenInstanceUserData>()
-        // console.debug(`StepsContainer.tsx getTokensInstancesFromSelectedTokensLists: typeof connectedAddress=${typeof connectedAddress}`)
         if (connectedAddress && typeof connectedAddress == 'string') {
-          // const connectedAddressLC:any = connectedAddress.toLowerCase()
           tokenInstanceUserDataArray[connectedAddress as any] = ({
             selected: false,
             balance: null,
@@ -507,7 +505,6 @@ const StepsContainer = ( {
           } as TTokenInstanceUserData)
           }
         return {
-        // tokensInstances.push({
           chainId,
           type: (_token.extraData && _token.extraData.type ? _token.extraData.type : "ERC20" as TTokenType),
           address: _token.address,
@@ -1022,6 +1019,7 @@ const StepsContainer = ( {
                   if (_resultOnly) {
                     return {
                       userData: tokenInstanceUserDataArray,
+                      selectable,
                     };
                   }
                   return {
@@ -1079,6 +1077,52 @@ const StepsContainer = ( {
 
   useEffect( () =>
   {
+
+      const loadTargetData = async( _tokensInstances:TTokensInstances, targetAddress:TAddressEmpty) : Promise<TTokenInstance[]> => {
+
+        let tokensInstancesData:TTokenInstance[] = []
+        try {
+
+          if (_tokensInstances && targetAddress) {
+
+            // Load target balances
+            // tokens target user balances
+            const targetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true);
+            // tokens transfer ability
+            const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true);
+
+            // Wait for all promises to resolve
+            const loadTokensOnChainDataPromises = await Promise.all([targetBalances, canTransfer]);
+
+            // Merge loadTokensOnChainDataPromises results
+            tokensInstancesData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
+              if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] ) {
+                _tokenInstance.userData = {
+                  ..._tokenInstance.userData,
+                  ...loadTokensOnChainDataPromises[0][index].userData, // target balances
+                  ...loadTokensOnChainDataPromises[1][index].userData, // can transfer
+                }
+              }
+              return _tokenInstance;
+            })
+
+            console.debug(`StepsContainer.tsx loadTargetData AFTER MERGE promises (target balances, cantransfer) tokensInstancesData =`)
+            console.dir(tokensInstancesData)
+
+            // // update chainTokensList
+            // chainTokensList.tokensInstances = tokensInstancesData;
+            // // Everything up to transferAbility included is loaded
+            // chainTokensList.loadState = EChainTokensListLoadState.transferAbility
+            return tokensInstancesData;
+
+          } // if (targetAddress)
+
+        } catch (error) {
+          console.error(`StepsContainer.tsx loadTargetData error: ${error}`);
+        }
+        return tokensInstancesData;
+      }
+
       /**
        * 
        * @param chainTokensList
@@ -1174,6 +1218,15 @@ const StepsContainer = ( {
               // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
               // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
 
+              // TODO: CLEAR SELECTED TOKENS
+              // TODO: CLEAR SELECTED TOKENS
+              // TODO: CLEAR SELECTED TOKENS
+              // TODO: CLEAR SELECTED TOKENS
+              // TODO: CLEAR SELECTED TOKENS
+              // TODO: CLEAR SELECTED TOKENS
+              // TODO: CLEAR SELECTED TOKENS
+              // TODO: CLEAR SELECTED TOKENS
+
               if (targetAddress) {
 
                 console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState. <> CONTRACTS targetAddress is set`)
@@ -1181,43 +1234,78 @@ const StepsContainer = ( {
                 // Load State : Symbol = load targetBalances, transferAbility
                 if (chainTokensList.loadState == EChainTokensListLoadState.symbols) {
                   console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState == SYMBOLS targetAddress is set`)
-                  // Load target balances
-                  // tokens target user balances
-                  const targetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true);
-                  // tokens transfer ability
-                  const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true);
+                  // Load target data
 
-                  // Wait for all promises to resolve
-                  const loadTokensOnChainDataPromises = await Promise.all([targetBalances, canTransfer]);
+                  const _tokensInstancesTargetData = await loadTargetData(_tokensInstances, targetAddress)
+                  if (_tokensInstancesTargetData && _tokensInstancesTargetData.length ) {
+                    _tokensInstances = _tokensInstancesTargetData
+                  }
 
-                  // Merge loadTokensOnChainDataPromises results
-                  const tokensInstancesAllData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
-                    if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] ) {
-                      _tokenInstance.userData = {
-                        ..._tokenInstance.userData,
-                        ...loadTokensOnChainDataPromises[0][index].userData, // target balances
-                        ...loadTokensOnChainDataPromises[1][index].userData, // can transfer
-                      }
-                    }
-                    return _tokenInstance;
-                  })
+                  // // tokens target user balances
+                  // const targetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true);
+                  // // tokens transfer ability
+                  // const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.transferAbility,true,connectedAddress,targetAddress, true);
 
-                  console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER MERGE promises (target balances, cantransfer) tokensInstancesAllData =`)
-                  console.dir(tokensInstancesAllData)
+                  // // Wait for all promises to resolve
+                  // const loadTokensOnChainDataPromises = await Promise.all([targetBalances, canTransfer]);
+
+                  // // Merge loadTokensOnChainDataPromises results
+                  // const tokensInstancesAllData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
+                  //   if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] ) {
+                  //     _tokenInstance.userData = {
+                  //       ..._tokenInstance.userData,
+                  //       ...loadTokensOnChainDataPromises[0][index].userData, // target balances
+                  //       ...loadTokensOnChainDataPromises[1][index].userData, // can transfer
+                  //     }
+                  //   }
+                  //   return _tokenInstance;
+                  // })
+
+                  console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER MERGE promises (target balances, cantransfer) _tokensInstancesTargetData =`)
+                  console.dir(_tokensInstancesTargetData)
     
                   // update chainTokensList
-                  chainTokensList.tokensInstances = tokensInstancesAllData;
+                  chainTokensList.tokensInstances = _tokensInstancesTargetData;
                   // Everything up to transferAbility included is loaded
                   chainTokensList.loadState = EChainTokensListLoadState.transferAbility
                   
                 } // if (chainTokensList.loadState == EChainTokensListLoadState.symbols)
                 else {
                   console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState <> SYMBOLS targetAddress is set`)
+
+                  // Check targetAddress
+                  const allInstancesWithTarget = _tokensInstances?.every( (_tokenInstance:TTokenInstance) => {
+                    return ( _tokenInstance.userData && _tokenInstance.userData[targetAddress as any] &&
+                      !(_tokenInstance.userData[targetAddress as any].balance == undefined || _tokenInstance.userData[targetAddress as any].balance == null
+                      || _tokenInstance.userData[targetAddress as any].canTransfer == undefined || _tokenInstance.userData[targetAddress as any].canTransfer == null)
+                    )
+                  })
+
+                  if (!allInstancesWithTarget) {
+                    console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState <> SYMBOLS ; targetAddress is set ; NOT ALLINSTANCESWITHTARGET LOADING TARGET DATA`)
+
+                    const _tokensInstancesTargetData = await loadTargetData(_tokensInstances, targetAddress)
+                    if (_tokensInstancesTargetData && _tokensInstancesTargetData.length ) {
+                      _tokensInstances = _tokensInstancesTargetData
+                    }
+
+                    console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER MERGE promises (target balances, cantransfer) _tokensInstancesTargetData =`)
+                    console.dir(_tokensInstancesTargetData)
+      
+                    // update chainTokensList
+                    chainTokensList.tokensInstances = _tokensInstancesTargetData;
+                    // Everything up to transferAbility included is loaded
+                    chainTokensList.loadState = EChainTokensListLoadState.transferAbility
+                  }
+                  else {
+                    console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState <> SYMBOLS ; targetAddress is set ; ALLINSTANCESWITHTARGET EVERYTHING IS LOADED`)
+                  }
+
                   // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
                   // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
                   // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
                   // TODO: CHECK IF TARGETADDRESS IS THE RIGHT ONE
-                  console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState=${chainTokensList.loadState} TARGETADDRESS is set, NOTHING TO DO`)
+                  // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState=${chainTokensList.loadState} TARGETADDRESS is set, NOTHING TO DO`)
                 }
                 // // Load State : targetBalances = load transferAbility
                 // if (chainTokensList.loadState == EChainTokensListLoadState.targetBalances) {
@@ -1253,23 +1341,18 @@ const StepsContainer = ( {
         let result:TTokensInstances[] = []
         try {
           console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray`)
-
           // For each chain tokens list, get/update its tokens instances
           const tokenInstancesPromises = _chainsTokensList?.map( (chainTokensList:TChainsTokensListNullUndef) => {
             // console.dir(chainTokensList)
-            const t = getUpdatedChainTokensListTokensInstances(chainTokensList)
-            console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray: getUpdatedChainTokensListTokensInstances t=`)
-            console.dir(t)
+            const updatedChainTokensListTokensInstances = getUpdatedChainTokensListTokensInstances(chainTokensList)
+            // console.debug(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray: getUpdatedChainTokensListTokensInstances t=`)
+            // console.dir(t)
             // update
             // chainTokensList.tokensInstances = t
-            return t
+            return updatedChainTokensListTokensInstances
           })
-
           const tokenInstancesArrayUpdated = await Promise.all(tokenInstancesPromises  as Promise<TTokensInstances>[])
-
-          // return tokenInstancesArrayUpdated;
-          result = tokenInstancesArrayUpdated;
-
+          result = tokenInstancesArrayUpdated; // RETURN
 
         } catch (error) {
           console.error(`StepsContainer.tsx useEffect [SELECTABLETOKENSLISTS] getUpdatedTokensInstancesArray error: ${error}`);
@@ -1354,9 +1437,7 @@ const StepsContainer = ( {
           // debugger
           console.dir(newSelectedChainsTokensList)
 
-
           // setisLoading(false)
-          // return tokensInstances // RETURN
 
           const updatedTokensInstancesArray = getUpdatedTokensInstancesArray(newSelectedChainsTokensList)
           updatedTokensInstancesArray.then( (updatedTokensInstancesArray:TTokensInstances[]) => {
