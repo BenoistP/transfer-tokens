@@ -52,24 +52,24 @@ All Steps : 🚧
 
 
 
-Step 1: 🚧 
+Step 0: 🚧 
 - Watch for balances changes 👀
 - Ethereum data is not loaded ?
 
-Step 3: 🚧 
+Step 2: 🚧 
 - ☑️ Fix list loading bug/missing icons (all/none & lock)
 - Update transfer amount
 - display target address
-- 🚧 Sort tokens: ☑️ by Id  🚧 By Name  🚧 by Balance
+- ☑️ Sort tokens: ☑️ by Id  ☑️ By Name  ☑️ by Balance
 - ☑️ fix tokens numbering in lists (filtering changes numbers)
-
+- 🚧 Unselect token on target address change (if not transferrable)
 
 
 
 🚧 avatar list/select style
 
-Make an address component and properly check address validity
-check destination address is a contract and show a warning
+☑️ Make an address component and properly check address validity
+🚧 check if destination address is a contract and show a warning
 
 
 Bugs :

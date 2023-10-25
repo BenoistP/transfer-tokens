@@ -11,7 +11,7 @@ import { ERC20_DECIMALS_DEFAULT } from "@uiconsts/misc";
 import { useTranslation } from "react-i18next";
 
 // Icons
-import { NoSymbolIcon } from '@heroicons/react/24/solid'
+import { NoSymbolIcon, MinusSmallIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
@@ -246,7 +246,7 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
   const canTransfer = (targetAddress && (tokenInstance.userData[targetAddress as any] )) ? tokenInstance.userData[accountAddress as any]?.canTransfer : false
 
   // console.debug(`TokenInstance.tsx render cantTransfer=${cantTransfer} (targetAddress && (tokenInstance.userData[targetAddress as any] != undefined))=${(targetAddress && (tokenInstance.userData[targetAddress as any] != undefined))} tokenInstance.userData[targetAddress as any]=`)
-  console.debug(`TokenInstance.tsx render canTransfer=${canTransfer} ; if(targetAddress && (tokenInstance.userData[targetAddress as any] ))="${(targetAddress && (tokenInstance.userData[targetAddress as any] ))?true:false }" ; tokenInstance.userData[targetAddress as any]=`)
+  // console.debug(`TokenInstance.tsx render canTransfer=${canTransfer} ; if(targetAddress && (tokenInstance.userData[targetAddress as any] ))="${(targetAddress && (tokenInstance.userData[targetAddress as any] ))?true:false }" ; tokenInstance.userData[targetAddress as any]=`)
   // console.dir(tokenInstance.userData[targetAddress as any])
 
 
@@ -277,18 +277,25 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
                 disabled={isDisabled}
               />
               :
-              null
+              <input
+                type="checkbox"
+                className="checkbox checkbox-xs sm:checkbox-md md:checkbox-md mt-1 "
+                checked={isSelected}
+                disabled={true}
+              />
           }
         </td>
         :
           null
       }
       { enableEditable ?
-          <td className={"p-1 "}>
+          <td className="p-1 ">
             { canTransfer ?
               <TokenInstanceEditableAmount selectable={tokenInstance.selectable} balance={(balance && balance.valueOf()?balance.valueOf(): 0n)} amount={(amount && amount.valueOf()?amount.valueOf():0n)} setamount={setamount} decimals={Number(decimals)/* tokenInstance.decimals */} unSelect={unSelect} />
               :
-              null
+              <div className="flex justify-center">
+                <MinusSmallIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+              </div>
             }
           </td>
         :
