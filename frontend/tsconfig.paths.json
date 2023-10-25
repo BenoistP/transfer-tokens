@@ -19,34 +19,14 @@
       "@abis/*": ["./src/app/abis/*"],
 
       "@Providers/*": ["./src/app/js/providers/*"],
-      // "@Components/*": ["components/*"],
       // "@hooks/*": ["components/hooks/*"],
       // "@Tailwind/*": ["components/Tailwind/*"],
       // "@UIElements/*": ["components/Tailwind/UIElements/*"],
       // "@Modals/*": ["components/Tailwind/UIElements/Modals/*"],
       // "@Pages/*": ["components/Tailwind/Pages/*"],
-      // "@SocialPages/*": ["components/Tailwind/Pages/Social/*"],
-      
-      // "@ClaimableCollection/*": ["components/Tailwind/UIElements/ClaimableCollection/*"],
-      // "@Collection/*": ["components/Tailwind/UIElements/Collection/*"],
-      // "@Collections/*": ["components/Tailwind/UIElements/Collections/*"],
-      // "@SocialShare/*": ["components/Tailwind/UIElements/Social/Share/*"],
-
-
       // "@Toasts/*": ["components/Tailwind/UIElements/Toasts/*"],
-
-      // "@MVFooter/*": ["components/Tailwind/UIElements/Footer/*"],
-
-      // "@js/*": ["js/*"],
-      // "@jsui/*": ["js/ui/*"],
-      // "@jsi18n/*": ["js/ui/i18n/*"],
-
       // "@contracts/*": ["artifacts/contracts/*"],
-
-      // "@styles/*": ["styles/*"],
-
       // "@lotties/*": ["static/lotties/*"],
-
     }
   }
 }
