@@ -1,11 +1,16 @@
+// React
 import { useCallback, useEffect, useState } from "react"
 
-import SelectableTokensLists from "./SelectableTokensLists"
+// Components
+import SelectableTokensLists from "@components/SelectableTokensLists"
 
+// Utils
 import { getChainTokensList } from "@jsutils/tokensListsUtils"
 
+// Icons
 import { ArrowPathRoundedSquareIcon } from '@heroicons/react/24/solid'
 
+// Translation
 import { useTranslation } from "react-i18next"
 import { useNetwork } from 'wagmi'
 

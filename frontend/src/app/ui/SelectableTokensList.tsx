@@ -1,7 +1,11 @@
+// React
 import { useCallback } from "react";
 
-import { QuestionMarkCircleIcon  } from '@heroicons/react/24/solid'
+// Translation
 import { useTranslation } from "react-i18next"
+
+// Icons
+import { QuestionMarkCircleIcon  } from '@heroicons/react/24/solid'
 
 // ------------------------------
 

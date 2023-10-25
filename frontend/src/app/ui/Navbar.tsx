@@ -1,10 +1,13 @@
 // React
 
-import { LanguageSelector } from "./LanguageSelector";
-import { ThemeSwitch } from "./ThemeSwitch";
+// Components
+import { LanguageSelector } from "@components/LanguageSelector";
+import { ThemeSwitch } from "@components/ThemeSwitch";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Avatar } from "./NavbarAvatar";
-import { Status } from "./NavbarStatus";
+import { Avatar } from "@components/NavbarAvatar";
+import { NavbarStatus } from "@components/NavbarStatus";
+
+// ------------------------------
 
 export const Navbar = () => {
 
@@ -31,7 +34,7 @@ export const Navbar = () => {
           </div> {/* navbar-center */}
 
           <div className="navbar-end">
-            <Status/>
+            <NavbarStatus/>
             <Avatar/>
           </div>
 

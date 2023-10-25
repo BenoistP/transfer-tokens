@@ -1,13 +1,14 @@
+// React
 import { useEffect } from "react";
 
 // ------------------------------
 
 const StepError = ( { setpreviousDisabled, setNextDisabled }: IStepErrorProps ) => {
 
-  console.debug(`StepError.tsx render`)
+  // console.debug(`StepError.tsx render`)
  
   useEffect( () => {
-    console.debug(`StepError.tsx useEffect`)
+    // console.debug(`StepError.tsx useEffect`)
     setpreviousDisabled(true)
     setNextDisabled(true)
   }, [setpreviousDisabled, setNextDisabled] )

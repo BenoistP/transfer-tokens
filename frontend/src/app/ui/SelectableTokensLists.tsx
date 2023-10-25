@@ -1,5 +1,8 @@
+// React
 
-import { SelectableTokensList } from "./SelectableTokensList";
+import { SelectableTokensList } from "@components/SelectableTokensList";
+
+// ------------------------------
 
 const SelectableTokensLists = ( {
   selectableTokensLists,

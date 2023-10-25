@@ -1,16 +1,18 @@
+// React
 import { useMemo } from "react";
 
-import TokenInstanceListFiltered from "./TokenInstanceListFiltered";
-import SortIcon from "./SortIcon";
+// Components
+import TokenInstanceListFiltered from "@components/TokenInstanceListFiltered";
+import SortIcon from "@components/SortIcon";
 
+// Translation
 import { useTranslation } from "react-i18next";
 
+// Icons
 import { ArrowPathRoundedSquareIcon, FunnelIcon } from '@heroicons/react/24/solid'
 
-// import { ErrorBoundary } from "react-error-boundary";
-
 const TokenInstanceListTableFiltered = (
-   {tokensInstances, // settokensInstances,
+   {tokensInstances,
     accountAddress,
     // chainId, // , transferTokens,
     enableCheckboxes,

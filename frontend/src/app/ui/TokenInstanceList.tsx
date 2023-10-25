@@ -1,6 +1,9 @@
-import { TokenInstance } from "./TokenInstance";
+// React
 
-// import { ErrorBoundary } from "react-error-boundary";
+// Components
+import { TokenInstance } from "@components/TokenInstance";
+
+// ----------------------------
 
 const TokenInstanceList = ( {
   tokensInstances,

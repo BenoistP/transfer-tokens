@@ -1,27 +1,29 @@
-import {useCallback, useEffect, useState} from "react";
-// import { useTranslation } from "react-i18next";
-import { SunIcon, MoonIcon, HomeIcon } from '@heroicons/react/24/solid'
+// React
+import { useCallback, useEffect, useState } from "react";
 
+// Theme switcher hook
 import { useTheme } from 'next-themes'
+
+// Icons
+import { SunIcon, MoonIcon, HomeIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
 export const ThemeSwitch = () => {
 
-    // const { t } = useTranslation();
-    const { theme, setTheme, themes } = useTheme()
+  const { theme, setTheme, themes } = useTheme()
 
-    const findThemeId = () => themes.findIndex((aTheme) => aTheme == theme);
+  const findThemeId = () => themes.findIndex((aTheme) => aTheme == theme);
 
-    const [themeId, setthemeId] = useState<number>(findThemeId());
+  const [themeId, setthemeId] = useState<number>(findThemeId());
 
-    const themesCount = themes.length;
+  const themesCount = themes.length;
 
-    const nextTheme = useCallback( () => {
-      setthemeId( () => { return ( (themeId + 1)%themesCount ) });
-    },
-    [themeId, themesCount]
-    );
+  const nextTheme = useCallback( () => {
+    setthemeId( () => { return ( (themeId + 1)%themesCount ) });
+  },
+  [themeId, themesCount]
+  );
 
 
   const swapDefaultChecked = (themeId % 2 != 0);

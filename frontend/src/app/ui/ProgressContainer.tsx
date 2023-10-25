@@ -1,13 +1,14 @@
+// React
 
-// import ProgressStep from "./ProgressStep";
-// import ProgressBarColor from "./ProgressBarColor";
-import ProgressStepBar from "./ProgressStepBar";
+// Components
+import ProgressStepBar from "@components/ProgressStepBar";
+import ProgressBar from "@components/ProgressBar";
 
+// Context
 import { useMoveTokensAppContext } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
 
 // Translation
 import { useTranslation } from 'react-i18next';
-import ProgressBar from "./ProgressBar";
 
 // ------------------------------
 

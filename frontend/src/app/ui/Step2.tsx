@@ -1,14 +1,14 @@
-import { useEffect, } from "react";
+// React
+import { useEffect } from "react";
 
-import TokenInstanceListTableFiltered from "./TokenInstanceListTableFiltered";
+// Components
+import TokenInstanceListTableFiltered from "@components/TokenInstanceListTableFiltered";
 
 // ------------------------------
 
 const Step2 = ( {
   setNextDisabled,
   tokensInstances,
-  // settokensInstances,
-  // setShowProgressBar, setProgressBarPercentage,
   accountAddress,
   // chainId,
   targetAddress, isError,

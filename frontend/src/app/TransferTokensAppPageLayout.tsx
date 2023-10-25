@@ -1,10 +1,10 @@
 // React
 import { ReactNode, useCallback, useState } from 'react'
 
-import { Navbar } from './ui/Navbar'
-import { Footer } from './ui/Footer'
+import { Navbar } from '@components/Navbar'
+import { Footer } from '@components/Footer'
 import { MoveTokensAppProvider } from './js/providers/MoveTokensAppProvider/MoveTokensAppContext'
-import { ContentBottomPadding } from './ui/ContentBottomPadding'
+import { ContentBottomPadding } from '@components/ContentBottomPadding'
 
 // Components
 

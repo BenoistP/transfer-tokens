@@ -1,20 +1,21 @@
+// React
 import { useEffect, useState} from "react";
 
 // Context
 import { useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
 
-// Translation
-// import { useTranslation } from 'react-i18next';
-
 import { useAccount } from 'wagmi'
+
+// ------------------------------
 
 export const Avatar = () => {
 
-  // const { t } = useTranslation();
   const { address:connectedAddress, } = useAccount()
   const { globalAppData:{ address:globalAddress }, globalAppDataHandlers: { getAddress, setAddress, getAvatarComponent, } } = useGlobalAppContext()
-  
+
   const [avatarComponent, setavatarComponent] = useState<any>(undefined)
+
+  // ---
 
   useEffect(() => {
     if (connectedAddress!=getAddress()) {
@@ -26,7 +27,7 @@ export const Avatar = () => {
     setavatarComponent(getAvatarComponent());
   }, [getAvatarComponent, globalAddress])
 
-  // ---
+  // ------------------------------
 
   return (
     <div className="">

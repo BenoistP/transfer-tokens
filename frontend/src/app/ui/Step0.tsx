@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
-import TokensListsSelect from "@ui/TokensListsSelect";
-import TokenInstanceListTable from "./TokenInstanceListTable";
+import TokensListsSelect from "@components/TokensListsSelect";
+import TokenInstanceListTable from "@components/TokenInstanceListTable";
 
 // ------------------------------
 

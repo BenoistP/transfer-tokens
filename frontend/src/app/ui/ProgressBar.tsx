@@ -1,8 +1,5 @@
 // React
 
-// Translation
-// import { useTranslation } from 'react-i18next';
-
 // ------------------------------
 
 const ProgressBar = ({ showProgressBar=false, progressPercentage }: ITF_ProgressBar ) => {
@@ -28,8 +25,6 @@ const ProgressBar = ({ showProgressBar=false, progressPercentage }: ITF_Progress
       </div>
   );
 };
-
-
 
 // ------------------------------
 

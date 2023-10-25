@@ -460,7 +460,6 @@ interface IStep1Props {
   setNextDisabled: TsetNextDisabled,
   accountAddress: TAddressNullUndef,
   tokensInstances: TTokensInstances,
-  // settokensInstances: TsetTokensInstances,
   // chainId: TChainId,
   targetAddress: TAddressEmpty,
   settargetAddress:TsettargetAddress
@@ -472,7 +471,6 @@ interface IStep1Props {
 interface IStep2Props {
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
-  // settokensInstances: TsetTokensInstances,
   setShowProgressBar: TsetShowProgressBar
   setProgressBarPercentage: TsetProgressBarPercentage,
   accountAddress: TAddressNullUndef,

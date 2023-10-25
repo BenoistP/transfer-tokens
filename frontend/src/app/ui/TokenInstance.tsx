@@ -1,14 +1,19 @@
+// React
 import { useEffect, useCallback, useState } from "react";
-import { TokenInstanceEditableAmount } from "./TokenInstanceEditableAmount";
 
-import { useTranslation } from "react-i18next";
+// Components
+import { TokenInstanceEditableAmount } from "@components/TokenInstanceEditableAmount";
 
-// import { CheckIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
-import { NoSymbolIcon } from '@heroicons/react/24/solid'
+// Consts
 import { ERC20_DECIMALS_DEFAULT } from "@jsconsts/misc";
 
-// ------------------------------
+// Translation
+import { useTranslation } from "react-i18next";
 
+// Icons
+import { NoSymbolIcon } from '@heroicons/react/24/solid'
+
+// ------------------------------
 
 const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddress, changeCheckboxStatus, editable }: ITokenProps ) => {
 

@@ -1,8 +1,10 @@
-// import { ErrorBoundary } from "react-error-boundary";
-
+// React
 import { useCallback } from "react";
 
-import { TokenInstance } from "./TokenInstance";
+// Components
+import { TokenInstance } from "@components/TokenInstance";
+
+// ----------------------------
 
 const TokenInstanceListFiltered = ( {
   tokensInstances,

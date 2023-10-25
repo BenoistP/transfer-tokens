@@ -1,11 +1,16 @@
+// React
 import { useMemo } from "react";
 
-import TokenInstanceList from "./TokenInstanceList";
-import SortIcon from "./SortIcon";
+// Components
+import TokenInstanceList from "@components/TokenInstanceList";
 
+// Icons
+import SortIcon from "@components/SortIcon";
+
+// Translation
 import { useTranslation } from "react-i18next";
 
-// import { ErrorBoundary } from "react-error-boundary";
+// ------------------------------
 
 const TokenInstanceListTable = (
    {tokensInstances, // settokensInstances,

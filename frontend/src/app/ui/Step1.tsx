@@ -1,7 +1,9 @@
-import { useEffect, /* useCallback,  useState */ } from "react";
+// React
+import { useEffect } from "react";
 
-import AddressInput from "./AddressInput";
-import TokenInstanceListTable from "./TokenInstanceListTable";
+// Components
+import AddressInput from "@components/AddressInput";
+import TokenInstanceListTable from "@components/TokenInstanceListTable";
 
 import { isValidAddress } from "@jsutils/blockchainUtils";
 
@@ -11,7 +13,6 @@ const Step1 = ( {
   accountAddress,
   setNextDisabled,
   tokensInstances,
-  // settokensInstances,
   targetAddress,
   settargetAddress,
   // setShowProgressBar,

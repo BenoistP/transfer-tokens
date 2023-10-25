@@ -3,19 +3,8 @@ import { checkAndFixAddress0xFormat, isValidAddress, checksumAddress } from "@js
 import { /* ADDRESS_MIN_SIZE, */ ADDRESS_MAX_SIZE, /* DEFAULT_TARGET_ADDRESS, */ NULL_ADDRESS } from "@jsconsts/addresses";
 import { BackspaceIcon, CheckIcon, ExclamationTriangleIcon, InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
-// Context
-// import { useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
-
 // Translation
 import { useTranslation } from 'react-i18next';
-
-// import { useAccount , useNetwork, useBlockNumber, useEnsAvatar,/* useBalance */ 
-// useBalance,
-// useEnsAddress} from 'wagmi'
-
-// import { normalize } from 'viem/ens'
-
-// import { fetchBalance } from '@wagmi/core'
 
 const AddressInput = ({
   sourceAddress,

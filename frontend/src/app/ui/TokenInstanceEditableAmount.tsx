@@ -1,12 +1,18 @@
+// React
 import { useEffect, useCallback, useState } from "react";
 
-import { /* ArrowSmallUpIcon, ArrowSmallDownIcon, MinusCircleIcon, NoSymbolIcon, */ PlusCircleIcon, XCircleIcon, LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/solid'
+// Icons
+import { PlusCircleIcon, XCircleIcon, LockClosedIcon, LockOpenIcon
+  // , ArrowSmallUpIcon, ArrowSmallDownIcon, MinusCircleIcon, NoSymbolIcon,
+} from '@heroicons/react/24/solid'
+
+// ------------------------------
 
 const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, decimals, unSelect, }: ITokenInstanceAmountProps ) => {
 
   // console.debug(`TokenInstance.tsx (${index}) RealToken render realTokenInstance.userData.address=${realTokenInstance.userData.address} realTokenInstance.address=${realTokenInstance.address} realTokenInstance.userData.amount=${realTokenInstance.userData.amount}`)
  
- // ---
+// ---
 
 //  const [decimals, setdecimals] = useState<bigint>(BigInt(tokenInstance.decimals)) as [bigint, (balance:bigint) => void];
   const [editableAmountString, seteditableAmountString] = useState("0") as [string, (balance:string) => void];
@@ -287,44 +293,6 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
   );
 }
 
-
-
-
-/* 
-<div className="flex flex-row">
-<div className="bg-green-300">
-  <input type="number"
-    value={editableAmountString} onChange={(e)=>{updateAmount(e)}}
-    step={0.001} min={0} max={10_000_000_000_000}
-    className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md" placeholder="...">
-  </input>
-</div>
-<div className="bg-blue-300 block grow-0 m-0 p-0 ">
-  <button className="bg-purple-300 btn btn-ghost btn-xs " onClick={() => { setMaxAmount() }}><ArrowSmallUpIcon className="w-2 h-3 text-base-content" /></button>
-  <button className="bg-yellow-200 btn btn-ghost btn-xs " onClick={() => { setZeroAmount() }}><ArrowSmallDownIcon className="w-2 h-3 text-base-content" /></button>
-</div>
-</div>
- */
-
-/* 
-<div className="grid grid-rows-2 grid-flow-col gap-4">
-<div className="bg-green-300 row-span-2">
-  <input type="number"
-    value={editableAmountString} onChange={(e)=>{updateAmount(e)}}
-    step={0.001} min={0} max={10_000_000_000_000}
-    className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md" placeholder="...">
-  </input>
-</div>
-<div className="bg-blue-300 row-span-2">
-  <button className="bg-purple-300 btn btn-ghost btn-xs " onClick={() => { setMaxAmount() }}><ArrowSmallUpIcon className="w-4 h-4 text-base-content" /></button>
-  <button className="bg-yellow-200 btn btn-ghost btn-xs " onClick={() => { setZeroAmount() }}><ArrowSmallDownIcon className="w-4 h-4 text-base-content" /></button>
-</div>
-</div>
- */
-
-/* 
-<ArrowSmallDownIcon className="w-6 h-6 text-primary base-content" />
- */
 // ------------------------------
 
 export { TokenInstanceEditableAmount }

@@ -13,10 +13,13 @@ import Step3 from "./Step3";
 // Context Hooks
 import { useMoveTokensAppContext } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
 
-import { useAccount } from 'wagmi'
 
+// Utils
 import { getChainTokensList } from "@jsutils/tokensListsUtils";
+
+// Wagmi
 import { getContract, multicall } from '@wagmi/core'
+import { useAccount } from 'wagmi'
 
 // ABIs
 import { erc20ABI } from 'wagmi'
@@ -1847,12 +1850,9 @@ const StepsContainer = ( {
           <MainContentContainer>
             {/* <div className="bg-orange-500"> */}
               <Step1
-                // tokensLists={tokensLists}
                 setNextDisabled={setNextDisabled}
-                // selectableTokensLists={selectableTokensLists}
                 accountAddress={connectedAddress}
                 tokensInstances={tokensInstances}
-                // settokensInstances={settokensInstances}
                 chainId={chainId}
                 targetAddress={targetAddress}
                 settargetAddress={settargetAddress}
@@ -1872,7 +1872,6 @@ const StepsContainer = ( {
               <Step2
                 setNextDisabled={setNextDisabled}
                 tokensInstances={tokensInstances}
-                // settokensInstances={settokensInstances}
                 setShowProgressBar={setShowProgressBar}
                 setProgressBarPercentage={setProgressBarPercentage}
                 accountAddress={connectedAddress}

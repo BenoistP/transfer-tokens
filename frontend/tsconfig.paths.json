@@ -12,6 +12,7 @@
       "@styles/*": ["./src/app/styles/*"],
       "@css/*": ["./src/app/styles/*"],
       "@ui/*": ["./src/app/ui/*"],
+      "@components/*": ["./src/app/ui/*"],
       "@jsui/*": ["./src/app/js/ui/*"],
       "@i18n/*": ["./src/app/js/ui/i18n/*"],
       "@abis/*": ["./src/app/abis/*"],

@@ -1,11 +1,20 @@
+// React
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNetwork } from 'wagmi'
+
+// Components
+import ProgressContainer from "@components/ProgressContainer";
+import StepsContainer from "@components/StepsContainer";
+import MainContentContainer from "@components/MainContentContainer";
+
 import { isChainSupported } from "@jsutils/blockchainUtils";
-import ProgressContainer from "./ProgressContainer";
-import StepsContainer from "./StepsContainer";
-import MainContentContainer from "./MainContentContainer";
 import { tokenListsData } from '@jsutils/tokensLists';
+
+// Translation
+import { useTranslation } from "react-i18next";
+
+import { useNetwork } from 'wagmi'
+
+// ------------------------------
 
 export const MainContent = ( ) => {
 
