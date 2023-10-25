@@ -1,6 +1,6 @@
-import { useEffect /* , useCallback, useState */ } from "react";
+import { useEffect } from "react";
 
-import TokensListsSelect from "~/ui/TokensListsSelect";
+import TokensListsSelect from "@ui/TokensListsSelect";
 import TokenInstanceListTable from "./TokenInstanceListTable";
 
 // ------------------------------
@@ -13,8 +13,7 @@ const Step0 = (  {
     targetAddress,
     selectableTokensLists,
     setselectableTokensLists,
-    tokensInstances, // settokensInstances,
-    // chainId,
+    tokensInstances,
     isError,
     tokensInstancesListTablePropsHandlers
     } :IStep0Props ) =>

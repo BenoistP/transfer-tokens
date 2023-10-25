@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 // import { CheckIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
 import { NoSymbolIcon } from '@heroicons/react/24/solid'
-import { ERC20_DECIMALS_DEFAULT } from "~/js/constants/misc";
+import { ERC20_DECIMALS_DEFAULT } from "@jsconsts/misc";
 
 // ------------------------------
 

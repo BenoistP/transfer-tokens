@@ -1832,7 +1832,6 @@ const StepsContainer = ( {
                 accountAddress={connectedAddress}
                 targetAddress={targetAddress}
                 tokensInstances={tokensInstances}
-                // settokensInstances={settokensInstances}
                 chainId={chainId}
                 isError={isError}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}

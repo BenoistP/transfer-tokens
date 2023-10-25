@@ -12,7 +12,7 @@ import { ContentBottomPadding } from './ui/ContentBottomPadding'
 import { ThemeProvider, useTheme } from "next-themes";
 import { GlobalAppProvider, useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
 
-import { DEFAULT_GNOSIS_ICON_URL } from '~/js/ui/uiConsts';
+import { DEFAULT_GNOSIS_ICON_URL } from '@jsui/uiConsts';
 // Cookies
 import { CookiesProvider } from "react-cookie";
 // import { useCookies } from "react-cookie";

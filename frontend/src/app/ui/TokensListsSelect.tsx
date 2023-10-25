@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 
 import SelectableTokensLists from "./SelectableTokensLists"
 
-import { getChainTokensList } from "~/js/utils/tokensListsUtils"
+import { getChainTokensList } from "@jsutils/tokensListsUtils"
 
 import { ArrowPathRoundedSquareIcon } from '@heroicons/react/24/solid'
 

@@ -448,11 +448,9 @@ interface IStep0Props {
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
   setShowProgressBar: TsetShowProgressBar,
-
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstances: TTokensInstances,
-  // settokensInstances: TsetTokensInstances,
   chainId: ChainId;
   isError: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
