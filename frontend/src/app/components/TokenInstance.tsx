@@ -5,7 +5,7 @@ import { useEffect, useCallback, useState } from "react";
 import { TokenInstanceEditableAmount } from "@Components/TokenInstanceEditableAmount";
 
 // Consts
-import { ERC20_DECIMALS_DEFAULT } from "@jsconsts/misc";
+import { ERC20_DECIMALS_DEFAULT } from "@uiconsts/misc";
 
 // Translation
 import { useTranslation } from "react-i18next";

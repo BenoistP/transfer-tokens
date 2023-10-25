@@ -26,7 +26,7 @@ import { erc20ABI } from 'wagmi'
 import CoinBridgeToken from "@abis/CoinBridgeToken.json";
 
 // Consts & Enums
-import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT } from "@jsconsts/misc";
+import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT } from "@uiconsts/misc";
 import { EStepsLoadTokensData, EChainTokensListLoadState } from "@jsconsts/enums"; 
 
 // ------------------------------

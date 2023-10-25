@@ -10,7 +10,7 @@ import SUPPORTED_LANGUAGES from "@uiconsts/languages";
 
 // Cookies
 import { useCookies } from "react-cookie";
-import { COOKIE_LANGUAGE } from "@jsconsts/misc";
+import { COOKIE_LANGUAGE } from "@uiconsts/misc";
 
 // ------------------------------
 
