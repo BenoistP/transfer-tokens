@@ -400,8 +400,14 @@ type TTokenInstanceUserData = {
 
 type TokenID = string;
 
+type TChecked = {
+  checked: boolean;
+}
+
 interface IChangeCheckboxStatus {
-  (id: TokenID) : void;
+  ( id: TokenID,
+    value?: TChecked,
+  ) : void;
 }
 interface ITF_ProgressBar {
   showProgressBar: boolean;

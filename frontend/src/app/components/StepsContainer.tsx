@@ -376,7 +376,11 @@ const StepsContainer = ( {
             if (tokensInstances) {
               const tokensInstancesInvertCheck = tokensInstances.map((tokensInstance) => {
                 if (tokensInstance.selectable) {
-                  if (tokensInstance.userData[/*accountAddress*/ connectedAddress as any]) {
+                  // if (tokensInstance.userData[/*accountAddress*/ connectedAddress as any]) {
+                  if (tokensInstance.userData[/*accountAddress*/ connectedAddress as any]
+                    && tokensInstance.userData[/*accountAddress*/ targetAddress as any].canTransfer
+                    && tokensInstance.userData[/*accountAddress*/ targetAddress as any].transferAmount>0
+                    ) {
                     // if (tokensInstance.userData[/*accountAddress*/ connectedAddress as any].transferAmount>0) {
                       tokensInstance.userData[/*accountAddress*/ connectedAddress as any].selected = ! tokensInstance.userData[/*accountAddress*/ connectedAddress as any].selected;
                     // }
@@ -397,13 +401,13 @@ const StepsContainer = ( {
           console.error(`StepsContainer.tsx handleInvertAllChecks error: ${error}`);
         }
       },
-      [tokensInstances, invertAll, updateCheckAll, connectedAddress]
+      [tokensInstances, invertAll, updateCheckAll, connectedAddress, targetAddress]
   ); // handleInvertAllChecks
 
   // ---
 
   const changeCheckboxStatus:IChangeCheckboxStatus = /* useCallback( */
-    (id: string) =>
+    (id: string, value: TChecked | undefined) =>
       {
         try {
           
@@ -412,7 +416,13 @@ const StepsContainer = ( {
             if (tokenInstance.chainId+"-"+tokenInstance.address === id) {
               // console.debug(`changeCheckboxStatus id=${id} tokenInstance.chainId+"-"+tokenInstance.address=${tokenInstance.chainId+"-"+tokenInstance.address} tokenInstance.userData[/*accountAddress*/ connectedAddress as any]?.selected=${tokenInstance.userData[/*accountAddress*/ connectedAddress as any]?.selected} `);
               if (/*accountAddress*/ connectedAddress && typeof /*accountAddress*/ connectedAddress === "string" && tokenInstance.userData && tokenInstance.userData[/*accountAddress*/ connectedAddress as any]) {
-                tokenInstance.userData[/*accountAddress*/ connectedAddress as any].selected = !tokenInstance.userData[/*accountAddress*/ connectedAddress as any].selected;
+                if (value) {
+                  console.debug(`changeCheckboxStatus id=${id} value.checked=${value.checked} `);
+                  tokenInstance.userData[/*accountAddress*/ connectedAddress as any].selected = value.checked;
+                } else {
+                  console.debug(`changeCheckboxStatus id=${id} !tokenInstance.userData[/*accountAddress*/ connectedAddress as any].selected=${!tokenInstance.userData[/*accountAddress*/ connectedAddress as any].selected} `);
+                  tokenInstance.userData[/*accountAddress*/ connectedAddress as any].selected = !tokenInstance.userData[/*accountAddress*/ connectedAddress as any].selected;
+                }
               } // if (accountAddress && ...
             } // if (tokenInstance.chainId+"-"+tokenInstance.address === id)
             return {
@@ -501,7 +511,7 @@ const StepsContainer = ( {
             selected: false,
             balance: null,
             transferAmount: 0n,
-            canTransfer: false,
+            canTransfer: true, // warn: COULD BE FALSE for non transferable tokens, should be defaulted to false then checked with a multicall
           } as TTokenInstanceUserData)
           }
         return {
@@ -892,7 +902,6 @@ const StepsContainer = ( {
                       // selected: false,
                       balance: userBalance,
                       transferAmount: userBalance,
-                      // canTransfer: false,
                     } as TTokenInstanceUserData)
                   } // if (_from && typeof _from == 'string')
                   if (_resultOnly) {
@@ -903,8 +912,6 @@ const StepsContainer = ( {
                   return {
                     ...tokenInstance,
                     status: step,
-                    // displayed: true,
-                    // selectable: false,
                     userData: tokenInstanceUserDataArray,
                   } as TTokenInstance;
                 }
@@ -953,13 +960,9 @@ const StepsContainer = ( {
                 // Step 5: get tokens target user balances
                 if (step == EStepsLoadTokensData.targetBalances) {
                   // tokens balances
-                  // let tokenInstanceUserDataArray = tokenInstance.userData;
                   let tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
-                  if (!tokenInstanceUserDataArray) {
-                    tokenInstanceUserDataArray = new Array<TTokenInstanceUserData>()
-                  }
+                  if (!tokenInstanceUserDataArray) tokenInstanceUserDataArray = new Array<TTokenInstanceUserData>();
                   if (_to && typeof _to == 'string') {
-                    // tokenInstanceUserDataArray[toAddressLC] = ({
                     tokenInstanceUserDataArray[_to as any] = ({
                       selected: false,
                       balance: onchainData[index]?.result, // Token User balance
@@ -985,18 +988,14 @@ const StepsContainer = ( {
                 if (step == EStepsLoadTokensData.transferAbility) {
                   // can transfer from to
                   // console.debug(`StepsContainer.tsx loadTokensOnChainData ProgressBar canTransfer from=${connectedAddress} to=${targetAddress} result=${onchainData[index]?.result}`)
-                  // const tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
-                  // let tokenInstanceUserDataArray = tokenInstance.userData;
                   let tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
-                  if (!tokenInstanceUserDataArray) {
-                    tokenInstanceUserDataArray = new Array<TTokenInstanceUserData>()
-                  }
+                  if (!tokenInstanceUserDataArray) tokenInstanceUserDataArray = new Array<TTokenInstanceUserData>();
                   // console.debug(`StepsContainer.tsx loadTokensOnChainData StepsContainer canTransfer from=${_from} to=${_to} result=${onchainData[index]?.result}`)
                   // console.dir(onchainData[index]?.result)
                   const canTransfer = (onchainData[index] && onchainData[index]?.result && onchainData[index]?.result[0] ? true : false) ; // can transfer from to
                   let {selectable} = tokenInstance
-                  tokenInstanceUserDataArray[_from as any] = ({
-                      ...tokenInstance.userData[_from as any],
+                  tokenInstanceUserDataArray[/* _from */_to as any] = ({
+                      ...tokenInstance.userData[/* _from */ _to as any],
                       // result: bool, uint256, uint256
                       canTransfer,
                       // transferAmount: 0n,
