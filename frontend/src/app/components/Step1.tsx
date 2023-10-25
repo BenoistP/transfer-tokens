@@ -2,8 +2,8 @@
 import { useEffect } from "react";
 
 // Components
-import AddressInput from "@components/AddressInput";
-import TokenInstanceListTable from "@components/TokenInstanceListTable";
+import AddressInput from "@Components/AddressInput";
+import TokenInstanceListTable from "@Components/TokenInstanceListTable";
 
 import { isValidAddress } from "@jsutils/blockchainUtils";
 

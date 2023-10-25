@@ -1,7 +1,7 @@
 // React
 
 // Components
-import { FooterStatus } from "@components/FooterStatus";
+import { FooterStatus } from "@Components/FooterStatus";
 
 // Translation
 import { useTranslation } from "react-i18next";

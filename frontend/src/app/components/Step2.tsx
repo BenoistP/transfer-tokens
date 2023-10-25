@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 
 // Components
-import TokenInstanceListTableFiltered from "@components/TokenInstanceListTableFiltered";
+import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
 
 // ------------------------------
 

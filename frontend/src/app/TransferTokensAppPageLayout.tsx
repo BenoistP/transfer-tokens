@@ -2,10 +2,10 @@
 import { ReactNode, useCallback, useState } from 'react'
 
 // Components
-import { Navbar } from '@components/Navbar'
-import { Footer } from '@components/Footer'
+import { Navbar } from '@Components/Navbar'
+import { Footer } from '@Components/Footer'
 import { MoveTokensAppProvider } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
-import { ContentBottomPadding } from '@components/ContentBottomPadding'
+import { ContentBottomPadding } from '@Components/ContentBottomPadding'
 
 // Context
 import { ThemeProvider, useTheme } from "next-themes";

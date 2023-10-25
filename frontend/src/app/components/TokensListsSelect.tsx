@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from "react"
 
 // Components
-import SelectableTokensLists from "@components/SelectableTokensLists"
+import SelectableTokensLists from "@Components/SelectableTokensLists"
 
 // Utils
 import { getChainTokensList } from "@jsutils/tokensListsUtils"

@@ -1,11 +1,11 @@
 // React
 
 // Components
-import { LanguageSelector } from "@components/LanguageSelector";
-import { ThemeSwitch } from "@components/ThemeSwitch";
+import { LanguageSelector } from "@Components/LanguageSelector";
+import { ThemeSwitch } from "@Components/ThemeSwitch";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Avatar } from "@components/NavbarAvatar";
-import { NavbarStatus } from "@components/NavbarStatus";
+import { Avatar } from "@Components/NavbarAvatar";
+import { NavbarStatus } from "@Components/NavbarStatus";
 
 // ------------------------------
 

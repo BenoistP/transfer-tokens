@@ -1,6 +1,6 @@
 // React
 
-import { SelectableTokensList } from "@components/SelectableTokensList";
+import { SelectableTokensList } from "@Components/SelectableTokensList";
 
 // ------------------------------
 

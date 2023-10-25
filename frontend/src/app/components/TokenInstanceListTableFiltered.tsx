@@ -2,8 +2,8 @@
 import { useMemo } from "react";
 
 // Components
-import TokenInstanceListFiltered from "@components/TokenInstanceListFiltered";
-import SortIcon from "@components/SortIcon";
+import TokenInstanceListFiltered from "@Components/TokenInstanceListFiltered";
+import SortIcon from "@Components/SortIcon";
 
 // Translation
 import { useTranslation } from "react-i18next";

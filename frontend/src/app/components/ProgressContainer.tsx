@@ -1,8 +1,8 @@
 // React
 
 // Components
-import ProgressStepBar from "@components/ProgressStepBar";
-import ProgressBar from "@components/ProgressBar";
+import ProgressStepBar from "@Components/ProgressStepBar";
+import ProgressBar from "@Components/ProgressBar";
 
 // Context
 import { useMoveTokensAppContext } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'

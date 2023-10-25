@@ -2,9 +2,9 @@
 import { useEffect, useState } from "react";
 
 // Components
-import ProgressContainer from "@components/ProgressContainer";
-import StepsContainer from "@components/StepsContainer";
-import MainContentContainer from "@components/MainContentContainer";
+import ProgressContainer from "@Components/ProgressContainer";
+import StepsContainer from "@Components/StepsContainer";
+import MainContentContainer from "@Components/MainContentContainer";
 
 import { isChainSupported } from "@jsutils/blockchainUtils";
 import { tokenListsData } from '@jsutils/tokensLists';

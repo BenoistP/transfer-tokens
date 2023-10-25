@@ -2,7 +2,7 @@
 import { useEffect, useCallback, useState } from "react";
 
 // Components
-import { TokenInstanceEditableAmount } from "@components/TokenInstanceEditableAmount";
+import { TokenInstanceEditableAmount } from "@Components/TokenInstanceEditableAmount";
 
 // Consts
 import { ERC20_DECIMALS_DEFAULT } from "@jsconsts/misc";

@@ -2,10 +2,10 @@
 import { useMemo } from "react";
 
 // Components
-import TokenInstanceList from "@components/TokenInstanceList";
+import TokenInstanceList from "@Components/TokenInstanceList";
 
 // Icons
-import SortIcon from "@components/SortIcon";
+import SortIcon from "@Components/SortIcon";
 
 // Translation
 import { useTranslation } from "react-i18next";
