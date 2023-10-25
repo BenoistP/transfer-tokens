@@ -10,7 +10,6 @@ const TokenInstanceListFiltered = ( {
   tokensInstances,
   // chainId,
   accountAddress,
-  // changeCheckboxStatus,
   targetAddress,
   tokensInstancesListTablePropsHandlers,
  }: ITokenListFilteredProps ) => {
@@ -26,9 +25,7 @@ const TokenInstanceListFiltered = ( {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [ accountAddress,
     tokensInstancesListTablePropsHandlers.filterStates.name, tokensInstancesListTablePropsHandlers.filterStates.balanceGt0, tokensInstancesListTablePropsHandlers.filterStates.balance, tokensInstancesListTablePropsHandlers.filterStates.address,
-    // tokenInstanceFilterParams.name, tokenInstanceFilterParams.balanceGt0, tokenInstanceFilterParams.balance, tokenInstanceFilterParams.address,
     tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenDisplayId, tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenName, tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenBalance,
-    // sortOrderParams.displayId, sortOrderParams.tokenName, sortOrderParams.tokenBalance,
   ]
   );
   // ---
@@ -40,9 +37,7 @@ const TokenInstanceListFiltered = ( {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [ accountAddress,
     tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenDisplayId, tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenName, tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenBalance,
-    // sortOrderParams.displayId, sortOrderParams.tokenName, sortOrderParams.tokenBalance,
     tokensInstancesListTablePropsHandlers.filterStates.name, tokensInstancesListTablePropsHandlers.filterStates.balanceGt0, tokensInstancesListTablePropsHandlers.filterStates.balance, tokensInstancesListTablePropsHandlers.filterStates.address,
-    // tokenInstanceFilterParams.name, tokenInstanceFilterParams.balanceGt0, tokenInstanceFilterParams.balance, tokenInstanceFilterParams.address,
   ]
 );
 
@@ -51,7 +46,7 @@ const TokenInstanceListFiltered = ( {
   return (
     <>
       {
-        tokensInstances?.filter(filterTokenInstanceCB).sort(sortTokensInstancesCB).map( (tokenInstance:TTokenInstance/* , index:number */) => {
+        tokensInstances?.filter(filterTokenInstanceCB).sort(sortTokensInstancesCB).map( (tokenInstance:TTokenInstance) => {
           const key = accountAddress+'-'+tokenInstance.address;
           // console.debug(`TokenInstanceListFiltered.tsx render realTokenInstance key:${key}`);
           return (
