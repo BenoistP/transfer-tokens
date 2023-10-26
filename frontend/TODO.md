@@ -53,8 +53,9 @@ All Steps : 🚧
 
 
 Step 0: 🚧 
-- Watch for balances changes 👀
+- 🚧 Watch for balances changes 👀
 - Ethereum data is not loaded ?
+- 🚧 check transferability for connected account
 
 Step 2: 🚧 
 - ☑️ Fix list loading bug/missing icons (all/none & lock)
