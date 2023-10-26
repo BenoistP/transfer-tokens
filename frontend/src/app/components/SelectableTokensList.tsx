@@ -87,7 +87,7 @@ const SelectableTokensList = ( { selectableTokensList, changeTokensListCheckboxS
         }
       </td>
       <th>
-        <button className="btn btn-ghost btn-xs">details</button>
+        <button className="btn btn-ghost btn-xs">{t("moveTokens.stepZero.tokensListsTable.details")}</button>
       </th>
 
 

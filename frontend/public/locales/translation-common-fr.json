@@ -28,7 +28,8 @@
         "listName": "Nom",
         "listDescription": "Description",
         "emptyList": "Aucune liste de tokens trouvée",
-        "errorLoadingList": "Le chargement de la liste a échoué"
+        "errorLoadingList": "Le chargement de la liste a échoué",
+        "details": "Détails"
       }
     },
 

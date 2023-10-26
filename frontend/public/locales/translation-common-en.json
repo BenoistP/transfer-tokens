@@ -26,7 +26,8 @@
         "listName": "Name",
         "listDescription": "Description",
         "emptyList": "No token list found",
-        "errorLoadingList": "Error loading tokens list"
+        "errorLoadingList": "Error loading tokens list",
+        "details": "Details"
       }
     },
 
