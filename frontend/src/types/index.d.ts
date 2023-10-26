@@ -3,12 +3,13 @@ enum EChainTokensListLoadState {
   notLoaded = 0,
   contracts = 1,
   sourceBalances = 2,
-  decimals = 3,
-  names = 4,
-  symbols = 5,
-  targetBalances = 6,
-  transferAbility = 7,
-  // watchTransfers = 8, // TODO
+  sourceTransferAbility = 3,
+  decimals = 4,
+  names = 5,
+  symbols = 6,
+  targetBalances = 7,
+  targetTransferAbility = 8,
+  // watchTransfers = , // TODO
 }
 
 // Types & Interfaces

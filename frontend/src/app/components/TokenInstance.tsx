@@ -139,8 +139,8 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
   const unSelect = useCallback( (/* tokenInstance:TTokenInstance */) =>
     {
       
-      console.debug(`TokenInstance.tsx: unSelect( tokenInstance.selectID:${tokenInstance.selectID} ) balance:${balance} tokenInstance.userData[targetAddress as any]=`)
-      console.dir(tokenInstance.userData[targetAddress as any])
+      // console.debug(`TokenInstance.tsx: unSelect( tokenInstance.selectID:${tokenInstance.selectID} ) balance:${balance} tokenInstance.userData[targetAddress as any]=`)
+      // console.dir(tokenInstance.userData[targetAddress as any])
       
       // console.debug(`TokenInstance.tsx: handleCheckboxClick( tokenInstanceID:${tokenInstanceID} )`)
       // if (balance && /* accountAddress */targetAddress && typeof /* accountAddress */targetAddress == "string" && tokenInstance.userData[/* accountAddress */targetAddress as any]?.canTransfer && tokenInstance.userData[/* accountAddress */accountAddress as any]?.selected && changeCheckboxStatus) {
@@ -172,7 +172,7 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
         if (amount!=null && amount.valueOf() == 0n) 
         {
           // Clear amount and unselect
-          console.debug(`TokenInstance.tsx useEffect AMOUNT ZERO amount:${amount}`)
+          // console.debug(`TokenInstance.tsx useEffect AMOUNT ZERO amount:${amount}`)
           // if (tokenInstance.userData[/* accountAddress */targetAddress as any]?.selected) unSelect(/* tokenInstance */)
           if (tokenInstance.selected) unSelect(/* tokenInstance */)
           setisCheckboxDisabled(true);

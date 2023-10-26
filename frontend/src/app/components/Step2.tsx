@@ -19,21 +19,24 @@ const Step2 = ( {
  
   // ---
 
-  useEffect( () => {
-    // setShowProgressBar(true)
-    // setProgressBarPercentage(50)
+  useEffect( () =>
+    {
+      // setShowProgressBar(true)
+      // setProgressBarPercentage(50)
 
-    const someSelected = tokensInstances?.some( (tokensInstance) => {
-      if (accountAddress && typeof accountAddress === "string" && tokensInstance.userData && tokensInstance.userData[accountAddress as any]) {
-        const selected = tokensInstance.userData[accountAddress as any]?.selected;
-        return selected;
-      }
-      return false;
-    });
+      const someSelected = tokensInstances?.some( (tokensInstance) => {
+        // if (accountAddress && typeof accountAddress === "string" && tokensInstance.userData && tokensInstance.userData[accountAddress as any]) {
+          // const selected = tokensInstance.userData[accountAddress as any]?.selected;
+          return tokensInstance.selected;
+        // }
+        return false;
+      });
 
-    setNextDisabled(!someSelected || isError)
+      setNextDisabled(!someSelected || isError)
 
-  }, [tokensInstances, accountAddress, isError, setNextDisabled] )
+    },
+    [tokensInstances, /* accountAddress, */ isError, setNextDisabled]
+  )
 
   // ---
 

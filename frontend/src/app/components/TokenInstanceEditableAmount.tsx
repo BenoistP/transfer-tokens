@@ -26,7 +26,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
 
   const setMaxAmount = useCallback( () =>
     {
-      console.debug(`TokenInstanceEditableAmount.tsx setMaxAmount editableAmountString:${editableAmountString} `)
+      // console.debug(`TokenInstanceEditableAmount.tsx setMaxAmount editableAmountString:${editableAmountString} `)
       seteditableAmountString(max.toString());
       setamount(max);
     },
@@ -37,7 +37,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
 
   const setZeroAmount = useCallback( () =>
     {
-      console.debug(`TokenInstanceEditableAmount.tsx setZeroAmount editableAmountString:${editableAmountString} `)
+      // console.debug(`TokenInstanceEditableAmount.tsx setZeroAmount editableAmountString:${editableAmountString} `)
       seteditableAmountString("0.0");
       setamount(0n);
       console.dir(unSelect)
