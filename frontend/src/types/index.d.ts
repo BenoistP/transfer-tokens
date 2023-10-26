@@ -367,9 +367,9 @@ type TTokenLoadStatus = number;
 type TTokensInstances = TTokenInstance[]|TNullUndef;
 
 type TDisplayId = number
+type TSelectId = string
 
 type TTokenInstance = {
-
   chainId: ChainId;
   address: TokenContractNullableAddress;// TokenContractAddress;
   type: TTokenType;
@@ -381,20 +381,20 @@ type TTokenInstance = {
   status: TTokenLoadStatus;
   displayed: boolean;
   displayId: TDisplayId;
+  selectID: TSelectId;
   selectable: boolean;
-  // TODO
-  // userData: TTokenInstanceUserData;
+  selected: boolean,
+  transferAmount: TTokenAmount;
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings
-
 }
 
 
 type TTokenInstanceUserData = {
   // user interface data
-  selected: boolean;
+  // selected: boolean;
   // user data
   balance: TTokenAmount | null// | undefined;
-  transferAmount: TTokenAmount;
+  // transferAmount: TTokenAmount;
   canTransfer: boolean;
 }
 
