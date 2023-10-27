@@ -1660,7 +1660,8 @@ const StepsContainer = ( {
           }) // updatedTokensInstancesArray.then
           */
           updateChainTokensListTokensInstances(newSelectedChainsTokensList).then( (updatedChainsTokensList:TChainsTokensListArrayNullUndef) => {
-            console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] AFTER updateChainTokensListTokensInstances`)
+            console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] AFTER updateChainTokensListTokensInstances.then`)
+            console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: SET SelectedChainsTokensList`)
             setselectedChainsTokensList(updatedChainsTokensList)
           }).catch( (error) => {
             console.error(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances error: ${error}`);
@@ -1673,8 +1674,8 @@ const StepsContainer = ( {
           
         }
 
-        console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: SET SelectedChainsTokensList`)
-        setselectedChainsTokensList(newSelectedChainsTokensList)
+        // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: SET SelectedChainsTokensList`)
+        // setselectedChainsTokensList(newSelectedChainsTokensList)
         // console.dir(newSelectedChainsTokensList)
 
       } catch (error) {
