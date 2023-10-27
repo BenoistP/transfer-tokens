@@ -1244,7 +1244,7 @@ const StepsContainer = ( {
               const tokensSymbolsPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.symbols,true,null,"", true)
               console.dir(tokensSymbolsPromises)
 
-              // If targetAddress is set, Load Additionnal data: targetBalances, transferAbility
+              // If targetAddress is already set, load Additionnal data: targetBalances, transferAbility
               // tokens target user balances
               const tokensTargetBalancesPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true) : null ;
               // tokens transfer ability
@@ -1255,65 +1255,33 @@ const StepsContainer = ( {
               // Wait for all promises to resolve
               // const loadTokensOnChainDataPromises = targetAddress ? await Promise.all([names, sourceBalances, decimals, symbols, targetBalances, canTransferToTarget]) : await Promise.all([names, sourceBalances, decimals, symbols]) ;
               // const loadTokensOnChainDataPromises = await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensDecimalsPromises, tokensSymbolsPromises]) ;
-              const [tokensNames, tokensSourceBalances, tokensDecimals, tokensSymbols] = await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensDecimalsPromises, tokensSymbolsPromises]) ;
+              const [tokensNames, tokensSourceBalances, tokensDecimals, tokensSymbols, tokensTargetBalances, tokensTargetCanTransferTo ] =
+                targetAddress ?
+                  await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensDecimalsPromises, tokensSymbolsPromises]) :
+                  await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensDecimalsPromises, tokensSymbolsPromises, tokensTargetBalancesPromises, tokensTargetCanTransferToPromises ]) ;
 
               console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER Promise.all`)
 
-              // // Merge loadTokensOnChainDataPromises results
-              // const tokensInstancesAllData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
-              //   if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1]
-              //       && loadTokensOnChainDataPromises[2] && loadTokensOnChainDataPromises[3] )
-              //     {
-              //       _tokenInstance.name = loadTokensOnChainDataPromises[0][index].name // tokens names
-              //       _tokenInstance.userData[connectedAddress as any] = {..._tokenInstance.userData[connectedAddress as any], ...loadTokensOnChainDataPromises[1][index]} // balances
-              //       _tokenInstance.decimals = loadTokensOnChainDataPromises[2][index].decimals // tokens decimals
-              //       _tokenInstance.symbol = loadTokensOnChainDataPromises[3][index].symbol // tokens symbols
-              //       if (loadTokensOnChainDataPromises[4] && loadTokensOnChainDataPromises[5]) {
-              //         // _tokenInstance.userData = {
-              //         //   ..._tokenInstance.userData,
-              //         //   ...loadTokensOnChainDataPromises[4][index].userData, // target balances
-              //         //   ...loadTokensOnChainDataPromises[5][index].userData, // can transfer
-              //         // }
-              //       //   _tokenInstance.userData[targetAddress as any] = {
-              //       //                       // TODO
-              //       //     ..._tokenInstance.userData[targetAddress as any],
-              //       //     ...loadTokensOnChainDataPromises[4][index], // target balances
-              //       //     ...loadTokensOnChainDataPromises[5][index], // can transfer
-              //       //   } // _tokenInstance.userData[targetAddress as any]
-              //     } // if (loadTokensOnChainDataPromises[4] && loadTokensOnChainDataPromises[5])
-
-              //     }
-              //     return _tokenInstance;
-              // })
-
               // Merge loadTokensOnChainDataPromises results
               const tokensInstancesAllData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
-                if (tokensNames && tokensSourceBalances && tokensDecimals && tokensSymbols )
-                  {
+                // Update tokenInstance with data from promises
+                if (tokensNames && tokensSourceBalances && tokensDecimals && tokensSymbols ) {
                     _tokenInstance.name = tokensNames[index].name // tokens names
-                    _tokenInstance.userData[connectedAddress as any] = {..._tokenInstance.userData[connectedAddress as any], ...tokensSourceBalances[index]} // balances
+                    _tokenInstance.userData[connectedAddress as any] = {..._tokenInstance.userData[connectedAddress as any], ...tokensSourceBalances[index]} // source balances
                     _tokenInstance.decimals = tokensDecimals[index].decimals // tokens decimals
                     _tokenInstance.symbol = tokensSymbols[index].symbol // tokens symbols
-                    // TODO
-                    // TODO
-                    // TODO
-                    // if (loadTokensOnChainDataPromises[4] && loadTokensOnChainDataPromises[5]) {
-                      // _tokenInstance.userData = {
-                      //   ..._tokenInstance.userData,
-                      //   ...loadTokensOnChainDataPromises[4][index].userData, // target balances
-                      //   ...loadTokensOnChainDataPromises[5][index].userData, // can transfer
-                      // }
-                    //   _tokenInstance.userData[targetAddress as any] = {
-                    //                       // TODO
-                    //     ..._tokenInstance.userData[targetAddress as any],
-                    //     ...loadTokensOnChainDataPromises[4][index], // target balances
-                    //     ...loadTokensOnChainDataPromises[5][index], // can transfer
-                    //   } // _tokenInstance.userData[targetAddress as any]
-                  // } // if (loadTokensOnChainDataPromises[4] && loadTokensOnChainDataPromises[5])
+                    console.warn(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances MERGING promises`)
+                    // TODO : CHECK IT IS WORKING
+                    // TODO : CHECK IT IS WORKING
+                    // TODO : CHECK IT IS WORKING
+                    if (targetAddress && tokensTargetBalances && tokensTargetCanTransferTo) {
+                      console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances targetAddress IS SET targetAddress && tokensTargetBalances && tokensTargetCanTransferTo MERGING promises`)
+                      _tokenInstance.userData[targetAddress as any] = {..._tokenInstance.userData[targetAddress as any], ...tokensTargetBalances[index], ...tokensTargetCanTransferTo[index]} // target balances, can transfer to target
+                  } // if (tokensTargetBalances && tokensTargetCanTransferTo)
 
-                  }
-                  return _tokenInstance;
-              })
+                }
+                return _tokenInstance;
+              }) // map
 
               console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER MERGE promises (names, user balances, decimals, symbols, [target balances, cantransfer]) tokensInstancesAllData =`)
               console.dir(tokensInstancesAllData)
