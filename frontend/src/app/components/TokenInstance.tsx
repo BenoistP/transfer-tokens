@@ -15,12 +15,20 @@ import { NoSymbolIcon, MinusSmallIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
-const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddress, changeCheckboxStatus, enableEditable }: ITokenProps ) => {
+const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCheckboxStatus, enableEditable }: ITokenProps ) => {
 
   // console.debug(`TokenInstance.tsx render`)
+
+  // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+  // {
+  //   console.debug(`TokenInstance.tsx render tokenInstance=`)
+  //   console.dir(tokenInstance)
+  // }
+
   const { t } = useTranslation()
 
   const [decimals, setdecimals] = useState<bigint>(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT))) as [bigint, (balance:bigint) => void];
+  const [name, setname] = useState<string>(null)
 
   // const [balance, setbalance] = useState<BigInt>(tokenInstance.userData[accountAddress as any]?.amount) as [BigInt, (balance:BigInt) => void];
   // const [balance, setbalance] = useState<BigInt>(tokenInstance.userData[accountAddress as any]?.balance) as [BigInt, (balance:BigInt) => void];
@@ -33,8 +41,52 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
   // const [amount, setamount] = useState<BigInt>(tokenInstance.userData[accountAddress as any]?.balance) // as [BigInt, (amount:BigInt) => void];
   const [amount, setamount] = useState<TTokenAmount | null>(tokenInstance.userData[accountAddress as any]?.balance)
 
+  // const [canTransferFrom, setcanTransferFrom] = useState<boolean>( (accountAddress && (tokenInstance.userData[accountAddress as any] )) ? tokenInstance.userData[accountAddress as any]?.canTransfer : false )
+  // const [canTransferTo, setcanTransferTo] = useState<boolean>( (targetAddress && (tokenInstance.userData[targetAddress as any] )) ? tokenInstance.userData[targetAddress as any]?.canTransfer : false )
+
+//  // const canTransferFrom = (targetAddress && (tokenInstance.userData[accountAddress as any] )) ? tokenInstance.userData[accountAddress as any]?.canTransfer : false
+//  // const canTransferTo = (targetAddress && (tokenInstance.userData[targetAddress as any] )) ? tokenInstance.userData[targetAddress as any]?.canTransfer : false
+
+
   // const tokenInstanceID = tokenInstance.chainId+"-"+tokenInstance.address
   // const [loadStatus, setStatus] = useState("Ok")
+
+
+  useEffect( () =>
+    {
+      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      {
+        console.debug(`TokenInstance.tsx useEffect [tokenInstance.name] tokenInstance.name=${tokenInstance.name}`)
+      }
+     if (tokenInstance.name) setname(tokenInstance.name)
+    },
+    [tokenInstance.name]
+  );
+
+
+/*
+  useEffect( () =>
+    {
+      if (accountAddress && (tokenInstance.userData[accountAddress as any] )) {
+        setcanTransferFrom(tokenInstance.userData[accountAddress as any]?.canTransfer)
+      } else {
+        setcanTransferFrom(false)
+      }
+    },
+    [accountAddress, tokenInstance.userData]
+  );
+
+  useEffect( () =>
+  {
+    // console.debug(`TokenInstance.tsx useEffect targetAddress=${targetAddress} tokenInstance.userData[targetAddress as any]?.canTransfer=${tokenInstance.userData[targetAddress as any]?.canTransfer}`)
+    if (targetAddress && (tokenInstance.userData[targetAddress as any] )) {
+      setcanTransferTo(tokenInstance.userData[targetAddress as any]?.canTransfer)
+    } else {
+      setcanTransferTo(false)
+    }
+  },
+  [targetAddress, tokenInstance.userData]
+);
 
 
   // trigger Balance computations for display
@@ -62,7 +114,10 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
     } else if (balance == 0n) {
       setbalanceString("0.0")
     }
-  }, [/* balance, */ decimals/* , status */, /* tokenInstance.userData[accountAddress as any]?.amount] */ balance]);
+  }, [// balance,
+    decimals,
+    // status, tokenInstance.userData[accountAddress as any]?.amount]
+    balance]);
   
 
   // ---
@@ -81,7 +136,7 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
         setbalance(0n);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Xeslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenInstance.userData[accountAddress as any]?.balance, accountAddress]);
 
   // ---
@@ -104,10 +159,9 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
       } else {
         setIsSelected(false);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      // Xeslint-disable-next-line react-hooks/exhaustive-deps
     },
     [
-      // tokenInstance.userData[accountAddress as any]?.selected, accountAddress
       tokenInstance.selected, accountAddress
     ]
   );
@@ -119,8 +173,11 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
     // {
       // console.debug(`TokenInstance.tsx useEffect accountAddress:${accountAddress} balance:${balance} tokenInstance.userData[accountAddress as any]?.canTransfer=${tokenInstance.userData[accountAddress as any]?.canTransfer}`)
     // }
-    if (/* balance && */ /* accountAddress */targetAddress &&
-        tokenInstance.userData[/* accountAddress */targetAddress as any]?.canTransfer
+    if (
+        // balance && accountAddress 
+        targetAddress &&
+        tokenInstance.userData[// accountAddress 
+                            targetAddress as any]?.canTransfer
         && (balance?.valueOf() || 0n) > 0n
         && amount||0 > 0
         )
@@ -131,38 +188,8 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
       // console.debug(`TokenInstance.tsx useEffect SETISDISABLED TRUE balance:${balance} amount:${amount}`)
       setisCheckboxDisabled(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ targetAddress, tokenInstance.userData[/* accountAddress */targetAddress as any]?.canTransfer, balance /* , accountAddress */, amount]);
-
-  // ---
-
-  const unSelect = useCallback( (/* tokenInstance:TTokenInstance */) =>
-    {
-      
-      // console.debug(`TokenInstance.tsx: unSelect( tokenInstance.selectID:${tokenInstance.selectID} ) balance:${balance} tokenInstance.userData[targetAddress as any]=`)
-      // console.dir(tokenInstance.userData[targetAddress as any])
-      
-      // console.debug(`TokenInstance.tsx: handleCheckboxClick( tokenInstanceID:${tokenInstanceID} )`)
-      // if (balance && /* accountAddress */targetAddress && typeof /* accountAddress */targetAddress == "string" && tokenInstance.userData[/* accountAddress */targetAddress as any]?.canTransfer && tokenInstance.userData[/* accountAddress */accountAddress as any]?.selected && changeCheckboxStatus) {
-      if (balance && targetAddress && tokenInstance.selected && tokenInstance.userData[targetAddress as any]?.canTransfer && changeCheckboxStatus) {
-        // console.debug(`TokenInstance.tsx: handleCheckboxClick( tokenInstanceID:${tokenInstance.address} ) balance:${balance} tokenInstance.userData[accountAddress as any]=${tokenInstance.userData[accountAddress as any]}`)
-        // console.debug(`TODO: changeCheckboxStatus(tokenInstanceID)`)
-        // changeCheckboxStatus(tokenInstanceID, {checked: false});
-        changeCheckboxStatus(tokenInstance.selectID, {checked: false});
-      } /* else {
-        console.debug(`TokenInstance.tsx: handleCheckboxClick( tokenInstanceID:${tokenInstanceID} ) balance:${balance}`)
-      } */
-    },
-    [
-      // /* index, */ balance, accountAddress, changeCheckboxStatus, tokenInstance.userData[accountAddress as any]?.canTransfer
-      // accountAddress,
-      targetAddress, balance, changeCheckboxStatus, tokenInstance.userData,
-      // tokenInstance.address, tokenInstance.chainId,
-      // tokenInstanceID,
-      tokenInstance.selectID,
-      tokenInstance.selected
-    ]
-  );
+    // xeslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ targetAddress, tokenInstance.userData[targetAddress as any]?.canTransfer, balance, amount]);
 
   // ---
 
@@ -173,26 +200,24 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
         {
           // Clear amount and unselect
           // console.debug(`TokenInstance.tsx useEffect AMOUNT ZERO amount:${amount}`)
-          // if (tokenInstance.userData[/* accountAddress */targetAddress as any]?.selected) unSelect(/* tokenInstance */)
-          if (tokenInstance.selected) unSelect(/* tokenInstance */)
+          // if (tokenInstance.userData[targetAddress as any]?.selected) unSelect()
+          if (tokenInstance.selected) unSelect()
           setisCheckboxDisabled(true);
-          // if (tokenInstance.userData[/* accountAddress */targetAddress as any]) tokenInstance.userData[/* accountAddress */targetAddress as any].transferAmount = 0n;
-          if (tokenInstance.userData[/* accountAddress */targetAddress as any]) tokenInstance.transferAmount = 0n;
+          if (tokenInstance.userData[targetAddress as any]) tokenInstance.transferAmount = 0n;
           // tokenInstance.userData[accountAddress as any].transferAmount = amount.valueOf();
           // tokenInstance.selectable = false;
-        } else if (/* accountAddress */targetAddress && tokenInstance.userData[/* accountAddress */targetAddress as any]?.canTransfer
+        } else if (targetAddress && tokenInstance.userData[targetAddress as any]?.canTransfer
             && (balance?.valueOf() || 0n) > 0n )
         {
           setisCheckboxDisabled(false)
           // console.debug(`TokenInstance.tsx useEffect SETISDISABLED FALSE amount:${amount}`)
-          // tokenInstance.userData[/* accountAddress */targetAddress as any].transferAmount = amount?.valueOf() || 0n;
+          // tokenInstance.userData[targetAddress as any].transferAmount = amount?.valueOf() || 0n;
           tokenInstance.transferAmount = amount?.valueOf() || 0n;
           tokenInstance.selectable = true;
         }
     },
     [
-      // tokenInstance.userData[accountAddress as any]?.transferAmount, amount]
-      /* accountAddress */targetAddress, amount, balance, tokenInstance, unSelect,
+      targetAddress, amount, balance, tokenInstance, unSelect,
     ]
   );
 
@@ -223,11 +248,36 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
       [] // eslint-disable-line react-hooks/exhaustive-deps
     );
 
+*/
+
+  // ---
+
+  const unSelect = useCallback( (// tokenInstance:TTokenInstance
+    ) =>
+    {
+      // console.debug(`TokenInstance.tsx: unSelect( tokenInstance.selectID:${tokenInstance.selectID} ) balance:${balance} tokenInstance.userData[targetAddress as any]=`)
+      // console.dir(tokenInstance.userData[targetAddress as any])
+      if (balance && targetAddress && tokenInstance.selected && tokenInstance.userData[targetAddress as any]?.canTransfer && changeCheckboxStatus) {
+        // console.debug(`TokenInstance.tsx: handleCheckboxClick( tokenInstanceID:${tokenInstance.address} ) balance:${balance} tokenInstance.userData[accountAddress as any]=${tokenInstance.userData[accountAddress as any]}`)
+        // console.debug(`TODO: changeCheckboxStatus(tokenInstanceID)`)
+        // changeCheckboxStatus(tokenInstanceID, {checked: false});
+        changeCheckboxStatus(tokenInstance.selectID, {checked: false});
+      }
+      // else {
+      //   console.debug(`TokenInstance.tsx: handleCheckboxClick( tokenInstanceID:${tokenInstanceID} ) balance:${balance}`)
+      // }
+    },
+    [
+      targetAddress, balance, changeCheckboxStatus, tokenInstance.userData,
+      tokenInstance.selectID,
+      tokenInstance.selected
+    ]
+  );
+
   // ---
 
   const handleCheckboxClick = useCallback( (/* tokenInstance:TTokenInstance */) =>
     {
-      
       // console.debug(`TokenInstance.tsx: handleCheckboxClick( tokenInstanceID:${tokenInstanceID} )`)
 
       if (amount && amount.valueOf() > 0n) {
@@ -238,7 +288,6 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
         // console.debug(`TODO: changeCheckboxStatus(tokenInstanceID)`)
           // changeCheckboxStatus(tokenInstanceID);
           changeCheckboxStatus(tokenInstance.selectID);
-          
         }
         // else {
         //   console.debug(`TokenInstance.tsx: handleCheckboxClick( tokenInstanceID:${tokenInstanceID} ) balance:${balance}`)
@@ -263,13 +312,10 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
   const clsText = clsTextPaddingLeft + (balance && balance.valueOf() > 0n ? clsTextReadable : clsTextLight)
   const clsTooltipLeft = "tooltip tooltip-left " + clsTextReadable
 
-  const canTransfer = (targetAddress && (tokenInstance.userData[targetAddress as any] )) ? tokenInstance.userData[/* accountAddress */ targetAddress as any]?.canTransfer : false
+  // const accountAddress = (targetAddress && (tokenInstance.userData[accountAddress as any] )) ? tokenInstance.userData[accountAddress as any]?.canTransfer : false
+  // const canTransferTo = (targetAddress && (tokenInstance.userData[targetAddress as any] )) ? tokenInstance.userData[targetAddress as any]?.canTransfer : false
 
-  // console.debug(`TokenInstance.tsx render cantTransfer=${cantTransfer} (targetAddress && (tokenInstance.userData[targetAddress as any] != undefined))=${(targetAddress && (tokenInstance.userData[targetAddress as any] != undefined))} tokenInstance.userData[targetAddress as any]=`)
-  // console.debug(`TokenInstance.tsx render canTransfer=${canTransfer} ; if(targetAddress && (tokenInstance.userData[targetAddress as any] ))="${(targetAddress && (tokenInstance.userData[targetAddress as any] ))?true:false }" ; tokenInstance.userData[targetAddress as any]=`)
-  // console.dir(tokenInstance.userData[targetAddress as any])
-
-  // console.debug(`TokenInstance.tsx render canTransfer=${canTransfer} , targetAddress=${targetAddress}`)
+  // console.debug(`TokenInstance.tsx render canTransferTo=${canTransferTo}, targetAddress=${targetAddress} tokenInstance.userData[targetAddress as any]=${tokenInstance.userData[targetAddress as any]?.canTransfer}`)
 
   // ------------------------------
 
@@ -279,19 +325,15 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
       {/* <td>{tokenInstance.address}</td> */}
       {/* <td className={clsText + " text-ellipsis min-w-full" + (balance?"":" opacity-60")}> */}
       <td className={clsText + " text-ellipsis min-w-full "}>
-        {tokenInstance.name ?
-            tokenInstance.name
-          :
-          <Loading/>
-        }
+        { name ? name : <Loading/> }
       </td>
       {/* <td>{loadStatus}</td> */}
       <td className={clsText + " text-right pr-2"}>
-        {balanceString ? balanceString : <Loading/>}
+        { balanceString ? balanceString : <Loading/> }
       </td>
       { enableEditable ?
         <td className="">
-          { canTransfer && changeCheckboxStatus ?
+          { canTransferTo && canTransferFrom && changeCheckboxStatus ?
               <input
                 type="checkbox"
                 className="checkbox checkbox-xs sm:checkbox-md md:checkbox-md mt-1 "
@@ -313,7 +355,7 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
       }
       { enableEditable ?
           <td className="p-1 ">
-            { canTransfer ?
+            { canTransferTo ?
               <TokenInstanceEditableAmount selectable={tokenInstance.selectable} balance={(balance && balance.valueOf()?balance.valueOf(): 0n)} amount={(amount && amount.valueOf()?amount.valueOf():0n)} setamount={setamount} decimals={Number(decimals)/* tokenInstance.decimals */} unSelect={unSelect} />
               :
               <div className="flex justify-center">
@@ -326,18 +368,18 @@ const TokenInstance = ( { tokenInstance, accountAddress, /* index, */ targetAddr
       }
       <td className={"min-h-full items-center justify-center" /* + clsText */ }>
         <div className="md:flex">
-        { targetAddress && !canTransfer // cantTransfer
-          &&
-          <div className={clsTooltipLeft + " tooltip-warning"} data-tip={t("moveTokens.stepTwo.token.noTransferTo")} >
-            <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
-          </div>
-        }
         {
           (tokenInstance.symbol || tokenInstance.address) &&
           <div className={clsTooltipLeft + " tooltip-info text-base-content tracking-tight"} data-tip={tokenInstance.symbol + "\n" + tokenInstance.address} >
             <span className="badge badge-ghost badge-sm bg-neutral text-neutral-content border border-neutral-content">
               {t("moveTokens.stepTwo.token.details")}
             </span>
+          </div>
+        }
+        { targetAddress && !canTransferTo // cantTransfer
+          &&
+          <div className={clsTooltipLeft + " pl-1 tooltip-warning"} data-tip={t("moveTokens.stepTwo.token.noTransferTo")} >
+            <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
           </div>
         }
         </div>
