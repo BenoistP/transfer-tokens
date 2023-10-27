@@ -737,33 +737,22 @@ const StepsContainer = ( {
       try {
         // console.debug(`StepsContainer.tsx loadTokensOnChainData ProgressBar _tokensInstances?.length=${_tokensInstances?.length}}, step=${step}`)
         let tokensInstancesResults:TTokensInstances;
-        // const baseProgress = 11
-        // const loadTokensOnChainDataProgress = 89 - 3
-        // const steps = 4
-        // let progressStep=(loadTokensOnChainDataProgress/(_tokensInstances?_tokensInstances.length:1))/steps
-        // let progressStep=loadTokensOnChainDataProgress/steps
-        // let progress = 0
 
         if (_tokensInstances && _tokensInstances.length > 0) {
           let multicallArray: any[] = [];
 
           switch (step) {
 
-            // Step 0: get tokens contracts
+            // Step contracts: get tokens contracts
             case EStepsLoadTokensData.contracts:
               console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.contracts: GET TOKENS CONTRACTS`)
-              // console.debug(`StepsContainer.tsx loadTokensOnChainData Step 0: GET TOKENS CONTRACTS _tokensInstances.length=${_tokensInstances.length} _tokensInstances=`)
-              // console.dir(_tokensInstances)
               tokensInstancesResults = await loadTokensContracts(_tokensInstances)
               // progress = 11
               break;
 
-            // Step 1: get tokens source user balances
+            // Step sourceBalances: get tokens source user balances
             case EStepsLoadTokensData.sourceBalances:
               console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.sourceBalances: GET USER TOKENS BALANCES`)
-              // console.debug(`StepsContainer.tsx loadTokensOnChainData Step 0: GET USER TOKENS BALANCES _tokensInstances.length=${_tokensInstances.length} _tokensInstances=`)
-              // console.dir(_tokensInstances)
-              // const balancesSourceMulticallArray = _tokensInstances.map( async (token) => {
               multicallArray = _tokensInstances.map( async (token) => {
                 if (token?.contract) {
                   return {
@@ -774,11 +763,37 @@ const StepsContainer = ( {
                 }
                 return null;
               });
-              // multicallArray = balancesSourceMulticallArray;
               // progress = 33
               break;
 
-            // Step 2: get token decimals
+            // Step sourceTransferAbility: get canTransfer token from source address
+            case EStepsLoadTokensData.sourceTransferAbility:
+              console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.sourceTransferAbility: GET TOKENS SOURCE TRANSFER ABILITY`)
+              multicallArray = _tokensInstances.map( async (token) => {
+
+                if (token?.contract) {
+                  if (token?.type == "COINBRIDGE" as TTokenType) {
+                    const amount = token.userData && token.userData[_from as any]?.balance || 1 // set minimal amount for checking transferability
+                    // query: From address, To address , Amount uint256 ;  response: bool, uint256, uint256
+                    // args: [connectedAddress, targetAddress, amount],
+                    return {
+                      ...token.contract,
+                      functionName: 'canTransfer',
+                      args: [_from, _from, amount], // self transfer test
+                    }
+                  }
+                  // Anything else than COINBRIDGE
+                  // don't call contract, just provide return value assuming (transferability is) true
+                  return {
+                      value: [true],
+                    }
+                } // if (token?.contract)
+                return null;
+              });
+              // progress = 100
+              break;
+
+            // Step decimals: get token decimals
             case EStepsLoadTokensData.decimals:
               console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.decimals: GET TOKENS DECIMALS`)
               // const decimalsMulticallArray = _tokensInstances.map( async (token) => {
@@ -791,14 +806,12 @@ const StepsContainer = ( {
                 }
                 return null;
               });
-              // multicallArray = decimalsMulticallArray;
               // progress = 55
               break;
 
-            // Step 3: get token name
+            // Step names: get token name
             case EStepsLoadTokensData.names:
               console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.names: GET TOKENS NAMES`)
-              // const nameMulticallArray = _tokensInstances.map( async (token) => {
               multicallArray = _tokensInstances.map( async (token) => {
                 if (token?.contract) {
                   return {
@@ -808,14 +821,12 @@ const StepsContainer = ( {
                 }
                 return null;
               });
-              // multicallArray = nameMulticallArray;
               // progress = 77
               break;
 
-            // Step 4: get token symbol
+            // Step symbols: get token symbol
             case EStepsLoadTokensData.symbols:
               console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.symbols: GET TOKENS SYMBOLS`)
-              // const symbolMulticallArray = _tokensInstances.map( async (token) => {
               multicallArray = _tokensInstances.map( async (token) => {
                 if (token?.contract) {
                   return {
@@ -825,15 +836,13 @@ const StepsContainer = ( {
                 }
                 return null;
               });
-              // multicallArray = symbolMulticallArray;
               // progress = 90
               break;
 
 
-            // Step 5: get tokens target user balances
+            // Step targetBalances: get tokens target user balances
             case EStepsLoadTokensData.targetBalances:
               console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.targetBalances: GET TARGET USER TOKENS BALANCES`)
-              // const balancesTargetMulticallArray = _tokensInstances.map( async (token) => {
               multicallArray = _tokensInstances.map( async (token) => {
                 if (token?.contract) {
                   return {
@@ -845,56 +854,45 @@ const StepsContainer = ( {
                 }
                 return null;
               });
-              // multicallArray = balancesTargetMulticallArray;
               // progress = 50
               break;
 
-            // Step 6: get canTransfer token from address to address
+            // Step targetTransferAbility: get canTransfer token from source address to target  address
             case EStepsLoadTokensData.targetTransferAbility:
-              console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.targetTransferAbility: GET TOKENS TRANSFER ABILITY`)
+              console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.targetTransferAbility: GET TOKENS TARGET TRANSFER ABILITY`)
               // const canTransferMulticallArray = _tokensInstances.map( async (token) => {
               multicallArray = _tokensInstances.map( async (token) => {
 
                 if (token?.contract) {
-                  if (token?.type == "COINBRIDGE" as TTokenType) { // TEST
-                  // if (token?.type == "ERC20" as TTokenType) {
-                    // const amount = token.userData && token.userData[connectedAddress as any]?.balance || 1
+                  if (token?.type == "COINBRIDGE" as TTokenType) {
                     const amount = token.userData && token.userData[_from as any]?.balance || 1 // set minimal amount for checking transferability
-                    // console.debug(`StepsContainer.tsx loadTokensOnChainData StepsContainer canTransfer from=${connectedAddress} to=${targetAddress} amount=${amount}`)
+                    // query: From address, To address , Amount uint256 ;  response: bool, uint256, uint256
+                    // args: [connectedAddress, targetAddress, amount],
                     return {
                       ...token.contract,
                       functionName: 'canTransfer',
-                      // query: From address, To address , Amount uint256 ;  response: bool, uint256, uint256
-                      // args: [connectedAddress, targetAddress, amount],
                       args: [_from, _to, amount],
-                      // functionName: 'transfer',
-                      // // To, Amount
-                      // args: [targetAddress, amount],
-                      // functionName: 'transferFrom',
-                      // // To, Amount
-                      // args: [connectedAddress, targetAddress, amount],
                     }
                   }
                   // Anything else than COINBRIDGE
                   // don't call contract, just provide return value assuming (transferability is) true
-                    return {
-                        value: [true],
-                      }
+                  return {
+                      value: [true],
+                    }
                 } // if (token?.contract)
                 return null;
               });
-              // multicallArray = canTransferMulticallArray;
               // progress = 100
               break;
 
-            // Step 7: Watch transfers : TODO
+            // Step ??: Watch transfers : TODO
 
           }
 
-          // Step 0: Load contracts
-          // Steps 1..7: Load onchain data
+          // Step contracts: Load contracts
+          // Others Steps : Load onchain data
 
-          if (step > 0) {
+          if (step > EStepsLoadTokensData.contracts) {
 
             // Multicall
             const multicallData = await Promise.all(multicallArray);
@@ -902,45 +900,15 @@ const StepsContainer = ( {
             // console.dir(multicallData);
             // const onchainData = await fetchOnChainData(multicallData);
             const onchainData = await fetchOnChainDataWrapper(multicallData);
-
-            // if (step == EStepsLoadTokensData.sourceBalances) {
-            //   console.debug(`StepsContainer.tsx loadTokensOnChainData ProgressBar sourceBalances from=${connectedAddress} to=${targetAddress} onchainData.length=${onchainData?.length}`)
-            //   console.dir(onchainData)
-            // }
   
-            // const tokensListLength = _tokensInstances.length
             if (onchainData?.length > 0) {
               const tokensInstancesWithOnchainData = _tokensInstances.map( async (tokenInstance, index) => {
 
-                // Step 1: get tokens source user balances
+                // Step sourceBalances: get tokens source user balances
                 if (step == EStepsLoadTokensData.sourceBalances) {
-                  // tokens balances
-                  // let tokenInstanceUserDataArray:TTokenInstanceUserData[] = new Array<TTokenInstanceUserData>()
-                  /* let */ // const tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
-
-
-                  // return { userData: tokenInstanceUserDataArray, }
-                  // console.dir(tokenInstanceUserDataArray)
-
-                  // if (!tokenInstanceUserDataArray) {
-                  //   console.warn(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.sourceBalances: tokenInstance.userData is null or undefined`)
-                  //   tokenInstanceUserDataArray = new Array<TTokenInstanceUserData>()
-                  // }
                   const userBalance = onchainData[index]?.result; // Token User balance
-                  // if (_from /* && typeof _from == 'string' */) {
-                  //   // debugger
-                  //   tokenInstanceUserDataArray[_from as any] = ({
-                  //     // selected: false,
-                  //     ...tokenInstanceUserDataArray[_from as any],
-                  //     balance: userBalance,
-                  //     // transferAmount: userBalance,
-                  //   } as TTokenInstanceUserData)
-                  // } // if (_from && typeof _from == 'string')
                   if (_resultOnly) {
-                    return {
-                      // userData: {balance: userBalance,},
-                      balance: userBalance,
-                    };
+                    return { balance: userBalance };
                   }
                   const tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
                   if (_from /* && typeof _from == 'string' */) {
@@ -959,7 +927,24 @@ const StepsContainer = ( {
                   } as TTokenInstance;
                 }
 
-                // Step 2: get token decimals
+                // Step sourceTransferAbility: get canTransfer token from source address
+                if (step == EStepsLoadTokensData.sourceTransferAbility) {
+                  // can transfer from to
+                  const canTransfer = (onchainData[index] && onchainData[index]?.result && onchainData[index]?.result[0] ? true : false) ; // can transfer from to // result: bool, uint256, uint256
+                  if (_resultOnly) {
+                    return { canTransfer };
+                  }
+                  let tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
+                  if (!tokenInstanceUserDataArray) tokenInstanceUserDataArray = new Array<TTokenInstanceUserData>();
+                  tokenInstanceUserDataArray[_from as any] = ({...tokenInstance.userData[ _from as any], canTransfer })
+                  return {
+                    ...tokenInstance,
+                    userData: tokenInstanceUserDataArray,
+                    status: step,
+                  } as TTokenInstance;
+                }
+
+                // Step decimals: get token decimals
                 if (step == EStepsLoadTokensData.decimals) {
                   // decimals
                   if (_resultOnly) {
@@ -974,7 +959,7 @@ const StepsContainer = ( {
                   } as TTokenInstance;
                 }
 
-                // Step 3: get token name
+                // Step names: get token name
                 if (step == EStepsLoadTokensData.names) {
                   // name
                   if (_resultOnly) {
@@ -989,7 +974,7 @@ const StepsContainer = ( {
                   } as TTokenInstance;
                 }
 
-                // Step 4: get token symbol
+                // Step symbols: get token symbol
                 if (step == EStepsLoadTokensData.symbols) {
                   // symbol
                   if (_resultOnly) {
@@ -1004,26 +989,12 @@ const StepsContainer = ( {
                   } as TTokenInstance;
                 }
 
-                // Step 5: get tokens target user balances
+                // Step targetBalances: get tokens target user balances
                 if (step == EStepsLoadTokensData.targetBalances) {
-                  // tokens balances
-                  // let tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
-                  // if (!tokenInstanceUserDataArray) tokenInstanceUserDataArray = new Array<TTokenInstanceUserData>();
-                  // if (_to && typeof _to == 'string') {
-                  //   tokenInstanceUserDataArray[_to as any] = ({
-                  //     // selected: false,
-                  //     balance: onchainData[index]?.result, // Token User balance
-                  //     // transferAmount: 0n,
-                  //     canTransfer: false,
-                  //   } // as TTokenInstanceUserData
-                  //   )
-                  // } // if (_to && typeof _to == 'string')
                   if (_resultOnly) {
                     return {
-                      // userData: {
                         balance: onchainData[index]?.result, // Token User balance
                         canTransfer: false // defaulted to false, then fetched after with a multicall
-                      // },
                     };
                   }
                   let tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
@@ -1045,47 +1016,18 @@ const StepsContainer = ( {
                     userData: tokenInstanceUserDataArray,
                   } as TTokenInstance;
                 }
-                // Step 6: get canTransfer token from address to address
+                // Step targetTransferAbility: get canTransfer token from source address to target  address
                 if (step == EStepsLoadTokensData.targetTransferAbility) {
                   // can transfer from to
-                  // console.debug(`StepsContainer.tsx loadTokensOnChainData ProgressBar canTransfer from=${connectedAddress} to=${targetAddress} result=${onchainData[index]?.result}`)
-                  // console.debug(`StepsContainer.tsx loadTokensOnChainData StepsContainer canTransfer from=${_from} to=${_to} result=${onchainData[index]?.result}`)
-                  // console.dir(onchainData[index]?.result)
-                  const canTransfer = (onchainData[index] && onchainData[index]?.result && onchainData[index]?.result[0] ? true : false) ; // can transfer from to
-                  // let {selectable} = tokenInstance;
-                  // if (_from && typeof _from == 'string') {
-                  //   if (tokenInstanceUserDataArray[_from as any]) {
-                  //     selectable = ( (tokenInstanceUserDataArray[_from as any].balance || 0n) > 0n
-                  //       && canTransfer)
-                  //   }
-                  // }
-                  // console.info(`StepsContainer.tsx loadTokensOnChainData StepsContainer canTransfer=${canTransfer} from=${_from} to=${_to} result=${onchainData[index]?.result} selectable=${selectable} `)
-                  // if (_to && typeof _to == 'string') {
-                  //   // tokenInstanceUserDataArray[_from as any] = ({
-                  //   tokenInstanceUserDataArray[_to as any] = ({
-                  //     ...tokenInstance.userData[_to as any],
-                  //     canTransfer: onchainData[index]?.result, // can transfer from to
-                  //   } as TTokenInstanceUserData)
-                  // } // if (_to && typeof _to == 'string')
+                  const canTransfer = (onchainData[index] && onchainData[index]?.result && onchainData[index]?.result[0] ? true : false) ; // can transfer from to // result: bool, uint256, uint256
                   if (_resultOnly) {
-                    return {
-                      // userData: tokenInstanceUserDataArray,
-                      // selectable,
-                      canTransfer, // can transfer from to
-                    };
+                    return { canTransfer };
                   }
                   let tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
                   if (!tokenInstanceUserDataArray) tokenInstanceUserDataArray = new Array<TTokenInstanceUserData>();
-                  tokenInstanceUserDataArray[/* _from */_to as any] = ({
-                      ...tokenInstance.userData[/* _from */ _to as any],
-                      // result: bool, uint256, uint256
-                      canTransfer,
-                      // transferAmount: 0n,
-                    } //  as TTokenInstanceUserData
-                  )
+                  tokenInstanceUserDataArray[_to as any] = ({...tokenInstance.userData[ _to as any], canTransfer })
                   return {
                     ...tokenInstance,
-                    // selectable,
                     userData: tokenInstanceUserDataArray,
                     status: step,
                   } as TTokenInstance;
@@ -1105,8 +1047,8 @@ const StepsContainer = ( {
               // settokensInstances(allPromiseResolved);
   
             } // if (onchainData?.length > 0
-          } // if (step > 0)
-          
+          } // if (step > EStepsLoadTokensData.contracts)
+
           // console.debug(`StepsContainer.tsx loadTokensOnChainData ProgressBar progress=${progress}`)
 
           // if (_showProgressBar) {
@@ -1232,22 +1174,22 @@ const StepsContainer = ( {
               // Load everything else : sourceBalances, decimals, names, symbols
               // tokens names
               const tokensNamesPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.names,true,null,"", true)
-              console.dir(tokensNamesPromises)
 
               // tokens connected user (source) balances
               const tokensSourceBalancesPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.sourceBalances,true,connectedAddress,"", true)
-              console.dir(tokensSourceBalancesPromises)
+
+              // tokens source transferability
+              const tokensSourceCanTransferPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.sourceTransferAbility,true,connectedAddress,connectedAddress, true);
+
               // tokens decimals
               const tokensDecimalsPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.decimals,true,null,"", true)
-              console.dir(tokensDecimalsPromises)
               // tokens symbols
               const tokensSymbolsPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.symbols,true,null,"", true)
-              console.dir(tokensSymbolsPromises)
 
               // If targetAddress is already set, load Additionnal data: targetBalances, transferAbility
               // tokens target user balances
               const tokensTargetBalancesPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true) : null ;
-              // tokens transfer ability
+              // tokens target transferability
               const tokensTargetCanTransferToPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,connectedAddress,targetAddress, true) : null ;
 
               console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances BEFORE Promise.all`)
@@ -1255,27 +1197,26 @@ const StepsContainer = ( {
               // Wait for all promises to resolve
               // const loadTokensOnChainDataPromises = targetAddress ? await Promise.all([names, sourceBalances, decimals, symbols, targetBalances, canTransferToTarget]) : await Promise.all([names, sourceBalances, decimals, symbols]) ;
               // const loadTokensOnChainDataPromises = await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensDecimalsPromises, tokensSymbolsPromises]) ;
-              const [tokensNames, tokensSourceBalances, tokensDecimals, tokensSymbols, tokensTargetBalances, tokensTargetCanTransferTo ] =
+              const [tokensNames, tokensSourceBalances, tokensSourceCanTransfer, tokensDecimals, tokensSymbols, tokensTargetBalances, tokensTargetCanTransferTo ] =
                 targetAddress ?
-                  await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensDecimalsPromises, tokensSymbolsPromises]) :
-                  await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensDecimalsPromises, tokensSymbolsPromises, tokensTargetBalancesPromises, tokensTargetCanTransferToPromises ]) ;
+                  await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensSourceCanTransferPromises, tokensDecimalsPromises, tokensSymbolsPromises]) :
+                  await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensSourceCanTransferPromises, tokensDecimalsPromises, tokensSymbolsPromises, tokensTargetBalancesPromises, tokensTargetCanTransferToPromises ]) ;
 
               console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER Promise.all`)
 
               // Merge loadTokensOnChainDataPromises results
               const tokensInstancesAllData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
                 // Update tokenInstance with data from promises
-                if (tokensNames && tokensSourceBalances && tokensDecimals && tokensSymbols ) {
+                if (tokensNames && tokensSourceBalances && tokensSourceCanTransfer && tokensDecimals && tokensSymbols ) {
                     _tokenInstance.name = tokensNames[index].name // tokens names
-                    _tokenInstance.userData[connectedAddress as any] = {..._tokenInstance.userData[connectedAddress as any], ...tokensSourceBalances[index]} // source balances
+                    _tokenInstance.userData[connectedAddress as any] = {..._tokenInstance.userData[connectedAddress as any], ...tokensSourceBalances[index], ...tokensSourceCanTransfer[index]} // source balances, can transfer from source
                     _tokenInstance.decimals = tokensDecimals[index].decimals // tokens decimals
                     _tokenInstance.symbol = tokensSymbols[index].symbol // tokens symbols
-                    console.warn(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances MERGING promises`)
                     // TODO : CHECK IT IS WORKING
                     // TODO : CHECK IT IS WORKING
                     // TODO : CHECK IT IS WORKING
                     if (targetAddress && tokensTargetBalances && tokensTargetCanTransferTo) {
-                      console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances targetAddress IS SET targetAddress && tokensTargetBalances && tokensTargetCanTransferTo MERGING promises`)
+                      console.warn(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances targetAddress IS SET targetAddress && tokensTargetBalances && tokensTargetCanTransferTo MERGING promises`)
                       _tokenInstance.userData[targetAddress as any] = {..._tokenInstance.userData[targetAddress as any], ...tokensTargetBalances[index], ...tokensTargetCanTransferTo[index]} // target balances, can transfer to target
                   } // if (tokensTargetBalances && tokensTargetCanTransferTo)
 
