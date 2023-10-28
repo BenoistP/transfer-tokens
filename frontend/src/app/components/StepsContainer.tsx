@@ -611,7 +611,6 @@ const StepsContainer = ( {
   const loadTokensContracts = useCallback( async(tokensInstances:TTokensInstances/* TTokenChainDataArray */):Promise<TTokensInstances> =>
     {
       try {
-        // console.debug(`StepsContainer.tsx loadTokensContracts tokensInstances?.length=${tokensInstances?.length}`)
         console.debug(`StepsContainer.tsx loadTokensContracts`)
         const contractCoinBridgeTokenABI = JSON.parse(CoinBridgeToken.ABI)
 
@@ -1067,8 +1066,8 @@ const StepsContainer = ( {
   useEffect( () =>
   {
 
-      const loadTargetData = async( _tokensInstances:TTokensInstances, targetAddress:TAddressEmpty) : Promise<TTokenInstance[]> => {
-
+      const loadTargetData = async( _tokensInstances:TTokensInstances, targetAddress:TAddressEmpty) : Promise<TTokenInstance[]> =>
+      {
         let tokensInstancesData:TTokenInstance[] = []
         try {
           console.debug(`StepsContainer.tsx loadTargetData BEFORE MERGE promises (target balances, cantransfer) tokensInstancesData =`)
@@ -1083,10 +1082,10 @@ const StepsContainer = ( {
 
             // Wait for all promises to resolve
             const loadTokensOnChainDataPromises = await Promise.all([targetBalances, canTransfer]);
-            console.debug(`StepsContainer.tsx loadTargetData AFTER await Promise.all`)
+            // console.debug(`StepsContainer.tsx loadTargetData AFTER await Promise.all`)
+            // console.dir(loadTokensOnChainDataPromises[0])
+            // console.dir(loadTokensOnChainDataPromises[1])
 
-            console.dir(loadTokensOnChainDataPromises[0])
-            console.dir(loadTokensOnChainDataPromises[1])
             // Merge loadTokensOnChainDataPromises results
             tokensInstancesData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
               if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] ) {
@@ -1106,8 +1105,8 @@ const StepsContainer = ( {
               return _tokenInstance;
             })
 
-            console.debug(`StepsContainer.tsx loadTargetData AFTER MERGE promises (target balances, cantransfer) tokensInstancesData =`)
-            console.dir(tokensInstancesData)
+            // console.debug(`StepsContainer.tsx loadTargetData AFTER MERGE promises (target balances, cantransfer) tokensInstancesData =`)
+            // console.dir(tokensInstancesData)
 
             // // update chainTokensList
             // chainTokensList.tokensInstances = tokensInstancesData;
@@ -1121,7 +1120,7 @@ const StepsContainer = ( {
           console.error(`StepsContainer.tsx loadTargetData error: ${error}`);
         }
         return tokensInstancesData;
-      }
+      } // loadTargetData
 
       /**
        * 
@@ -1131,10 +1130,9 @@ const StepsContainer = ( {
        */
       const getUpdatedChainTokensListTokensInstances = async( chainTokensList:TChainsTokensListNullUndef ) : Promise<TTokensInstances> =>
       {
+        const start:number = Date.now()
         try {
-          
           console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.chainId=${chainTokensList?.chainId} chainTokensList.tokensCount=${chainTokensList?.tokensCount} chainTokensList.tokensInstances?.length=${chainTokensList?.tokensInstances?.length}`)
-          
           let _tokensInstances:TTokensInstances;
           if (chainTokensList && chainTokensList.tokensInstances && chainTokensList.tokensInstances.length) {
             // let tmp: TTokensInstances = []
@@ -1152,8 +1150,7 @@ const StepsContainer = ( {
             }
 
             if (chainTokensList.loadState == EChainTokensListLoadState.contracts) {
-
-              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState.CONTRACTS`)
+              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState == EChainTokensListLoadState.CONTRACTS`)
               // Load everything else : sourceBalances, decimals, names, symbols
               // tokens names
               const tokensNamesPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.names,true,null,"", true)
@@ -1175,7 +1172,7 @@ const StepsContainer = ( {
               // tokens target transferability
               const tokensTargetCanTransferToPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,connectedAddress,targetAddress, true) : null ;
 
-              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances BEFORE Promise.all`)
+              // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances BEFORE Promise.all`)
 
               // Wait for all promises to resolve
               // const loadTokensOnChainDataPromises = targetAddress ? await Promise.all([names, sourceBalances, decimals, symbols, targetBalances, canTransferToTarget]) : await Promise.all([names, sourceBalances, decimals, symbols]) ;
@@ -1185,7 +1182,7 @@ const StepsContainer = ( {
                   await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensSourceCanTransferPromises, tokensDecimalsPromises, tokensSymbolsPromises]) :
                   await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensSourceCanTransferPromises, tokensDecimalsPromises, tokensSymbolsPromises, tokensTargetBalancesPromises, tokensTargetCanTransferToPromises ]) ;
 
-              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER Promise.all`)
+              // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER Promise.all`)
 
               // Merge loadTokensOnChainDataPromises results
               const tokensInstancesAllData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
@@ -1207,8 +1204,8 @@ const StepsContainer = ( {
                 return _tokenInstance;
               }) // map
 
-              console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER MERGE promises (names, user balances, decimals, symbols, [target balances, cantransfer]) tokensInstancesAllData =`)
-              console.dir(tokensInstancesAllData)
+              // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER MERGE promises (names, user balances, decimals, symbols, [target balances, cantransfer]) tokensInstancesAllData =`)
+              // console.dir(tokensInstancesAllData)
 
               // update chainTokensList
               chainTokensList.tokensInstances = tokensInstancesAllData;
@@ -1341,7 +1338,7 @@ const StepsContainer = ( {
 
             } // else
 
-            console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances BEFORE RETURN chainTokensList.tokensInstances`)
+            // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances BEFORE RETURN chainTokensList.tokensInstances`)
             return chainTokensList.tokensInstances;
           } // if (chainTokensList && chainTokensList.tokensInstances && chainTokensList.tokensInstances.length)
           else {
@@ -1351,7 +1348,11 @@ const StepsContainer = ( {
         } catch (error) {
           console.error(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances error: ${error}`);
         }
-    
+
+        finally {
+          console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER RETURN chainTokensList.tokensInstances elapsed=${Date.now() - start}ms`)
+        }
+
       } // getUpdatedChainTokensListTokensInstances
       
 
@@ -1383,7 +1384,7 @@ const StepsContainer = ( {
       const getUpdatedTokensInstancesArray = async (_chainsTokensList:TChainsTokensListArrayNullUndef):Promise<TTokensInstances[]/*  | undefined */> => {
         let result:TTokensInstances[] = []
         try {
-          console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] getUpdatedTokensInstancesArray`)
+          // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] getUpdatedTokensInstancesArray`)
           if (_chainsTokensList && _chainsTokensList.length) {
 
             const tokenInstances = _chainsTokensList.map( async(chainTokensList:TChainsTokensListNullUndef) => {
@@ -1409,7 +1410,7 @@ const StepsContainer = ( {
         }
         // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] getUpdatedTokensInstancesArray result=`)
         // console.dir(result)
-        console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] getUpdatedTokensInstancesArray BEFORE RETURN`)
+        // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] getUpdatedTokensInstancesArray BEFORE RETURN`)
         return result
       } // getUpdatedTokensInstancesArray
 
@@ -1418,10 +1419,10 @@ const StepsContainer = ( {
       const updateChainTokensListTokensInstances = async (_chainsTokensList:TChainsTokensListArrayNullUndef):Promise<TChainsTokensListArrayNullUndef> => {
         // let chainsTokensListResult:TChainsTokensListArrayNullUndef // = [];
         try {
-          console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances`)
+          // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances`)
           // chainsTokensListResult = _chainsTokensList;
           const updatedTokensInstancesArray = await getUpdatedTokensInstancesArray(_chainsTokensList)
-          console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances: AFTER getUpdatedTokensInstancesArray`)
+          // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances: AFTER getUpdatedTokensInstancesArray`)
           // updatedTokensInstancesArray.then( (updatedTokensInstancesArray:TTokensInstances[]) => {
   
             if (updatedTokensInstancesArray && updatedTokensInstancesArray.length) {
@@ -1447,6 +1448,7 @@ const StepsContainer = ( {
         return _chainsTokensList
       } // updateChainTokensListTokensInstances
 
+      const start:number = Date.now()
       try {
         // setisLoading(true)
         console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]`)
@@ -1552,9 +1554,12 @@ const StepsContainer = ( {
           }) // updatedTokensInstancesArray.then
           */
           updateChainTokensListTokensInstances(newSelectedChainsTokensList).then( (updatedChainsTokensList:TChainsTokensListArrayNullUndef) => {
-            console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] AFTER updateChainTokensListTokensInstances.then`)
-            console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: SET SelectedChainsTokensList`)
+            // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] AFTER updateChainTokensListTokensInstances.then`)
+            // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: SET SelectedChainsTokensList`)
             setselectedChainsTokensList(updatedChainsTokensList)
+
+            // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances elapsed=${Date.now() - start}ms`)
+
           }).catch( (error) => {
             console.error(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances error: ${error}`);
           })
@@ -1572,6 +1577,10 @@ const StepsContainer = ( {
 
       } catch (error) {
         console.error(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: error=${error}`)
+      }
+
+      finally {
+        console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances elapsed=${Date.now() - start}ms`)
       }
 
     },
