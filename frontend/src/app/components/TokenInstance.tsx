@@ -11,7 +11,7 @@ import { ERC20_DECIMALS_DEFAULT } from "@uiconsts/misc";
 import { useTranslation } from "react-i18next";
 
 // Icons
-import { NoSymbolIcon, MinusSmallIcon } from '@heroicons/react/24/solid'
+import { NoSymbolIcon, MinusSmallIcon, ArrowLeftOnRectangleIcon as ArrowReceive, ArrowRightOnRectangleIcon as ArrowSend } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
@@ -51,19 +51,28 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
   // const tokenInstanceID = tokenInstance.chainId+"-"+tokenInstance.address
   // const [loadStatus, setStatus] = useState("Ok")
 
+  if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197") console.debug(`TokenInstance.tsx RENDER`);
 
   useEffect( () =>
     {
-      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-      {
-        console.debug(`TokenInstance.tsx useEffect [tokenInstance.name] tokenInstance.name=${tokenInstance.name}`)
-      }
+      // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      // {
+      //   console.debug(`TokenInstance.tsx useEffect [tokenInstance.name] tokenInstance.name=${tokenInstance.name}`)
+      // }
      if (tokenInstance.name) setname(tokenInstance.name)
     },
     [tokenInstance.name]
   );
 
-
+  useEffect( () =>
+    {
+      // console.debug(`TokenInstance.tsx useEffect targetAddress=${targetAddress} tokenInstance.userData[targetAddress as any]?.canTransfer=${tokenInstance.userData[targetAddress as any]?.canTransfer}`)
+      setcanTransferFrom(accountAddress ? (tokenInstance.userData[accountAddress as any]?.canTransfer) : false )
+      setcanTransferTo(targetAddress ? (tokenInstance.userData[targetAddress as any]?.canTransfer) : false )
+    },
+    // X eslint-disable-next-line react-hooks/exhaustive-deps
+    [accountAddress, targetAddress, tokenInstance.userData[accountAddress as any]?.canTransfer, tokenInstance.userData[targetAddress as any]?.canTransfer]
+  );
 /*
   useEffect( () =>
     {
@@ -322,8 +331,6 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
   return (
     <>
       <td className={clsTextPaddingLeft+"w-8 text-center font-thin"}>{tokenInstance.displayId}</td>
-      {/* <td>{tokenInstance.address}</td> */}
-      {/* <td className={clsText + " text-ellipsis min-w-full" + (balance?"":" opacity-60")}> */}
       <td className={clsText + " text-ellipsis min-w-full "}>
         { name ? name : <Loading/> }
       </td>
@@ -366,21 +373,36 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
         :
           null
       }
-      <td className={"min-h-full items-center justify-center" /* + clsText */ }>
-        <div className="md:flex">
+      <td className={"min-h-full" /* + clsText */ }>
+        <div className="flex ml-1 justify-start">
         {
           (tokenInstance.symbol || tokenInstance.address) &&
-          <div className={clsTooltipLeft + " tooltip-info text-base-content tracking-tight"} data-tip={tokenInstance.symbol + "\n" + tokenInstance.address} >
+          <div className={clsTooltipLeft + "tooltip-info text-base-content tracking-tight"} data-tip={tokenInstance.symbol + "\n" + tokenInstance.address} >
             <span className="badge badge-ghost badge-sm bg-neutral text-neutral-content border border-neutral-content">
               {t("moveTokens.stepTwo.token.details")}
             </span>
           </div>
         }
-        { targetAddress && !canTransferTo // cantTransfer
+        
+          { canTransferFrom ?
+            <div className={clsTooltipLeft + "pl-1 tooltip-info"} data-tip={t(canTransferFrom?"moveTokens.stepTwo.token.canTransferFrom":"moveTokens.stepTwo.token.noTransferFrom")} >
+              <ArrowSend className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+            </div>
+            :
+            <div className={clsTooltipLeft + "pl-1 tooltip-warning"} data-tip={t(canTransferFrom?"moveTokens.stepTwo.token.canTransferFrom":"moveTokens.stepTwo.token.noTransferFrom")} >
+              <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+            </div>
+          }
+        { targetAddress
           &&
-          <div className={clsTooltipLeft + " pl-1 tooltip-warning"} data-tip={t("moveTokens.stepTwo.token.noTransferTo")} >
-            <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
-          </div>
+              canTransferTo ?
+                <div className={clsTooltipLeft + "pl-1 tooltip-info"} data-tip={t(canTransferTo?"moveTokens.stepTwo.token.canTransferTo":"moveTokens.stepTwo.token.noTransferTo")} >
+                  <ArrowReceive className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+                </div>
+              :
+                <div className={clsTooltipLeft + "pl-1 tooltip-warning"} data-tip={t(canTransferTo?"moveTokens.stepTwo.token.canTransferTo":"moveTokens.stepTwo.token.noTransferTo")} >
+                  <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+                </div>
         }
         </div>
       </td>
