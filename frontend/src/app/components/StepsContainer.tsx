@@ -1396,6 +1396,21 @@ const StepsContainer = ( {
               // console.dir(t)
               // update
               // chainTokensList.tokensInstances = t
+              updatedChainTokensListTokensInstances?.forEach( (tokenInstance:TTokenInstance) => {
+                // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] getUpdatedTokensInstancesArray: getUpdatedChainTokensListTokensInstances t=`)
+                // console.dir(tokenInstance)
+                // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] getUpdatedTokensInstancesArray: getUpdatedChainTokensListTokensInstances t.userData=`)
+                // console.dir(tokenInstance.userData)
+                const selectable = (tokenInstance.userData
+                  && (tokenInstance.userData[connectedAddress as any]?.balance || 0n > 0n)
+                  && tokenInstance.userData[connectedAddress as any]?.canTransfer && tokenInstance.userData[connectedAddress as any]?.canTransfer) ? true : false ;
+                tokenInstance.selectable = selectable;
+                // If not selectable : reset selected and transferAmount
+                if (!selectable && (tokenInstance.selected || (tokenInstance.transferAmount||0n>0n)) ) {
+                  tokenInstance.transferAmount = 0n;
+                  tokenInstance.selected = false;
+                }
+              })
               return updatedChainTokensListTokensInstances
             })
 

@@ -63,7 +63,8 @@ Step 2: 🚧
 - display target address
 - ☑️ Sort tokens: ☑️ by Id  ☑️ By Name  ☑️ by Balance
 - ☑️ fix tokens numbering in lists (filtering changes numbers)
-- 🚧 Unselect token on target address change (if not transferrable)
+- ☑️ Unselect token on target address change (if not transferrable)
+- 🚧 Keep transfer amont and lock state between screens
 
 
 

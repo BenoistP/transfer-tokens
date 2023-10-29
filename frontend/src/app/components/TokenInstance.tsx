@@ -30,8 +30,6 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
   const [decimals, setdecimals] = useState<bigint>(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT))) as [bigint, (balance:bigint) => void];
   const [name, setname] = useState<string>(null)
 
-  // const [balance, setbalance] = useState<BigInt>(tokenInstance.userData[accountAddress as any]?.amount) as [BigInt, (balance:BigInt) => void];
-  // const [balance, setbalance] = useState<BigInt>(tokenInstance.userData[accountAddress as any]?.balance) as [BigInt, (balance:BigInt) => void];
   const [balance, setbalance] = useState<TTokenAmount | null>(tokenInstance.userData[accountAddress as any]?.balance);
   
   const [balanceString, setbalanceString] = useState("") as [string, (balance:string) => void];
@@ -50,12 +48,17 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
 
   // const tokenInstanceID = tokenInstance.chainId+"-"+tokenInstance.address
   // const [loadStatus, setStatus] = useState("Ok")
-
+  // DEBUG
   if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197") {
     console.debug(`TokenInstance.tsx RENDER
     `);
   }
 
+  // ---
+
+  /**
+   * Name update
+  */
   useEffect( () =>
     {
       // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
@@ -63,19 +66,170 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
       //   console.debug(`TokenInstance.tsx useEffect [tokenInstance.name] tokenInstance.name=${tokenInstance.name}`)
       // }
      if (tokenInstance.name) setname(tokenInstance.name)
+     if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+       {console.debug(`TokenInstance.tsx useEffect [tokenInstance.name]`)}
     },
     [tokenInstance.name]
   );
 
+  // ---
+
+  /**
+   * Decimals update
+   */
+  useEffect(() =>
+    {
+      // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      // {
+      //   console.debug(`TokenInstance.tsx useEffect decimals`)
+      // }
+      setdecimals(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT)));
+      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+        {console.debug(`TokenInstance.tsx useEffect [tokenInstance.decimals]`)}
+    },
+    [tokenInstance.decimals]
+  );
+
+  // ---
+
+  /**
+   * Balance
+   */
+  useEffect(() =>
+    {
+      // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      // {
+      //   console.debug(`TokenInstance.tsx useEffect amount tokenInstance.userData[accountAddress as any]?.amount:${tokenInstance.userData[accountAddress as any]?.amount} decimals:${decimals} `)
+      // }
+      if (accountAddress) {
+        // setbalance(tokenInstance.userData[accountAddress as any]?.balance);
+        const accountBalance = tokenInstance.userData[accountAddress as any]?.balance;
+        if (accountBalance) {
+          setbalance(accountBalance);
+        } else {
+          setbalance(0n);
+        }
+      }
+      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+        {console.debug(`TokenInstance.tsx useEffect [tokenInstance.userData[accountAddress as any]?.balance]`)}
+    }, // X eslint-disable-next-line react-hooks/exhaustive-deps
+    [tokenInstance.userData[accountAddress as any]?.balance, accountAddress]
+  );
+
+  // ---
+
+  /**
+   * canTransferFrom, canTransferTo
+   */
   useEffect( () =>
     {
       // console.debug(`TokenInstance.tsx useEffect targetAddress=${targetAddress} tokenInstance.userData[targetAddress as any]?.canTransfer=${tokenInstance.userData[targetAddress as any]?.canTransfer}`)
       setcanTransferFrom(accountAddress ? (tokenInstance.userData[accountAddress as any]?.canTransfer) : false )
       setcanTransferTo(targetAddress ? (tokenInstance.userData[targetAddress as any]?.canTransfer) : false )
+      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+        {console.debug(`TokenInstance.tsx useEffect [accountAddress, targetAddress, tokenInstance.userData[accountAddress as any]?.canTransfer, tokenInstance.userData[targetAddress as any]?.canTransfer]`)}
     },
     // X eslint-disable-next-line react-hooks/exhaustive-deps
     [accountAddress, targetAddress, tokenInstance.userData[accountAddress as any]?.canTransfer, tokenInstance.userData[targetAddress as any]?.canTransfer]
   );
+
+  // ---
+
+  /**
+   * trigger Balance computations for display on : decimals, balance
+   */
+  useEffect(() => {
+    // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+    // {
+    //   console.debug(`TokenInstance.tsx useEffect tokenInstance.userData[accountAddress as any]?.amount:${tokenInstance.userData[accountAddress as any]?.amount} decimals:${decimals} `)
+    // }
+
+    if (balance) {
+      const balanceValue = balance.valueOf();// + 1n;
+      // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} `)
+      const intValue = ( balanceValue / (10n**decimals) );
+      // console.debug(`TokenInstance.tsx useEffect balance:${balance} decimals:${decimals} intValue:${intValue} `)
+      // console.dir(intValue)
+      const decimalValue = (balanceValue - intValue * (10n**decimals));
+      // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalValue:${decimalValue} `)
+      if (decimalValue > 0) {
+        const decimalDisplay = decimalValue.toString().padStart( Number(decimals) , "0");
+        setbalanceString(`${intValue}.${decimalDisplay}`)
+        // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalDisplay:${decimalDisplay} `)
+      } else {
+        setbalanceString(`${intValue}.0`)
+      }
+    } else if (balance == 0n) {
+      setbalanceString("0.0")
+    }
+    if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      {console.debug(`TokenInstance.tsx useEffect [balance, decimals]`)}
+  }, [// balance,
+    decimals,
+    // status, tokenInstance.userData[accountAddress as any]?.amount]
+    balance]);
+
+
+  // ---
+
+  useEffect(  () =>
+    {
+      // if (accountAddress && tokenInstance.userData[accountAddress as any]?.selected) {
+      if (accountAddress && tokenInstance.selected) {
+        setIsSelected(true);
+      } else {
+        setIsSelected(false);
+      }
+      // Xeslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [ tokenInstance.selected, accountAddress ]
+  );
+
+  // ---
+
+  useEffect(() =>
+    {
+
+      if (
+        !accountAddress || !targetAddress ||
+        !tokenInstance.selectable ||
+        !tokenInstance.userData ||
+        !tokenInstance.userData[accountAddress as any]?.canTransfer ||
+        !tokenInstance.userData[targetAddress as any]?.canTransfer ||
+        (balance?.valueOf() || 0n) == 0n ||
+        (amount||0n) == 0n
+      ) {
+        setisCheckboxDisabled(true)
+
+        // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+        // {console.debug(`TokenInstance.tsx useEffect [...] EN/DIS/ABLE CHECKBOX
+        // accountAddress=${accountAddress} targetAddress=${targetAddress} tokenInstance.selectable=${tokenInstance.selectable} 
+        // tokenInstance.userData[accountAddress as any]?.canTransfer=${tokenInstance.userData[accountAddress as any]?.canTransfer} 
+        // tokenInstance.userData[targetAddress as any]?.canTransfer=${tokenInstance.userData[targetAddress as any]?.canTransfer} 
+        // balance?.valueOf()=${balance?.valueOf()} amount=${amount} isCheckboxDisabled=${!accountAddress || !targetAddress ||
+        //   !tokenInstance.selectable ||
+        //   !tokenInstance.userData ||
+        //   !tokenInstance.userData[accountAddress as any]?.canTransfer ||
+        //   !tokenInstance.userData[targetAddress as any]?.canTransfer
+        //   || (balance?.valueOf() || 0n) == 0n
+        //    || (amount||0n) == 0n
+        //   }
+        // `)}
+        } else {
+        setisCheckboxDisabled(false)
+      }
+
+      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      {console.debug(`TokenInstance.tsx useEffect [...] EN/DIS/ABLE CHECKBOX`)}
+    }, // X eslint-disable-next-line react-hooks/exhaustive-deps
+    [ accountAddress, targetAddress, tokenInstance.selectable,
+      tokenInstance.userData,
+      // tokenInstance.userData[accountAddress as any]?.canTransfer,
+      // tokenInstance.userData[targetAddress as any]?.canTransfer,
+      balance, amount]
+  );
+
+
 /*
   useEffect( () =>
     {
