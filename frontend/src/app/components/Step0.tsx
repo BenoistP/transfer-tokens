@@ -14,7 +14,7 @@ const Step0 = (  {
     selectableTokensLists,
     setselectableTokensLists,
     tokensInstances,
-    isError,
+    isLoading, isError,
     tokensInstancesListTablePropsHandlers
     } :IStep0Props ) =>
 {
@@ -76,7 +76,7 @@ const Step0 = (  {
                 accountAddress={accountAddress}
                 // chainId={chainId}
                 targetAddress={targetAddress}
-                isError={isError}
+                isLoading={isLoading} isError={isError}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
               />
 
