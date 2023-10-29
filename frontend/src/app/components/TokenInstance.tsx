@@ -28,11 +28,14 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
   const { t } = useTranslation()
 
   const [decimals, setdecimals] = useState<bigint>(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT))) as [bigint, (balance:bigint) => void];
-  const [name, setname] = useState<string>(null)
+  const [name, setname] = useState<string>("")
 
   const [balance, setbalance] = useState<TTokenAmount | null>(tokenInstance.userData[accountAddress as any]?.balance);
-  
-  const [balanceString, setbalanceString] = useState("") as [string, (balance:string) => void];
+
+  // const [balanceString, setbalanceString] = useState("") as [string, (balance:string) => void];
+  const [shortBalanceString, setshortBalanceString] = useState("") as [string, (balance:string) => void];
+  const [longBalanceString, setlongBalanceString] = useState("") as [string, (balance:string) => void];
+
   const [isSelected, setIsSelected] = useState<boolean>(false)
   const [isCheckboxDisabled, setisCheckboxDisabled] = useState<boolean>(true)
 
@@ -153,15 +156,25 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
       const decimalValue = (balanceValue - intValue * (10n**decimals));
       // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalValue:${decimalValue} `)
       if (decimalValue > 0) {
+        // exact decimals display
         const decimalDisplay = decimalValue.toString().padStart( Number(decimals) , "0");
-        setbalanceString(`${intValue}.${decimalDisplay}`)
+        const shortDecimalDisplay = Number(`0.${decimalValue.toString()}`).toFixed(3).toString();
+        console.debug(`TokenInstance.tsx useEffect shortDecimalDisplay=${shortDecimalDisplay} decimalDisplay=${decimalDisplay} "0."decimalValue.toString() = ${"0."+decimalValue.toString()}`)
+        // setbalanceString(`${intValue}.${decimalDisplay}`)
+        setlongBalanceString(`${intValue}.${decimalDisplay}`)
+        setshortBalanceString(`${intValue}.${shortDecimalDisplay}`)
         // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalDisplay:${decimalDisplay} `)
       } else {
-        setbalanceString(`${intValue}.0`)
+        // setbalanceString(`${intValue}.0`)
+        // console.debug(`TokenInstance.tsx useEffect decimalValue<=0 tokenInstance.displayId=${tokenInstance.displayId} tokenInstance.=${tokenInstance.address} decimals:${decimals} intValue:${intValue} `)
+        setlongBalanceString(`${intValue}.0`)
+        setshortBalanceString(`${intValue}`)
       }
     } else if (balance == 0n) {
-      setbalanceString("0.0")
-    }
+      // setbalanceString("0.0")
+      setlongBalanceString("0.0")
+      setshortBalanceString("0")
+  }
     if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
       {console.debug(`TokenInstance.tsx useEffect [balance, decimals]`)}
   }, [// balance,
@@ -493,7 +506,7 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
       </td>
       {/* <td>{loadStatus}</td> */}
       <td className={clsText + " text-right pr-2"}>
-        { balanceString ? balanceString : <Loading/> }
+        { longBalanceString ? longBalanceString : <Loading/> }
       </td>
       { enableEditable ?
         <td className="">
