@@ -1,5 +1,5 @@
 // React
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // Components
 import TokenInstanceList from "@Components/TokenInstanceList";
@@ -25,6 +25,9 @@ const TokenInstanceListTable = (
 
   const { t } = useTranslation()
 
+  const [showIsLoading, setshowIsLoading] = useState<boolean>(false);
+  const [showIsEmpty, setshowIsEmpty] = useState<boolean>(false);
+
   // ---
   
   const TokenInstanceListMemo = useMemo(
@@ -38,6 +41,25 @@ const TokenInstanceListTable = (
       />
     , [tokensInstances, accountAddress, targetAddress, tokensInstancesListTablePropsHandlers.sortHandlers.sortTokensInstances]
   );
+
+  useEffect(() =>
+    {
+      if (!isError && tokensInstances?.length) {
+        setshowIsEmpty(false)
+        setshowIsLoading(false)
+      } else {
+        setshowIsLoading(true)
+        setTimeout(() => {
+          setshowIsLoading(false)
+          setshowIsEmpty(true)
+        }, 2_000);
+      }
+
+    },
+    [isError, tokensInstances?.length, setshowIsLoading//, setshowIsEmpty
+    ]
+  );
+
 
   // ----------------------------
 
@@ -100,9 +122,18 @@ const TokenInstanceListTable = (
               </>
               :
               <>
-                <p className="text-center text-sm sm:text-md md:text-lg font-medium bg-info text-info-content rounded-lg h-full">
+                {
+                  showIsEmpty &&
+                  <p className="text-center text-sm sm:text-md md:text-lg font-medium bg-info text-info-content rounded-lg h-full">
                   {t("moveTokens.stepTwo.tokensTable.empty")}
                 </p>
+                }
+                {
+                  showIsLoading &&
+                  <div className="flex justify-center items-center">
+                    <span className="loading loading-spinner loading-lg"></span>
+                  </div>
+                }              
               </>
 
         }
