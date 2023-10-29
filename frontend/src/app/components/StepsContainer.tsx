@@ -1040,7 +1040,7 @@ const StepsContainer = ( {
               return loadTokensOnChainData_addressBalances(_tokensInstances, _resultOnly, _to);
             // Step targetTransferAbility: get canTransfer token from source address to target  address
             case EStepsLoadTokensData.targetTransferAbility:
-              return loadTokensOnChainData_TransferAbility(_tokensInstances, _resultOnly, _from, _to);
+              return loadTokensOnChainData_TransferAbility(_tokensInstances, _resultOnly, /* _from */_to, _to);
             // Step ??: Watch transfers : TODO
             default:
               console.error(`StepsContainer.tsx loadTokensOnChainData error: step=${step} not found`)
@@ -1078,7 +1078,8 @@ const StepsContainer = ( {
             // tokens target user balances
             const targetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true);
             // tokens transfer ability
-            const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,connectedAddress,targetAddress, true);
+            // const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,connectedAddress,targetAddress, true);
+            const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,null,targetAddress, true);
 
             // Wait for all promises to resolve
             const loadTokensOnChainDataPromises = await Promise.all([targetBalances, canTransfer]);
@@ -1170,7 +1171,8 @@ const StepsContainer = ( {
               // tokens target user balances
               const tokensTargetBalancesPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true) : null ;
               // tokens target transferability
-              const tokensTargetCanTransferToPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,connectedAddress,targetAddress, true) : null ;
+              // const tokensTargetCanTransferToPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,connectedAddress,targetAddress, true) : null ;
+              const tokensTargetCanTransferToPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,null,targetAddress, true) : null ;
 
               // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances BEFORE Promise.all`)
 
