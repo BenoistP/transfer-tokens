@@ -108,7 +108,7 @@ const TokenInstanceListTable = (
                 {
                   isLoading ?
                   <div className="flex justify-center items-center">
-                    <span className="loading loading-spinner loading-lg"></span>
+                    <span className="loading loading-dots loading-sm md:loading-md lg:loading-lg"></span>
                   </div>
                   :
                   <p className="text-center text-sm sm:text-md md:text-lg font-medium bg-info text-info-content rounded-lg h-full">
@@ -128,21 +128,6 @@ const TokenInstanceListTable = (
   
 } // TokenInstanceListTable
 
-/* 
-isLoading
-{
-  showIsEmpty &&
-  <p className="text-center text-sm sm:text-md md:text-lg font-medium bg-info text-info-content rounded-lg h-full">
-  {t("moveTokens.stepTwo.tokensTable.empty")}
-</p>
-}
-{
-  showIsLoading &&
-  <div className="flex justify-center items-center">
-    <span className="loading loading-spinner loading-lg"></span>
-  </div>
-}
- */
 // ----------------------------
 
 export default TokenInstanceListTable;
