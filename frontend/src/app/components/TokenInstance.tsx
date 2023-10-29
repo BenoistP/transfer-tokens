@@ -51,7 +51,10 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
   // const tokenInstanceID = tokenInstance.chainId+"-"+tokenInstance.address
   // const [loadStatus, setStatus] = useState("Ok")
 
-  if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197") console.debug(`TokenInstance.tsx RENDER`);
+  if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197") {
+    console.debug(`TokenInstance.tsx RENDER
+    `);
+  }
 
   useEffect( () =>
     {
@@ -393,23 +396,24 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
               <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
             </div>
           }
-        { targetAddress
-          &&
-              canTransferTo ?
-                <div className={clsTooltipLeft + "pl-1 tooltip-info"} data-tip={t(canTransferTo?"moveTokens.stepTwo.token.canTransferTo":"moveTokens.stepTwo.token.noTransferTo")} >
-                  <ArrowReceive className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
-                </div>
+        { targetAddress == "" ?
+            null
+          :
+            (canTransferTo ?
+              <div className={clsTooltipLeft + "pl-1 tooltip-info"} data-tip={t(canTransferTo?"moveTokens.stepTwo.token.canTransferTo":"moveTokens.stepTwo.token.noTransferTo")} >
+                <ArrowReceive className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+              </div>
               :
-                <div className={clsTooltipLeft + "pl-1 tooltip-warning"} data-tip={t(canTransferTo?"moveTokens.stepTwo.token.canTransferTo":"moveTokens.stepTwo.token.noTransferTo")} >
-                  <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
-                </div>
+              <div>
+                <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+              </div>
+            )
         }
         </div>
       </td>
     </>
   );
 }
-
 
 // ------------------------------
 
