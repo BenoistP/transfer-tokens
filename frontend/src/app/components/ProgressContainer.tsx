@@ -2,7 +2,7 @@
 
 // Components
 import ProgressStepBar from "@Components/ProgressStepBar";
-import ProgressBar from "@Components/ProgressBar";
+// import ProgressBar from "@Components/ProgressBar";
 
 // Context
 import { useMoveTokensAppContext } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
@@ -82,11 +82,11 @@ const ProgressContainer = ( { previousDisabled, nextDisabled, showProgressBar, p
           </button>
         </div>
 
-
+{/* 
         <div className="flex flex-wrap content-center w-full col-start-3 sm:col-start-1 col-span-8 sm:col-span-10 row-span-2 sm:row-span-1 sm:mt-1 justify-self-center sm:justify-self-center base-100 px-2">
           <ProgressBar showProgressBar={showProgressBar} progressPercentage={progressBarPercentage} />
         </div>
-
+ */}
 
         {/* <div className="col-start-4 sm:col-start-4 col-span-5 sm:col-span-5 row-span-2 sm:row-span-1 justify-stretch base-100 m-1"> */}
           {/* <ProgressBarColor progressPercentage={ (step+1 - minStep) / (maxStep+1 - minStep) * 100} /> */}
