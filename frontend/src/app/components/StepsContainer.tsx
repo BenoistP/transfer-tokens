@@ -28,7 +28,6 @@ import CoinBridgeToken from "@abis/CoinBridgeToken.json";
 // Consts & Enums
 import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT } from "@uiconsts/misc";
 import { EStepsLoadTokensData, EChainTokensListLoadState } from "@jsconsts/enums"; 
-import { set } from "lodash";
 
 // ------------------------------
 
@@ -344,13 +343,17 @@ const StepsContainer = ( {
           if (tokensInstances) {
             const newCheckAll = !selectAll
             const tokensInstancesCheckAll = tokensInstances.map((tokensInstance) => {
-              // if (  tokensInstance.selectable && /*accountAddress*/ connectedAddress && typeof /*accountAddress*/ connectedAddress === "string" && tokensInstance.userData &&
-              //     tokensInstance.userData[/*accountAddress*/ connectedAddress as any].canTransfer && (tokensInstance.userData[/*accountAddress*/ connectedAddress as any].balance||0)>0)
+
+              if (tokensInstance.address.toUpperCase() == "0X8D1090DF790FFAFDACCDA03015C05DF3B4CC9C21") {
+                console.debug(`handleCheckSelectAll tokensInstance=`);
+                  console.dir(tokensInstance)
+              } // debug
               if (  tokensInstance.selectable && targetAddress && tokensInstance.userData &&
                     tokensInstance.userData[targetAddress as any].canTransfer &&
-                    // (tokensInstance.userData[targetAddress as any].balance||0)>0 &&
+                    tokensInstance.userData[connectedAddress as any].canTransfer &&
+                    (tokensInstance.userData[connectedAddress as any].balance||0n) > 0n &&
                     // tokensInstance.userData[targetAddress as any].transferAmount>0
-                    tokensInstance.transferAmount>0
+                    tokensInstance.transferAmount > 0n
                   )
               {
                 // tokensInstance.userData[targetAddress as any].selected = newCheckAll;
@@ -369,7 +372,7 @@ const StepsContainer = ( {
           console.error(`StepsContainer.tsx handleCheckSelectAll error: ${error}`);
         }
       },
-      [tokensInstances, /*accountAddress*/ /* connectedAddress, */ targetAddress, selectAll]
+      [tokensInstances, /*accountAddress*/ /* connectedAddress, */ connectedAddress, targetAddress, selectAll]
   ); // handleCheckSelectAll
 
   // ---
@@ -385,10 +388,9 @@ const StepsContainer = ( {
             if (tokensInstances) {
               const tokensInstancesInvertCheck = tokensInstances.map((tokensInstance) => {
                 if (tokensInstance.selectable) {
-                  // if (tokensInstance.userData[/*accountAddress*/ connectedAddress as any]) {
                   if (tokensInstance.userData && targetAddress && tokensInstance.userData[/*accountAddress*/ connectedAddress as any]
+                    && tokensInstance.userData[/*accountAddress*/ connectedAddress as any].canTransfer
                     && tokensInstance.userData[/*accountAddress*/ targetAddress as any].canTransfer
-                    // && tokensInstance.userData[/*accountAddress*/ targetAddress as any].transferAmount>0
                     && tokensInstance.transferAmount>0
                     ) {
                     // if (tokensInstance.userData[/*accountAddress*/ connectedAddress as any].transferAmount>0) {
@@ -439,7 +441,7 @@ const StepsContainer = ( {
                   tokenInstance.selected = !tokenInstance.selected;
                 }
               } // if (accountAddress && ...
-            } // if (tokenInstance.chainId+"-"+tokenInstance.address === id)
+            } // if (tokenInstance.selectID === id)
             return {
               ...tokenInstance,
             } as TTokenInstance;
@@ -454,6 +456,37 @@ const StepsContainer = ( {
       []
   );  */
   // changeCheckboxStatus
+
+  // ---
+
+  const changeTransferAmount:IChangeTransferAmount = /* useCallback( */
+    (id: string, amount: TTokenAmount) =>
+      {
+        try {
+          
+          console.info(`changetransferAmount id=${id} amount=${amount} `);
+          
+          const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
+            // if (tokenInstance.chainId+"-"+tokenInstance.address === id) {
+            if (tokenInstance.selectID === id) {
+              console.debug(`changetransferAmount id=${id} FOUND`);
+              console.dir(tokenInstance);
+              tokenInstance.transferAmount = amount;
+            } // if (tokenInstance.selectID === id)
+            return {
+              ...tokenInstance,
+            } as TTokenInstance;
+          })
+          settokensInstances(tokensInstancesUpdated);
+          updateCheckAll(tokensInstancesUpdated);
+        } catch (error) {
+          console.error(`StepsContainer.tsx changetransferAmount error: ${error}`);
+        }
+      }
+      /* ,
+      []
+  );  */
+  // changetransferAmount
 
   // ---
 
@@ -473,10 +506,11 @@ const StepsContainer = ( {
       selectAll,
       invertAll
     },
-    selectHandlers: {
+    updateHandlers: {
       handleCheckSelectAll,
       handleInvertAllChecks,
       changeCheckboxStatus,
+      changeTransferAmount,
     },
     filterStates: {
       name: nameFilter,
@@ -545,6 +579,7 @@ const StepsContainer = ( {
           selectable: false,
           selected: false,
           transferAmount: 0n,
+          lockTransferAmount: false,
           userData: tokenInstanceUserDataArray,
         } // as TTokenInstance
         // console.dir(_tokenInstance)
@@ -1210,9 +1245,11 @@ const StepsContainer = ( {
                 // Update tokenInstance with data from promises
                 if (tokensNames && tokensSourceBalances && tokensSourceCanTransfer && tokensDecimals && tokensSymbols ) {
                     _tokenInstance.name = tokensNames[index].name // tokens names
-                    _tokenInstance.userData[connectedAddress as any] = {..._tokenInstance.userData[connectedAddress as any], ...tokensSourceBalances[index], ...tokensSourceCanTransfer[index]} // source balances, can transfer from source
+                    const {balance} = tokensSourceBalances[index] as unknown as TTokenInstanceUserData
+                    _tokenInstance.userData[connectedAddress as any] = {..._tokenInstance.userData[connectedAddress as any], /* ...tokensSourceBalances[index] */balance, ...tokensSourceCanTransfer[index]} // source balances, can transfer from source
                     _tokenInstance.decimals = tokensDecimals[index].decimals // tokens decimals
                     _tokenInstance.symbol = tokensSymbols[index].symbol // tokens symbols
+                    _tokenInstance.transferAmount = balance||0n // tokens transfer amount
                     // TODO : CHECK IT IS WORKING
                     // TODO : CHECK IT IS WORKING
                     // TODO : CHECK IT IS WORKING
@@ -1428,6 +1465,7 @@ const StepsContainer = ( {
                 if (!selectable && (tokenInstance.selected || (tokenInstance.transferAmount||0n>0n)) ) {
                   tokenInstance.transferAmount = 0n;
                   tokenInstance.selected = false;
+                  tokenInstance.lockTransferAmount = false;
                 }
               })
               return updatedChainTokensListTokensInstances

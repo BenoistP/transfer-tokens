@@ -386,6 +386,7 @@ type TTokenInstance = {
   selectable: boolean;
   selected: boolean,
   transferAmount: TTokenAmount;
+  lockTransferAmount: boolean;
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings
 }
 
@@ -410,6 +411,13 @@ interface IChangeCheckboxStatus {
     value?: TChecked,
   ) : void;
 }
+interface IChangeTransferAmount {
+  ( id: TokenID,
+    amount: TTokenAmount,
+  ) : void;
+}
+
+
 interface ITF_ProgressBar {
   showProgressBar: boolean;
   progressPercentage: number;
@@ -558,6 +566,7 @@ interface ITokenProps {
   tokenInstance : TTokenInstance;
   accountAddress: TAddressNullUndef;
   changeCheckboxStatus: IChangeCheckboxStatus|null;
+  changeTransferAmount: IChangeTransferAmount|null;
   targetAddress: TAddressEmpty,
   enableEditable: boolean,
 }
@@ -590,7 +599,8 @@ interface IsortTokensInstancesMethods {
 interface IselectTokensInstancesMethods {
   handleCheckSelectAll: () => void,
   handleInvertAllChecks: () => void,
-  changeCheckboxStatus: IChangeCheckboxStatus
+  changeCheckboxStatus: IChangeCheckboxStatus,
+  changeTransferAmount: IChangeTransferAmount,
 }
 
 interface IselectTokensInstancesStates {
@@ -607,7 +617,7 @@ interface ITokensInstancesListTableStatesHandlers {
   sortStates: IsortTokensInstancesOrdersStates,
   sortHandlers: IsortTokensInstancesMethods,
   selectStates: IselectTokensInstancesStates,
-  selectHandlers: IselectTokensInstancesMethods,
+  updateHandlers: IselectTokensInstancesMethods,
   filterStates: ITokenInstanceListFilterStates,
   filterHandlers: IfilterTokenInstanceMethods,
 }

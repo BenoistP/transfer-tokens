@@ -15,7 +15,7 @@ import { NoSymbolIcon, MinusSmallIcon, ArrowLeftOnRectangleIcon as ArrowReceive,
 
 // ------------------------------
 
-const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCheckboxStatus, enableEditable }: ITokenProps ) => {
+const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCheckboxStatus, changeTransferAmount, enableEditable }: ITokenProps ) => {
 
   // console.debug(`TokenInstance.tsx render`)
 
@@ -42,8 +42,10 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
   const [isCheckboxDisabled, setisCheckboxDisabled] = useState<boolean>(true)
 
   // const [amount, setamount] = useState<BigInt>(tokenInstance.userData[accountAddress as any]?.balance) // as [BigInt, (amount:BigInt) => void];
-  const [amount, setamount] = useState<TTokenAmount | null>(tokenInstance.userData[accountAddress as any]?.balance)
-const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(false)
+  // const [amount, setamount] = useState<TTokenAmount | null>(tokenInstance.userData[accountAddress as any]?.balance)
+  // const [transferAmount, settransferAmount] = useState<TTokenAmount | null>(null)
+  const [transferAmount, settransferAmount] = useState<TTokenAmount | null>(tokenInstance.transferAmount)
+  const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(false)
 
   const [canTransferFrom, setcanTransferFrom] = useState<boolean>( (accountAddress && (tokenInstance.userData[accountAddress as any] )) ? tokenInstance.userData[accountAddress as any]?.canTransfer : false )
   const [canTransferTo, setcanTransferTo] = useState<boolean>( (targetAddress && (tokenInstance.userData[targetAddress as any] )) ? tokenInstance.userData[targetAddress as any]?.canTransfer : false )
@@ -112,14 +114,62 @@ const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(fa
         const accountBalance = tokenInstance.userData[accountAddress as any]?.balance;
         if (accountBalance) {
           setbalance(accountBalance);
+          // settransferAmount(accountBalance);
         } else {
           setbalance(0n);
+          // settransferAmount(0n);
         }
       }
       if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
         {console.debug(`TokenInstance.tsx useEffect [tokenInstance.userData[accountAddress as any]?.balance]`)}
     }, // X eslint-disable-next-line react-hooks/exhaustive-deps
     [tokenInstance.userData[accountAddress as any]?.balance, accountAddress]
+  );
+
+  // ---
+
+  // useEffect(() =>
+  //   {
+  //     if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+  //       {console.debug(`TokenInstance.tsx useEffect [BALANCE]`)}
+
+  //     if (transferAmount == null) {
+  //       if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+  //       {console.debug(`TokenInstance.tsx useEffect [BALANCE] transferAmount==null settransferAmount(balance)`)}
+  //       settransferAmount(balance)
+  //     }
+  //   }, // X eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [balance]
+  // );
+
+    // ---
+
+    useEffect(() =>
+    {
+      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+        {console.debug(`TokenInstance.tsx useEffect [TRANSFERAMOUNT] transferAmount=${transferAmount}`)}
+      if (transferAmount != null) {
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
+        // tokenInstance.transferAmount = transferAmount;
+        if (changeTransferAmount) changeTransferAmount(tokenInstance.selectID, transferAmount);
+      }
+
+    }, // X eslint-disable-next-line react-hooks/exhaustive-deps
+    [transferAmount]
   );
 
   // ---
@@ -236,7 +286,7 @@ const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(fa
         !tokenInstance.userData[accountAddress as any]?.canTransfer ||
         !tokenInstance.userData[targetAddress as any]?.canTransfer ||
         (balance?.valueOf() || 0n) == 0n ||
-        (amount||0n) == 0n
+        (transferAmount||0n) == 0n
       ) {
         setisCheckboxDisabled(true)
 
@@ -265,7 +315,7 @@ const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(fa
       tokenInstance.userData,
       // tokenInstance.userData[accountAddress as any]?.canTransfer,
       // tokenInstance.userData[targetAddress as any]?.canTransfer,
-      balance, amount]
+      balance, transferAmount]
   );
 
 
@@ -485,7 +535,7 @@ const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(fa
     {
       // console.debug(`TokenInstance.tsx: handleCheckboxClick( tokenInstanceID:${tokenInstanceID} )`)
 
-      if (amount && amount.valueOf() > 0n) {
+      if (transferAmount && transferAmount.valueOf() > 0n) {
         // console.debug(`TokenInstance.tsx: handleCheckboxClick amount.valueOf():${amount.valueOf()}`)
         // if (balance && /* accountAddress */targetAddress && typeof /* accountAddress */targetAddress == "string" && tokenInstance.userData[/* accountAddress */targetAddress as any]?.canTransfer && changeCheckboxStatus) {
         if (balance && targetAddress && tokenInstance.userData && tokenInstance.userData[/* accountAddress */targetAddress as any]?.canTransfer && changeCheckboxStatus) {
@@ -505,10 +555,12 @@ const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(fa
       // accountAddress, tokenInstance.chainId, tokenInstance.address,
       // tokenInstanceID,
       tokenInstance.selectID,
-      tokenInstance.userData, amount, balance, changeCheckboxStatus]
+      tokenInstance.userData, transferAmount, balance, changeCheckboxStatus]
   );
 
-  // ------------------------------
+    // ---
+
+    // ------------------------------
 
   const clsTextSize = "text-xs sm:text-sm md:text-base"
   const clsTextLight = "font-light " + clsTextSize
@@ -564,7 +616,13 @@ const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(fa
       { enableEditable ?
           <td className="p-1 ">
             { canTransferTo ?
-              <TokenInstanceEditableAmount selectable={tokenInstance.selectable} balance={(balance && balance.valueOf()?balance.valueOf(): 0n)} amount={(amount && amount.valueOf()?amount.valueOf():0n)} setamount={setamount} decimals={Number(decimals)/* tokenInstance.decimals */} unSelect={unSelect} />
+              <TokenInstanceEditableAmount
+                selectable={tokenInstance.selectable}
+                balance={(balance && balance.valueOf()?balance.valueOf(): 0n)}
+                amount={(transferAmount && transferAmount.valueOf()?transferAmount.valueOf():0n)}
+                setamount={settransferAmount}
+                decimals={Number(decimals)}
+                unSelect={unSelect} />
               :
               <div className="flex justify-center">
                 <MinusSmallIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
