@@ -598,11 +598,11 @@ const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(fa
             null
           :
             (canTransferTo ?
-              <div className={clsTooltipLeft + "pl-1 tooltip-info"} data-tip={t(canTransferTo?"moveTokens.stepTwo.token.canTransferTo":"moveTokens.stepTwo.token.noTransferTo")} >
+              <div className={clsTooltipLeft + "pl-1 tooltip-info"} data-tip={t("moveTokens.stepTwo.token.canTransferTo")} >
                 <ArrowReceive className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
               </div>
               :
-              <div>
+              <div className={clsTooltipLeft + "pl-1 tooltip-warning"} data-tip={t("moveTokens.stepTwo.token.noTransferTo")} >
                 <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
               </div>
             )
