@@ -27,6 +27,8 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
 
   const { t } = useTranslation()
 
+  const SHORT_DISPLAY_DECIMAL_COUNT = 3;
+
   const [decimals, setdecimals] = useState<bigint>(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT))) as [bigint, (balance:bigint) => void];
   const [name, setname] = useState<string>("")
 
@@ -41,6 +43,7 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
 
   // const [amount, setamount] = useState<BigInt>(tokenInstance.userData[accountAddress as any]?.balance) // as [BigInt, (amount:BigInt) => void];
   const [amount, setamount] = useState<TTokenAmount | null>(tokenInstance.userData[accountAddress as any]?.balance)
+const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(false)
 
   const [canTransferFrom, setcanTransferFrom] = useState<boolean>( (accountAddress && (tokenInstance.userData[accountAddress as any] )) ? tokenInstance.userData[accountAddress as any]?.canTransfer : false )
   const [canTransferTo, setcanTransferTo] = useState<boolean>( (targetAddress && (tokenInstance.userData[targetAddress as any] )) ? tokenInstance.userData[targetAddress as any]?.canTransfer : false )
@@ -141,46 +144,72 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
   /**
    * trigger Balance computations for display on : decimals, balance
    */
-  useEffect(() => {
-    // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-    // {
-    //   console.debug(`TokenInstance.tsx useEffect tokenInstance.userData[accountAddress as any]?.amount:${tokenInstance.userData[accountAddress as any]?.amount} decimals:${decimals} `)
-    // }
+  useEffect(() =>
+    {
+      // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      // {
+      //   console.debug(`TokenInstance.tsx useEffect tokenInstance.userData[accountAddress as any]?.amount:${tokenInstance.userData[accountAddress as any]?.amount} decimals:${decimals} `)
+      // }
+      try {
+        if (balance) {
+          const balanceValue = balance.valueOf();// + 1n;
+          // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} `)
+          const intValue = ( balanceValue / (10n**decimals) );
+          // console.debug(`TokenInstance.tsx useEffect balance:${balance} decimals:${decimals} intValue:${intValue} `)
+          // console.dir(intValue)
+          const decimalValue = (balanceValue - intValue * (10n**decimals));
 
-    if (balance) {
-      const balanceValue = balance.valueOf();// + 1n;
-      // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} `)
-      const intValue = ( balanceValue / (10n**decimals) );
-      // console.debug(`TokenInstance.tsx useEffect balance:${balance} decimals:${decimals} intValue:${intValue} `)
-      // console.dir(intValue)
-      const decimalValue = (balanceValue - intValue * (10n**decimals));
-      // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalValue:${decimalValue} `)
-      if (decimalValue > 0) {
-        // exact decimals display
-        const decimalDisplay = decimalValue.toString().padStart( Number(decimals) , "0");
-        const shortDecimalDisplay = Number(`0.${decimalValue.toString()}`).toFixed(3).toString();
-        console.debug(`TokenInstance.tsx useEffect shortDecimalDisplay=${shortDecimalDisplay} decimalDisplay=${decimalDisplay} "0."decimalValue.toString() = ${"0."+decimalValue.toString()}`)
-        // setbalanceString(`${intValue}.${decimalDisplay}`)
-        setlongBalanceString(`${intValue}.${decimalDisplay}`)
-        setshortBalanceString(`${intValue}.${shortDecimalDisplay}`)
-        // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalDisplay:${decimalDisplay} `)
-      } else {
-        // setbalanceString(`${intValue}.0`)
-        // console.debug(`TokenInstance.tsx useEffect decimalValue<=0 tokenInstance.displayId=${tokenInstance.displayId} tokenInstance.=${tokenInstance.address} decimals:${decimals} intValue:${intValue} `)
-        setlongBalanceString(`${intValue}.0`)
-        setshortBalanceString(`${intValue}`)
-      }
-    } else if (balance == 0n) {
-      // setbalanceString("0.0")
-      setlongBalanceString("0.0")
-      setshortBalanceString("0")
+          if (  tokenInstance.address.toUpperCase() == "0xD1095B31F41D3BDBb66A52B94a737b2D7Ac17635".toUpperCase() || // 14263-OHIO-ST-DETROIT
+                tokenInstance.address.toUpperCase() == "0xf3c4c10ab96f9B6d7719De63f4219f69078Df976".toUpperCase() || // 14881-GREENFIELD-RD-DETROIT
+                tokenInstance.address.toUpperCase() == "0x79e18a519D60c2ef7e18aac08D60Ba0D4Eee2511".toUpperCase() || // 20039-BLOOM-ST-DETROIT
+                tokenInstance.address.toUpperCase() == "0x1E001730A23c7EBaFF35BC8bc90DA5a9b20804A4".toUpperCase() || // 9481 Wayburn St Detroit
+                tokenInstance.address.toUpperCase() == "0xa137D82197Ea4cdfd5f008A91Ba816b8324F59E1".toUpperCase() || // 5601 S Wood St Chicago
+                tokenInstance.address.toUpperCase() == "0x8D1090dF790FFAFdACCda03015c05dF3b4cC9c21".toUpperCase() // 15753-HARTWELL-ST-DETROIT
+              ) {
+            console.debug(`TokenInstance.tsx useEffect [balance, decimals] ${tokenInstance.address}  balanceValue=${balanceValue} intValue=${intValue} decimalValue=${decimalValue}`)
+          }
+
+          // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalValue:${decimalValue} `)
+          if (decimalValue > 0) {
+            // exact decimals display
+            const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
+            //const zeroDecimal = Number(`0.${decimalValue.toString()}`)
+            const zeroDecimalToFixed = Number(`0.${decimalValue.toString()}`).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+            const shortDecimalDisplay = zeroDecimalToFixed.substring(2);
+            const roundUpShortDisplay = (zeroDecimalToFixed.substring(0,2) =="1.")
+            // if (roundUpShortDisplay) {
+            //   console.debug(`ROUNDING UP  intValue=${intValue}`)
+            // }
+            console.debug(`TokenInstance.tsx useEffect balanceValue=${balanceValue} intValue=${intValue} decimalValue=${decimalValue} zeroDecimalToFixed=${zeroDecimalToFixed} shortDecimalDisplay=${shortDecimalDisplay} longDecimalDisplayPadded=${longDecimalDisplayPadded}`)
+            // setbalanceString(`${intValue}.${decimalDisplay}`)
+            setlongBalanceString(`${intValue}.${longDecimalDisplayPadded}`)
+            setshortBalanceString(`${(roundUpShortDisplay?intValue+1n:intValue)}.${shortDecimalDisplay}`)
+
+            setisRoundedDisplayAmount(true)
+            // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalDisplay:${decimalDisplay} `)
+          } else {
+            // setbalanceString(`${intValue}.0`)
+            // console.debug(`TokenInstance.tsx useEffect decimalValue<=0 tokenInstance.displayId=${tokenInstance.displayId} tokenInstance.=${tokenInstance.address} decimals:${decimals} intValue:${intValue} `)
+            setlongBalanceString(`${intValue}.0`)
+            setshortBalanceString(`${intValue}`)
+          }
+        } else if (balance == 0n) {
+          // setbalanceString("0.0")
+          setlongBalanceString("0.0")
+          setshortBalanceString("0")
+        }
+        if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+          {console.debug(`TokenInstance.tsx useEffect [balance, decimals]`)}
+
+      } catch (error) {
+        console.error(`TokenInstance.tsx useEffect [decimals, balance] error=${error}`)
   }
-    if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-      {console.debug(`TokenInstance.tsx useEffect [balance, decimals]`)}
-  }, [// balance,
-    decimals,
-    // status, tokenInstance.userData[accountAddress as any]?.amount]
-    balance]);
+    },
+    [// balance,
+      decimals,
+      // status, tokenInstance.userData[accountAddress as any]?.amount]
+      balance]
+  );
 
 
   // ---
@@ -504,9 +533,14 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress, changeCh
       <td className={clsText + " text-ellipsis min-w-full "}>
         { name ? name : <Loading/> }
       </td>
-      {/* <td>{loadStatus}</td> */}
       <td className={clsText + " text-right pr-2"}>
-        { longBalanceString ? longBalanceString : <Loading/> }
+        { longBalanceString ?
+            <div className="tooltip tooltip-info" data-tip={longBalanceString}>
+              <p className={isRoundedDisplayAmount?"italic font-medium":""}>{shortBalanceString}</p>
+            </div>
+          :
+            <Loading/>
+          }
       </td>
       { enableEditable ?
         <td className="">
