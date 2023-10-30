@@ -157,39 +157,30 @@ const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(fa
           const intValue = ( balanceValue / (10n**decimals) );
           // console.debug(`TokenInstance.tsx useEffect balance:${balance} decimals:${decimals} intValue:${intValue} `)
           // console.dir(intValue)
-          const decimalValue = (balanceValue - intValue * (10n**decimals));
-
-          if (  tokenInstance.address.toUpperCase() == "0xD1095B31F41D3BDBb66A52B94a737b2D7Ac17635".toUpperCase() || // 14263-OHIO-ST-DETROIT
-                tokenInstance.address.toUpperCase() == "0xf3c4c10ab96f9B6d7719De63f4219f69078Df976".toUpperCase() || // 14881-GREENFIELD-RD-DETROIT
-                tokenInstance.address.toUpperCase() == "0x79e18a519D60c2ef7e18aac08D60Ba0D4Eee2511".toUpperCase() || // 20039-BLOOM-ST-DETROIT
-                tokenInstance.address.toUpperCase() == "0x1E001730A23c7EBaFF35BC8bc90DA5a9b20804A4".toUpperCase() || // 9481 Wayburn St Detroit
-                tokenInstance.address.toUpperCase() == "0xa137D82197Ea4cdfd5f008A91Ba816b8324F59E1".toUpperCase() || // 5601 S Wood St Chicago
-                tokenInstance.address.toUpperCase() == "0x8D1090dF790FFAFdACCda03015c05dF3b4cC9c21".toUpperCase() // 15753-HARTWELL-ST-DETROIT
-              ) {
-            console.debug(`TokenInstance.tsx useEffect [balance, decimals] ${tokenInstance.address} 
-              balanceValue=${balanceValue} intValue=${intValue} decimalValue=${decimalValue.toString()}`)
-          }
-
+          const decimalValue = balanceValue - intValue * (10n**decimals);
           // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalValue:${decimalValue} `)
           if (decimalValue > 0) {
             // exact decimals display
             const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
             //const zeroDecimal = Number(`0.${decimalValue.toString()}`)
-            const zeroDecimalToFixed = Number(`0.${decimalValue.toString()}`).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+            const zeroDecimalToFixed = Number("0."+longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
             const shortDecimalDisplay = zeroDecimalToFixed.substring(2);
             const roundUpShortDisplay = (zeroDecimalToFixed.substring(0,2) =="1.")
             // if (roundUpShortDisplay) {
             //   console.debug(`ROUNDING UP  intValue=${intValue}`)
             // }
-            console.debug(`TokenInstance.tsx useEffect balanceValue=${balanceValue} intValue=${intValue} decimalValue=${decimalValue} zeroDecimalToFixed=${zeroDecimalToFixed} shortDecimalDisplay=${shortDecimalDisplay} longDecimalDisplayPadded=${longDecimalDisplayPadded}`)
+            // console.debug(`TokenInstance.tsx useEffect balanceValue=${balanceValue} intValue=${intValue} decimalValue=${decimalValue} zeroDecimalToFixed=${zeroDecimalToFixed} shortDecimalDisplay=${shortDecimalDisplay} longDecimalDisplayPadded=${longDecimalDisplayPadded}`)
             // setbalanceString(`${intValue}.${decimalDisplay}`)
-            setlongBalanceString(`${intValue}.${longDecimalDisplayPadded}`)
-            setshortBalanceString(`${(roundUpShortDisplay?intValue+1n:intValue)}.${shortDecimalDisplay}`)
+            const longBalanceString = intValue+"."+longDecimalDisplayPadded;
+            const shortBalanceString = `${(roundUpShortDisplay?intValue+1n:intValue)}.${shortDecimalDisplay}`
 
-            // TODO : check if displayed amont is really rounded
-            // TODO : check if displayed amont is really rounded
-            // TODO : check if displayed amont is really rounded
-            setisRoundedDisplayAmount(true)
+            // setlongBalanceString(`${intValue}.${longDecimalDisplayPadded}`)
+            setlongBalanceString(longBalanceString)
+            // setshortBalanceString(`${(roundUpShortDisplay?intValue+1n:intValue)}.${shortDecimalDisplay}`)
+            setshortBalanceString(shortBalanceString)
+            if (roundUpShortDisplay || !longBalanceString.startsWith(shortBalanceString) || !longBalanceString.substring(shortBalanceString.length).match(/^0+$/)) {
+              setisRoundedDisplayAmount(true)
+            }
             // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalDisplay:${decimalDisplay} `)
           } else {
             // setbalanceString(`${intValue}.0`)
