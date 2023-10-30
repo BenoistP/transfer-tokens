@@ -77,7 +77,10 @@
         "empty": "No token found"
       },
       "token": {
-        "noTransferTo": "Can't transfer to this address",
+        "canTransferFrom": "Can transfer (send) this token FROM this address",
+        "canTransferTo": "Target address can receive this token",
+        "noTransferFrom": "Can't transfer (send) FROM this address",
+        "noTransferTo": "Can't transfer TO this address",
         "details": "Details"
       }
     },

@@ -17,7 +17,7 @@ const Step1 = ( {
   settargetAddress,
   // setShowProgressBar,
   // chainId,
-  isError,
+  isLoading, isError,
   tokensInstancesListTablePropsHandlers,
 }: IStep1Props ) => {
 
@@ -58,7 +58,7 @@ const Step1 = ( {
                 accountAddress={accountAddress}
                 // chainId={chainId}
                 targetAddress={targetAddress}
-                isError={isError}
+                isLoading={isLoading} isError={isError}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
               />
 

@@ -459,6 +459,7 @@ interface IStep0Props {
   targetAddress: TAddressEmpty,
   tokensInstances: TTokensInstances,
   chainId: ChainId;
+  isLoading: boolean,
   isError: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
@@ -471,6 +472,7 @@ interface IStep1Props {
   targetAddress: TAddressEmpty,
   settargetAddress:TsettargetAddress
   chainId: ChainId;
+  isLoading: boolean,
   isError: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
@@ -615,6 +617,7 @@ interface ITokensInstancesListTableProps {
   accountAddress:TAddressNullUndef;
   // chainId: ChainId;
   targetAddress: TAddressEmpty,
+  isLoading: boolean,
   isError: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }

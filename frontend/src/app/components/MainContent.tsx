@@ -31,8 +31,7 @@ export const MainContent = ( ) => {
 
     useEffect(() => {
       setTokensLists(tokenListsData) // Set inital token list data
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tokenListsData])
+    }, [])
 
     // -------------------
 
@@ -58,7 +57,7 @@ export const MainContent = ( ) => {
                   :
                   <div>
 
-                    <div className="w-full p-0 m-0 mb-4 base-100 text-primary-content" >
+                    <div className="w-full p-0 m-0 mb-1 base-100 text-primary-content" >
                         <ProgressContainer
                           previousDisabled={previousDisabled} nextDisabled={nextDisabled}
                           showProgressBar={showProgressBar} progressBarPercentage={progressBarPercentage}

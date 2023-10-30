@@ -17,13 +17,18 @@ const TokenInstanceListTable = (
     accountAddress,
     // chainId,
     targetAddress,
-    isError,
+    isLoading, isError,
     tokensInstancesListTablePropsHandlers,
     }: ITokensInstancesListTableProps )  => {
 
-  // console.log(`TokenInstanceListTable.tsx render chainId: ${chainId} accountAddress: ${accountAddress}`);
+  // ---
+
+  // console.log(`TokenInstanceListTable.tsx render isError: ${isError} isLoading: ${isLoading}`);
 
   const { t } = useTranslation()
+
+  // const [showIsLoading, setshowIsLoading] = useState<boolean>(false);
+  // const [showIsEmpty, setshowIsEmpty] = useState<boolean>(false);
 
   // ---
   
@@ -100,9 +105,16 @@ const TokenInstanceListTable = (
               </>
               :
               <>
-                <p className="text-center text-sm sm:text-md md:text-lg font-medium bg-info text-info-content rounded-lg h-full">
-                  {t("moveTokens.stepTwo.tokensTable.empty")}
-                </p>
+                {
+                  isLoading ?
+                  <div className="flex justify-center items-center">
+                    <span className="loading loading-dots loading-sm md:loading-md lg:loading-lg"></span>
+                  </div>
+                  :
+                  <p className="text-center text-sm sm:text-md md:text-lg font-medium bg-info text-info-content rounded-lg h-full">
+                    {t("moveTokens.stepTwo.tokensTable.empty")}
+                  </p>
+                }
               </>
 
         }
