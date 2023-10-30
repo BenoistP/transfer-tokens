@@ -166,7 +166,8 @@ const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(fa
                 tokenInstance.address.toUpperCase() == "0xa137D82197Ea4cdfd5f008A91Ba816b8324F59E1".toUpperCase() || // 5601 S Wood St Chicago
                 tokenInstance.address.toUpperCase() == "0x8D1090dF790FFAFdACCda03015c05dF3b4cC9c21".toUpperCase() // 15753-HARTWELL-ST-DETROIT
               ) {
-            console.debug(`TokenInstance.tsx useEffect [balance, decimals] ${tokenInstance.address}  balanceValue=${balanceValue} intValue=${intValue} decimalValue=${decimalValue}`)
+            console.debug(`TokenInstance.tsx useEffect [balance, decimals] ${tokenInstance.address} 
+              balanceValue=${balanceValue} intValue=${intValue} decimalValue=${decimalValue.toString()}`)
           }
 
           // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalValue:${decimalValue} `)
@@ -185,17 +186,22 @@ const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(fa
             setlongBalanceString(`${intValue}.${longDecimalDisplayPadded}`)
             setshortBalanceString(`${(roundUpShortDisplay?intValue+1n:intValue)}.${shortDecimalDisplay}`)
 
+            // TODO : check if displayed amont is really rounded
+            // TODO : check if displayed amont is really rounded
+            // TODO : check if displayed amont is really rounded
             setisRoundedDisplayAmount(true)
             // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalDisplay:${decimalDisplay} `)
           } else {
             // setbalanceString(`${intValue}.0`)
             // console.debug(`TokenInstance.tsx useEffect decimalValue<=0 tokenInstance.displayId=${tokenInstance.displayId} tokenInstance.=${tokenInstance.address} decimals:${decimals} intValue:${intValue} `)
-            setlongBalanceString(`${intValue}.0`)
-            setshortBalanceString(`${intValue}`)
+            
+            // setlongBalanceString(`${intValue}.`)
+            setlongBalanceString(intValue.toString()+"."+"0".repeat(Number(decimals)))
+            setshortBalanceString(intValue.toString())
           }
         } else if (balance == 0n) {
           // setbalanceString("0.0")
-          setlongBalanceString("0.0")
+          setlongBalanceString("0."+"0".repeat(Number(decimals)))
           setshortBalanceString("0")
         }
         if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
