@@ -212,16 +212,17 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
   // ---
 
   useEffect(() =>
-  {
-    // console.debug(`TokenInstanceEditableAmount.tsx useEffect editableAmountString:${editableAmountString} amount:${amount} `)
-    // if (editableAmountString == "0") {
-    if (amount == 0n) {
-      // seteditable(false);
-      if (unSelect) {unSelect()}
-    }
-  },
-  [  amount, unSelect ]
+    {
+      // console.debug(`TokenInstanceEditableAmount.tsx useEffect editableAmountString:${editableAmountString} amount:${amount} `)
+      // if (editableAmountString == "0") {
+      if (amount == 0n) {
+        // seteditable(false);
+        if (unSelect) {unSelect()}
+      }
+    },
+    [ amount, unSelect ]
   );
+
   // ---
 
   // const clsTextSize = "text-xs sm:text-sm md:text-base"
@@ -257,8 +258,8 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
                 </input>
               </div>
               <div className="flex grow-0 m-0 p-0 ">
-                <label className={"swap swap-rotate "+ (transferAmountLock ? "invisible":"visible")}>
-                  <input type="checkbox"  />
+                <label className={"swap swap-rotate "+ (transferAmountLock?"invisible":"visible")}>
+                  <input type="checkbox" checked={(amount&&amount>0n?false:true)} onChange={()=>{}} />
                   <PlusCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={() => { setZeroAmount() }} />
                   <XCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={() => { setMaxAmount() }} />
                 </label>
@@ -270,8 +271,8 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
             <div className="flex grow-0 m-0 pr-1 p-0 invisible">
               <label className="swap swap-rotate">
                 <input type="checkbox" />
-                <LockClosedIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={() => {}} />
-                <LockOpenIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={() => {}} />
+                  <LockClosedIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={()=>{}} />
+                  <LockOpenIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={()=>{}} />
               </label>
             </div>
             <div className={"join join-vertical " + "font-light text-base-content opacity-60"}>
