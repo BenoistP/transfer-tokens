@@ -423,20 +423,18 @@ const StepsContainer = ( {
     (id: string, value: TChecked | undefined) =>
       {
         try {
-          console.info(`updateCheckboxStatus id=${id} `);
+          // console.info(`updateCheckboxStatus id=${id} `);
           const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
             // if (tokenInstance.chainId+"-"+tokenInstance.address === id) {
             if (tokenInstance.selectID === id) {
-              console.debug(`updateCheckboxStatus id=${id} tokenInstance.selected=${tokenInstance.selected} `);
+              // console.debug(`updateCheckboxStatus id=${id} tokenInstance.selected=${tokenInstance.selected} `);
               if (connectedAddress /* && typeof connectedAddress === "string" */ && tokenInstance.userData && tokenInstance.userData[connectedAddress as any]) {
                 if (value) {
-                  console.debug(`updateCheckboxStatus id=${id} value.checked=${value.checked} `);
+                  // console.debug(`updateCheckboxStatus id=${id} value.checked=${value.checked} `);
                   // tokenInstance.userData[connectedAddress as any].selected = value.checked;
                   tokenInstance.selected = value.checked;
                 } else {
-                  // console.debug(`updateCheckboxStatus id=${id} !tokenInstance.userData[connectedAddress as any].selected=${!tokenInstance.userData[connectedAddress as any].selected} `);
-                  console.debug(`updateCheckboxStatus id=${id} !tokenInstance.selected=${!tokenInstance.selected} `);
-                  // tokenInstance.userData[connectedAddress as any].selected = !tokenInstance.userData[connectedAddress as any].selected;
+                  // console.debug(`updateCheckboxStatus id=${id} !tokenInstance.selected=${!tokenInstance.selected} `);
                   tokenInstance.selected = !tokenInstance.selected;
                 }
               } // if (accountAddress && ...
@@ -462,7 +460,7 @@ const StepsContainer = ( {
     (id: string, amount: TTokenAmount) =>
       {
         try {
-          console.info(`updateTransferAmount id=${id} amount=${amount} `);
+          // console.info(`updateTransferAmount id=${id} amount=${amount} `);
           const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
             // if (tokenInstance.chainId+"-"+tokenInstance.address === id) {
             if (tokenInstance.selectID === id) {
@@ -491,7 +489,7 @@ const StepsContainer = ( {
     (id: string, value: boolean) =>
       {
         try {
-          console.info(`updateTransferAmountLock id=${id} `);
+          // console.info(`updateTransferAmountLock id=${id} `);
           const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
             // if (tokenInstance.chainId+"-"+tokenInstance.address === id) {
             if (tokenInstance.selectID === id) {

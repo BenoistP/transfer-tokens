@@ -73,12 +73,8 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress,
   useEffect( () =>
     {
       // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-      // {
-      //   console.debug(`TokenInstance.tsx useEffect [tokenInstance.name] tokenInstance.name=${tokenInstance.name}`)
-      // }
-     if (tokenInstance.name) setname(tokenInstance.name)
-     if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-       {console.debug(`TokenInstance.tsx useEffect [tokenInstance.name]`)}
+      //     {console.debug(`TokenInstance.tsx useEffect [tokenInstance.name] tokenInstance.name=${tokenInstance.name}`)}
+      if (tokenInstance.name) setname(tokenInstance.name)
     },
     [tokenInstance.name]
   );
@@ -91,12 +87,8 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress,
   useEffect(() =>
     {
       // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-      // {
-      //   console.debug(`TokenInstance.tsx useEffect decimals`)
-      // }
+      //   {console.debug(`TokenInstance.tsx useEffect [tokenInstance.decimals]`)}
       setdecimals(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT)));
-      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-        {console.debug(`TokenInstance.tsx useEffect [tokenInstance.decimals]`)}
     },
     [tokenInstance.decimals]
   );
@@ -109,9 +101,7 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress,
   useEffect(() =>
     {
       // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-      // {
-      //   console.debug(`TokenInstance.tsx useEffect amount tokenInstance.userData[accountAddress as any]?.amount:${tokenInstance.userData[accountAddress as any]?.amount} decimals:${decimals} `)
-      // }
+      //   {console.debug(`TokenInstance.tsx useEffect [tokenInstance.userData[accountAddress as any]?.balance]`)}
       if (accountAddress) {
         // setbalance(tokenInstance.userData[accountAddress as any]?.balance);
         const accountBalance = tokenInstance.userData[accountAddress as any]?.balance;
@@ -123,8 +113,6 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress,
           // settransferAmount(0n);
         }
       }
-      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-        {console.debug(`TokenInstance.tsx useEffect [tokenInstance.userData[accountAddress as any]?.balance]`)}
     }, // X eslint-disable-next-line react-hooks/exhaustive-deps
     [tokenInstance.userData[accountAddress as any]?.balance, accountAddress]
   );
@@ -149,76 +137,39 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress,
 
     useEffect(() =>
     {
-      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-        {console.debug(`TokenInstance.tsx useEffect [TRANSFERAMOUNT] transferAmount=${transferAmount}`)}
-      if (transferAmount != null) {
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // tokenInstance.transferAmount = transferAmount;
-        if (updateTransferAmount) updateTransferAmount(tokenInstance.selectID, transferAmount);
+      // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      //   {console.debug(`TokenInstance.tsx useEffect [TRANSFERAMOUNT] transferAmount=${transferAmount}`)}
+      if (transferAmount != null && tokenInstance.transferAmount != transferAmount && updateTransferAmount) {
+        updateTransferAmount(tokenInstance.selectID, transferAmount);
       }
-
     }, // X eslint-disable-next-line react-hooks/exhaustive-deps
-    [transferAmount]
+    [transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID]
   );
 
     // ---
 
     useEffect(() =>
     {
-      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197") {
-          console.debug(`TokenInstance.tsx useEffect [TRANSFERAMOUNTLOCK] transferAmountLock=${transferAmountLock} transferAmount=${transferAmount}`)
-          // debugger;
+      // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      //   { console.debug(`TokenInstance.tsx useEffect [TRANSFERAMOUNTLOCK] transferAmountLock=${transferAmountLock} transferAmount=${transferAmount}`) }
+      if (tokenInstance.transferAmountLock != transferAmountLock && updateTransferAmountLock) {
+        updateTransferAmountLock(tokenInstance.selectID, transferAmountLock);
       }
-      if (transferAmount != null) {
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // TODO
-        // tokenInstance.transferAmount = transferAmount;
-        if (updateTransferAmountLock) updateTransferAmountLock(tokenInstance.selectID, transferAmountLock);
-      }
-
     }, // X eslint-disable-next-line react-hooks/exhaustive-deps
-    [transferAmountLock]
+    [transferAmountLock, tokenInstance.transferAmountLock, tokenInstance.selectID, updateTransferAmountLock]
   );
 
   // ---
 
   /**
    * canTransferFrom, canTransferTo
-   */
+  */
   useEffect( () =>
     {
-      // console.debug(`TokenInstance.tsx useEffect targetAddress=${targetAddress} tokenInstance.userData[targetAddress as any]?.canTransfer=${tokenInstance.userData[targetAddress as any]?.canTransfer}`)
+      // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      //   {console.debug(`TokenInstance.tsx useEffect [accountAddress, targetAddress, tokenInstance.userData[accountAddress as any]?.canTransfer, tokenInstance.userData[targetAddress as any]?.canTransfer]`)}
       setcanTransferFrom(accountAddress ? (tokenInstance.userData[accountAddress as any]?.canTransfer) : false )
       setcanTransferTo(targetAddress ? (tokenInstance.userData[targetAddress as any]?.canTransfer) : false )
-      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-        {console.debug(`TokenInstance.tsx useEffect [accountAddress, targetAddress, tokenInstance.userData[accountAddress as any]?.canTransfer, tokenInstance.userData[targetAddress as any]?.canTransfer]`)}
     },
     // X eslint-disable-next-line react-hooks/exhaustive-deps
     [accountAddress, targetAddress, tokenInstance.userData[accountAddress as any]?.canTransfer, tokenInstance.userData[targetAddress as any]?.canTransfer]
@@ -231,11 +182,9 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress,
    */
   useEffect(() =>
     {
-      // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-      // {
-      //   console.debug(`TokenInstance.tsx useEffect tokenInstance.userData[accountAddress as any]?.amount:${tokenInstance.userData[accountAddress as any]?.amount} decimals:${decimals} `)
-      // }
       try {
+        // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+        //   {console.debug(`TokenInstance.tsx useEffect [balance, decimals]`)}
         if (balance) {
           const balanceValue = balance.valueOf();// + 1n;
           // console.debug(`TokenInstance.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} `)
@@ -280,19 +229,12 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress,
           setlongBalanceString("0."+"0".repeat(Number(decimals)))
           setshortBalanceString("0")
         }
-        if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-          {console.debug(`TokenInstance.tsx useEffect [balance, decimals]`)}
-
       } catch (error) {
         console.error(`TokenInstance.tsx useEffect [decimals, balance] error=${error}`)
-  }
+      }
     },
-    [// balance,
-      decimals,
-      // status, tokenInstance.userData[accountAddress as any]?.amount]
-      balance]
+    [ decimals, balance, tokenInstance.displayId ]
   );
-
 
   // ---
 
