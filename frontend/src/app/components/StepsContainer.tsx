@@ -305,20 +305,11 @@ const StepsContainer = ( {
       if (tokensInstances && /*accountAddress*/ connectedAddress) {
         const isAllChecked = tokensInstances.every(
           (tokensInstance) => {
-
             if (tokensInstance.selectable) {
-
-              // if (tokensInstance.userData[connectedAddress as any]) {
-              //   return (
-              //     // (tokensInstance.userData[connectedAddress as any].selected ? true : false)
-              //     (tokensInstance.selected ? true : false)
-              //   )
-              // }
-              // return true; // not user data : skip and RETURN TRUE
-              return tokensInstance.selected;
+              if (tokensInstance.transferAmount)
+                return tokensInstance.selected;
             }
-
-            return true; // not selectable : skip and RETURN TRUE
+            return true; // not selectable OR no amount : RETURN TRUE
           } // every
         );
         setselectAll(isAllChecked);
