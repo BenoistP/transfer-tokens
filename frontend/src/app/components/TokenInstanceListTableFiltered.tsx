@@ -35,7 +35,7 @@ const TokenInstanceListTableFiltered = (
         tokensInstances={tokensInstances}
         // chainId={chainId}
         accountAddress={accountAddress}
-        // changeCheckboxStatus={enableCheckboxes?changeCheckboxStatus:null}
+        // updateCheckboxStatus={enableCheckboxes?updateCheckboxStatus:null}
         targetAddress={targetAddress}
 
         tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}

@@ -348,8 +348,11 @@ type TokensListsLoaderData = {
 // interface IContentProps {
 // }
 
-type TsetPreviousDisabled = React.Dispatch<React.SetStateAction<boolean>>;
-type TsetNextDisabled = React.Dispatch<React.SetStateAction<boolean>>;
+// React.Dispatch<React.SetStateAction<boolean>>
+type TreactSetState_boolean = React.Dispatch<React.SetStateAction<boolean>>;
+
+type TsetPreviousDisabled = TreactSetState_boolean;
+type TsetNextDisabled = TreactSetState_boolean;
 
 // type TsetSelectedTokensChainDataArray = React.Dispatch<React.SetStateAction<TTokenChainDataArray>>;
 
@@ -359,7 +362,7 @@ type TsetTokensInstances = React.Dispatch<React.SetStateAction<TTokensInstances>
 type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressEmpty>>
 
 
-type TsetShowProgressBar = React.Dispatch<React.SetStateAction<boolean>>
+type TsetShowProgressBar = TreactSetState_boolean;
 type TsetProgressBarPercentage = React.Dispatch<React.SetStateAction<number>>
 
 type TTokenLoadStatus = number;
@@ -386,7 +389,7 @@ type TTokenInstance = {
   selectable: boolean;
   selected: boolean,
   transferAmount: TTokenAmount;
-  lockTransferAmount: boolean;
+  transferAmountLock: boolean;
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings
 }
 
@@ -406,17 +409,21 @@ type TChecked = {
   checked: boolean;
 }
 
-interface IChangeCheckboxStatus {
+interface IUpdateCheckboxStatus {
   ( id: TokenID,
     value?: TChecked,
   ) : void;
 }
-interface IChangeTransferAmount {
+interface IUpdateTransferAmount {
   ( id: TokenID,
     amount: TTokenAmount,
   ) : void;
 }
-
+interface ITransferAmountLock {
+  ( id: TokenID,
+    value: boolean,
+  ) : void;
+}
 
 interface ITF_ProgressBar {
   showProgressBar: boolean;
@@ -565,20 +572,25 @@ interface ITokenListFilteredProps {
 interface ITokenProps {
   tokenInstance : TTokenInstance;
   accountAddress: TAddressNullUndef;
-  changeCheckboxStatus: IChangeCheckboxStatus|null;
-  changeTransferAmount: IChangeTransferAmount|null;
+  updateCheckboxStatus: IUpdateCheckboxStatus|null;
+  updateTransferAmount: IUpdateTransferAmount|null;
+  updateTransferAmountLock: ITransferAmountLock;
   targetAddress: TAddressEmpty,
   enableEditable: boolean,
 }
 
 
 type Tsetamount = React.Dispatch<React.SetStateAction<TTokenAmount | null>>
+type TsetamountLock = TreactSetState_boolean;
 
 interface ITokenInstanceAmountProps {
   selectable: boolean,
   balance: TTokenAmount,
   amount: TTokenAmount,
   setamount: Tsetamount,
+  transferAmountLock: boolean,
+  settransferAmountLock: TsetamountLock,
+
   decimals: number,
   unSelect: (/* tokenInstance: TTokenInstance */) => void,
 }
@@ -599,8 +611,9 @@ interface IsortTokensInstancesMethods {
 interface IselectTokensInstancesMethods {
   handleCheckSelectAll: () => void,
   handleInvertAllChecks: () => void,
-  changeCheckboxStatus: IChangeCheckboxStatus,
-  changeTransferAmount: IChangeTransferAmount,
+  updateCheckboxStatus: IUpdateCheckboxStatus,
+  updateTransferAmount: IUpdateTransferAmount,
+  updateTransferAmountLock: ITransferAmountLock;
 }
 
 interface IselectTokensInstancesStates {
