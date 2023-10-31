@@ -1,28 +1,28 @@
 // React
 import { ReactNode, useCallback, useState } from 'react'
 
-import { Navbar } from './ui/Navbar'
-import { Footer } from './ui/Footer'
-import { MoveTokensAppProvider } from './js/providers/MoveTokensAppProvider/MoveTokensAppContext'
-import { ContentBottomPadding } from './ui/ContentBottomPadding'
-
 // Components
+import { Navbar } from '@Components/Navbar'
+import { Footer } from '@Components/Footer'
+import { MoveTokensAppProvider } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
+import { ContentBottomPadding } from '@Components/ContentBottomPadding'
 
 // Context
 import { ThemeProvider, useTheme } from "next-themes";
 import { GlobalAppProvider, useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
 
-import { DEFAULT_GNOSIS_ICON_URL } from '~/js/ui/uiConsts';
 // Cookies
 import { CookiesProvider } from "react-cookie";
-// import { useCookies } from "react-cookie";
 
+// Wagmi
 import { configureChains, createConfig, WagmiConfig, Chain  } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 import { infuraProvider } from 'wagmi/providers/infura'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 
-import THEMES_NAMES from "./js/ui/themes/themes";
+// Consts
+import THEMES_NAMES from "@uiconsts/themes";
+import { DEFAULT_GNOSIS_ICON_URL } from '@uiconsts/uiConsts';
 
 import {
   // Mainnets
@@ -81,8 +81,12 @@ const testnetChains = [
     const mainnetChainsProviders:any = [
       infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA_APIKEY||"" }), // Ethereum
       alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY_APIKEY||"" }), // Gnosis
+      publicProvider(),
      ];
-    const testnetChainsProviders:any = [ publicProvider() ];
+    // const testnetChainsProviders:any = [ publicProvider() ];
+
+    // console.dir(mainnetChains)
+    // console.dir(mainnetChainsProviders)
 
     const { chains, publicClient } = configureChains(
       [ ...mainnetChains,
@@ -90,13 +94,14 @@ const testnetChains = [
       ],
       [
         ...mainnetChainsProviders, // Mainnets
-        ...testnetChainsProviders, // Testnets
+        // ...testnetChainsProviders, // Testnets
       ],
       {
         batch: { multicall: true },
         stallTimeout: 5_000,
-        rank: true,
+        rank: false,
         retryCount: 3,
+        pollingInterval: 10_000,
         // stallTimeout: 60_000
       },
     )

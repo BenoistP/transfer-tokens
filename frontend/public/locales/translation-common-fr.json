@@ -28,7 +28,8 @@
         "listName": "Nom",
         "listDescription": "Description",
         "emptyList": "Aucune liste de tokens trouvée",
-        "errorLoadingList": "Le chargement de la liste a échoué"
+        "errorLoadingList": "Le chargement de la liste a échoué",
+        "details": "Détails"
       }
     },
 
@@ -78,7 +79,11 @@
         "empty": "Aucun token trouvé"
       },
       "token": {
-        "noTransferTo": "Can't transfer to this address"
+        "canTransferFrom": "Transfert (envoi) autorisé DEPUIS cette addresse",
+        "canTransferTo": "Réception du token autorisé par le destinataire",
+        "noTransferFrom": "Transfert (envoi) interdit DEPUIS cette addresse",
+        "noTransferTo": "Transfert interdit VERS cette addresse",
+        "details": "Détails"
       }
     },
 

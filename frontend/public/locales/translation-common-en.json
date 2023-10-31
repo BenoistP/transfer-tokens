@@ -26,7 +26,8 @@
         "listName": "Name",
         "listDescription": "Description",
         "emptyList": "No token list found",
-        "errorLoadingList": "Error loading tokens list"
+        "errorLoadingList": "Error loading tokens list",
+        "details": "Details"
       }
     },
 
@@ -73,10 +74,14 @@
           }
         },
         "errorLoadingTokens": "Error loading tokens",
-        "empty": "No tokens found"
+        "empty": "No token found"
       },
       "token": {
-        "noTransferTo": "Can't transfer to this address"
+        "canTransferFrom": "Can transfer (send) this token FROM this address",
+        "canTransferTo": "Target address can receive this token",
+        "noTransferFrom": "Can't transfer (send) FROM this address",
+        "noTransferTo": "Can't transfer TO this address",
+        "details": "Details"
       }
     },
 
