@@ -8,7 +8,9 @@ import { PlusCircleIcon, XCircleIcon, LockClosedIcon, LockOpenIcon
 
 // ------------------------------
 
-const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, decimals, unSelect }: ITokenInstanceAmountProps ) => {
+const TokenInstanceEditableAmount = ( { selectable, balance,
+  amount, setamount,
+  transferAmountLock, settransferAmountLock, decimals, unSelect }: ITokenInstanceAmountProps ) => {
 
   // console.debug(`TokenInstanceEditableAmount.tsx (${index}) RealToken render realTokenInstance.userData.address=${realTokenInstance.userData.address} realTokenInstance.address=${realTokenInstance.address} realTokenInstance.userData.amount=${realTokenInstance.userData.amount}`)
  
@@ -16,7 +18,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
 
 //  const [decimals, setdecimals] = useState<bigint>(BigInt(tokenInstance.decimals)) as [bigint, (balance:bigint) => void];
   const [editableAmountString, seteditableAmountString] = useState("0") as [string, (balance:string) => void];
-  const [lock, setlock] = useState<boolean>(false)
+  // const [lock, setlock] = useState<boolean>(false)
   const [editable, seteditable] = useState<boolean>(selectable)
  // ---
 
@@ -52,7 +54,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
     {
       // seteditableAmountString(max.toString());
       // setamount(max);
-      setlock(true);
+      settransferAmountLock(true);
     },
     [] // Xeslint-disable-line react-hooks/exhaustive-deps
   );
@@ -63,7 +65,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
     {
       // seteditableAmountString("0.0");
       // setamount(0n);
-      setlock(false);
+      settransferAmountLock(false);
     },
     [] // Xeslint-disable-line react-hooks/exhaustive-deps
   );
@@ -210,16 +212,17 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
   // ---
 
   useEffect(() =>
-  {
-    // console.debug(`TokenInstanceEditableAmount.tsx useEffect editableAmountString:${editableAmountString} amount:${amount} `)
-    // if (editableAmountString == "0") {
-    if (amount == 0n) {
-      // seteditable(false);
-      if (unSelect) {unSelect()}
-    }
-  },
-  [  amount, unSelect ]
+    {
+      // console.debug(`TokenInstanceEditableAmount.tsx useEffect editableAmountString:${editableAmountString} amount:${amount} `)
+      // if (editableAmountString == "0") {
+      if (amount == 0n) {
+        // seteditable(false);
+        if (unSelect) {unSelect()}
+      }
+    },
+    [ amount, unSelect ]
   );
+
   // ---
 
   // const clsTextSize = "text-xs sm:text-sm md:text-base"
@@ -228,6 +231,8 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
   // const clsTextPadding = "p-2 "
   // const clsText = clsTextPadding + (balance.valueOf() > 0n ? clsTextBold : clsTextThin)
   // const clsTextDisabled = clsText + " text-center opacity-60"
+
+  // console.debug(`TokenInstanceEditableAmount.tsx render`)
 
   // ------------------------------
 
@@ -239,34 +244,25 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
             <div className="flex flex-row justify-left">
               <div className="flex grow-0 m-0 pr-1 p-0 ">
                 <label className="swap swap-rotate">
-                  <input type="checkbox" />
+                  <input type="checkbox" checked={transferAmountLock} onChange={()=>{}} />
                   <LockClosedIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={() => { setLockAmount() }} />
                   <LockOpenIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={() => { setUnLockAmount() }}/>
                 </label>
               </div>
-              <div className={"join join-vertical " + (lock? "font-semibold text-accent-content opacity-50":"font-normal text-base-content")}>
+              <div className={"join join-vertical " + (transferAmountLock? "font-semibold text-accent-content opacity-50":"font-normal text-base-content")}>
                 <input type="number"
                   value={editableAmountString} onChange={(e)=>{updateAmount(e)}}
                   step={0.001} min={0} max={10_000_000_000_000}
-                  readOnly={lock}
+                  readOnly={transferAmountLock}
                   className="input input-bordered text-xs sm:text-sm md:text-base h-6" placeholder="...">
                 </input>
               </div>
               <div className="flex grow-0 m-0 p-0 ">
-                {/* <div className="m-0 ml-1 flex flex-col"> */}
-                  <label className={"swap swap-rotate "+ (lock ? "invisible":"visible")}>
-                    <input type="checkbox"  />
-                    <PlusCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={() => { setZeroAmount() }} />
-                    <XCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={() => { setMaxAmount() }} />
-                  </label>
-                  {/* 
-                  <label className="swap swap-rotate">
-                    <input type="checkbox" />
-                    <LockClosedIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={() => { setLockAmount() }} />
-                    <LockOpenIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={() => { setUnLockAmount() }}/>
-                  </label>
-                 */}
-                {/* </div> */}
+                <label className={"swap swap-rotate "+ (transferAmountLock?"invisible":"visible")}>
+                  <input type="checkbox" checked={(amount&&amount>0n?false:true)} onChange={()=>{}} />
+                  <PlusCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={() => { setZeroAmount() }} />
+                  <XCircleIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={() => { setMaxAmount() }} />
+                </label>
               </div>
             </div>
           </>
@@ -275,8 +271,8 @@ const TokenInstanceEditableAmount = ( { selectable, balance, amount, setamount, 
             <div className="flex grow-0 m-0 pr-1 p-0 invisible">
               <label className="swap swap-rotate">
                 <input type="checkbox" />
-                <LockClosedIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={() => {}} />
-                <LockOpenIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={() => {}} />
+                  <LockClosedIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={()=>{}} />
+                  <LockOpenIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={()=>{}} />
               </label>
             </div>
             <div className={"join join-vertical " + "font-light text-base-content opacity-60"}>

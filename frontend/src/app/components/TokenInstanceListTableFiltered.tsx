@@ -23,6 +23,7 @@ const TokenInstanceListTableFiltered = (
   {
 
   // console.log(`TokenInstanceListTableFiltered.tsx render chainId: ${chainId} accountAddress: ${accountAddress}`);
+  console.dir(tokensInstances)
 
   const { t } = useTranslation()
 
@@ -34,7 +35,7 @@ const TokenInstanceListTableFiltered = (
         tokensInstances={tokensInstances}
         // chainId={chainId}
         accountAddress={accountAddress}
-        // changeCheckboxStatus={enableCheckboxes?changeCheckboxStatus:null}
+        // updateCheckboxStatus={enableCheckboxes?updateCheckboxStatus:null}
         targetAddress={targetAddress}
 
         tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
@@ -53,7 +54,7 @@ const TokenInstanceListTableFiltered = (
       try {
         // console.debug(`TokenInstanceListTableFiltered.tsx countSelected tokensInstances.length: ${tokensInstances?.length} accountAddress: ${accountAddress}`);
         if (tokensInstances && tokensInstances.length>0 && accountAddress && typeof accountAddress == "string") {
-          selectedCount = tokensInstances.reduce( (selectedCount,tokensInstance) => selectedCount + ((tokensInstance.userData[accountAddress as any].selected==true)?1:0),0 )
+          selectedCount = tokensInstances.reduce( (selectedCount,tokensInstance) => selectedCount + ((tokensInstance.selected==true)?1:0),0 )
         }
         // console.debug(`TokenInstanceListTableFiltered.tsx countSelected = ${selectedCount}`);
         return selectedCount;
@@ -148,7 +149,7 @@ const TokenInstanceListTableFiltered = (
                     {/* Select ALL checkbox */}
                     <input type="checkbox" className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
                       checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
-                      onChange={(/* e */)=>{tokensInstancesListTablePropsHandlers.selectHandlers.handleCheckSelectAll()}}
+                      onChange={(/* e */)=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
                       disabled={!tokensInstances?.length}
                       />
                   </label>
@@ -156,7 +157,7 @@ const TokenInstanceListTableFiltered = (
                 <td className="p-2">
                   <label>
                     {/* INVERT ALL checkbox */}
-                    <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={tokensInstancesListTablePropsHandlers.selectHandlers.handleInvertAllChecks} />
+                    <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks} />
                   </label>
                 </td>
 

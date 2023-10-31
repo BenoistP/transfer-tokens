@@ -7,10 +7,10 @@ import { FooterStatus } from "@Components/FooterStatus";
 import { useTranslation } from "react-i18next";
 
 // Router
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 // Icons
-import { ChevronUpIcon, ChevronDownIcon, ChevronDoubleDownIcon, ChevronDoubleUpIcon } from '@heroicons/react/24/solid'
+// import { ChevronUpIcon, ChevronDownIcon, ChevronDoubleDownIcon, ChevronDoubleUpIcon } from '@heroicons/react/24/solid'
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,7 @@ export const Footer = () => {
                         </div>
                         <div className="font-light ">
                             <div className=" flex flex-row justify-center items-center">
+{/* 
                                 <Link to="#">
                                     <ChevronDoubleUpIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
                                 </Link>
@@ -46,6 +47,7 @@ export const Footer = () => {
                                 <Link to="#bottom">
                                     <ChevronDoubleDownIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
                                 </Link>
+ */}
                             </div>
                         </div>
                         <div className="">

@@ -32,7 +32,7 @@ const TokenInstanceList = ( {
               <TokenInstance
                 tokenInstance={tokenInstance}
                 accountAddress={accountAddress}
-                changeCheckboxStatus={null}
+                updateCheckboxStatus={null}
                 targetAddress={targetAddress}
                 enableEditable={false}
               />

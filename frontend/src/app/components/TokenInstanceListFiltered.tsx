@@ -56,7 +56,9 @@ const TokenInstanceListFiltered = ( {
               <TokenInstance
                 tokenInstance={tokenInstance}
                 accountAddress={accountAddress}
-                changeCheckboxStatus={tokensInstancesListTablePropsHandlers.selectHandlers.changeCheckboxStatus}
+                updateCheckboxStatus={tokensInstancesListTablePropsHandlers.updateHandlers.updateCheckboxStatus}
+                updateTransferAmount={tokensInstancesListTablePropsHandlers.updateHandlers.updateTransferAmount}
+                updateTransferAmountLock={tokensInstancesListTablePropsHandlers.updateHandlers.updateTransferAmountLock}
                 targetAddress={targetAddress}
                 enableEditable={true}
               />
