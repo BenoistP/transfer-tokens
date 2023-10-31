@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 // ------------------------------
 
-const ProgressContainer = ( { previousDisabled, nextDisabled, showProgressBar, progressBarPercentage }: ITF_ProgressContainer ) => {
+const ProgressContainer = ( { previousDisabled, nextDisabled/* , showProgressBar, progressBarPercentage */ }: ITF_ProgressContainer ) => {
 
   // console.debug(`ProgressContainer.tsx render previousNextDisabled=${previousNextDisabled}`)
   // console.debug(`ProgressContainer.tsx render`)

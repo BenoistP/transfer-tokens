@@ -35,7 +35,7 @@ const StepsContainer = ( {
   tokensLists,
   chainId,
   setpreviousDisabled, setNextDisabled,
-  setShowProgressBar, setProgressBarPercentage,
+  // setShowProgressBar, setProgressBarPercentage,
  } :IStepsContainerProps ) => {
 
   // console.debug(`StepsContainer.tsx render`)
@@ -455,8 +455,8 @@ const StepsContainer = ( {
           const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
             // if (tokenInstance.chainId+"-"+tokenInstance.address === id) {
             if (tokenInstance.selectID === id) {
-              console.debug(`updateTransferAmount id=${id} FOUND`);
-              console.dir(tokenInstance);
+              // console.debug(`updateTransferAmount id=${id} FOUND`);
+              // console.dir(tokenInstance);
               tokenInstance.transferAmount = amount;
             } // if (tokenInstance.selectID === id)
             return {
@@ -484,8 +484,8 @@ const StepsContainer = ( {
           const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
             // if (tokenInstance.chainId+"-"+tokenInstance.address === id) {
             if (tokenInstance.selectID === id) {
-              console.debug(`updateTransferAmountLock id=${id} tokenInstance.transferAmountLock=${tokenInstance.transferAmountLock} value=${value}`);
-              console.dir(tokenInstance);
+              // console.debug(`updateTransferAmountLock id=${id} tokenInstance.transferAmountLock=${tokenInstance.transferAmountLock} value=${value}`);
+              // console.dir(tokenInstance);
               if (connectedAddress/*  && typeof connectedAddress === "string" */ && tokenInstance.userData && tokenInstance.userData[connectedAddress as any]) {
                 tokenInstance.transferAmountLock = value;
               } // if (accountAddress && ...
@@ -637,7 +637,7 @@ const StepsContainer = ( {
 
   const setLoadingDataState = useCallback( (isLoading:boolean) =>
     {
-      console.debug(`StepsContainer.tsx setLoadingDataState isLoading: ${isLoading}`);
+      // console.debug(`StepsContainer.tsx setLoadingDataState isLoading: ${isLoading}`);
       setisLoading(isLoading)
     }, []
   )
@@ -646,7 +646,7 @@ const StepsContainer = ( {
 
   const setErrorLoadingDataState = useCallback( (isError:boolean) =>
     {
-      console.debug(`StepsContainer.tsx setErrorLoadingDataState isError: ${isError}`);
+      // console.debug(`StepsContainer.tsx setErrorLoadingDataState isError: ${isError}`);
       setisError(isError)
     }, []
   )
@@ -875,7 +875,7 @@ const StepsContainer = ( {
       try {
         if (_tokensInstances && _tokensInstances.length) {
           const secondaryAddress = (_target?_target:_source)
-          console.debug(`StepsContainer.tsx loadTokensOnChainData_TransferAbility: GET TOKENS TRANSFER FROM:${_source} TO:${secondaryAddress}`)
+          console.debug(`StepsContainer.tsx loadTokensOnChainData_TransferAbility: GET TOKENS TRANSFER FROM:${(_source?_source.substring(0,6)+"..."+_source.substring(_source.length-5,_source.length):"null/undef")} TO:${(secondaryAddress?secondaryAddress.substring(0,6)+"..."+secondaryAddress.substring(secondaryAddress.length-5,secondaryAddress.length):"null/undef")}`)
           const multicallArray = _tokensInstances.map( async (token) => {
             if (token?.contract) {
               if (token?.type == "COINBRIDGE" as TTokenType) {
@@ -1540,16 +1540,14 @@ const StepsContainer = ( {
         return _chainsTokensList
       } // updateChainTokensListTokensInstances
 
+      // ---
+
       const start:number = Date.now()
       try {
-        
-        console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]`)
-
+        // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]`)
         const newSelectedChainsTokensList:TChainsTokensListArrayNullUndef = [];
         // const tokensInstances:TTokensInstances = [];
-
         // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: tokensLists=${tokensLists}`)
-
         const selectedTokenLists = getSelectedTokenLists(selectableTokensLists);
         // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: selectedTokenLists.length = ${selectedTokenLists?.length}, selectedTokenLists= `)
         // console.dir(selectedTokenLists)
@@ -1662,27 +1660,21 @@ const StepsContainer = ( {
             setErrorLoadingDataState(true)
           })
 
-          
         } // if (newSelectedChainsTokensList.length > 0)
-        else {
-          // settokensInstances(null)
-          console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: newSelectedChainsTokensList.length <= 00`)
-          
-        }
-
+        // else {
+        //   // settokensInstances(null)
+        //   console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: newSelectedChainsTokensList.length <= 00`)
+        // }
         // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: SET SelectedChainsTokensList`)
         // setselectedChainsTokensList(newSelectedChainsTokensList)
         // console.dir(newSelectedChainsTokensList)
-
       } catch (error) {
         console.error(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: error=${error}`)
       }
-
       finally {
         // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances elapsed=${Date.now() - start}ms`)
         // setLoadingDataState(false)
       }
-
     },
     [ tokensLists, selectableTokensLists,
       // getUpdatedChainTokensListTokensInstances,
@@ -1715,8 +1707,8 @@ const StepsContainer = ( {
           })
 
         settokensInstances(tokensInstancesFromSelectedTokensLists)
-        console.debug(`StepsContainer.tsx useEffect [SELECTED CHAINSTOKENSLIST] = tokensInstancesFromSelectedTokensLists[]=`)
-        console.dir(tokensInstancesFromSelectedTokensLists)
+        // console.debug(`StepsContainer.tsx useEffect [SELECTED CHAINSTOKENSLIST] = tokensInstancesFromSelectedTokensLists[]=`)
+        // console.dir(tokensInstancesFromSelectedTokensLists)
       }
     
     },
@@ -1752,7 +1744,7 @@ const StepsContainer = ( {
                 // setSelectedTokensChainDataArray={setSelectedTokensChainDataArray}
                 selectableTokensLists={selectableTokensLists}
                 setselectableTokensLists={setselectableTokensLists}
-                setShowProgressBar={setShowProgressBar}
+                // setShowProgressBar={setShowProgressBar}
                 accountAddress={connectedAddress}
                 targetAddress={targetAddress}
                 tokensInstances={tokensInstances}
@@ -1789,8 +1781,8 @@ const StepsContainer = ( {
               <Step2
                 setNextDisabled={setNextDisabled}
                 tokensInstances={tokensInstances}
-                setShowProgressBar={setShowProgressBar}
-                setProgressBarPercentage={setProgressBarPercentage}
+                // setShowProgressBar={setShowProgressBar}
+                // setProgressBarPercentage={setProgressBarPercentage}
                 accountAddress={connectedAddress}
                 // chainId={chainId}
                 targetAddress={targetAddress}
@@ -1805,8 +1797,8 @@ const StepsContainer = ( {
         <div className="w-full" >
           <MainContentContainer>
             <Step3
-              setShowProgressBar={setShowProgressBar}
-              setProgressBarPercentage={setProgressBarPercentage}
+              // setShowProgressBar={setShowProgressBar}
+              // setProgressBarPercentage={setProgressBarPercentage}
             />
           </MainContentContainer>
         </div>

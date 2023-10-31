@@ -23,7 +23,7 @@ const TokenInstanceListTableFiltered = (
   {
 
   // console.log(`TokenInstanceListTableFiltered.tsx render chainId: ${chainId} accountAddress: ${accountAddress}`);
-  console.dir(tokensInstances)
+  // console.dir(tokensInstances)
 
   const { t } = useTranslation()
 
