@@ -1,25 +1,21 @@
 // React
 import { Suspense } from 'react';
-
 // Components
 import TransferTokensAppPageLayout from '@App/TransferTokensAppPageLayout';
 import { MainContent } from '@Components/MainContent';
-
 // Router
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
-
 // Translation
 import { I18nextProvider } from "react-i18next";
 import i18next from "i18next";
-import './i18n';
-
+import '@App/i18nConfig';
 // Styles
 import '@styles/global.css'
 import '@styles/tailwind.css'
 
 // ----------------------------------------------------------------------
 
-const TransferTokensApp = ( /* {  } */ ) =>
+const TransferTokensApp = ( ) =>
 {
 return (
   <BrowserRouter>
@@ -32,10 +28,7 @@ return (
             <Route path={"/"}
                 element={
                   <Suspense fallback="loading">
-
-                    {/* <TestPage/> */}
                     <MainContent />
-
                   </Suspense>
                 }
             ></Route>
@@ -51,6 +44,6 @@ return (
   </BrowserRouter>
   )
 
-} // App
+} // TransferTokensApp
 
 export default TransferTokensApp;
