@@ -14,7 +14,7 @@ export default defineConfig({
     open: false,
   },
   server: {
-    port: 7000, // dev
+    port: 3000, // dev
     strictPort: false,
     open: false,
   },
