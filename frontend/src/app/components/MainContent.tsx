@@ -30,14 +30,14 @@ export const MainContent = ( ) => {
     // ---
 
     useEffect(() => {
-      const init = async () => {
+      const initTokensLists = async () => {
         const tokenLists = await getTokenLists()
-        console.dir(tokenLists)
+        // console.dir(tokenLists)
         setTokensLists(tokenLists) // Set inital token list data
       }
       // console.dir(tokenListsData)
       // setTokensLists(tokenListsData) // Set inital token list data
-      init()
+      initTokensLists()
     }, [])
 
     // -------------------
