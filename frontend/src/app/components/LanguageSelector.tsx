@@ -12,7 +12,6 @@ import { COOKIE_LANGUAGE } from "@uiconsts/misc";
 // ------------------------------
 
 const FlagIcon = ({flagIconCountryCode = ""}: FlagIconProps) => {
-    console.debug(`LanguageSelector.tsx FlagIcon flagIconCountryCode=${flagIconCountryCode}`)
     return (
         <span
             className={`ml-2 fi fis fiCircle inline-block mr-2 fi-${flagIconCountryCode}`}
@@ -57,10 +56,7 @@ export const LanguageSelector = () =>
       const setupLanguages = async () => {
         setLanguages(SUPPORTED_LANGUAGES);
       };
-      // const setupCookies = () => {
-      // };
       setupLanguages();
-      // setupCookies();
     } catch (error) {
       console.error(`LanguageSelector.tsx error=${error}`);
     }
@@ -68,10 +64,8 @@ export const LanguageSelector = () =>
 
   useEffect( () =>
     {
-      console.debug(`LanguageSelector.tsx useEffect [i18n.language, setLanguage] i18n.language=${i18n.language}`)
-        setLanguage(i18n.language)
+      setLanguage(i18n.language)
     },
-    // X eslint-disable-line react-hooks/exhaustive-deps
     [i18n.language, setLanguage]);
 
   // ---
@@ -83,7 +77,7 @@ export const LanguageSelector = () =>
             for (let index = 0; index < languages.length; index++) {
                 if (languages[index].key == languageKey) return languages[index].flagIconCountryCode;
             }
-            console.warn(`getFlagIconCountryCode: languageKey not found: ${languageKey}`)
+            // console.warn(`getFlagIconCountryCode: languageKey not found: ${languageKey}`)
         }
       } catch (error) {
         console.error(`LanguageSelector.tsx error=${error}`);
@@ -93,10 +87,11 @@ export const LanguageSelector = () =>
     [languages],
   ) // getFlagIconCountryCode
 
-// ---
-console.debug(`LanguageSelector.tsx render i18n.language=${i18n.language} getFlagIconCountryCode=${getFlagIconCountryCode(i18n.language)}`)
+  // ---
 
-return (
+  //  console.debug(`LanguageSelector.tsx render i18n.language=${i18n.language} getFlagIconCountryCode=${getFlagIconCountryCode(i18n.language)}`)
+
+  return (
     <div className="dropdown bg-base-200">
       <label tabIndex={0} className="btn btn-ghost btn-circle">
         <FlagIcon flagIconCountryCode={getFlagIconCountryCode(i18n.language)} />
@@ -120,5 +115,5 @@ return (
         }
       </ul>
     </div>
-    );
+  );
 };
