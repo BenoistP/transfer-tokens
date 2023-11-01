@@ -12,7 +12,7 @@ import { ThemeProvider, useTheme } from "next-themes";
 import { GlobalAppProvider, useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
 
 // Cookies
-import { CookiesProvider } from "react-cookie";
+// import { CookiesProvider } from "react-cookie";
 
 // Wagmi
 import { configureChains, createConfig, WagmiConfig, Chain  } from 'wagmi';
@@ -135,62 +135,28 @@ const testnetChains = [
     };
   }); // useState
 
-
-
-
-/* 
-  const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
-    <Text>
-      By connecting your wallet, you agree to the{' '}
-      <Link href="https://termsofservice.xyz">Terms of Service</Link> and
-      acknowledge you have read and understand the protocol{' '}
-      <Link href="https://disclaimer.xyz">Disclaimer</Link>
-    </Text>
-  );
- */
-// ------------------------------
-
+  // ------------------------------
 
   return (
-    <>
-    <CookiesProvider>
+    // <CookiesProvider>
 
       <MoveTokensAppProvider>
-{/* 
-      <RainbowKitProvider
-        avatar={getAvatarComponent()}
-        coolMode
-        chains={chains as Chain[]}
-        theme={rainbowTheme()}
-        appInfo={{
-        appName: "publicKeys.PUBLIC_APP_NAME",
-        disclaimer: Disclaimer,
-        }}
-      >
- */}
 
-          {/* <div className="w-full bg-neutral" > */}
           <div className="flex flex-col w-full h-screen pt-0 bg-base-100">
 
-
-            {/* Pages */}
-            {config && chains ? (
+            { config && chains ?
                 <WagmiConfig config={config}>
 
                   <GlobalAppProvider>
 
                     <ThemeProvider enableSystem={false} themes={THEMES_NAMES}>
 
-                      {/* Navbar */}
-
                       <RainbowOutletWrapper 
                         children={
-
                           <>
-                          <Navbar/>
-                          {children}
+                            <Navbar/>
+                            {children}
                           </>
-
                         }
                         chains={chains}
                       />
@@ -202,7 +168,9 @@ const testnetChains = [
                   </GlobalAppProvider>
 
                 </WagmiConfig>
-              ) : null}
+              :
+                null
+            }
 
             <ContentBottomPadding/>
             <Footer/>
@@ -210,10 +178,7 @@ const testnetChains = [
           </div>
       </MoveTokensAppProvider>
 
-      {/* </RainbowKitProvider> */}
-
-    </CookiesProvider>
-    </>
+    // </CookiesProvider>
   )
 } // App
 
@@ -284,7 +249,6 @@ return (
   </>
   );
 };
-
 
 
 export default TransferTokensAppPageLayout;
