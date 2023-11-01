@@ -49,6 +49,7 @@ https://play.tailwindcss.com/OPAsySKNCd
 
 All Steps : 🚧 
 - 🚧 Handle chain change
+- 🚧 Set default language cookie (invisible flag)
 
 
 
