@@ -240,11 +240,8 @@ return (
     appName: import.meta.env.PUBLIC_APPNAME,
     disclaimer: Disclaimer,
     }}
-    >
-    {/* <CookiesProvider> */}
-        {children}
-    {/* </CookiesProvider> */}
-    {/* <Navbar/> */}
+  >
+    {children}
   </RainbowKitProvider>
   </>
   );
