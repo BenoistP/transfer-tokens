@@ -7,7 +7,7 @@ import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
 
 import { isChainSupported } from "@jsutils/blockchainUtils";
-import { tokenListsData } from '@jsutils/tokensLists';
+import { /* tokenListsData */getTokenLists } from '@jsutils/tokensLists';
 
 // Translation
 import { useTranslation } from "react-i18next";
@@ -30,8 +30,14 @@ export const MainContent = ( ) => {
     // ---
 
     useEffect(() => {
-      console.dir(tokenListsData)
-      setTokensLists(tokenListsData) // Set inital token list data
+      const initTokensLists = async () => {
+        const tokenLists = await getTokenLists()
+        // console.dir(tokenLists)
+        setTokensLists(tokenLists) // Set inital token list data
+      }
+      // console.dir(tokenListsData)
+      // setTokensLists(tokenListsData) // Set inital token list data
+      initTokensLists()
     }, [])
 
     // -------------------

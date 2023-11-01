@@ -522,7 +522,7 @@ interface IChangeTokensListCheckboxStatus {
 
 interface ITokensListsSelectProps {
   tokensLists: TTokensLists|null|undefined,
-  // chainId: TChainId
+  chainId: TChainId
   // setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,

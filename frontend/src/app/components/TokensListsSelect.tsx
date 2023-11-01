@@ -12,13 +12,13 @@ import { ArrowPathRoundedSquareIcon } from '@heroicons/react/24/solid'
 
 // Translation
 import { useTranslation } from "react-i18next"
-import { useNetwork } from 'wagmi'
+// import { useNetwork } from 'wagmi'
 
 // ------------------------------
 
 const TokensListsSelect = ( { 
   tokensLists,
-  // chainId,
+  chainId,
   selectableTokensLists,
   setselectableTokensLists,  }: ITokensListsSelectProps ) =>
   {
@@ -26,21 +26,23 @@ const TokensListsSelect = ( {
   // console.debug(`TokenListSelect.tsx render`)
   // console.debug(`TokenListSelect.tsx render: selectableTokensLists=${JSON.stringify(selectableTokensLists)}`)
 
-  const { chain } = useNetwork()
+  // const { chain } = useNetwork()
   const { t } = useTranslation()
+  const [isCheckAllDisabled, setisCheckAllDisabled] = useState(false)
+  const [checkAll, setCheckAll] = useState<boolean>(false);
 
   // ---
 
   const isAllChecked = useCallback( () =>
     {
       if (selectableTokensLists) {
-        const isAllChecked = selectableTokensLists?.every(
+        const isAllChecked = selectableTokensLists.every(
           (selectableTokensList) => {
             return (
               selectableTokensList.selected || !selectableTokensList.selectable // === true
             )
           }
-        )
+        ) // every
         return isAllChecked;
       } // if (selectableTokensLists)
       return false;
@@ -50,7 +52,24 @@ const TokensListsSelect = ( {
 
   // ---
 
-  const [checkAll, setCheckAll] = useState<boolean>(isAllChecked);
+  // const [checkAll, setCheckAll] = useState<boolean>(isAllChecked);
+
+  // ---
+
+  useEffect( () =>
+    {
+      if (!selectableTokensLists || ((selectableTokensLists.length||0) === 0)) {
+        setisCheckAllDisabled(true)
+      } else {
+        const notSelectable = selectableTokensLists.every ( (selectableTokensList) => {
+          return (
+            selectableTokensList.selectable === false
+          )
+        })
+        setisCheckAllDisabled(notSelectable)
+      }
+    }, [selectableTokensLists]
+  )
 
   // ---
 
@@ -78,8 +97,8 @@ const TokensListsSelect = ( {
       //   }
       // } //  if (selectableTokensLists)
       // Reload if selectableTokensLists empty OR (not empty AND chain changed)
-      if ((!selectableTokensLists||selectableTokensLists.length<=0)
-        || (selectableTokensLists?.length>0&&selectableTokensLists[0].chainId !== chain?.id) ) {
+// if ((!selectableTokensLists||selectableTokensLists.length<=0)
+// || (selectableTokensLists?.length>0&&selectableTokensLists[0].chainId !== /* chain?.id */chainId) ) {
         // console.debug(`TokensListsSelect useEffect`)
         // if (tokensLists) {
         //   console.log('TokensListsSelect: useEffect: tokensLists=');
@@ -105,7 +124,7 @@ const TokensListsSelect = ( {
             console.debug(`TokensListsSelect: useEffect: tokensList is undefined or tokensList.tokens.length <= 0`);
           }
           */
-        const chainId = (chain?.id ? chain?.id : -1)
+        // const chainId = (chain?.id ? chain?.id : -1)
         const chainTokensList = getChainTokensList(tokensList, chainId)
         // console.debug(`TokensListsSelect: useEffect: chainTokensList=`);
         // console.dir(chainTokensList);
@@ -147,13 +166,16 @@ const TokensListsSelect = ( {
 
         setselectableTokensLists(filteredSelectableTokensLists)
 
-      } // if (!selectableTokensLists||selectableTokensLists.length<=0)
+// } // if (!selectableTokensLists||selectableTokensLists.length<=0)
 
     },
     [
       // tokensLists, chain?.id
       // tokensLists, chain?.id, selectableTokensLists, setselectableTokensLists
-      tokensLists, chain?.id, 
+      tokensLists,
+      // chain?.id,
+      chainId,
+      setselectableTokensLists
     ]
   )
 
@@ -231,7 +253,6 @@ const TokensListsSelect = ( {
       try {
         // console.debug(`TokensListsSelect.tsx: handleCheckSelectAll`);
         const newCheckAll = !checkAll
-
         if (selectableTokensLists) {
           const new_selectableTokensLists = [...selectableTokensLists];
           new_selectableTokensLists.map((selectableTokensList) => {
@@ -272,7 +293,8 @@ const TokensListsSelect = ( {
                     <input type="checkbox" className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
                       checked={checkAll}
                       onChange={handleCheckSelectAll}
-                      disabled={(selectableTokensLists?.length||0) === 0}
+                      // disabled={(selectableTokensLists?.length||0) === 0}
+                      disabled={isCheckAllDisabled}
                     />
                   </label>
                   <label>
