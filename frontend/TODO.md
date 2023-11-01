@@ -52,10 +52,11 @@ All Steps : 🚧
 
 
 
-Step 0: 🚧 
-- 🚧 Watch for balances changes 👀
-- Ethereum data is not loaded ?
+Step 0: 🚧
 - ☑️ check transferability for connected account
+- 🚧 Watch for balances changes 👀
+- 𓆣 Ethereum data is not loaded ?
+- 🚧 Add loading indicator when loading tokens lists
 
 Step 2: 🚧 
 - ☑️ Fix list loading bug/missing icons (all/none & lock)
