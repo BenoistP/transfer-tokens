@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 // Components
 import TransferTokensApp from '@App/TransferTokensApp'
 import { DEFAULT_APP_TITLE } from '@uiconsts/misc';
-
+// Cookies
+import { CookiesProvider } from "react-cookie";
 // ----------------------------------------------------------------------
 
 const AppRoot = ( /* { } */ ) =>
@@ -17,9 +18,9 @@ const AppRoot = ( /* { } */ ) =>
   // ---
 
   return (
-    <>
+    <CookiesProvider>
         <TransferTokensApp/>
-    </>
+    </CookiesProvider>
 )
 
 } // App
