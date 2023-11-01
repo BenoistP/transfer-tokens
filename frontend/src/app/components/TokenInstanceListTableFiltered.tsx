@@ -127,7 +127,7 @@ const TokenInstanceListTableFiltered = (
 
   // ---
 
-  const clsIconBigInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ((tokensInstances?.length||0) === 0? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
+  const clsIconBigInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
   const clsIcon = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2' 
 
   // ---
@@ -186,7 +186,7 @@ const TokenInstanceListTableFiltered = (
                 <td className="p-2">
                   <label>
                     {/* INVERT ALL checkbox */}
-                    <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks} />
+                    <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
                   </label>
                 </td>
 
