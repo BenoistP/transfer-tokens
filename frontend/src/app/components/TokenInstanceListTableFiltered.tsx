@@ -34,14 +34,14 @@ const TokenInstanceListTableFiltered = (
       // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokensInstances] tokensInstances?.length: ${tokensInstances?.length}`)
       // setSelectAllDisabled(!tokensInstances?.length)
       if (tokensInstances?.length) {
-        const noneSelectable = tokensInstances.every( (tokensInstance) => {
-          const notSelectable = ( !tokensInstance.selectable || !tokensInstance.userData[accountAddress as any]?.canTransfer || !tokensInstance.userData[targetAddress as any]?.canTransfer )
-          // console.debug(`selectable :${tokensInstance.selectable} accountAddress: ${tokensInstance.userData[accountAddress as any]?.canTransfer} targetAddress: ${tokensInstance.userData[targetAddress as any]?.canTransfer} notSelectable: ${notSelectable}`)
-          return ( notSelectable )
+        const noneSelectable = tokensInstances.every( (tokenInstance) => {
+          // const notSelectable = ( !tokenInstance.selectable || !tokenInstance.userData[accountAddress as any]?.canTransfer || !tokenInstance.userData[targetAddress as any]?.canTransfer )
+          // console.debug(`selectable :${tokenInstance.selectable} accountAddress: ${tokenInstance.userData[accountAddress as any]?.canTransfer} targetAddress: ${tokenInstance.userData[targetAddress as any]?.canTransfer} notSelectable: ${notSelectable}`)
+          // return ( notSelectable )
+          return !tokenInstance.selectable
         })
-        // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokensInstances] noneSelectable: ${noneSelectable}`)
+        // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokenInstances] noneSelectable: ${noneSelectable}`)
         setSelectAllDisabled(noneSelectable)
-
       } else {
         setSelectAllDisabled(true)
       }
@@ -49,6 +49,21 @@ const TokenInstanceListTableFiltered = (
     [tokensInstances, accountAddress, targetAddress]
   )
 
+  // ---
+
+  useEffect( () =>
+    {
+      // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokensInstances] tokensInstances?.length: ${tokensInstances?.length}`)
+      // setSelectAllDisabled(!tokensInstances?.length)
+      if (selectAllDisabled && tokensInstancesListTablePropsHandlers.selectStates.selectAll) {
+        tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()
+        // tokensInstancesListTablePropsHandlers.updateHandlers.handleUnselectAll()
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectAllDisabled, tokensInstancesListTablePropsHandlers.selectStates, tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll]
+  )
+  
   // ---
 
   const TokenInstanceListFilteredMemo = useMemo(
