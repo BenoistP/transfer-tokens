@@ -13,20 +13,10 @@
       "@css/*": ["./src/app/styles/*"],
       "@ui/*": ["./src/app/ui/*"],
       "@Components/*": ["./src/app/components/*"],
-//      "@jsui/*": ["./src/app/js/ui/*"],
       "@uiconsts/*": ["./src/app/js/constants/ui/*"],
       "@i18n/*": ["./src/app/js/ui/i18n/*"],
       "@abis/*": ["./src/app/abis/*"],
-
       "@Providers/*": ["./src/app/js/providers/*"],
-      // "@hooks/*": ["components/hooks/*"],
-      // "@Tailwind/*": ["components/Tailwind/*"],
-      // "@UIElements/*": ["components/Tailwind/UIElements/*"],
-      // "@Modals/*": ["components/Tailwind/UIElements/Modals/*"],
-      // "@Pages/*": ["components/Tailwind/Pages/*"],
-      // "@Toasts/*": ["components/Tailwind/UIElements/Toasts/*"],
-      // "@contracts/*": ["artifacts/contracts/*"],
-      // "@lotties/*": ["static/lotties/*"],
     }
   }
 }

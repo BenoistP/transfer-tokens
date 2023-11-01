@@ -1,14 +1,14 @@
 // React
 import { useEffect } from 'react';
-
 // Components
 import TransferTokensApp from '@App/TransferTokensApp'
 import { DEFAULT_APP_TITLE } from '@uiconsts/misc';
 // Cookies
 import { withCookies } from "react-cookie";
+
 // ----------------------------------------------------------------------
 
-const AppRootWithoutCookies = ( /* { } */ ) =>
+const AppRootWithoutCookies = ( ) =>
 {
 
   useEffect(() => {
