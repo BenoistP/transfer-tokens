@@ -7,7 +7,7 @@ import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
 
 import { isChainSupported } from "@jsutils/blockchainUtils";
-import { tokenListsData } from '@jsutils/tokensLists';
+import { /* tokenListsData */getTokenLists } from '@jsutils/tokensLists';
 
 // Translation
 import { useTranslation } from "react-i18next";
@@ -24,13 +24,20 @@ export const MainContent = ( ) => {
     const [tokensLists, setTokensLists] = useState<TTokensLists>(null)
     const [previousDisabled, setpreviousDisabled] = useState<boolean>(false);
     const [nextDisabled, setNextDisabled] = useState<boolean>(false);
-    const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
-    const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
+    // const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
+    // const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
 
     // ---
 
     useEffect(() => {
-      setTokensLists(tokenListsData) // Set inital token list data
+      const initTokensLists = async () => {
+        const tokenLists = await getTokenLists()
+        // console.dir(tokenLists)
+        setTokensLists(tokenLists) // Set inital token list data
+      }
+      // console.dir(tokenListsData)
+      // setTokensLists(tokenListsData) // Set inital token list data
+      initTokensLists()
     }, [])
 
     // -------------------
@@ -60,7 +67,7 @@ export const MainContent = ( ) => {
                     <div className="w-full p-0 m-0 mb-1 base-100 text-primary-content" >
                         <ProgressContainer
                           previousDisabled={previousDisabled} nextDisabled={nextDisabled}
-                          showProgressBar={showProgressBar} progressBarPercentage={progressBarPercentage}
+                          // showProgressBar={showProgressBar} progressBarPercentage={progressBarPercentage}
                         />
                     </div>
 
@@ -69,7 +76,7 @@ export const MainContent = ( ) => {
                         tokensLists={tokensLists}
                         chainId={chain?.id}
                         setpreviousDisabled={setpreviousDisabled} setNextDisabled={setNextDisabled}
-                        setShowProgressBar={setshowProgressBar} setProgressBarPercentage={setprogressBarPercentage}
+                        // setShowProgressBar={setshowProgressBar} setProgressBarPercentage={setprogressBarPercentage}
                       />
                     </div>
 

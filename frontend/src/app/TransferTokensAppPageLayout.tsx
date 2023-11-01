@@ -152,7 +152,7 @@ const testnetChains = [
 
 
   return (
-
+    <>
     <CookiesProvider>
 
       <MoveTokensAppProvider>
@@ -213,6 +213,7 @@ const testnetChains = [
       {/* </RainbowKitProvider> */}
 
     </CookiesProvider>
+    </>
   )
 } // App
 
@@ -233,7 +234,7 @@ const { globalAppDataHandlers: {getAvatarComponent} } = useGlobalAppContext()
 
   // --------
 
-  const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
+  const Disclaimer: DisclaimerComponent = ({ Text, Link }:any) => (
     <Text>
       By connecting your wallet, you agree to the{' '}
       <Link href="https://termsofservice.xyz">Terms of Service</Link> and

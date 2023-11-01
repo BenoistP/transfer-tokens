@@ -2,13 +2,7 @@
 import TOKENS_LISTS_SOURCES from '@jsconsts/tokensLists'
 import { getTokensLists_TokenData } from '@jsutils/tokensListsUtils';
 
-// console.debug(`tokensLists.ts`)
-
-const getTokenLists = async(tokenLists:TTokensLists) => {
-  const tokensLists_TokenData = await getTokensLists_TokenData(tokenLists) // Load token data from token lists
-  return tokensLists_TokenData;
+// Top-level await is not available in the configured target environment
+export async function getTokenLists() {
+  return await getTokensLists_TokenData(TOKENS_LISTS_SOURCES)
 }
-
-const tokenListsData = await getTokenLists(TOKENS_LISTS_SOURCES);
-
-export { tokenListsData };

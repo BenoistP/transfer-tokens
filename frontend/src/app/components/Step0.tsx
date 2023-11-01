@@ -8,7 +8,7 @@ import TokenInstanceListTable from "@Components/TokenInstanceListTable";
 const Step0 = (  {
     accountAddress,
     tokensLists,
-    // chainId,
+    chainId,
     setNextDisabled,
     targetAddress,
     selectableTokensLists,
@@ -61,7 +61,7 @@ const Step0 = (  {
           <div className="w-full flex">
             <TokensListsSelect
               tokensLists={tokensLists}
-              // chainId={chainId}
+              chainId={chainId}
               selectableTokensLists={selectableTokensLists}
               setselectableTokensLists={setselectableTokensLists}
             />

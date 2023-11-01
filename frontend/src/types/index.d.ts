@@ -12,6 +12,36 @@ enum EChainTokensListLoadState {
   // watchTransfers = , // TODO
 }
 
+
+// Types to remove ->
+
+interface ITF_ProgressBar {
+  showProgressBar: boolean;
+  progressPercentage: number;
+}
+
+// interface ITF_ProgressBarColor {
+//   progressPercentage: number;
+// }
+
+
+// interface IAppMoveTokens2Props {
+//   // tokensLists: TTokensLists|null|undefined,
+//   // chainId: TChainId
+//   // changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
+// }
+
+
+// interface IContentProps {
+// }
+
+// type TsetShowProgressBar = TreactSetState_boolean;
+// type TsetProgressBarPercentage = React.Dispatch<React.SetStateAction<number>>
+
+// <- Types to remove
+
+
+
 // Types & Interfaces
 
 type TAvatarComponent = any;
@@ -338,17 +368,6 @@ type TokensListsLoaderData = {
   errorDetails?: string
 }
 
-// interface IAppMoveTokens2Props {
-//   // tokensLists: TTokensLists|null|undefined,
-//   // chainId: TChainId
-//   // changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
-// }
-
-
-// interface IContentProps {
-// }
-
-// React.Dispatch<React.SetStateAction<boolean>>
 type TreactSetState_boolean = React.Dispatch<React.SetStateAction<boolean>>;
 
 type TsetPreviousDisabled = TreactSetState_boolean;
@@ -361,9 +380,6 @@ type TsetTokensInstances = React.Dispatch<React.SetStateAction<TTokensInstances>
 // type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressString>>
 type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressEmpty>>
 
-
-type TsetShowProgressBar = TreactSetState_boolean;
-type TsetProgressBarPercentage = React.Dispatch<React.SetStateAction<number>>
 
 type TTokenLoadStatus = number;
 
@@ -425,20 +441,11 @@ interface ITransferAmountLock {
   ) : void;
 }
 
-interface ITF_ProgressBar {
-  showProgressBar: boolean;
-  progressPercentage: number;
-}
-
-interface ITF_ProgressBarColor {
-  progressPercentage: number;
-}
-
 interface ITF_ProgressContainer {
   previousDisabled: boolean;
   nextDisabled: boolean;
-  showProgressBar: boolean;
-  progressBarPercentage: number;
+  // showProgressBar: boolean;
+  // progressBarPercentage: number;
 }
 interface IAddressInputProps {
   sourceAddress: TAddressNullUndef,
@@ -453,8 +460,8 @@ interface IStepsContainerProps {
   chainId: TChainId
   setpreviousDisabled: TsetPreviousDisabled,
   setNextDisabled: TsetNextDisabled,
-  setShowProgressBar: TsetShowProgressBar
-  setProgressBarPercentage: TsetProgressBarPercentage
+  // setShowProgressBar: TsetShowProgressBar
+  // setProgressBarPercentage: TsetProgressBarPercentage
 }
 
 interface IStepErrorProps {
@@ -469,7 +476,7 @@ interface IStep0Props {
   setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
-  setShowProgressBar: TsetShowProgressBar,
+  // setShowProgressBar: TsetShowProgressBar,
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstances: TTokensInstances,
@@ -495,8 +502,8 @@ interface IStep1Props {
 interface IStep2Props {
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
-  setShowProgressBar: TsetShowProgressBar
-  setProgressBarPercentage: TsetProgressBarPercentage,
+  // setShowProgressBar: TsetShowProgressBar
+  // setProgressBarPercentage: TsetProgressBarPercentage,
   accountAddress: TAddressNullUndef,
   // chainId: ChainId;
   targetAddress: TAddressEmpty,
@@ -505,8 +512,8 @@ interface IStep2Props {
 }
 
 interface IStep3Props {
-  setShowProgressBar: TsetShowProgressBar
-  setProgressBarPercentage: TsetProgressBarPercentage
+  // setShowProgressBar: TsetShowProgressBar
+  // setProgressBarPercentage: TsetProgressBarPercentage
 }
 
 interface IChangeTokensListCheckboxStatus {
@@ -515,7 +522,7 @@ interface IChangeTokensListCheckboxStatus {
 
 interface ITokensListsSelectProps {
   tokensLists: TTokensLists|null|undefined,
-  // chainId: TChainId
+  chainId: TChainId
   // setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
@@ -574,7 +581,7 @@ interface ITokenProps {
   accountAddress: TAddressNullUndef;
   updateCheckboxStatus: IUpdateCheckboxStatus|null;
   updateTransferAmount: IUpdateTransferAmount|null;
-  updateTransferAmountLock: ITransferAmountLock;
+  updateTransferAmountLock: ITransferAmountLock|null;
   targetAddress: TAddressEmpty,
   enableEditable: boolean,
 }

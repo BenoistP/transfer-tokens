@@ -1,5 +1,5 @@
 // React
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // Components
 import TokenInstanceListFiltered from "@Components/TokenInstanceListFiltered";
@@ -12,21 +12,58 @@ import { useTranslation } from "react-i18next";
 import { ArrowPathRoundedSquareIcon, FunnelIcon } from '@heroicons/react/24/solid'
 
 const TokenInstanceListTableFiltered = (
-   {tokensInstances,
-    accountAddress,
-    // chainId, // , transferTokens,
-    enableCheckboxes,
-    targetAddress,
-    isError,
-    tokensInstancesListTablePropsHandlers
-  }: ITokensListTableFilteredProps )  =>
+    { tokensInstances,
+      accountAddress,
+      // chainId, // , transferTokens,
+      enableCheckboxes,
+      targetAddress,
+      isError,
+      tokensInstancesListTablePropsHandlers }: ITokensListTableFilteredProps )  =>
   {
 
   // console.log(`TokenInstanceListTableFiltered.tsx render chainId: ${chainId} accountAddress: ${accountAddress}`);
-  console.dir(tokensInstances)
+  // console.dir(tokensInstances)
 
   const { t } = useTranslation()
+  const [selectAllDisabled, setSelectAllDisabled] = useState(false)
 
+  // ---
+
+  useEffect( () =>
+    {
+      // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokensInstances] tokensInstances?.length: ${tokensInstances?.length}`)
+      // setSelectAllDisabled(!tokensInstances?.length)
+      if (tokensInstances?.length) {
+        const noneSelectable = tokensInstances.every( (tokenInstance) => {
+          // const notSelectable = ( !tokenInstance.selectable || !tokenInstance.userData[accountAddress as any]?.canTransfer || !tokenInstance.userData[targetAddress as any]?.canTransfer )
+          // console.debug(`selectable :${tokenInstance.selectable} accountAddress: ${tokenInstance.userData[accountAddress as any]?.canTransfer} targetAddress: ${tokenInstance.userData[targetAddress as any]?.canTransfer} notSelectable: ${notSelectable}`)
+          // return ( notSelectable )
+          return !tokenInstance.selectable
+        })
+        // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokenInstances] noneSelectable: ${noneSelectable}`)
+        setSelectAllDisabled(noneSelectable)
+      } else {
+        setSelectAllDisabled(true)
+      }
+    },
+    [tokensInstances, accountAddress, targetAddress]
+  )
+
+  // ---
+
+  useEffect( () =>
+    {
+      // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokensInstances] tokensInstances?.length: ${tokensInstances?.length}`)
+      // setSelectAllDisabled(!tokensInstances?.length)
+      if (selectAllDisabled && tokensInstancesListTablePropsHandlers.selectStates.selectAll) {
+        tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()
+        // tokensInstancesListTablePropsHandlers.updateHandlers.handleUnselectAll()
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectAllDisabled, tokensInstancesListTablePropsHandlers.selectStates, tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll]
+  )
+  
   // ---
 
   const TokenInstanceListFilteredMemo = useMemo(
@@ -37,10 +74,9 @@ const TokenInstanceListTableFiltered = (
         accountAddress={accountAddress}
         // updateCheckboxStatus={enableCheckboxes?updateCheckboxStatus:null}
         targetAddress={targetAddress}
-
         tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
-        />
-    , [tokensInstances, accountAddress, targetAddress, tokensInstancesListTablePropsHandlers]
+      />,
+      [tokensInstances, accountAddress, targetAddress, tokensInstancesListTablePropsHandlers]
   );
 
   // ---
@@ -62,9 +98,6 @@ const TokenInstanceListTableFiltered = (
         console.error(`countSelected error: ${error}`);
         return selectedCount;
       }
-      // finally {
-      // }
-      
     }
   //   ,
   //   [/* accountAddress, */ tokensInstances]
@@ -87,10 +120,6 @@ const TokenInstanceListTableFiltered = (
         console.error(`countDisplayed error: ${error}`);
         return displayedCount;
       }
-      // finally {
-        // return displayedCount;
-      // }
-      
     }
   //   ,
   //   [/* accountAddress, */ tokensInstances]
@@ -98,7 +127,7 @@ const TokenInstanceListTableFiltered = (
 
   // ---
 
-  const clsIconBigInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ((tokensInstances?.length||0) === 0? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
+  const clsIconBigInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
   const clsIcon = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2' 
 
   // ---
@@ -150,14 +179,14 @@ const TokenInstanceListTableFiltered = (
                     <input type="checkbox" className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
                       checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
                       onChange={(/* e */)=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
-                      disabled={!tokensInstances?.length}
+                      disabled={selectAllDisabled}
                       />
                   </label>
                 </td>
                 <td className="p-2">
                   <label>
                     {/* INVERT ALL checkbox */}
-                    <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks} />
+                    <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
                   </label>
                 </td>
 

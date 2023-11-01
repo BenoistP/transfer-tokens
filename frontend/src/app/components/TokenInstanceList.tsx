@@ -32,9 +32,11 @@ const TokenInstanceList = ( {
               <TokenInstance
                 tokenInstance={tokenInstance}
                 accountAddress={accountAddress}
-                updateCheckboxStatus={null}
                 targetAddress={targetAddress}
                 enableEditable={false}
+                updateCheckboxStatus={null}
+                updateTransferAmount={null}
+                updateTransferAmountLock={null}
               />
             </tr>
           )
