@@ -12,6 +12,7 @@ export default defineConfig({
     port: 8000, // serve BUILD
     strictPort: true,
     open: false,
+    host: true
   },
   server: {
     port: 3000, // dev
