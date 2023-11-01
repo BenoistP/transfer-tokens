@@ -8,7 +8,7 @@
   "moveTokens" :
   {
     "warnings": {
-      "connectawallet": "Connecter un wallet",
+      "connectawallet": "Connecter ou déverrouiller un portefeuille",
       "wrongchain": "Les chaînes supportées sont: Ethereum ou Gnosis"
     },
     "common": {

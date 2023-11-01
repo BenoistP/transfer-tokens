@@ -3,14 +3,15 @@
 // ------------------------------
 
 
-const Step3 = ( { setShowProgressBar, setProgressBarPercentage }: IStep3Props ) => {
+// const Step3 = ( { setShowProgressBar, setProgressBarPercentage }: IStep3Props ) => {
+const Step3 = ( ) => {
 
   console.debug(`Step3.tsx render`)
  
   // ---
 
-  setShowProgressBar(true)
-  setProgressBarPercentage(0)
+  // setShowProgressBar(true)
+  // setProgressBarPercentage(0)
 
   // ---
 

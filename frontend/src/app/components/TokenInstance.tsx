@@ -61,9 +61,9 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress,
   // const tokenInstanceID = tokenInstance.chainId+"-"+tokenInstance.address
   // const [loadStatus, setStatus] = useState("Ok")
   // DEBUG
-  if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197") {
-    console.debug(`TokenInstance.tsx RENDER`);
-  }
+  // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197") {
+  //   console.debug(`TokenInstance.tsx RENDER`);
+  // }
 
   // ---
 
@@ -285,8 +285,8 @@ const TokenInstance = ( { tokenInstance, accountAddress, targetAddress,
         setisCheckboxDisabled(false)
       }
 
-      if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-      {console.debug(`TokenInstance.tsx useEffect [...] EN/DIS/ABLE CHECKBOX`)}
+      // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
+      // {console.debug(`TokenInstance.tsx useEffect [...] EN/DIS/ABLE CHECKBOX`)}
     }, // X eslint-disable-next-line react-hooks/exhaustive-deps
     [ accountAddress, targetAddress, tokenInstance.selectable,
       tokenInstance.userData,
