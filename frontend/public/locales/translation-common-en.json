@@ -8,7 +8,7 @@
   "moveTokens": {
 
     "warnings": {
-      "connectawallet": "Please connect a wallet",
+      "connectawallet": "Please connect or unlock your wallet",
       "wrongchain": "Please switch to a supported chain: Ethereum or Gnosis"
     },
     "common": {
