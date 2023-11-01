@@ -272,7 +272,8 @@ const TokensListsSelect = ( {
 
   // ---
 
-  const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ((selectableTokensLists?.length||0) === 0? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
+  const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
+   + ( ((selectableTokensLists?.length||0)=== 0) ? "fill-base-content opacity-10 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
 
   // ---
 
@@ -293,7 +294,6 @@ const TokensListsSelect = ( {
                     <input type="checkbox" className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
                       checked={checkAll}
                       onChange={handleCheckSelectAll}
-                      // disabled={(selectableTokensLists?.length||0) === 0}
                       disabled={isCheckAllDisabled}
                     />
                   </label>
