@@ -30,6 +30,7 @@ export const MainContent = ( ) => {
     // ---
 
     useEffect(() => {
+      console.dir(tokenListsData)
       setTokensLists(tokenListsData) // Set inital token list data
     }, [])
 
