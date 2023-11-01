@@ -1,5 +1,5 @@
 // React
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // Components
 import TokenInstanceListFiltered from "@Components/TokenInstanceListFiltered";
@@ -12,20 +12,42 @@ import { useTranslation } from "react-i18next";
 import { ArrowPathRoundedSquareIcon, FunnelIcon } from '@heroicons/react/24/solid'
 
 const TokenInstanceListTableFiltered = (
-   {tokensInstances,
-    accountAddress,
-    // chainId, // , transferTokens,
-    enableCheckboxes,
-    targetAddress,
-    isError,
-    tokensInstancesListTablePropsHandlers
-  }: ITokensListTableFilteredProps )  =>
+    { tokensInstances,
+      accountAddress,
+      // chainId, // , transferTokens,
+      enableCheckboxes,
+      targetAddress,
+      isError,
+      tokensInstancesListTablePropsHandlers }: ITokensListTableFilteredProps )  =>
   {
 
   // console.log(`TokenInstanceListTableFiltered.tsx render chainId: ${chainId} accountAddress: ${accountAddress}`);
   // console.dir(tokensInstances)
 
   const { t } = useTranslation()
+  const [selectAllDisabled, setSelectAllDisabled] = useState(false)
+
+  // ---
+
+  useEffect( () =>
+    {
+      // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokensInstances] tokensInstances?.length: ${tokensInstances?.length}`)
+      // setSelectAllDisabled(!tokensInstances?.length)
+      if (tokensInstances?.length) {
+        const noneSelectable = tokensInstances.every( (tokensInstance) => {
+          const notSelectable = ( !tokensInstance.selectable || !tokensInstance.userData[accountAddress as any]?.canTransfer || !tokensInstance.userData[targetAddress as any]?.canTransfer )
+          // console.debug(`selectable :${tokensInstance.selectable} accountAddress: ${tokensInstance.userData[accountAddress as any]?.canTransfer} targetAddress: ${tokensInstance.userData[targetAddress as any]?.canTransfer} notSelectable: ${notSelectable}`)
+          return ( notSelectable )
+        })
+        // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokensInstances] noneSelectable: ${noneSelectable}`)
+        setSelectAllDisabled(noneSelectable)
+
+      } else {
+        setSelectAllDisabled(true)
+      }
+    },
+    [tokensInstances, accountAddress, targetAddress]
+  )
 
   // ---
 
@@ -37,10 +59,9 @@ const TokenInstanceListTableFiltered = (
         accountAddress={accountAddress}
         // updateCheckboxStatus={enableCheckboxes?updateCheckboxStatus:null}
         targetAddress={targetAddress}
-
         tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
-        />
-    , [tokensInstances, accountAddress, targetAddress, tokensInstancesListTablePropsHandlers]
+      />,
+      [tokensInstances, accountAddress, targetAddress, tokensInstancesListTablePropsHandlers]
   );
 
   // ---
@@ -62,9 +83,6 @@ const TokenInstanceListTableFiltered = (
         console.error(`countSelected error: ${error}`);
         return selectedCount;
       }
-      // finally {
-      // }
-      
     }
   //   ,
   //   [/* accountAddress, */ tokensInstances]
@@ -87,10 +105,6 @@ const TokenInstanceListTableFiltered = (
         console.error(`countDisplayed error: ${error}`);
         return displayedCount;
       }
-      // finally {
-        // return displayedCount;
-      // }
-      
     }
   //   ,
   //   [/* accountAddress, */ tokensInstances]
@@ -150,7 +164,7 @@ const TokenInstanceListTableFiltered = (
                     <input type="checkbox" className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
                       checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
                       onChange={(/* e */)=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
-                      disabled={!tokensInstances?.length}
+                      disabled={selectAllDisabled}
                       />
                   </label>
                 </td>
