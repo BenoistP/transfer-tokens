@@ -44,7 +44,7 @@ https://play.tailwindcss.com/OPAsySKNCd
 
 ☑️ Error handling
 ☑️ 🚧 Move tokens 🏠🏡
-🗒 🚧 progressive list loading
+☑️ progressive list loading
 
 
 All Steps : 🚧 
@@ -56,17 +56,18 @@ All Steps : 🚧
 Step 0: 🚧
 - ☑️ check transferability for connected account
 - 🚧 Watch for balances changes 👀
-- 𓆣 Ethereum data is not loaded ?
-- 🚧 Add loading indicator when loading tokens lists
+- ☑️ Ethereum data is not loaded
+- ☑️ Add loading indicator when loading tokens lists
+- Error handling
 
 Step 2: 🚧 
 - ☑️ Fix list loading bug/missing icons (all/none & lock)
-- Update transfer amount
+- ☑️ Update transfer amount
 - display target address
 - ☑️ Sort tokens: ☑️ by Id  ☑️ By Name  ☑️ by Balance
 - ☑️ fix tokens numbering in lists (filtering changes numbers)
 - ☑️ Unselect token on target address change (if not transferrable)
-- 🚧 Keep transfer amount and lock state between screens
+- ☑️ Keep transfer amount and lock state between screens
 
 
 

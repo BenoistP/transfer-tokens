@@ -1,9 +1,7 @@
 // React
 import { useCallback } from "react";
-
 // Translation
 import { useTranslation } from "react-i18next"
-
 // Icons
 import { QuestionMarkCircleIcon  } from '@heroicons/react/24/solid'
 
@@ -11,17 +9,13 @@ import { QuestionMarkCircleIcon  } from '@heroicons/react/24/solid'
 
 const SelectableTokensList = ( { selectableTokensList, changeTokensListCheckboxStatus }: ISelectableTokensListProps ) => {
 
-  // console.debug(`SelectableTokensList.tsx render `)
-  // console.debug(`selectableTokensListtokensList?.name=${selectableTokensList.tokensList?.name}`)
-
-  const iconCls = "fill-base-content w-6 h-6 sm:w-10 sm:h-10   ";
+  const iconCls = "fill-base-content w-6 h-6 sm:w-10 sm:h-10";
   const { t } = useTranslation()
 
   // ---
 
   const handleCheckboxClick = useCallback( () =>
     {
-      // console.debug(`RealTokenInstance.tsx: handleCheckboxClick( id:${id} )`)
       const id:TTokensListId = selectableTokensList.tokensList?.id;
       changeTokensListCheckboxStatus(id);
     },
@@ -32,7 +26,6 @@ const SelectableTokensList = ( { selectableTokensList, changeTokensListCheckboxS
 
   return (
     <>
-
       <th>
         <label>
           <input type="checkbox"
@@ -89,8 +82,6 @@ const SelectableTokensList = ( { selectableTokensList, changeTokensListCheckboxS
       <th>
         <button className="btn btn-ghost btn-xs">{t("moveTokens.stepZero.tokensListsTable.details")}</button>
       </th>
-
-
     </>
   );
 }
