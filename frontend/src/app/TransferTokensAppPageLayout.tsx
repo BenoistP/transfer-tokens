@@ -58,12 +58,31 @@ const testnetChains = [
     testnetChains.forEach( () => {
       testnetChainsProviders.push(publicProvider());
     });
+    // const mainnetChainsProviders:any = [
+    //   infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA||"" }), // Ethereum
+    //   alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY||"" }), // Gnosis
+    //   publicProvider(),
+    //  ];
     const mainnetChainsProviders:any = [
-      infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA||"" }), // Ethereum
-      alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY||"" }), // Gnosis
-      publicProvider(),
+      // infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA||"" }), // Ethereum
+      // alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY||"" }), // Gnosis
+      // publicProvider(),
      ];
 
+    //  infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA||"" }), // Ethereum
+    //  alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY||"" }), // Gnosis
+    //  publicProvider(),
+
+    mainnetChains?.forEach( (/* chain */) => {
+      if (import.meta.env.APIKEY_ALCHEMY||"") {
+        mainnetChainsProviders.push(alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY||"" }), // Gnosis
+        );
+      } else if (import.meta.env.APIKEY_INFURA||"") {
+        mainnetChainsProviders.push(infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA||"" }), // Ethereum
+        );
+      }
+    });
+    mainnetChainsProviders.push(publicProvider());
 
     const { chains, publicClient } = configureChains(
       [ ...mainnetChains,
