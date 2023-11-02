@@ -6,7 +6,7 @@ import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
 // Utils
 import { isChainSupported } from "@jsutils/blockchainUtils";
-import { /* tokenListsData */getTokenLists } from '@jsutils/tokensLists';
+import { getTokenLists } from '@jsutils/tokensLists';
 // Translation
 import { useTranslation } from "react-i18next";
 // Wagmi
@@ -51,9 +51,6 @@ export const MainContent = ( ) => {
     {
 
       const initTokensLists = async () => {
-        // const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms))
-        // await sleep(5_000) // Wait for the chain to be set
-        // throw new Error("initTokensLists error")
         const tokenLists = await getTokenLists()
         setTokensLists(tokenLists) // Set inital token list data
       }
@@ -121,15 +118,7 @@ export const MainContent = ( ) => {
                         tokensLists={tokensLists}
                         chainId={chain?.id}
                         setpreviousDisabled={setpreviousDisabled} setNextDisabled={setNextDisabled}
-                        // isLoading={isLoading} setisLoading={setisLoading} isError={isError} setisError={setisError}
-                        // isLoadingTokensLists={isLoadingTokensLists} // setisLoadingTokensLists={setisLoadingTokensLists}
-                        // isErrorTokensLists={isErrorTokensLists} // setisErrorTokensLists={setisErrorTokensLists}
-                        
-                        // isLoadingTokensLists={setStateLoadingTokensists} isErrorTokensLists={setStateIsErrorTokensLists}
                         isLoadingTokensLists={isLoadingTokensLists} isErrorTokensLists={isErrorTokensLists}
-                        
-
-                        // isError={isError} setisError={setisError}
                         // setShowProgressBar={setshowProgressBar} setProgressBarPercentage={setprogressBarPercentage}
                       />
                     </div>
