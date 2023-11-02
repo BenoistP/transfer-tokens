@@ -14,7 +14,8 @@ const Step0 = (  {
     selectableTokensLists,
     setselectableTokensLists,
     tokensInstances,
-    isLoading, isError,
+    isLoadingTokensLists, isErrorTokensLists,
+    isLoadingTokensInstances, isErrorTokensInstances,
     tokensInstancesListTablePropsHandlers
     } :IStep0Props ) =>
 {
@@ -22,8 +23,6 @@ const Step0 = (  {
   // ---
 
   // console.debug(`Step0.tsx render`)
-
-
   const someTokensListsSelected = selectableTokensLists?.some ( (tokensList) => tokensList.selected ) || false
 
   // ---
@@ -45,11 +44,9 @@ const Step0 = (  {
       // setNextDisabled(!tokenChainDataArray || tokenChainDataArray.length <= 0)
       // const someTokensListsSelected = selectableTokensLists?.some ( (tokensList) => tokensList.selected )
       // console.log(`Step0.tsx useEffect: someSelected=${someSelected}`);
-      setNextDisabled(!someTokensListsSelected || isError)
+      setNextDisabled(!someTokensListsSelected || isLoadingTokensLists || isErrorTokensLists)
     },
-    [ setNextDisabled, someTokensListsSelected, isError
-      // selectableTokensLists,
-    ]
+    [setNextDisabled, someTokensListsSelected, isLoadingTokensLists, isErrorTokensLists]
   )
 
 // ------------------------------
@@ -64,7 +61,7 @@ const Step0 = (  {
               chainId={chainId}
               selectableTokensLists={selectableTokensLists}
               setselectableTokensLists={setselectableTokensLists}
-              isLoading={isLoading} isError={isError}
+              isLoading={isLoadingTokensLists} isError={isErrorTokensLists}
             />
           </div>
 
@@ -77,7 +74,7 @@ const Step0 = (  {
                 accountAddress={accountAddress}
                 // chainId={chainId}
                 targetAddress={targetAddress}
-                isLoading={isLoading} isError={isError}
+                isLoading={isLoadingTokensInstances} isError={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
               />
 

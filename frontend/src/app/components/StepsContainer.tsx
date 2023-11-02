@@ -643,16 +643,14 @@ const StepsContainer = ( {
 
   const setStateLoadingTokensInstances = useCallback( (isLoading:boolean) =>
     {
-      console.debug(`StepsContainer.tsx setStateLoadingTokensInstances isLoading: ${isLoading}`);
       setisLoadingTokensInstances(isLoading)
     }, []
   )
 
-  // // ---
+  // ---
 
   const setStateErrorLoadingTokensInstances = useCallback( (isError:boolean) =>
     {
-      console.debug(`StepsContainer.tsx setStateErrorLoadingTokensInstances isError: ${isError}`);
       setisErrorTokensInstances(isError)
     }, []
   )
@@ -1577,7 +1575,6 @@ const StepsContainer = ( {
         })
         // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: newSelectedChainsTokensList.length = ${newSelectedChainsTokensList?.length}, newSelectedChainsTokensList[]=`)
         // console.dir(newSelectedChainsTokensList)
-          setStateLoadingTokensInstances(true)
 
         // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: newSelectedChainsTokensList to TTokenChainDataArray`)
         if (newSelectedChainsTokensList.length > 0) {
@@ -1776,8 +1773,10 @@ const StepsContainer = ( {
                 tokensInstances={tokensInstances}
                 chainId={chainId}
                 // isLoading={isLoading} isError={isError}
-                isLoading={isLoadingTokensLists}
-                isError={isErrorTokensLists}
+                isLoadingTokensLists={isLoadingTokensLists}
+                isErrorTokensLists={isErrorTokensLists}
+                isLoadingTokensInstances={isLoadingTokensInstances}
+                isErrorTokensInstances={isErrorTokensInstances}
 
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
               />

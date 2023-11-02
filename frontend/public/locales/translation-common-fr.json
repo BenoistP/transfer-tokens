@@ -20,7 +20,13 @@
       "previous": "Précédent",
       "next": "Suivant"
     },
-
+    "stepAny": {
+      "tokensTable" : {
+        "loadingTokens": "Chargement",
+        "errorLoadingTokens": "Erreur de chargement des tokens",
+        "noTokens": "Aucun token trouvé"
+      }
+    },
     "stepZero": {
       "title": "Choisir des listes de tokens",
       "titleStep": "Listes de tokens",
@@ -33,7 +39,6 @@
         "details": "Détails"
       }
     },
-
     "stepOne": {
       "title": "Sélectionner une adresse destinataire",
       "titleStep": "Destinataire",
@@ -75,9 +80,7 @@
             "tokenAmount": "Montant",
             "tokenInfo": "Info."
           }
-        },
-        "errorLoadingTokens": "Erreur lors du chargement",
-        "empty": "Aucun token trouvé"
+        }
       },
       "token": {
         "canTransferFrom": "Transfert (envoi) autorisé DEPUIS cette addresse",

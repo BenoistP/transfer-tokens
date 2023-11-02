@@ -19,6 +19,13 @@
       "previous": "Previous",
       "next": "Next"
     },
+    "stepAny": {
+      "tokensTable" : {
+        "loadingTokens": "Loading tokens",
+        "errorLoadingTokens": "Error loading tokens",
+        "noTokens": "No token found"
+      }
+    },
     "stepZero": {
       "title": "Select token lists",
       "titleStep": "Token lists",
@@ -26,7 +33,7 @@
         "listName": "Name",
         "listDescription": "Description",
         "loadingTokensLists": "Loading tokens lists",
-        "emptyTokensLists": "No token list found",
+        "noTokensLists": "No token list found",
         "errorLoadingTokensLists": "Error loading tokens list",
         "details": "Details"
       }
@@ -73,9 +80,7 @@
             "tokenAmount": "Amount",
             "tokenInfo": "Info."
           }
-        },
-        "errorLoadingTokens": "Error loading tokens",
-        "empty": "No token found"
+        }
       },
       "token": {
         "canTransferFrom": "Can transfer (send) this token FROM this address",

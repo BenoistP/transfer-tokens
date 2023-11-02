@@ -8,7 +8,6 @@ import { getChainTokensList } from "@jsutils/tokensListsUtils"
 import { ArrowPathRoundedSquareIcon } from '@heroicons/react/24/solid'
 // Translation
 import { useTranslation } from "react-i18next"
-
 // Icons
 import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
 
@@ -259,7 +258,6 @@ const TokensListsSelect = ( {
                 <td colSpan={2}>
                 {
                 isError ?
-
                   <div className="flex justify-center text-error font-semibold pt-2 text-md sm:text-base md:text-xl">
                       <div className="pt-0 pr-3 ">
                       {t('moveTokens.stepZero.tokensListsTable.errorLoadingTokensLists')}
@@ -268,23 +266,18 @@ const TokensListsSelect = ( {
                         <ExclamationCircleIcon className={clsIcon} />
                       </div>
                   </div>
-
                 :
-
                   isLoading ?
-
                     <div className="flex justify-center text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
                         <div className="pt-0 pr-3 ">
                         {t('moveTokens.stepZero.tokensListsTable.loadingTokensLists')}
                         </div>
                         <div className="loading loading-dots loading-sm md:loading-md lg:loading-lg"/>
                     </div>
-
                   :
-
                     <div className="flex justify-center text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
                       <div className="pt-0 pr-3 ">
-                        {t('moveTokens.stepZero.tokensListsTable.emptyTokensLists')}
+                        {t('moveTokens.stepZero.tokensListsTable.noTokensLists')}
                       </div>
                       <div className="pt-0">
                         <InformationCircleIcon className={clsIcon} />
