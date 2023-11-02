@@ -15,6 +15,8 @@ enum EChainTokensListLoadState {
 
 // Types to remove ->
 
+
+
 interface ITF_ProgressBar {
   showProgressBar: boolean;
   progressPercentage: number;
@@ -22,17 +24,6 @@ interface ITF_ProgressBar {
 
 // interface ITF_ProgressBarColor {
 //   progressPercentage: number;
-// }
-
-
-// interface IAppMoveTokens2Props {
-//   // tokensLists: TTokensLists|null|undefined,
-//   // chainId: TChainId
-//   // changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
-// }
-
-
-// interface IContentProps {
 // }
 
 // type TsetShowProgressBar = TreactSetState_boolean;
@@ -146,8 +137,6 @@ type TTokensListKeywords = TNullableStringArray|TNullUndef;
 type TTokensLists = TTokensList[]|TNullUndef;
 type TTokensListType = "URI"|"META-URI"|"API"
 type TChainIdArray = TChainId[]|TNullUndef;
-// type TTokensListChainIds = TChainId|TChainId[]|"auto-detect"|TNullUndef;
-// type TTokensListChainIds = TChainIdArray // |"auto-detect"|TNullUndef;
 type TChainId = number;
 type TChainIdNullUndef = TChainId|TNullUndef;
 
@@ -157,12 +146,6 @@ type TTokensListError = TStringNullUndef;
 type TTokensListId = string;
 
 type TI18NString = string;
-
-// export enum EnumTokensListStatus {
-//   Orange = "Orange",
-//   Apple  = "Apple",
-//   Banana = "Banana"
-// }
 
 type TtokenCount = number;
 
@@ -182,18 +165,6 @@ type TSelectableTokensList = {
   selected: boolean,
   currentChainTokensCount: TtokenCount,
 }
-
-// type TChainTokensList = {
-//   tokensList: TTokensList,
-//   chainId: TChainId,
-// }
-
-
-// type TTokensListMetaLists = TTokensLists
-
-// type TTokensListMeta = {
-//   lists: TTokensListMetaLists,
-// }
 
 type TTokensListMetaInfoGenerationMethod = string;
 
@@ -258,53 +229,12 @@ type TChainTokensList = {
   loadState: EChainTokensListLoadState,
 }
 
-// enum EChainTokensListLoadState {
-//   notLoaded = 0,
-//   contracts = 1,
-//   sourceBalances = 2,
-//   decimals = 3,
-//   names = 4,
-//   symbols = 5,
-//   targetBalances = 6,
-//   transferAbility = 7,
-//   // watchTransfers = 8, // TODO
-// }
-
-/*
-type TFilteredTokensListsNullUndef = TFilteredTokensList[]|TNullUndef;
-
-type TFilteredTokensList = {
-  id: TTokensListId,
-  name: TStringNullUndef, // RealTokens, Coingecko Ethereum, Coingecko Gnosis
-  description: TStringNullUndef,
-  version?: TTokensListVersion,
-  timestamp: TTimeStamp,
-  source?: TStringNullUndef, // Coingecko, RealT
-  keywords?: TTokensListKeywords, // [ "default", "list", "cowswap" ]
-  type: TTokensListType,
-  // chains: TTokensListChainIds,
-  chainId: TChainId,
-  chainTokenCount?: TtokenCount, // total for chain
-  URI: TTokenListUri,
-  // summaryURI?: TTokenListUri,
-  // status: TTokensListStatus,
-  // error?: TTokensListError,
-  
-  // // metaUri: TTokenListUri,
-  logoURI?: TTokenList_TokensListImageUri,
-  tokens: TTokenChainDataArray,
-  // // tokens: TTokensList_TokenData
-  // lists?: TTokensMetaLists,
-  listCount?: number, // total all chains included
-}
-*/
 type TMetaTokensListUri = {
   URI: TTokenListUri,
   sha: TSha,
 }
 
 type TTokenListUri = TStringNullUndef;
-// type TTokenListImageUri = TStringNullUndef;
 type TTokenList_TokensListImageUri = TStringNullUndef;
 type TTokenList_TokenImageUri = TStringNullUndef;
 
@@ -324,7 +254,7 @@ type TTokenBasicData = {
   decimals: TTokenDecimals;
 }
 
-type TTokenType = "ERC20"|"COINBRIDGE" // |"ERC721"|"ERC1155"|"ERC777"|"ERC721Deprecated"|"E
+type TTokenType = "ERC20"|"COINBRIDGE"
 type TTokenExtraData = {
   type: TTokenType;
   totalSupply: TTokenSupply;
@@ -373,16 +303,13 @@ type TreactSetState_boolean = React.Dispatch<React.SetStateAction<boolean>>;
 type TsetPreviousDisabled = TreactSetState_boolean;
 type TsetNextDisabled = TreactSetState_boolean;
 
-// type TsetSelectedTokensChainDataArray = React.Dispatch<React.SetStateAction<TTokenChainDataArray>>;
 
 type TsetSelectableTokensLists = React.Dispatch<React.SetStateAction<TSelectableTokensLists>>;
 type TsetTokensInstances = React.Dispatch<React.SetStateAction<TTokensInstances>>;
-// type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressString>>
 type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressEmpty>>
 
 
 type TTokenLoadStatus = number;
-
 
 type TTokensInstances = TTokenInstance[]|TNullUndef;
 
@@ -406,16 +333,12 @@ type TTokenInstance = {
   selected: boolean,
   transferAmount: TTokenAmount;
   transferAmountLock: boolean;
-  userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings
+  userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x...)
 }
 
 
 type TTokenInstanceUserData = {
-  // user interface data
-  // selected: boolean;
-  // user data
   balance: TTokenAmount | null// | undefined;
-  // transferAmount: TTokenAmount;
   canTransfer: boolean;
 }
 
@@ -449,7 +372,6 @@ interface ITF_ProgressContainer {
 }
 interface IAddressInputProps {
   sourceAddress: TAddressNullUndef,
-  // targetAddress: TAddressString,
   targetAddress: TAddressEmpty,
   settargetAddress:TsettargetAddress
 }
@@ -460,6 +382,8 @@ interface IStepsContainerProps {
   chainId: TChainId
   setpreviousDisabled: TsetPreviousDisabled,
   setNextDisabled: TsetNextDisabled,
+  isErrorTokensLists: boolean,
+  isLoadingTokensLists : boolean,
   // setShowProgressBar: TsetShowProgressBar
   // setProgressBarPercentage: TsetProgressBarPercentage
 }
@@ -481,8 +405,13 @@ interface IStep0Props {
   targetAddress: TAddressEmpty,
   tokensInstances: TTokensInstances,
   chainId: ChainId;
-  isLoading: boolean,
-  isError: boolean,
+
+  isLoadingTokensLists: boolean,
+  isErrorTokensLists: boolean,
+
+  isLoadingTokensInstances: boolean,
+  isErrorTokensInstances: boolean,
+
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -526,6 +455,8 @@ interface ITokensListsSelectProps {
   // setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
+  isLoading: boolean,
+  isError: boolean,
 }
 
 interface ISelectableTokensListsProps
@@ -675,7 +606,5 @@ interface ITokensListTableFilteredProps {
   enableCheckboxes: boolean;
   targetAddress: TAddressEmpty,
   isError: boolean,
-
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
-
 }

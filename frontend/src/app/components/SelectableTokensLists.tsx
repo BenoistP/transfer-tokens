@@ -14,26 +14,26 @@ const SelectableTokensLists = ( {
 
 // ------------------------------
 
-return (
-  <>
-    {
-      selectableTokensLists?.map( (selectableTokensList:TSelectableTokensList, index:number) =>
+  return (
+    <>
       {
-        const key = `${index}-${selectableTokensList?.tokensList?.id}`;
-        return (
-          <tr className=" "
-            key={key}
-          >
-            <SelectableTokensList
-                selectableTokensList={selectableTokensList}
-                changeTokensListCheckboxStatus={changeTokensListCheckboxStatus}
-            />
-          </tr>
-        )
-      })
-    }
-  </>
-)
+        selectableTokensLists?.map( (selectableTokensList:TSelectableTokensList, index:number) =>
+        {
+          const key = `${index}-${selectableTokensList?.tokensList?.id}`;
+          return (
+            <tr className=" "
+              key={key}
+            >
+              <SelectableTokensList
+                  selectableTokensList={selectableTokensList}
+                  changeTokensListCheckboxStatus={changeTokensListCheckboxStatus}
+              />
+            </tr>
+          )
+        })
+      }
+    </>
+  )
 
 }
 

@@ -1,12 +1,8 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react'
-// import {
-//   AvatarComponent,
-// } from '@rainbow-me/rainbowkit';
-// import { useTranslation } from "react-i18next";
-
 // Avatars
 import { createAvatar } from '@dicebear/core';
 import { identicon } from '@dicebear/collection';
+// Icons
 import { LockClosedIcon } from '@heroicons/react/24/solid'
 
 const GlobalAppContext = createContext<TGlobalAppContext>(
@@ -28,9 +24,9 @@ const GlobalAppContext = createContext<TGlobalAppContext>(
 GlobalAppContext.displayName = 'GlobalApp_Context'
 
 const GlobalAppProvider = ( { children }:any ) => {
-  // const { i18n } = useTranslation()
+
   const lockAvatar = useMemo(() => {
-    return <LockClosedIcon className="w-6 h-6 text-primary base-content" />
+    return <LockClosedIcon className="w-6 h-6 sm:w-8 sm:h-8 text-base-content text-xs" />
     }, [])
 
   const initialGlobalAppData: TGlobalAppDataContext = {
@@ -44,7 +40,6 @@ const GlobalAppProvider = ( { children }:any ) => {
 
   const avatarImgUri = useCallback((/* _address:Address */) =>
   {
-    // console.debug(`GlobalAppProvider: useCallback: avatarImgUri globalAppData.address=${globalAppData.address}`);
     return createAvatar(identicon, {
       seed: (globalAppData.address?globalAppData.address:(defaultAvatarAddress)),
       size: 128,
@@ -54,36 +49,32 @@ const GlobalAppProvider = ( { children }:any ) => {
   [globalAppData.address])
 
   const DefaultAvatarComponent = useCallback( () => 
-    <div className='flex justify-center items-center'>
+    <div className='flex justify-center items-center transition-all duration-300 ease-in-out'>
         {lockAvatar}
     </div>,
     [lockAvatar]
   );
 
   const ImgAvatarComponent = useCallback( () => 
-    <div className='flex justify-center items-center'>
+    <div className='flex justify-center items-center transition-all duration-300 ease-in-out'>
         <img src={avatarImgUri()} alt='avatar' />
     </div>,
     [avatarImgUri]
   )
 
   const AvatarComponent = useMemo(() => {
-    // console.debug(`GlobalAppProvider: useCallback: AvatarComponent globalAppData.address=${globalAppData.address}`);
     return (
       globalAppData.address?
         ImgAvatarComponent
       :
         DefaultAvatarComponent
       );
-    // return undefined
   },
   [globalAppData.address, DefaultAvatarComponent, ImgAvatarComponent])
 
 
-  const globalAppDataHandlers = useMemo( () => ({
-
-  // const globalAppDataHandlers = {
-    
+  const globalAppDataHandlers = useMemo( () =>
+    ({
       getLanguage: () => {
         return globalAppData.language;
       },
@@ -114,8 +105,6 @@ const GlobalAppProvider = ( { children }:any ) => {
     }),
     [AvatarComponent, globalAppData.address, globalAppData.language]
   ) // globalAppDataHandlers
-
-  // } // globalAppDataHandlers
 
   return (
     <GlobalAppContext.Provider value={{globalAppData:globalAppData, globalAppDataHandlers:globalAppDataHandlers}}>
