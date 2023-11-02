@@ -460,6 +460,17 @@ interface IStepsContainerProps {
   chainId: TChainId
   setpreviousDisabled: TsetPreviousDisabled,
   setNextDisabled: TsetNextDisabled,
+  // isError: boolean,
+  // setisError: TreactSetState_boolean,
+  // isLoading : boolean,
+  // setisLoading: TreactSetState_boolean,
+
+  isErrorTokensLists: boolean,
+  // setisErrorTokensLists: TreactSetState_boolean,
+  isLoadingTokensLists : boolean,
+  // setisLoadingTokensLists: TreactSetState_boolean,
+
+
   // setShowProgressBar: TsetShowProgressBar
   // setProgressBarPercentage: TsetProgressBarPercentage
 }
@@ -526,6 +537,8 @@ interface ITokensListsSelectProps {
   // setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
+  isLoading: boolean,
+  isError: boolean,
 }
 
 interface ISelectableTokensListsProps

@@ -26,7 +26,7 @@ GlobalAppContext.displayName = 'GlobalApp_Context'
 const GlobalAppProvider = ( { children }:any ) => {
 
   const lockAvatar = useMemo(() => {
-    return <LockClosedIcon className="w-6 h-6 text-primary base-content" />
+    return <LockClosedIcon className="w-6 h-6 sm:w-8 sm:h-8 text-base-content text-xs" />
     }, [])
 
   const initialGlobalAppData: TGlobalAppDataContext = {
@@ -49,14 +49,14 @@ const GlobalAppProvider = ( { children }:any ) => {
   [globalAppData.address])
 
   const DefaultAvatarComponent = useCallback( () => 
-    <div className='flex justify-center items-center'>
+    <div className='flex justify-center items-center transition-all duration-300 ease-in-out'>
         {lockAvatar}
     </div>,
     [lockAvatar]
   );
 
   const ImgAvatarComponent = useCallback( () => 
-    <div className='flex justify-center items-center'>
+    <div className='flex justify-center items-center transition-all duration-300 ease-in-out'>
         <img src={avatarImgUri()} alt='avatar' />
     </div>,
     [avatarImgUri]

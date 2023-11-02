@@ -34,6 +34,12 @@ const StepsContainer = ( {
   tokensLists,
   chainId,
   setpreviousDisabled, setNextDisabled,
+  // isError, setisError,
+  // isLoading, setisLoading,
+  isLoadingTokensLists,
+  isErrorTokensLists,
+  // setisErrorTokensLists,
+  // setisLoadingTokensLists,
   // setShowProgressBar, setProgressBarPercentage,
  } :IStepsContainerProps ) => {
 
@@ -52,9 +58,11 @@ const StepsContainer = ( {
 
   const [targetAddress, settargetAddress] = useState<TAddressEmpty>("")
 
-  const [isLoading, setisLoading] = useState<boolean>(false)
-  // const [loadStep, setloadStep] = useState<ESLoadtate>(ESLoadtate.notLoaded)
-  const [isError, setisError] = useState(false)
+  // const [isLoading, setisLoading] = useState<boolean>(false)
+  // const [isError, setisError] = useState(false)
+
+  const [isLoadingTokensInstances, setisLoadingTokensInstances] = useState<boolean>(false)
+  const [isErrorTokensInstances, setisErrorTokensInstances] = useState(false)
 
   // Sorting
   const [sortOrderTokenDisplayId, setsortOrderTokenDisplayId] = useState<TsortOrder>(0) // 0: unsorted, 1: lowest first , 2 highest first
@@ -631,21 +639,21 @@ const StepsContainer = ( {
   //   [setProgressBarPercentage]
   // )
 
-  // ---
+  // // ---
 
-  const setLoadingDataState = useCallback( (isLoading:boolean) =>
+  const setStateLoadingTokensInstances = useCallback( (isLoading:boolean) =>
     {
-      // console.debug(`StepsContainer.tsx setLoadingDataState isLoading: ${isLoading}`);
-      setisLoading(isLoading)
+      console.debug(`StepsContainer.tsx setStateLoadingTokensInstances isLoading: ${isLoading}`);
+      setisLoadingTokensInstances(isLoading)
     }, []
   )
 
-  // ---
+  // // ---
 
-  const setErrorLoadingDataState = useCallback( (isError:boolean) =>
+  const setStateErrorLoadingTokensInstances = useCallback( (isError:boolean) =>
     {
-      // console.debug(`StepsContainer.tsx setErrorLoadingDataState isError: ${isError}`);
-      setisError(isError)
+      console.debug(`StepsContainer.tsx setStateErrorLoadingTokensInstances isError: ${isError}`);
+      setisErrorTokensInstances(isError)
     }, []
   )
 
@@ -712,7 +720,7 @@ const StepsContainer = ( {
     let multicallAllBatchesResult : any[] = [];
     try {
        // console.debug(`StepsContainer.tsx fetchOnChainData multicallInput.length: ${multicallInput.length}`);
-       // throw new Error("fetchOnChainData error test")
+      //  throw new Error("fetchOnChainData error test")
        for (let i = 0; i < Math.ceil(multicallInput.length / MAXBATCHSIZE); i++) {
          const batch = multicallInput.slice(i * MAXBATCHSIZE, (i + 1) * MAXBATCHSIZE);
          // console.debug(`StepsContainer.tsx fetchOnChainData batch.length: ${batch.length}`);
@@ -734,13 +742,19 @@ const StepsContainer = ( {
       //  setisLoading(false)
        // console.debug(`StepsContainer.tsx fetchOnChainData setErrorLoadingDataState(TRUE)`);
       //  setErrorLoadingDataState(true)
+      // setisLoading(false)
+      // setisError(true)
+      // setisLoadingTokensInstances(false)
+      setStateLoadingTokensInstances(false)
+      // setisErrorTokensInstances(true)
+      setStateErrorLoadingTokensInstances(true)
      } // catch (error)
      // console.debug(`StepsContainer.tsx fetchOnChainData result.length: ${multicallAllBatchesResult.length}`);
      // console.dir(multicallAllBatchesResult);
      return multicallAllBatchesResult;
     }
     ,
-    [ MAXBATCHSIZE /* , setErrorLoadingDataState */ ]
+    [ MAXBATCHSIZE, setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances /* , setErrorLoadingDataState */ ]
   ); // fetchOnChainData
 
   // ---
@@ -1563,13 +1577,20 @@ const StepsContainer = ( {
         })
         // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: newSelectedChainsTokensList.length = ${newSelectedChainsTokensList?.length}, newSelectedChainsTokensList[]=`)
         // console.dir(newSelectedChainsTokensList)
+          setStateLoadingTokensInstances(true)
 
         // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: newSelectedChainsTokensList to TTokenChainDataArray`)
         if (newSelectedChainsTokensList.length > 0) {
 
-          setLoadingDataState(true)
+          // setLoadingDataState(true)
+          // setisLoading(true)
+          // setisLoadingTokensInstances(true)
+          setStateLoadingTokensInstances(true)
           // debugger;
-          setErrorLoadingDataState(false)
+          // setErrorLoadingDataState(false)
+          // setisError(false)
+          // setisErrorTokensInstances(false)
+          setStateErrorLoadingTokensInstances(false)
 
           // let tokensCount = 0
           newSelectedChainsTokensList.forEach( (selected_chainTokensList:TChainsTokensListNullUndef) => {
@@ -1645,13 +1666,22 @@ const StepsContainer = ( {
             // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] AFTER updateChainTokensListTokensInstances.then`)
             // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: SET SelectedChainsTokensList`)
             setselectedChainsTokensList(updatedChainsTokensList)
-            setLoadingDataState(false)
+            // setLoadingDataState(false)
+            // setisLoading(false)
+            // setisLoadingTokensInstances(false)
+            setStateLoadingTokensInstances(false)
             // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances elapsed=${Date.now() - start}ms`)
             console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances elapsed=${Date.now() - start}ms`)
           }).catch( (error) => {
             console.error(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances error: ${error}`);
-            setLoadingDataState(false)
-            setErrorLoadingDataState(true)
+            // setLoadingDataState(false)
+            // setisLoading(false)
+            // setisLoadingTokensInstances(false)
+            setStateLoadingTokensInstances(false)
+            // setErrorLoadingDataState(true)
+            // setisError(true)
+            // setisErrorTokensInstances(true)
+            setStateErrorLoadingTokensInstances(true)
           })
 
         } // if (newSelectedChainsTokensList.length > 0)
@@ -1674,7 +1704,10 @@ const StepsContainer = ( {
       // getUpdatedChainTokensListTokensInstances,
       chainId, targetAddress, connectedAddress,
       getSelectedTokenLists, initTokenInstance, loadTokensOnChainData,
-      setLoadingDataState, setErrorLoadingDataState
+      // setLoadingDataState, setErrorLoadingDataState,
+      // setisError, setisLoading
+      // setisLoadingTokensInstances, setisErrorTokensInstances,
+      setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances
     ]
   ) // useEffect
 
@@ -1742,7 +1775,10 @@ const StepsContainer = ( {
                 targetAddress={targetAddress}
                 tokensInstances={tokensInstances}
                 chainId={chainId}
-                isLoading={isLoading} isError={isError}
+                // isLoading={isLoading} isError={isError}
+                isLoading={isLoadingTokensLists}
+                isError={isErrorTokensLists}
+
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
               />
           </MainContentContainer>
@@ -1761,7 +1797,8 @@ const StepsContainer = ( {
                 targetAddress={targetAddress}
                 settargetAddress={settargetAddress}
                 // setShowProgressBar={setShowProgressBar}
-                isLoading={isLoading} isError={isError}
+                // isLoading={isLoading} isError={isError}
+                isLoading={isLoadingTokensInstances} isError={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
               />
           </MainContentContainer>
@@ -1779,7 +1816,8 @@ const StepsContainer = ( {
                 accountAddress={connectedAddress}
                 // chainId={chainId}
                 targetAddress={targetAddress}
-                isError={isError}
+                // isError={isError}
+                isError={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 />
           </MainContentContainer>
