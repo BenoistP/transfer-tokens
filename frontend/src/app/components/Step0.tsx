@@ -64,6 +64,7 @@ const Step0 = (  {
               chainId={chainId}
               selectableTokensLists={selectableTokensLists}
               setselectableTokensLists={setselectableTokensLists}
+              isLoading={isLoading} isError={isError}
             />
           </div>
 

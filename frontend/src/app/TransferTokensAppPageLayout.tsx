@@ -54,19 +54,16 @@ const testnetChains = [
   const [{ config, chains }] = useState(() => {
     const testChainsEnabled = import.meta.env.PUBLIC_ENABLE_TESTNETS !== 'true' ? [] : testnetChains ;
 
-    // let testnetChainsProviders:any = [];
-    // testnetChains.forEach(testnetChain => {
-    //   testnetChainsProviders.push(publicProvider());
-    // });
+    const testnetChainsProviders:any = [];
+    testnetChains.forEach( () => {
+      testnetChainsProviders.push(publicProvider());
+    });
     const mainnetChainsProviders:any = [
-      infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA_APIKEY||"" }), // Ethereum
-      alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY_APIKEY||"" }), // Gnosis
+      infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA||"" }), // Ethereum
+      alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY||"" }), // Gnosis
       publicProvider(),
      ];
-    // const testnetChainsProviders:any = [ publicProvider() ];
 
-    // console.dir(mainnetChains)
-    // console.dir(mainnetChainsProviders)
 
     const { chains, publicClient } = configureChains(
       [ ...mainnetChains,
@@ -74,7 +71,7 @@ const testnetChains = [
       ],
       [
         ...mainnetChainsProviders, // Mainnets
-        // ...testnetChainsProviders, // Testnets
+        ...testnetChainsProviders, // Testnets
       ],
       {
         batch: { multicall: true },

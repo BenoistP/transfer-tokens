@@ -1,18 +1,16 @@
 // React
 import { useCallback, useEffect, useState } from "react"
-
 // Components
 import SelectableTokensLists from "@Components/SelectableTokensLists"
-
 // Utils
 import { getChainTokensList } from "@jsutils/tokensListsUtils"
-
 // Icons
 import { ArrowPathRoundedSquareIcon } from '@heroicons/react/24/solid'
-
 // Translation
 import { useTranslation } from "react-i18next"
-// import { useNetwork } from 'wagmi'
+
+// Icons
+import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
@@ -20,13 +18,10 @@ const TokensListsSelect = ( {
   tokensLists,
   chainId,
   selectableTokensLists,
-  setselectableTokensLists,  }: ITokensListsSelectProps ) =>
+  setselectableTokensLists,
+  isLoading, isError    }: ITokensListsSelectProps ) =>
   {
 
-  // console.debug(`TokenListSelect.tsx render`)
-  // console.debug(`TokenListSelect.tsx render: selectableTokensLists=${JSON.stringify(selectableTokensLists)}`)
-
-  // const { chain } = useNetwork()
   const { t } = useTranslation()
   const [isCheckAllDisabled, setisCheckAllDisabled] = useState(false)
   const [checkAll, setCheckAll] = useState<boolean>(false);
@@ -35,16 +30,20 @@ const TokensListsSelect = ( {
 
   const isAllChecked = useCallback( () =>
     {
-      if (selectableTokensLists) {
-        const isAllChecked = selectableTokensLists.every(
-          (selectableTokensList) => {
-            return (
-              selectableTokensList.selected || !selectableTokensList.selectable // === true
-            )
-          }
-        ) // every
-        return isAllChecked;
-      } // if (selectableTokensLists)
+      try {
+        if (selectableTokensLists) {
+          const isAllChecked = selectableTokensLists.every(
+            (selectableTokensList) => {
+              return (
+                selectableTokensList.selected || !selectableTokensList.selectable // === true
+              )
+            }
+          ) // every
+          return isAllChecked;
+        } // if (selectableTokensLists)
+      } catch (error) {
+        console.error(`TokensListsSelect.tsx: isAllChecked: error=${error}`);
+      }
       return false;
     },
     [selectableTokensLists]
@@ -58,18 +57,22 @@ const TokensListsSelect = ( {
 
   useEffect( () =>
     {
-      if (!selectableTokensLists || ((selectableTokensLists.length||0) === 0)) {
-        setisCheckAllDisabled(true)
-      } else {
-        const notSelectable = selectableTokensLists.every ( (selectableTokensList) => {
-          return (
-            selectableTokensList.selectable === false
-          )
-        })
-        setisCheckAllDisabled(notSelectable)
+      try {
+        if (!selectableTokensLists || ((selectableTokensLists.length||0) === 0)) {
+          setisCheckAllDisabled(true)
+        } else {
+          const notSelectable = selectableTokensLists.every ( (selectableTokensList) => {
+            return (
+              selectableTokensList.selectable === false
+            )
+          })
+          setisCheckAllDisabled(notSelectable)
+        }
+      } catch (error) {
+        console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
       }
     }, [selectableTokensLists]
-  )
+  );
 
   // ---
 
@@ -90,136 +93,61 @@ const TokensListsSelect = ( {
 
   useEffect( () =>
     {
-      // if (selectableTokensLists&&selectableTokensLists.length>0) {
-      //   if (selectableTokensLists[0].chainId !== chain?.id) {
-      //     console.debug(`TokensListsSelect useEffect selectableTokensLists[0].chainId !== chain?.id`)
-      //     // setselectableTokensLists(null) // clear
-      //   }
-      // } //  if (selectableTokensLists)
-      // Reload if selectableTokensLists empty OR (not empty AND chain changed)
-// if ((!selectableTokensLists||selectableTokensLists.length<=0)
-// || (selectableTokensLists?.length>0&&selectableTokensLists[0].chainId !== /* chain?.id */chainId) ) {
-        // console.debug(`TokensListsSelect useEffect`)
-        // if (tokensLists) {
-        //   console.log('TokensListsSelect: useEffect: tokensLists=');
-        //   console.dir(tokensLists);
-        // } else {
-        //   console.debug('TokensListsSelect: useEffect: tokensLists is undefined');
-        // }
-
-        // TODO: filter upon chain id
+      try {
         const filteredSelectableTokensLists: TSelectableTokensLists = []
         tokensLists?.forEach( (tokensList: TTokensList) => {
-          /*
-          // console.dir(tokensList);
-          if (tokensList && tokensList.tokens && tokensList.tokens.length > 0) {
-            console.debug(`TokensListsSelect: useEffect: tokensList DEFINED && tokensList.tokens.length > 0`);
-            if (tokensList.chains && tokensList.chains.length > 0 && tokensList.chains.includes((chain?.id ? chain?.id : -1))) {
-              console.debug(`TokensListsSelect: useEffect: tokensList.chains DEFINED && tokensList.chains.length > 0 && tokensList.chains.includes(chain.id) (${chain?.id}))`);
-              filteredSelectableTokensLists.push({ tokensList, selected: false }) // as TSelectableTokensList
-            } else {
-              console.debug(`TokensListsSelect: useEffect: tokensList.chains is undefined or tokensList.chains.length <= 0 , or tokensList.chains does not include chain.id (${chain?.id})})`);
-            }
-          } else {
-            console.debug(`TokensListsSelect: useEffect: tokensList is undefined or tokensList.tokens.length <= 0`);
-          }
-          */
-        // const chainId = (chain?.id ? chain?.id : -1)
-        const chainTokensList = getChainTokensList(tokensList, chainId)
-        // console.debug(`TokensListsSelect: useEffect: chainTokensList=`);
-        // console.dir(chainTokensList);
+          const chainTokensList = getChainTokensList(tokensList, chainId)
+          const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
+          const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
+          const selectableTokensList = {
+            tokensList,
+            chainId,
+            selected: false,
+            selectable,
+            currentChainTokensCount
+          } // as TSelectableTokensList
 
-        const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
-        const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
-        // console.debug(`TokensListsSelect: useEffect: chainTokensList?.tokensCount=${chainTokensList?.tokensCount} tokensList.status=${tokensList.status} currentChainTokensCount=${currentChainTokensCount} selectable=${selectable}`);
-        const selectableTokensList = {
-          tokensList,
-          chainId,
-          selected: false,
-          selectable,
-          currentChainTokensCount
-        } // as TSelectableTokensList
-
-        filteredSelectableTokensLists.push(selectableTokensList)
-
-
-          // if (chainTokensList) {
-          //   const selectable = (chainTokensList.tokensCount > 0) && (chainTokensList.stat === chainId)
-          //   console.debug(`TokensListsSelect: useEffect: chainTokensList DEFINED && chainTokensList.tokensCount > 0`);
-          //   const selectableTokensList = { tokensList, selected: false, selectable } as TSelectableTokensList
-          //   filteredSelectableTokensLists.push(selectableTokensList)
-          // }
-          // // debug
-          // else {
-          //   console.debug(`TokensListsSelect: useEffect: chainTokensList is undefined or chainTokensList.tokens.length <= 0`);
-          //   console.dir(tokensList.URI);
-          //   console.debug(`TokensListsSelect: useEffect: tokensList.name=${tokensList.name} tokensList.URI=${tokensList.URI} chainTokensList?.tokens?.length=${chainTokensList?.tokens?.length}`);
-          //   console.debug(`TokensListsSelect: useEffect: tokensList.chains=`);
-          //   console.dir(tokensList.chains);
-          //   chainTokensList.chainId
-          // }
-
-        }) as TSelectableTokensLists
-
-        // console.log('TokensListsSelect: filteredSelectableTokensLists=');
-        // console.dir(filteredSelectableTokensLists);
-
+          filteredSelectableTokensLists.push(selectableTokensList)
+        })
         setselectableTokensLists(filteredSelectableTokensLists)
-
-// } // if (!selectableTokensLists||selectableTokensLists.length<=0)
-
+      } catch (error) {
+        console.error(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselectableTokensLists]: error=${error}`);
+      }
     },
-    [
-      // tokensLists, chain?.id
-      // tokensLists, chain?.id, selectableTokensLists, setselectableTokensLists
-      tokensLists,
-      // chain?.id,
-      chainId,
-      setselectableTokensLists
-    ]
-  )
+    [tokensLists, chainId, setselectableTokensLists]
+  ) // useEffect
 
   // ---
 
   const updateCheckAll = useCallback( (selectableTokensLists:TSelectableTokensLists) =>
     {
       try {
-        // console.debug(`TokensListsSelect.tsx x realTokensList: ${realTokensList}`);
         if (selectableTokensLists) {
-          // const isAllChecked = realTokensList.every(
-          //   (realToken) => realToken.userData.selected === true
-          // );
-          // const isAllChecked = selectableTokensLists.every(
-          //   (selectableTokensList) => {
-          //     return (
-          //       // selectableTokensList.selected // === true
-          //       selectableTokensList.selected || !selectableTokensList.selectable // === true
-          //     )
-          //   }
-          // );
-          // console.debug(`TokensListsSelect.tsx updateCheckAll isAllChecked:${isAllChecked}`);
-          // setCheckAll(isAllChecked);
           setCheckAll(isAllChecked());
         } // if (selectableTokensLists)
       } catch (error) {
         console.error(`TokensListsSelect.tsx: updateCheckAll: error=${error}`);
       }
     },
-    [/* selectableTokensLists */ isAllChecked]); // updateCheckAll
+    [isAllChecked]
+  );
   // ---
 
   const changeTokensListCheckboxStatus:IChangeTokensListCheckboxStatus = useCallback(
     (id) =>
     {
-      // console.debug(`TokensListsSelect.tsx changeTokensListCheckboxStatus() id="${id}"`)
-      if (selectableTokensLists) {
-        const new_selectableTokensLists = [...selectableTokensLists];
-        selectableTokensLists.map((selectableTokensList) => {
-          if (selectableTokensList.tokensList?.id === id)
-            selectableTokensList.selected = !selectableTokensList.selected;
-        });
-        updateCheckAll(new_selectableTokensLists);
-        setselectableTokensLists(new_selectableTokensLists);
+      try {
+        if (selectableTokensLists) {
+          const new_selectableTokensLists = [...selectableTokensLists];
+          selectableTokensLists.map((selectableTokensList) => {
+            if (selectableTokensList.tokensList?.id === id)
+              selectableTokensList.selected = !selectableTokensList.selected;
+          });
+          updateCheckAll(new_selectableTokensLists);
+          setselectableTokensLists(new_selectableTokensLists);
+        }
+      } catch (error) {
+        console.error(`TokensListsSelect.tsx: changeTokensListCheckboxStatus: error=${error}`);
       }
     },
     [selectableTokensLists, setselectableTokensLists, updateCheckAll],
@@ -251,12 +179,10 @@ const TokensListsSelect = ( {
   const handleCheckSelectAll = useCallback( () =>
     {
       try {
-        // console.debug(`TokensListsSelect.tsx: handleCheckSelectAll`);
         const newCheckAll = !checkAll
         if (selectableTokensLists) {
           const new_selectableTokensLists = [...selectableTokensLists];
           new_selectableTokensLists.map((selectableTokensList) => {
-            // selectableTokensList.selected = newCheckAll;
             selectableTokensList.selected = (selectableTokensList.selectable?newCheckAll:false)
           });
           setselectableTokensLists(new_selectableTokensLists);
@@ -274,6 +200,8 @@ const TokensListsSelect = ( {
 
   const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
    + ( ((selectableTokensLists?.length||0)=== 0) ? "fill-base-content opacity-10 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
+
+  const clsIcon = 'w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 stroke-2'
 
   // ---
 
@@ -317,33 +245,55 @@ const TokensListsSelect = ( {
 
             <tbody>
 
-            { (selectableTokensLists?.length||0) === 0 ?
-
-              <tr>
-                <th>
-                  <label>
-
-                  </label>
-                </th>
-                <td colSpan={2}>
-                  <div className="font-semibold text-md sm:text-base md:text-xl">
-                   {t('moveTokens.stepZero.tokensListsTable.emptyList')}
-                  </div>
-                </td>
-                <td>
-
-                  <br/>
-                </td>
-
-              </tr>
-
-              :
+            { (!isError && selectableTokensLists?.length) ?
 
               <SelectableTokensLists
                 selectableTokensLists={selectableTokensLists}
                 // chainId={chainId}
                 changeTokensListCheckboxStatus={changeTokensListCheckboxStatus}
               />
+
+              :
+
+              <tr>
+                <td colSpan={2}>
+                {
+                isError ?
+
+                  <div className="flex justify-center text-error font-semibold pt-2 text-md sm:text-base md:text-xl">
+                      <div className="pt-0 pr-3 ">
+                      {t('moveTokens.stepZero.tokensListsTable.errorLoadingTokensLists')}
+                      </div>
+                      <div className="pt-0">
+                        <ExclamationCircleIcon className={clsIcon} />
+                      </div>
+                  </div>
+
+                :
+
+                  isLoading ?
+
+                    <div className="flex justify-center text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
+                        <div className="pt-0 pr-3 ">
+                        {t('moveTokens.stepZero.tokensListsTable.loadingTokensLists')}
+                        </div>
+                        <div className="loading loading-dots loading-sm md:loading-md lg:loading-lg"/>
+                    </div>
+
+                  :
+
+                    <div className="flex justify-center text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
+                      <div className="pt-0 pr-3 ">
+                        {t('moveTokens.stepZero.tokensListsTable.emptyTokensLists')}
+                      </div>
+                      <div className="pt-0">
+                        <InformationCircleIcon className={clsIcon} />
+                      </div>
+                    </div>
+                }
+                  </td>
+                </tr>
+
             }
 
             </tbody>

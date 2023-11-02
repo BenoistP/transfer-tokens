@@ -25,8 +25,9 @@
       "tokensListsTable": {
         "listName": "Name",
         "listDescription": "Description",
-        "emptyList": "No token list found",
-        "errorLoadingList": "Error loading tokens list",
+        "loadingTokensLists": "Loading tokens lists",
+        "emptyTokensLists": "No token list found",
+        "errorLoadingTokensLists": "Error loading tokens list",
         "details": "Details"
       }
     },

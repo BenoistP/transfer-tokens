@@ -1,92 +1,144 @@
 // React
-import { useEffect, useState } from "react";
-
+import { useCallback, useEffect, useState } from "react";
 // Components
 import ProgressContainer from "@Components/ProgressContainer";
 import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
-
+// Utils
 import { isChainSupported } from "@jsutils/blockchainUtils";
 import { /* tokenListsData */getTokenLists } from '@jsutils/tokensLists';
-
 // Translation
 import { useTranslation } from "react-i18next";
-
+// Wagmi
 import { useNetwork } from 'wagmi'
 
 // ------------------------------
 
 export const MainContent = ( ) => {
 
-    const { t } = useTranslation();
-    const { chain } = useNetwork()
+  const { t } = useTranslation();
+  const { chain } = useNetwork()
 
-    const [tokensLists, setTokensLists] = useState<TTokensLists>(null)
-    const [previousDisabled, setpreviousDisabled] = useState<boolean>(false);
-    const [nextDisabled, setNextDisabled] = useState<boolean>(false);
-    // const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
-    // const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
+  const [tokensLists, setTokensLists] = useState<TTokensLists>(null)
+  const [previousDisabled, setpreviousDisabled] = useState<boolean>(false);
+  const [nextDisabled, setNextDisabled] = useState<boolean>(false);
 
-    // ---
+  const [isLoadingTokensLists, setisLoadingTokensLists] = useState<boolean>(false)
+  const [isErrorTokensLists, setisErrorTokensLists] = useState(false)
 
-    useEffect(() => {
+  // const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
+  // const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
+
+  // ---
+
+  const setStateLoadingTokensLists = useCallback( (isLoading:boolean) =>
+    {
+      setisLoadingTokensLists(isLoading)
+    }, []
+  )
+
+  // ---
+
+  const setStateIsErrorTokensLists = useCallback( (isError:boolean) =>
+    {
+      setisErrorTokensLists(isError)
+    }, []
+  )
+
+  // ---
+
+  useEffect(() =>
+    {
+
       const initTokensLists = async () => {
+        // const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms))
+        // await sleep(5_000) // Wait for the chain to be set
+        // throw new Error("initTokensLists error")
         const tokenLists = await getTokenLists()
-        // console.dir(tokenLists)
         setTokensLists(tokenLists) // Set inital token list data
       }
-      // console.dir(tokenListsData)
-      // setTokensLists(tokenListsData) // Set inital token list data
-      initTokensLists()
-    }, [])
 
-    // -------------------
+      try {
+        setStateLoadingTokensLists(true)
+        setStateIsErrorTokensLists(false)
+        initTokensLists().
+          then( () => {
+            setStateLoadingTokensLists(false)
+          }).
+          catch( (error) => {
+            console.error(`MainContent.tsx useEffect initTokensLists error: ${error}`);
+            setStateIsErrorTokensLists(true)
+            setStateLoadingTokensLists(false)
+          })
+      } catch (error) {
+        setStateLoadingTokensLists(false)
+        setisErrorTokensLists(true)
+        console.error(`MainContent.tsx useEffect initTokensLists error: ${error}`);
+      }
+    },
+    [setStateIsErrorTokensLists, setStateLoadingTokensLists]
+  );
 
-    return (
-        <>
-          <div className="w-full flex flex-row z-0 m-0 p-1 " >
+  // ---
 
-            <div className="w-full base-100  " >
+  const clsParagraph = "text-base sm:text-lg md:text-xl font-semibold transition-all duration-300 ease-in-out"
 
-              { ! chain?.id
-                ?
-                <div className="w-full p-0 m-0  base-100 text-primary-content" >
-                  <MainContentContainer>
-                    {t('moveTokens.warnings.connectawallet') /* Please connect ... */}
-                  </MainContentContainer>
-                </div>
-                :
+  // -------------------
+
+  return (
+    <>
+      <div className="w-full flex flex-row z-0 m-0 p-1 " >
+
+        <div className="w-full base-100  " >
+
+          { ! chain?.id
+            ?
+              /* Please connect ... */
+              <div className="w-full p-0 m-0  base-100 text-primary-content" >
+                <MainContentContainer>
+                  <p className={"text-info "+clsParagraph}>{t('moveTokens.warnings.connectawallet')}</p>
+                </MainContentContainer>
+              </div>
+              :
                 ! isChainSupported(chain?.id)
                 ?
+                  /* Unsupported chain ... */
                   <div className="w-full p-0 m-0  base-100 text-primary-content" >
-                    {t('moveTokens.warnings.wrongchain') /* Unsupported chain ... */}
+                    <MainContentContainer>
+                      <p className={"text-warning "+clsParagraph}>{t('moveTokens.warnings.wrongchain')}</p>
+                    </MainContentContainer>
                   </div>
                   :
                   <div>
-
                     <div className="w-full p-0 m-0 mb-1 base-100 text-primary-content" >
                         <ProgressContainer
                           previousDisabled={previousDisabled} nextDisabled={nextDisabled}
                           // showProgressBar={showProgressBar} progressBarPercentage={progressBarPercentage}
                         />
                     </div>
-
                     <div className="w-full p-0 m-0 mt-1 base-100 text-primary-content" >
                       <StepsContainer
                         tokensLists={tokensLists}
                         chainId={chain?.id}
                         setpreviousDisabled={setpreviousDisabled} setNextDisabled={setNextDisabled}
+                        // isLoading={isLoading} setisLoading={setisLoading} isError={isError} setisError={setisError}
+                        // isLoadingTokensLists={isLoadingTokensLists} // setisLoadingTokensLists={setisLoadingTokensLists}
+                        // isErrorTokensLists={isErrorTokensLists} // setisErrorTokensLists={setisErrorTokensLists}
+                        
+                        // isLoadingTokensLists={setStateLoadingTokensists} isErrorTokensLists={setStateIsErrorTokensLists}
+                        isLoadingTokensLists={isLoadingTokensLists} isErrorTokensLists={isErrorTokensLists}
+                        
+
+                        // isError={isError} setisError={setisError}
                         // setShowProgressBar={setshowProgressBar} setProgressBarPercentage={setprogressBarPercentage}
                       />
                     </div>
-
                   </div>
+          }
 
-              }
+        </div>
 
-            </div>
-
-          </div>
-        </>
-    );
+      </div>
+    </>
+  );
 };

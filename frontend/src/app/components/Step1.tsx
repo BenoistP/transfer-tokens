@@ -21,7 +21,7 @@ const Step1 = ( {
   tokensInstancesListTablePropsHandlers,
 }: IStep1Props ) => {
 
-  // console.debug(`Step1.tsx render`)
+  console.debug(`Step1.tsx render isLoading:${isLoading} isError: ${isError} tokensInstances?.length ?=${tokensInstances?.length}`)
 
   // ---
 
