@@ -1,15 +1,14 @@
 // React
 import { useEffect } from "react";
-
 // Components
 import AddressInput from "@Components/AddressInput";
 import TokenInstanceListTable from "@Components/TokenInstanceListTable";
-
+// Utils
 import { isValidAddress } from "@jsutils/blockchainUtils";
 
 // ------------------------------
 
-const Step1 = ( {  
+const Step1 = ( {
   accountAddress,
   setNextDisabled,
   tokensInstances,
@@ -18,23 +17,16 @@ const Step1 = ( {
   // setShowProgressBar,
   // chainId,
   isLoading, isError,
-  tokensInstancesListTablePropsHandlers,
-}: IStep1Props ) => {
-
-  // console.debug(`Step1.tsx render`)
-
-  // ---
-
-  // setShowProgressBar(false)
+  tokensInstancesListTablePropsHandlers }: IStep1Props ) =>
+{
 
   // ---
 
   useEffect( () =>
     {
-      // console.debug(`Step1 useEffect [targetAddress]: targetAddress=${targetAddress}`)
-      setNextDisabled(! isValidAddress(targetAddress) || targetAddress == accountAddress || isError)
+      setNextDisabled(! isValidAddress(targetAddress) || targetAddress == accountAddress || isLoading || isError)
     },
-    [accountAddress, targetAddress, isError, setNextDisabled]
+    [accountAddress, targetAddress, isLoading, isError, setNextDisabled]
   )
 
   // ---

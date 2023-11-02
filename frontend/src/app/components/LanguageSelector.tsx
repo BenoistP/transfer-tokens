@@ -1,21 +1,17 @@
 // React
 import {useCallback, useEffect, useState} from "react";
-
 // Context
 import { useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
-
 // Translation
 import { useTranslation } from "react-i18next";
-import SUPPORTED_LANGUAGES from "@uiconsts/languages";
-
+import {SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE} from "@uiconsts/languages";
 // Cookies
 import { useCookies } from "react-cookie";
 import { COOKIE_LANGUAGE } from "@uiconsts/misc";
 
 // ------------------------------
 
-function FlagIcon({flagIconCountryCode = ""}: FlagIconProps) {
-
+const FlagIcon = ({flagIconCountryCode = ""}: FlagIconProps) => {
     return (
         <span
             className={`ml-2 fi fis fiCircle inline-block mr-2 fi-${flagIconCountryCode}`}
@@ -25,15 +21,17 @@ function FlagIcon({flagIconCountryCode = ""}: FlagIconProps) {
 
 // ---
 
-export const LanguageSelector = () => {
-    const {i18n} = useTranslation();
-    const [languages, setLanguages] = useState<iLanguage[]>([]);
-    const [cookies, setCookie] = useCookies();
-    const {globalAppDataHandlers: {setLanguage}} = useGlobalAppContext()
+export const LanguageSelector = () =>
+{
+  const {i18n} = useTranslation();
+  const [languages, setLanguages] = useState<iLanguage[]>([]);
+  const [cookies, setCookie] = useCookies();
+  const {globalAppDataHandlers: {setLanguage}} = useGlobalAppContext()
 
-// ---
+  // ---
 
-const handleLanguageChange = async (language: iLanguage) => {
+  const handleLanguageChange = async (language: iLanguage) =>
+  {
     try {
         await i18n.changeLanguage(language.key);
         if (cookies[COOKIE_LANGUAGE] != language) {
@@ -46,43 +44,54 @@ const handleLanguageChange = async (language: iLanguage) => {
         elem?.blur();
         }
     } catch (error) {
-        console.error(error);
+      console.error(`LanguageSelector.tsx error=${error}`);
     }
-};
+  };
 
-// ---
+  // ---
 
-useEffect(() => {
-    const setupLanguages = async () => {
+  useEffect(() =>
+  {
+    try {
+      const setupLanguages = async () => {
         setLanguages(SUPPORTED_LANGUAGES);
-    };
-    // const setupCookies = () => {
-    // };
-    setupLanguages();
-    // setupCookies();
+      };
+      setupLanguages();
+    } catch (error) {
+      console.error(`LanguageSelector.tsx error=${error}`);
+    }
 }, []);
 
-useEffect(() => {
-    setLanguage(i18n.language)
-}, [/* i18n.language */]); // eslint-disable-line react-hooks/exhaustive-deps
-// ---
+  useEffect( () =>
+    {
+      setLanguage(i18n.language)
+    },
+    [i18n.language, setLanguage]);
 
-const getFlagIconCountryCode = useCallback(
-  (languageKey:string) => {
-    if (languages && languages.length > 0) {
-        for (let index = 0; index < languages.length; index++) {
-            if (languages[index].key == languageKey) return languages[index].flagIconCountryCode;
+  // ---
+
+  const getFlagIconCountryCode = useCallback( (languageKey:string) =>
+    {
+      try {
+        if (languages && languages.length > 0) {
+            for (let index = 0; index < languages.length; index++) {
+                if (languages[index].key == languageKey) return languages[index].flagIconCountryCode;
+            }
+            // console.warn(`getFlagIconCountryCode: languageKey not found: ${languageKey}`)
         }
-        console.warn(`getFlagIconCountryCode: languageKey not found: ${languageKey}`)
-    }
-    return '';
-  },
-  [languages],
-)
+      } catch (error) {
+        console.error(`LanguageSelector.tsx error=${error}`);
+      }
+      return DEFAULT_LANGUAGE.flagIconCountryCode;
+    },
+    [languages],
+  ) // getFlagIconCountryCode
 
-// ---
+  // ---
 
-return (
+  //  console.debug(`LanguageSelector.tsx render i18n.language=${i18n.language} getFlagIconCountryCode=${getFlagIconCountryCode(i18n.language)}`)
+
+  return (
     <div className="dropdown bg-base-200">
       <label tabIndex={0} className="btn btn-ghost btn-circle">
         <FlagIcon flagIconCountryCode={getFlagIconCountryCode(i18n.language)} />
@@ -106,5 +115,5 @@ return (
         }
       </ul>
     </div>
-    );
+  );
 };

@@ -1,15 +1,12 @@
 // React
 import { useEffect, useMemo, useState } from "react";
-
 // Components
 import TokenInstanceListFiltered from "@Components/TokenInstanceListFiltered";
 import SortIcon from "@Components/SortIcon";
-
 // Translation
 import { useTranslation } from "react-i18next";
-
 // Icons
-import { ArrowPathRoundedSquareIcon, FunnelIcon } from '@heroicons/react/24/solid'
+import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
 
 const TokenInstanceListTableFiltered = (
     { tokensInstances,
@@ -300,17 +297,23 @@ const TokenInstanceListTableFiltered = (
               </table>
             :
               isError ?
-                <>
-                  <p className="text-center text-sm sm:text-md md:text-lg font-medium bg-error text-error-content rounded-lg">
-                    {t("moveTokens.stepTwo.tokensTable.errorLoadingTokens")}
-                  </p>
-                </>
+                  <div className="flex justify-center text-error font-semibold pt-2 text-md sm:text-base md:text-xl">
+                    <div className="pt-0 pr-3 ">
+                    {t("moveTokens.stepAny.tokensTable.errorLoadingTokens")}
+                    </div>
+                    <div className="pt-0">
+                      <ExclamationCircleIcon className={clsIcon} />
+                    </div>
+                  </div>
                 :
-                <>
-                  <p className="text-center text-sm sm:text-md md:text-lg font-medium bg-info text-info-content rounded-lg">
-                    {t("moveTokens.stepTwo.tokensTable.empty")}
-                  </p>
-                </>
+                  <div className="flex justify-center text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
+                    <div className="pt-0 pr-3 ">
+                      {t("moveTokens.stepAny.tokensTable.noTokens")}
+                    </div>
+                    <div className="pt-0">
+                      <InformationCircleIcon className={clsIcon} />
+                    </div>
+                  </div>
           }
 
         </div> {/* Tokens list */}
