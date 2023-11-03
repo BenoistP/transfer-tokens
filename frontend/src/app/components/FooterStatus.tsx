@@ -64,11 +64,18 @@ export const FooterStatus = () => {
 
 
 
-  useEffect(() => {
+  useEffect( () =>
+  {
 
     const blockNumberUpdate = (blockNumber:string) => {
+      try {
       // console.log('blockNumber', blockNumber);
       setBlockNumber(blockNumber);
+      } catch (error) {
+        console.error('blockNumberUpdate error', error);
+        unwatchBlockNumber()
+        setBlockNumber("Error")
+      }
     }
 
     const unwatchBlockNumber = watchBlockNumber(
