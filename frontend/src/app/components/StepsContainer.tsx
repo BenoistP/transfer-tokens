@@ -1529,6 +1529,7 @@ const StepsContainer = ( {
           // return undefined;
         } catch (error) {
           console.error(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances error: ${error}`);
+          setStateErrorLoadingTokensInstances(true)
         }
         finally {
           // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER RETURN chainTokensList.tokensInstances elapsed=${Date.now() - start}ms`)
@@ -1640,8 +1641,6 @@ const StepsContainer = ( {
             else {
               console.warn(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: updatedTokensInstancesArray.length <= 00`)
             }
-          // }) // updatedTokensInstancesArray.then
-  
         } catch (error) {
           console.error(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances error: ${error}`);
         }
@@ -1731,7 +1730,7 @@ const StepsContainer = ( {
           // TODO: Although newSelectedChainsTokensList is not fully loaded, call setselectedChainsTokensList for displaying loading effect ...
           // TODO: Although newSelectedChainsTokensList is not fully loaded, call setselectedChainsTokensList for displaying loading effect ...
           // TODO: Although newSelectedChainsTokensList is not fully loaded, call setselectedChainsTokensList for displaying loading effect ...
-          setselectedChainsTokensList(newSelectedChainsTokensList);
+          // setselectedChainsTokensList(newSelectedChainsTokensList);
 
           // setisLoading(false)
           /*
