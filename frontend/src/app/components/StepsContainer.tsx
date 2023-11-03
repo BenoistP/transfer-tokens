@@ -1214,6 +1214,7 @@ const StepsContainer = ( {
             })
             if (allNamesNullUndef) {
               console.warn(`StepsContainer.tsx checkTokensOnChainAllDataHasError: Names`)
+              console.dir(_tokensNames)
               return true; // RETURN error
             }
           }
@@ -1224,6 +1225,7 @@ const StepsContainer = ( {
             })
             if (allBalancesNullUndef) {
               console.warn(`StepsContainer.tsx checkTokensOnChainAllDataHasError: SourceBalances`)
+              console.dir(_tokensSourceBalances)
               return true; // RETURN error
             }
           }
@@ -1234,6 +1236,7 @@ const StepsContainer = ( {
             })
             if (allSourceCanTransferNullUndef) {
               console.warn(`StepsContainer.tsx checkTokensOnChainAllDataHasError: SourceCanTransfer`)
+              console.dir(_tokensSourceCanTransfer)
               return true; // RETURN error
             }
           }
@@ -1244,6 +1247,7 @@ const StepsContainer = ( {
             })
             if (allDecimalsNullUndef) {
               console.warn(`StepsContainer.tsx checkTokensOnChainAllDataHasError: Decimals`)
+              console.dir(_tokensDecimals)
               return true; // RETURN error
             }
           }
@@ -1254,6 +1258,7 @@ const StepsContainer = ( {
             })
             if (allSymbolsNullUndef) {
               console.warn(`StepsContainer.tsx checkTokensOnChainAllDataHasError: Symbols`)
+              console.dir(_tokensSymbols)
               return true; // RETURN error
             }
           }
@@ -1264,6 +1269,7 @@ const StepsContainer = ( {
             })
             if (allTargetBalancesNullUndef) {
               console.warn(`StepsContainer.tsx checkTokensOnChainAllDataHasError: TargetBalances`)
+              console.dir(_tokensTargetBalances)
               return true; // RETURN error
             }
           }
@@ -1274,6 +1280,7 @@ const StepsContainer = ( {
             })
             if (allTargetCanTransferNullUndef) {
               console.warn(`StepsContainer.tsx checkTokensOnChainAllDataHasError: TargetCanTransfer`)
+              console.dir(_tokensTargetCanTransfer)
               return true; // RETURN error
             }
           }
