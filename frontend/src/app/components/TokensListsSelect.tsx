@@ -50,10 +50,24 @@ const TokensListsSelect = ( {
 
   // ---
 
-  // const [checkAll, setCheckAll] = useState<boolean>(isAllChecked);
+  /**
+   * Uncheck "CheckAll" on chainId change
+   */
+  // useEffect( () =>
+  //   {
+  //     try {
+  //       setCheckAll(false)
+  //     } catch (error) {
+  //       console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
+  //     }
+  //   }, []
+  // );
 
   // ---
 
+  /**
+   * Disable "CheckAll" if there are no selectable tokens lists
+   */
   useEffect( () =>
     {
       try {
@@ -120,6 +134,7 @@ const TokensListsSelect = ( {
 
   const updateCheckAll = useCallback( (selectableTokensLists:TSelectableTokensLists) =>
     {
+      console.debug(`TokensListsSelect.tsx: updateCheckAll`);
       try {
         if (selectableTokensLists) {
           setCheckAll(isAllChecked());
