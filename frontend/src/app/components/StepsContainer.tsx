@@ -721,16 +721,17 @@ const StepsContainer = ( {
       //  throw new Error("fetchOnChainData error test")
        for (let i = 0; i < Math.ceil(multicallInput.length / MAXBATCHSIZE); i++) {
          const batch = multicallInput.slice(i * MAXBATCHSIZE, (i + 1) * MAXBATCHSIZE);
-         // console.debug(`StepsContainer.tsx fetchOnChainData batch.length: ${batch.length}`);
-         // console.dir(batch);
          const multicallBatchResult = await multicall({
-           contracts: batch,
-           // allowFailure: false, // disable error throwing
-         }) // multicall
-         // console.debug(`StepsContainer.tsx fetchOnChainData result.length: ${multicallBatchResult.length}`);
-         // console.dir(multicallBatchResult);
-         multicallAllBatchesResult = multicallAllBatchesResult.concat(multicallBatchResult);
-       } // for (let i = 0; i < Math.ceil(multicall.length / MAXBATCHSIZE); i++)
+          contracts: batch,
+          allowFailure: false, // disable error throwing
+        }) // multicall
+        if (!multicallBatchResult || !multicallBatchResult.length) {
+          throw new Error("multicallBatchResult error")
+        }
+        // console.debug(`StepsContainer.tsx fetchOnChainData result.length: ${multicallBatchResult.length}`);
+        // console.dir(multicallBatchResult);
+        multicallAllBatchesResult = multicallAllBatchesResult.concat(multicallBatchResult);
+      } // for (let i = 0; i < Math.ceil(multicall.length / MAXBATCHSIZE); i++)
 
        // console.debug(`StepsContainer.tsx fetchOnChainData setErrorLoadingDataState(false)`);
       //  setErrorLoadingDataState(false)
@@ -750,9 +751,8 @@ const StepsContainer = ( {
      // console.debug(`StepsContainer.tsx fetchOnChainData result.length: ${multicallAllBatchesResult.length}`);
      // console.dir(multicallAllBatchesResult);
      return multicallAllBatchesResult;
-    }
-    ,
-    [ MAXBATCHSIZE, setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances /* , setErrorLoadingDataState */ ]
+    },
+    [ MAXBATCHSIZE, setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances /* , chainId, setErrorLoadingDataState */ ]
   ); // fetchOnChainData
 
   // ---
