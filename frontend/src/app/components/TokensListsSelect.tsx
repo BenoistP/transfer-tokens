@@ -10,6 +10,8 @@ import { ArrowPathRoundedSquareIcon } from '@heroicons/react/24/solid'
 import { useTranslation } from "react-i18next"
 // Icons
 import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
+// Styles
+import { clsLoadingTokenLists, clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
 
 // ------------------------------
 
@@ -200,8 +202,6 @@ const TokensListsSelect = ( {
   const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
    + ( ((selectableTokensLists?.length||0)=== 0) ? "fill-base-content opacity-10 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
 
-  const clsIcon = 'w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 stroke-2'
-
   // ---
 
   return (
@@ -258,29 +258,29 @@ const TokensListsSelect = ( {
                 <td colSpan={2}>
                 {
                 isError ?
-                  <div className="flex justify-center text-error font-semibold pt-2 text-md sm:text-base md:text-xl">
+                  <div className="flex justify-center pb-3 text-error font-semibold pt-2 text-md sm:text-base md:text-xl">
                       <div className="pt-0 pr-3 ">
                       {t('moveTokens.stepZero.tokensListsTable.errorLoadingTokensLists')}
                       </div>
                       <div className="pt-0">
-                        <ExclamationCircleIcon className={clsIcon} />
+                        <ExclamationCircleIcon className={clsIconStatusSize} />
                       </div>
                   </div>
                 :
                   isLoading ?
-                    <div className="flex justify-center text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
+                    <div className="flex justify-center pb-3 text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
                         <div className="pt-0 pr-3 ">
                         {t('moveTokens.stepZero.tokensListsTable.loadingTokensLists')}
                         </div>
-                        <div className="loading loading-dots loading-sm md:loading-md lg:loading-lg"/>
+                        <div className={clsLoadingTokenLists}/>
                     </div>
                   :
-                    <div className="flex justify-center text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
+                    <div className="flex justify-center pb-3 text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
                       <div className="pt-0 pr-3 ">
                         {t('moveTokens.stepZero.tokensListsTable.noTokensLists')}
                       </div>
                       <div className="pt-0">
-                        <InformationCircleIcon className={clsIcon} />
+                        <InformationCircleIcon className={clsIconStatusSize} />
                       </div>
                     </div>
                 }
