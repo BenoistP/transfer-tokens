@@ -7,6 +7,8 @@ import SortIcon from "@Components/SortIcon";
 import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
 // Translation
 import { useTranslation } from "react-i18next";
+// Styles
+import { clsLoadingTokenLists, clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
 
 // ------------------------------
 
@@ -42,7 +44,7 @@ const TokenInstanceListTable = (
 
   // ---
 
-  const clsIcon = 'w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 stroke-2'
+  const clsStatus = 'flex justify-center font-semibold pt-2 pb-3 text-md sm:text-base md:text-xl'
 
   // ----------------------------
 
@@ -91,12 +93,12 @@ const TokenInstanceListTable = (
 
           isError ?
 
-              <div className="flex justify-center text-error font-semibold pt-2 text-md sm:text-base md:text-xl">
-                <div className="pt-0 pr-3 ">
+              <div className={clsStatus+' text-error'}>
+                <div className="pt-0 pr-3">
                 {t("moveTokens.stepAny.tokensTable.errorLoadingTokens")}
                 </div>
                 <div className="pt-0">
-                  <ExclamationCircleIcon className={clsIcon} />
+                  <ExclamationCircleIcon className={clsIconStatusSize} />
                 </div>
               </div>
             :
@@ -104,20 +106,20 @@ const TokenInstanceListTable = (
                 {
                   isLoading ?
 
-                    <div className="flex justify-center text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
-                      <div className="pt-0 pr-3 ">
+                    <div className={clsStatus+' text-info'}>
+                      <div className="pt-0 pr-3">
                         {t("moveTokens.stepAny.tokensTable.loadingTokens")}
                       </div>
-                      <div className="loading loading-dots loading-sm md:loading-md lg:loading-lg"/>
+                      <div className={clsLoadingTokenLists}/>
                     </div>
 
                   :
-                    <div className="flex justify-center text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
-                      <div className="pt-0 pr-3 ">
+                    <div className={clsStatus+' text-info'}>
+                      <div className="pt-0 pr-3">
                         {t("moveTokens.stepAny.tokensTable.noTokens")}
                       </div>
                       <div className="pt-0">
-                        <InformationCircleIcon className={clsIcon} />
+                        <InformationCircleIcon className={clsIconStatusSize} />
                       </div>
                     </div>
                 }

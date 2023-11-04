@@ -49,8 +49,10 @@ export const MainContent = ( ) => {
 
   useEffect(() =>
     {
-
       const initTokensLists = async () => {
+        // const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms))
+        // await sleep(10_000) // Wait 10 second(s) before fetching token lists
+        // throw new Error('Test error')
         const tokenLists = await getTokenLists()
         setTokensLists(tokenLists) // Set inital token list data
       }
