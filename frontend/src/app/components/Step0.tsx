@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 
 import TokensListsSelect from "@Components/TokensListsSelect";
-import TokenInstanceListTable from "@Components/TokenInstanceListTable";
+// import TokenInstanceListTable from "@Components/TokenInstanceListTable";
+import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
 
 // ------------------------------
 
@@ -68,7 +69,7 @@ const Step0 = (  {
           { someTokensListsSelected &&
           <div className="w-full py-4 bg-base-100">
             <div className="min-w-fit m-0 p-1 rounded-box border border-neutral ">
-
+{/* 
               <TokenInstanceListTable
                 tokensInstances={tokensInstances}
                 accountAddress={accountAddress}
@@ -77,7 +78,19 @@ const Step0 = (  {
                 isLoading={isLoadingTokensInstances} isError={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
               />
-
+ */}
+              <TokenInstanceListTableFiltered
+                tokensInstances={tokensInstances}
+                // settokensInstances={settokensInstances}
+                accountAddress={accountAddress}
+                // chainId={chainId}
+                enableCheckboxes={true}
+                targetAddress={targetAddress}
+                // isError={isError}
+                isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
+                tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+                enableEditable={false}
+              />
             </div>
           </div>
           }

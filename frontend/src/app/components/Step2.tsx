@@ -11,7 +11,9 @@ const Step2 = ( {
   tokensInstances,
   accountAddress,
   // chainId,
-  targetAddress, isError,
+  targetAddress,
+  // isError,
+  isLoadingTokensInstances, isErrorTokensInstances,
   tokensInstancesListTablePropsHandlers,
 }: IStep2Props ) => {
 
@@ -32,19 +34,17 @@ const Step2 = ( {
         return false;
       });
 
-      setNextDisabled(!someSelected || isError)
+      setNextDisabled(!someSelected || /* isError */isErrorTokensInstances)
 
     },
-    [tokensInstances, /* accountAddress, */ isError, setNextDisabled]
+    [tokensInstances, /* accountAddress, */ /* isError */isErrorTokensInstances, setNextDisabled]
   )
 
   // ---
 
   return (
     <>
-      {/* <div className="w-full bg-base-300 items-center justify-center gap-2 overflow-x-scroll border border-neutral shadow-xl rounded-box bg-cover bg-top p-4 "> */}
       <div className="w-full p-0 m-0">
-
           <TokenInstanceListTableFiltered
             tokensInstances={tokensInstances}
             // settokensInstances={settokensInstances}
@@ -52,10 +52,11 @@ const Step2 = ( {
             // chainId={chainId}
             enableCheckboxes={true}
             targetAddress={targetAddress}
-            isError={isError}
+            // isError={isError}
+            isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
             tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+            enableEditable={true}
           />
-
       </div>
     </>
   );

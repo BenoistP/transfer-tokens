@@ -423,8 +423,10 @@ interface IStep1Props {
   targetAddress: TAddressEmpty,
   settargetAddress:TsettargetAddress
   chainId: ChainId;
-  isLoading: boolean,
-  isError: boolean,
+  // isLoading: boolean,
+  // isError: boolean,
+  isLoadingTokensInstances: boolean,
+  isErrorTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -436,7 +438,9 @@ interface IStep2Props {
   accountAddress: TAddressNullUndef,
   // chainId: ChainId;
   targetAddress: TAddressEmpty,
-  isError: boolean,
+  // isError: boolean,
+  isLoadingTokensInstances: boolean,
+  isErrorTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -504,6 +508,7 @@ interface ITokenListFilteredProps {
   // chainId: ChainId;
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
+  enableEditable: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -605,6 +610,9 @@ interface ITokensListTableFilteredProps {
   // chainId: ChainId;
   enableCheckboxes: boolean;
   targetAddress: TAddressEmpty,
-  isError: boolean,
+  // isError: boolean,
+  isLoadingTokensInstances: boolean,
+  isErrorTokensInstances: boolean,
+  enableEditable: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }

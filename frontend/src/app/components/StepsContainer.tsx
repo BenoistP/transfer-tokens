@@ -1804,7 +1804,8 @@ const StepsContainer = ( {
                 settargetAddress={settargetAddress}
                 // setShowProgressBar={setShowProgressBar}
                 // isLoading={isLoading} isError={isError}
-                isLoading={isLoadingTokensInstances} isError={isErrorTokensInstances}
+                // isLoading={isLoadingTokensInstances} isError={isErrorTokensInstances}
+                isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
               />
           </MainContentContainer>
@@ -1823,7 +1824,8 @@ const StepsContainer = ( {
                 // chainId={chainId}
                 targetAddress={targetAddress}
                 // isError={isError}
-                isError={isErrorTokensInstances}
+                // isError={isErrorTokensInstances}
+                isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 />
           </MainContentContainer>

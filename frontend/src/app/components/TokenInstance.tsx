@@ -15,7 +15,8 @@ import { NoSymbolIcon, MinusSmallIcon, ArrowLeftOnRectangleIcon as ArrowReceive,
 
 // ------------------------------
 
-const TokenInstance = ( { tokenInstance, accountAddress, targetAddress,
+const TokenInstance = ( {
+  tokenInstance, accountAddress, targetAddress,
   updateCheckboxStatus, updateTransferAmount, updateTransferAmountLock,
   enableEditable }: ITokenProps ) => {
 

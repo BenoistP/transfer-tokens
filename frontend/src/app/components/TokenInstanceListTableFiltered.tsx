@@ -14,7 +14,9 @@ const TokenInstanceListTableFiltered = (
       // chainId, // , transferTokens,
       enableCheckboxes,
       targetAddress,
-      isError,
+      // isError,
+      isLoadingTokensInstances, isErrorTokensInstances,
+      enableEditable,
       tokensInstancesListTablePropsHandlers }: ITokensListTableFilteredProps )  =>
   {
 
@@ -72,8 +74,9 @@ const TokenInstanceListTableFiltered = (
         // updateCheckboxStatus={enableCheckboxes?updateCheckboxStatus:null}
         targetAddress={targetAddress}
         tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+        enableEditable={enableEditable}
       />,
-      [tokensInstances, accountAddress, targetAddress, tokensInstancesListTablePropsHandlers]
+      [tokensInstances, accountAddress, targetAddress, tokensInstancesListTablePropsHandlers, enableEditable ]
   );
 
   // ---
@@ -126,6 +129,8 @@ const TokenInstanceListTableFiltered = (
 
   const clsIconBigInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
   const clsIcon = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2' 
+
+  const clsStatus = "flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl" // 'flex justify-center font-semibold pt-2 pb-3 text-md sm:text-base md:text-xl'
 
   // ---
 
@@ -253,7 +258,7 @@ const TokenInstanceListTableFiltered = (
 
         <div className="min-w-full rounded-lg border border-neutral mt-2 transition-all">
 
-          { (!isError && tokensInstances?.length) ?
+          { (!isErrorTokensInstances && tokensInstances?.length) ?
 
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
 
@@ -277,12 +282,18 @@ const TokenInstanceListTableFiltered = (
                         {t("moveTokens.stepTwo.tokensTable.results.titles.tokenBalance")}
                       </div>
                     </th>
-                    <th className="p-2 font-medium">
-                      {enableCheckboxes?t("moveTokens.stepTwo.tokensTable.results.titles.selected"):""}
-                    </th>
-                    <th className="p-2 font-medium">
-                      {t("moveTokens.stepTwo.tokensTable.results.titles.tokenAmount")}
-                    </th>
+                    { enableEditable
+                      &&
+                    <>
+                      <th className="p-2 font-medium">
+                        {enableCheckboxes?t("moveTokens.stepTwo.tokensTable.results.titles.selected"):""}
+                      </th>
+                      <th className="p-2 font-medium">
+                        {t("moveTokens.stepTwo.tokensTable.results.titles.tokenAmount")}
+                      </th>
+                    </>
+                    }
+                    
                     <th className="p-2 font-medium flex-none">
                       {t("moveTokens.stepTwo.tokensTable.results.titles.tokenInfo")}
                     </th>
@@ -296,8 +307,8 @@ const TokenInstanceListTableFiltered = (
 
               </table>
             :
-              isError ?
-                  <div className="flex justify-center text-error font-semibold pt-2 text-md sm:text-base md:text-xl">
+              isErrorTokensInstances ?
+                  <div className={clsStatus+" text-error"}>
                     <div className="pt-0 pr-3 ">
                     {t("moveTokens.stepAny.tokensTable.errorLoadingTokens")}
                     </div>
@@ -306,14 +317,28 @@ const TokenInstanceListTableFiltered = (
                     </div>
                   </div>
                 :
-                  <div className="flex justify-center text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
-                    <div className="pt-0 pr-3 ">
-                      {t("moveTokens.stepAny.tokensTable.noTokens")}
-                    </div>
-                    <div className="pt-0">
-                      <InformationCircleIcon className={clsIcon} />
-                    </div>
-                  </div>
+                  <>
+                  {
+                    isLoadingTokensInstances ?
+                      <div className={clsStatus+" text-info"}>
+                        <div className="pt-0 pr-3 ">
+                          {t("moveTokens.stepAny.tokensTable.loadingTokens")}
+                        </div>
+                        <div className="pt-0">
+                          <InformationCircleIcon className={clsIcon} />
+                        </div>
+                      </div>
+                      :
+                      <div className={clsStatus+" text-info"}>
+                        <div className="pt-0 pr-3 ">
+                          {t("moveTokens.stepAny.tokensTable.noTokens")}
+                        </div>
+                        <div className="pt-0">
+                          <InformationCircleIcon className={clsIcon} />
+                        </div>
+                      </div>
+                  }
+                  </>
           }
 
         </div> {/* Tokens list */}
