@@ -33,7 +33,7 @@
       "tokensListsTable": {
         "listName": "Nom",
         "listDescription": "Description",
-        "loadingTokensLists": "Loading",
+        "loadingTokensLists": "Chargement",
         "emptyTokensLists": "Aucune liste de tokens trouvée",
         "errorLoadingTokensLists": "Le chargement de la liste a échoué",
         "details": "Détails"
