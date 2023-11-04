@@ -269,8 +269,11 @@ const TokensListsSelect = ( {
                 :
                   isLoading ?
                     <div className="flex justify-center pb-3 text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
-                        <div className="pt-0 pr-3 ">
-                        {t('moveTokens.stepZero.tokensListsTable.loadingTokensLists')}
+                      <div className="pt-0">
+                        <InformationCircleIcon className={clsIconStatusSize} />
+                      </div>
+                      <div className="pt-0 pr-3 ">
+                          {t('moveTokens.stepZero.tokensListsTable.loadingTokensLists')}
                         </div>
                         <div className={clsLoadingTokenLists}/>
                     </div>

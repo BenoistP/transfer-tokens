@@ -7,6 +7,8 @@ import SortIcon from "@Components/SortIcon";
 import { useTranslation } from "react-i18next";
 // Icons
 import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
+// Styles
+import { clsLoadingTokenLists, clsIconStatusSize, clsIconMedium } from "@uiconsts/twDaisyUiStyles";
 
 const TokenInstanceListTableFiltered = (
     { tokensInstances,
@@ -128,7 +130,7 @@ const TokenInstanceListTableFiltered = (
   // ---
 
   const clsIconBigInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
-  const clsIcon = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2' 
+  // const clsIcon = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2' 
 
   const clsStatus = "flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl" // 'flex justify-center font-semibold pt-2 pb-3 text-md sm:text-base md:text-xl'
 
@@ -202,7 +204,7 @@ const TokenInstanceListTableFiltered = (
               <input type="checkbox" /> 
               <div className="collapse-title text-xs sm:text-sm md:text-base font-light justify-center flex">
                 {t("moveTokens.stepTwo.tokensTable.search.additional.title")}
-                  <FunnelIcon className={clsIcon} />
+                  <FunnelIcon className={clsIconMedium} />
                 {/* {t("moveTokens.stepTwo.tokensTable.search.additional.title")}  */}
               </div>
               <div className="collapse-content"> 
@@ -309,11 +311,11 @@ const TokenInstanceListTableFiltered = (
             :
               isErrorTokensInstances ?
                   <div className={clsStatus+" text-error"}>
-                    <div className="pt-0 pr-3 ">
-                    {t("moveTokens.stepAny.tokensTable.errorLoadingTokens")}
-                    </div>
                     <div className="pt-0">
-                      <ExclamationCircleIcon className={clsIcon} />
+                      <ExclamationCircleIcon className={clsIconStatusSize} />
+                    </div>
+                    <div className="pt-0 pr-3 ">
+                      {t("moveTokens.stepAny.tokensTable.errorLoadingTokens")}
                     </div>
                   </div>
                 :
@@ -321,20 +323,21 @@ const TokenInstanceListTableFiltered = (
                   {
                     isLoadingTokensInstances ?
                       <div className={clsStatus+" text-info"}>
+                        <div className="pt-0">
+                          <InformationCircleIcon className={clsIconStatusSize} />
+                        </div>
                         <div className="pt-0 pr-3 ">
                           {t("moveTokens.stepAny.tokensTable.loadingTokens")}
                         </div>
-                        <div className="pt-0">
-                          <InformationCircleIcon className={clsIcon} />
-                        </div>
+                        <div className={clsLoadingTokenLists}/>
                       </div>
                       :
                       <div className={clsStatus+" text-info"}>
+                        <div className="pt-0">
+                          <InformationCircleIcon className={clsIconStatusSize} />
+                        </div>
                         <div className="pt-0 pr-3 ">
                           {t("moveTokens.stepAny.tokensTable.noTokens")}
-                        </div>
-                        <div className="pt-0">
-                          <InformationCircleIcon className={clsIcon} />
                         </div>
                       </div>
                   }
