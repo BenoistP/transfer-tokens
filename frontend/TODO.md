@@ -55,7 +55,7 @@ All Steps : 🚧
 
 filtered tokens table: 🚧 
 - 🚧 show target address balance
-- 🚧 Add reset all filters
+- ☑️ Add reset all filters
 - ☑️ pre-Check "amount > 0" checkbox
 - ☑️ Add colors to icons
 
