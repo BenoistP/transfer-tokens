@@ -396,7 +396,6 @@ interface IStepErrorProps {
 type TChangeSortOrderCallback = () => void;
 
 interface IStep0Props {
-  tokensLists: TTokensLists|null|undefined,
   setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
@@ -405,13 +404,10 @@ interface IStep0Props {
   targetAddress: TAddressEmpty,
   tokensInstances: TTokensInstances,
   chainId: ChainId;
-
   isLoadingTokensLists: boolean,
   isErrorTokensLists: boolean,
-
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
-
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -454,7 +450,6 @@ interface IChangeTokensListCheckboxStatus {
  }
 
 interface ITokensListsSelectProps {
-  tokensLists: TTokensLists|null|undefined,
   chainId: TChainId
   // setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,

@@ -16,7 +16,6 @@ import { clsLoadingTokenLists, clsIconStatusSize } from "@uiconsts/twDaisyUiStyl
 // ------------------------------
 
 const TokensListsSelect = ( { 
-  // tokensLists,
   // chainId,
   selectableTokensLists,
   setselectableTokensLists,
@@ -32,12 +31,9 @@ const TokensListsSelect = ( {
   const isAllChecked = useCallback( () =>
     {
       try {
-console.debug(`TokensListsSelect.tsx: isAllChecked`)
         if (selectableTokensLists) {
           const isAllChecked = selectableTokensLists.every(
             (selectableTokensList) => {
-console.debug(`TokensListsSelect.tsx: isAllChecked selectableTokensList.selected || !selectableTokensList.selectable=${selectableTokensList.selected || !selectableTokensList.selectable} selectableTokensList=`)
-console.dir(selectableTokensList)
               return (
                 selectableTokensList.selected || !selectableTokensList.selectable // === true
               )
@@ -55,17 +51,11 @@ console.dir(selectableTokensList)
 
   // ---
 
-  // const [checkAll, setCheckAll] = useState<boolean>(isAllChecked);
-
-  // ---
-
   useEffect( () =>
     {
       try {
-// console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists]`)
         if (!selectableTokensLists || ((selectableTokensLists.length||0) === 0)) {
           setisCheckAllDisabled(true)
-// console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: setisCheckAllDisabled(true)`)
         } else {
           const notSelectable = selectableTokensLists.every ( (selectableTokensList) => {
             return (
@@ -97,96 +87,9 @@ console.dir(selectableTokensList)
 
   // ---
 
-//   const initSelectableTokensLists = useCallback( async(/* _selectableTokensLists: TSelectableTokensLists */) =>
-//     {
-
-//       try {
-        
-//         // if (!_selectableTokensLists || !_selectableTokensLists.length) {
-// console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselectableTokensLists] INitializing _selectableTokensLists`)
-//           const filteredSelectableTokensLists: TSelectableTokensLists = []
-//           tokensLists?.forEach( (tokensList: TTokensList) => {
-//             const chainTokensList = getChainTokensList(tokensList, chainId)
-//             const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
-//             const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
-//             const selectableTokensList = {
-//               tokensList,
-//               chainId,
-//               selected: false,
-//               selectable,
-//               currentChainTokensCount
-//             } // as TSelectableTokensList
-  
-//             filteredSelectableTokensLists.push(selectableTokensList)
-//           })
-//           setselectableTokensLists(filteredSelectableTokensLists)
-//         // } // if (!_selectableTokensLists || !_selectableTokensLists.length)
-          
-
-//       } catch (error) {
-//         console.error(`TokensListsSelect.tsx: initSelectableTokensLists: error=${error}`);
-//       }
-
-//     },
-//     [chainId, setselectableTokensLists, tokensLists]
-//   );
-
-  // ---
-
-//   useEffect( () =>
-//     {
-//       const init = async() => {
-// console.debug(`TokensListsSelect.tsx: useEffect INIT`)
-//         await initSelectableTokensLists(/* selectableTokensLists */)
-//       }
-
-//       try {
-// // console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselectableTokensLists]`)
-// //         if (!selectableTokensLists || !selectableTokensLists.length) {
-// // console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselectableTokensLists] INitializing selectableTokensLists`)
-// //         const filteredSelectableTokensLists: TSelectableTokensLists = []
-// //         tokensLists?.forEach( (tokensList: TTokensList) => {
-// //           const chainTokensList = getChainTokensList(tokensList, chainId)
-// //           const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
-// //           const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
-// //           const selectableTokensList = {
-// //             tokensList,
-// //             chainId,
-// //             selected: false,
-// //             selectable,
-// //             currentChainTokensCount
-// //           } // as TSelectableTokensList
-
-// //           filteredSelectableTokensLists.push(selectableTokensList)
-// //         })
-// //         setselectableTokensLists(filteredSelectableTokensLists)
-// //       } // if (!selectableTokensLists || !selectableTokensLists.length)
-
-//         if (!selectableTokensLists || !selectableTokensLists.length) {
-//           init()
-//         }
-        
-//       } catch (error) {
-//         console.error(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselectableTokensLists]: error=${error}`);
-//       }
-//     },
-//     [ /* , setselectableTokensLists */  initSelectableTokensLists, selectableTokensLists]
-//   ) // useEffect
-
-
-  // useEffect( () =>
-  //   {
-  //     initSelectableTokensLists(/* selectableTokensLists */)
-  //   },
-  //   [initSelectableTokensLists]
-  // ) // useEffect
-
-  // ---
-
   const updateCheckAll = useCallback( (selectableTokensLists:TSelectableTokensLists) =>
     {
       try {
-// console.debug(`TokensListsSelect.tsx: updateCheckAll`)
         if (selectableTokensLists) {
           setCheckAll(isAllChecked());
         } // if (selectableTokensLists)
@@ -202,7 +105,6 @@ console.dir(selectableTokensList)
     (id) =>
     {
       try {
-// console.debug(`TokensListsSelect.tsx: changeTokensListCheckboxStatus`)
         if (selectableTokensLists) {
           const new_selectableTokensLists = [...selectableTokensLists];
           selectableTokensLists.map((selectableTokensList) => {
@@ -224,8 +126,6 @@ console.dir(selectableTokensList)
   const handleInvertAllChecks = useCallback( () =>
     {
       try {
-// console.debug(`TokensListsSelect.tsx: handleInvertAllChecks`)
-        // console.debug(`TokensListsSelect.tsx: handleInvertAllChecks`);
         if (selectableTokensLists && selectableTokensLists.length > 0) {
           const new_selectableTokensLists = [...selectableTokensLists];
           selectableTokensLists.map((selectableTokensList) => {
@@ -246,7 +146,6 @@ console.dir(selectableTokensList)
   const handleCheckSelectAll = useCallback( () =>
     {
       try {
-// console.debug(`TokensListsSelect.tsx: changeTokensListCheckboxStatus`)
         const newCheckAll = !checkAll
         if (selectableTokensLists) {
           const new_selectableTokensLists = [...selectableTokensLists];
@@ -269,27 +168,13 @@ console.dir(selectableTokensList)
   useEffect( () =>
     {
       try {
-        // const _isAllChecked = isAllChecked();
-        // console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists] isAllChecked=${_isAllChecked}`)
-        console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists] `)
         updateCheckAll(selectableTokensLists);
-        // if (_isAllChecked) {
-        //   setCheckAll(true);
-        // } else {
-        //   setCheckAll(false);
-        // }
-// console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists] isAllChecked=${_isAllChecked}`)
-        
-        // updateCheckAll(selectableTokensLists);
       }
       catch (error) {
         console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
       }
-
     }
-    , [selectableTokensLists, updateCheckAll
-      // , isAllChecked
-    ]
+    , [selectableTokensLists, updateCheckAll]
   )
 
   const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "

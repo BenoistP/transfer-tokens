@@ -8,7 +8,6 @@ import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFi
 
 const Step0 = (  {
     accountAddress,
-    tokensLists,
     chainId,
     setNextDisabled,
     targetAddress,
@@ -42,7 +41,6 @@ const Step0 = (  {
 
           <div className="w-full flex">
             <TokensListsSelect
-              tokensLists={tokensLists}
               chainId={chainId}
               selectableTokensLists={selectableTokensLists}
               setselectableTokensLists={setselectableTokensLists}
