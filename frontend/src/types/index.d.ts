@@ -396,7 +396,6 @@ interface IStepErrorProps {
 type TChangeSortOrderCallback = () => void;
 
 interface IStep0Props {
-  tokensLists: TTokensLists|null|undefined,
   setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
@@ -405,13 +404,10 @@ interface IStep0Props {
   targetAddress: TAddressEmpty,
   tokensInstances: TTokensInstances,
   chainId: ChainId;
-
   isLoadingTokensLists: boolean,
   isErrorTokensLists: boolean,
-
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
-
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -423,8 +419,10 @@ interface IStep1Props {
   targetAddress: TAddressEmpty,
   settargetAddress:TsettargetAddress
   chainId: ChainId;
-  isLoading: boolean,
-  isError: boolean,
+  // isLoading: boolean,
+  // isError: boolean,
+  isLoadingTokensInstances: boolean,
+  isErrorTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -436,7 +434,9 @@ interface IStep2Props {
   accountAddress: TAddressNullUndef,
   // chainId: ChainId;
   targetAddress: TAddressEmpty,
-  isError: boolean,
+  // isError: boolean,
+  isLoadingTokensInstances: boolean,
+  isErrorTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -450,7 +450,6 @@ interface IChangeTokensListCheckboxStatus {
  }
 
 interface ITokensListsSelectProps {
-  tokensLists: TTokensLists|null|undefined,
   chainId: TChainId
   // setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
@@ -504,6 +503,7 @@ interface ITokenListFilteredProps {
   // chainId: ChainId;
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
+  enableEditable: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -597,6 +597,7 @@ interface ItokenInstanceFilterParamsUpdaters {
   updateBalanceFilter: (e: React.FormEvent<HTMLInputElement>) => void,
   switchBalanceGt0Filter: () => void,
   updateAddressFilter: (e: React.FormEvent<HTMLInputElement>) => void,
+  clearAllFilters: () => void,
 }
 
 interface ITokensListTableFilteredProps {
@@ -605,6 +606,9 @@ interface ITokensListTableFilteredProps {
   // chainId: ChainId;
   enableCheckboxes: boolean;
   targetAddress: TAddressEmpty,
-  isError: boolean,
+  // isError: boolean,
+  isLoadingTokensInstances: boolean,
+  isErrorTokensInstances: boolean,
+  enableEditable: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }

@@ -2,7 +2,8 @@
 import { useEffect } from "react";
 // Components
 import AddressInput from "@Components/AddressInput";
-import TokenInstanceListTable from "@Components/TokenInstanceListTable";
+// import TokenInstanceListTable from "@Components/TokenInstanceListTable";
+import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
 // Utils
 import { isValidAddress } from "@jsutils/blockchainUtils";
 
@@ -16,7 +17,7 @@ const Step1 = ( {
   settargetAddress,
   // setShowProgressBar,
   // chainId,
-  isLoading, isError,
+  isLoadingTokensInstances, isErrorTokensInstances,
   tokensInstancesListTablePropsHandlers }: IStep1Props ) =>
 {
 
@@ -24,9 +25,9 @@ const Step1 = ( {
 
   useEffect( () =>
     {
-      setNextDisabled(! isValidAddress(targetAddress) || targetAddress == accountAddress || isLoading || isError)
+      setNextDisabled(! isValidAddress(targetAddress) || targetAddress == accountAddress || isLoadingTokensInstances || isErrorTokensInstances)
     },
-    [accountAddress, targetAddress, isLoading, isError, setNextDisabled]
+    [accountAddress, targetAddress, isLoadingTokensInstances, isErrorTokensInstances, setNextDisabled]
   )
 
   // ---
@@ -44,16 +45,16 @@ const Step1 = ( {
 
         <div className="w-full py-4 bg-base-100">
             <div className="min-w-fit m-0 p-1 rounded-box border border-neutral ">
-
-              <TokenInstanceListTable
+              <TokenInstanceListTableFiltered
                 tokensInstances={tokensInstances}
                 accountAddress={accountAddress}
                 // chainId={chainId}
+                enableCheckboxes={true}
                 targetAddress={targetAddress}
-                isLoading={isLoading} isError={isError}
+                isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+                enableEditable={false}
               />
-
             </div>
         </div>
 

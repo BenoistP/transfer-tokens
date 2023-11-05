@@ -12,6 +12,7 @@ const TokenInstanceListFiltered = ( {
   accountAddress,
   targetAddress,
   tokensInstancesListTablePropsHandlers,
+  enableEditable,
  }: ITokenListFilteredProps ) => {
 
   // console.debug(`TokenInstanceListFiltered.tsx render accountAddress: ${accountAddress}`);
@@ -60,7 +61,7 @@ const TokenInstanceListFiltered = ( {
                 updateTransferAmount={tokensInstancesListTablePropsHandlers.updateHandlers.updateTransferAmount}
                 updateTransferAmountLock={tokensInstancesListTablePropsHandlers.updateHandlers.updateTransferAmountLock}
                 targetAddress={targetAddress}
-                enableEditable={true}
+                enableEditable={enableEditable}
               />
             </tr>
           )
