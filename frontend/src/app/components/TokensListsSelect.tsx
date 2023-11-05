@@ -2,8 +2,8 @@
 import { useCallback, useEffect, useState } from "react"
 // Components
 import SelectableTokensLists from "@Components/SelectableTokensLists"
-// Utils
-import { getChainTokensList } from "@jsutils/tokensListsUtils"
+// // Utils
+// import { getChainTokensList } from "@jsutils/tokensListsUtils"
 // Icons
 import { ArrowPathRoundedSquareIcon } from '@heroicons/react/24/solid'
 // Translation
@@ -16,8 +16,7 @@ import { clsLoadingTokenLists, clsIconStatusSize } from "@uiconsts/twDaisyUiStyl
 // ------------------------------
 
 const TokensListsSelect = ( { 
-  tokensLists,
-  chainId,
+  // chainId,
   selectableTokensLists,
   setselectableTokensLists,
   isLoading, isError    }: ITokensListsSelectProps ) =>
@@ -49,10 +48,6 @@ const TokensListsSelect = ( {
     },
     [selectableTokensLists]
   );
-
-  // ---
-
-  // const [checkAll, setCheckAll] = useState<boolean>(isAllChecked);
 
   // ---
 
@@ -89,34 +84,6 @@ const TokensListsSelect = ( {
       ]
   );
 */
-
-  // ---
-
-  useEffect( () =>
-    {
-      try {
-        const filteredSelectableTokensLists: TSelectableTokensLists = []
-        tokensLists?.forEach( (tokensList: TTokensList) => {
-          const chainTokensList = getChainTokensList(tokensList, chainId)
-          const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
-          const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
-          const selectableTokensList = {
-            tokensList,
-            chainId,
-            selected: false,
-            selectable,
-            currentChainTokensCount
-          } // as TSelectableTokensList
-
-          filteredSelectableTokensLists.push(selectableTokensList)
-        })
-        setselectableTokensLists(filteredSelectableTokensLists)
-      } catch (error) {
-        console.error(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselectableTokensLists]: error=${error}`);
-      }
-    },
-    [tokensLists, chainId, setselectableTokensLists]
-  ) // useEffect
 
   // ---
 
@@ -159,7 +126,6 @@ const TokensListsSelect = ( {
   const handleInvertAllChecks = useCallback( () =>
     {
       try {
-        // console.debug(`TokensListsSelect.tsx: handleInvertAllChecks`);
         if (selectableTokensLists && selectableTokensLists.length > 0) {
           const new_selectableTokensLists = [...selectableTokensLists];
           selectableTokensLists.map((selectableTokensList) => {
@@ -198,6 +164,18 @@ const TokensListsSelect = ( {
   ); // handleCheckSelectAll
 
   // ---
+
+  useEffect( () =>
+    {
+      try {
+        updateCheckAll(selectableTokensLists);
+      }
+      catch (error) {
+        console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
+      }
+    }
+    , [selectableTokensLists, updateCheckAll]
+  )
 
   const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
    + ( ((selectableTokensLists?.length||0)=== 0) ? "fill-base-content opacity-10 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
@@ -269,8 +247,11 @@ const TokensListsSelect = ( {
                 :
                   isLoading ?
                     <div className="flex justify-center pb-3 text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
-                        <div className="pt-0 pr-3 ">
-                        {t('moveTokens.stepZero.tokensListsTable.loadingTokensLists')}
+                      <div className="pt-0">
+                        <InformationCircleIcon className={clsIconStatusSize} />
+                      </div>
+                      <div className="pt-0 pr-3 ">
+                          {t('moveTokens.stepZero.tokensListsTable.loadingTokensLists')}
                         </div>
                         <div className={clsLoadingTokenLists}/>
                     </div>
