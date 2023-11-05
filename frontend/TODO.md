@@ -53,7 +53,6 @@ All Steps : 🚧
 - 🚧 Add reset all filters
 - 🚧 Add fetch loading indicator in bottom bar
 - 🚧 use filtered tokens table in all screens
-- 🚧 show target address balance
 
 
 Step 0: 🚧
@@ -61,7 +60,13 @@ Step 0: 🚧
 - 🚧 Watch for balances changes 👀
 - ☑️ Ethereum data is not loaded
 - ☑️ Add loading indicator when loading tokens lists
-- Error handling
+- ☑️ Error handling
+- 🚧 Check amount > 0
+
+Step 1: 🚧
+- 🚧 show target address balance
+- ☑️ Error handling
+
 
 Step 2: 🚧 
 - ☑️ Fix list loading bug/missing icons (all/none & lock)
@@ -71,6 +76,7 @@ Step 2: 🚧
 - ☑️ fix tokens numbering in lists (filtering changes numbers)
 - ☑️ Unselect token on target address change (if not transferrable)
 - ☑️ Keep transfer amount and lock state between screens
+- ☑️ Error handling
 
 
 
