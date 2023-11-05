@@ -32,7 +32,7 @@ const TokensListsSelect = ( {
   const isAllChecked = useCallback( () =>
     {
       try {
-console.debug(`TokensListsSelect.tsx: isAllChecked`)
+// console.debug(`TokensListsSelect.tsx: isAllChecked`)
         if (selectableTokensLists) {
           const isAllChecked = selectableTokensLists.every(
             (selectableTokensList) => {
@@ -60,10 +60,10 @@ console.debug(`TokensListsSelect.tsx: isAllChecked`)
   useEffect( () =>
     {
       try {
-console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists]`)
+// console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists]`)
         if (!selectableTokensLists || ((selectableTokensLists.length||0) === 0)) {
           setisCheckAllDisabled(true)
-console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: setisCheckAllDisabled(true)`)
+// console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: setisCheckAllDisabled(true)`)
         } else {
           const notSelectable = selectableTokensLists.every ( (selectableTokensList) => {
             return (
@@ -184,7 +184,7 @@ console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: setisChe
   const updateCheckAll = useCallback( (selectableTokensLists:TSelectableTokensLists) =>
     {
       try {
-console.debug(`TokensListsSelect.tsx: updateCheckAll`)
+// console.debug(`TokensListsSelect.tsx: updateCheckAll`)
         if (selectableTokensLists) {
           setCheckAll(isAllChecked());
         } // if (selectableTokensLists)
@@ -200,7 +200,7 @@ console.debug(`TokensListsSelect.tsx: updateCheckAll`)
     (id) =>
     {
       try {
-console.debug(`TokensListsSelect.tsx: changeTokensListCheckboxStatus`)
+// console.debug(`TokensListsSelect.tsx: changeTokensListCheckboxStatus`)
         if (selectableTokensLists) {
           const new_selectableTokensLists = [...selectableTokensLists];
           selectableTokensLists.map((selectableTokensList) => {
@@ -222,7 +222,7 @@ console.debug(`TokensListsSelect.tsx: changeTokensListCheckboxStatus`)
   const handleInvertAllChecks = useCallback( () =>
     {
       try {
-console.debug(`TokensListsSelect.tsx: handleInvertAllChecks`)
+// console.debug(`TokensListsSelect.tsx: handleInvertAllChecks`)
         // console.debug(`TokensListsSelect.tsx: handleInvertAllChecks`);
         if (selectableTokensLists && selectableTokensLists.length > 0) {
           const new_selectableTokensLists = [...selectableTokensLists];
@@ -244,7 +244,7 @@ console.debug(`TokensListsSelect.tsx: handleInvertAllChecks`)
   const handleCheckSelectAll = useCallback( () =>
     {
       try {
-console.debug(`TokensListsSelect.tsx: changeTokensListCheckboxStatus`)
+// console.debug(`TokensListsSelect.tsx: changeTokensListCheckboxStatus`)
         const newCheckAll = !checkAll
         if (selectableTokensLists) {
           const new_selectableTokensLists = [...selectableTokensLists];
@@ -263,6 +263,25 @@ console.debug(`TokensListsSelect.tsx: changeTokensListCheckboxStatus`)
   ); // handleCheckSelectAll
 
   // ---
+
+  useEffect( () =>
+    {
+      try {
+        const _isAllChecked = isAllChecked();
+        if (_isAllChecked) {
+          setCheckAll(_isAllChecked);
+        }
+// console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists] isAllChecked=${_isAllChecked}`)
+        
+        // updateCheckAll(selectableTokensLists);
+      }
+      catch (error) {
+// console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
+      }
+
+    }
+    , [selectableTokensLists, updateCheckAll, isAllChecked]
+  )
 
   const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
    + ( ((selectableTokensLists?.length||0)=== 0) ? "fill-base-content opacity-10 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
