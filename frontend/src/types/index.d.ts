@@ -597,6 +597,7 @@ interface ItokenInstanceFilterParamsUpdaters {
   updateBalanceFilter: (e: React.FormEvent<HTMLInputElement>) => void,
   switchBalanceGt0Filter: () => void,
   updateAddressFilter: (e: React.FormEvent<HTMLInputElement>) => void,
+  clearAllFilters: () => void,
 }
 
 interface ITokensListTableFilteredProps {

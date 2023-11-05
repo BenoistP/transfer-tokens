@@ -115,13 +115,10 @@ const StepsContainer = ( {
 
   // ---
 
-  // const updateBalanceGt0Filter = useCallback(
   const switchBalanceGt0Filter = useCallback(
-    (/* e: React.FormEvent<HTMLInputElement> */): void =>
+    (): void =>
       {
         try {
-          // console.debug(`switchBalanceGt0Filter `);
-          // setBalanceGt0Filter(e.currentTarget.value);
           setBalanceGt0Filter(!balanceGt0Filter);
         } catch (error) {
           console.error(`StepsContainer.tsx switchBalanceGt0Filter error: ${error}`);
@@ -145,9 +142,27 @@ const StepsContainer = ( {
       []
   ); // updateAddressFilter
 
+  // ---
+
+  const clearAllFilters = useCallback(
+    (): void =>
+      {
+        try {
+          console.debug(`StepsContainer.tsx clearAllFilters`);
+          setaddressFilter("");
+          setBalanceFilter("");
+          setnameFilter("");
+          setBalanceGt0Filter(false);
+        } catch (error) {
+          console.error(`StepsContainer.tsx clearAllFilters ${error}`);
+        }
+      },
+      []
+  ); // clearAllFilters
+
   const tokenInstanceFilterParamsUpdaters = {
-    updateNameFilter, switchBalanceGt0Filter, updateBalanceFilter, updateAddressFilter
-  } as ItokenInstanceFilterParamsUpdaters
+    updateNameFilter, switchBalanceGt0Filter, updateBalanceFilter, updateAddressFilter, clearAllFilters
+  } // as ItokenInstanceFilterParamsUpdaters
     // ---
 
 

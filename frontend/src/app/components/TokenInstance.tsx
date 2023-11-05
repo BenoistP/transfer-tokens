@@ -301,16 +301,16 @@ const TokenInstance = ( {
           (tokenInstance.symbol || tokenInstance.address) &&
           <div className={clsTooltipLeft + "tooltip-info text-base-content tracking-tight"} data-tip={tokenInstance.symbol + "\n" + tokenInstance.address} >
             <span className="badge badge-ghost badge-sm bg-neutral text-neutral-content border border-neutral-content">
-              {t("moveTokens.stepTwo.token.details")}
+              {t("moveTokens.stepAny.token.details")}
             </span>
           </div>
         }
         { canTransferFrom ?
-          <div className={clsTooltipLeft + "pl-1 text-info tooltip-info"} data-tip={t(canTransferFrom?"moveTokens.stepTwo.token.canTransferFrom":"moveTokens.stepTwo.token.noTransferFrom")} >
+          <div className={clsTooltipLeft + "pl-1 text-info tooltip-info"} data-tip={t(canTransferFrom?"moveTokens.stepAny.token.canTransferFrom":"moveTokens.stepAny.token.noTransferFrom")} >
             <ArrowSend className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
           </div>
           :
-          <div className={clsTooltipLeft + "pl-1 text-warning tooltip-warning"} data-tip={t(canTransferFrom?"moveTokens.stepTwo.token.canTransferFrom":"moveTokens.stepTwo.token.noTransferFrom")} >
+          <div className={clsTooltipLeft + "pl-1 text-warning tooltip-warning"} data-tip={t(canTransferFrom?"moveTokens.stepAny.token.canTransferFrom":"moveTokens.stepAny.token.noTransferFrom")} >
             <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
           </div>
         }
@@ -318,11 +318,11 @@ const TokenInstance = ( {
             null
           :
             (canTransferTo ?
-              <div className={clsTooltipLeft + "pl-1 text-info tooltip-info"} data-tip={t("moveTokens.stepTwo.token.canTransferTo")} >
+              <div className={clsTooltipLeft + "pl-1 text-info tooltip-info"} data-tip={t("moveTokens.stepAny.token.canTransferTo")} >
                 <ArrowReceive className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
               </div>
               :
-              <div className={clsTooltipLeft + "pl-1 text-warning tooltip-warning"} data-tip={t("moveTokens.stepTwo.token.noTransferTo")} >
+              <div className={clsTooltipLeft + "pl-1 text-warning tooltip-warning"} data-tip={t("moveTokens.stepAny.token.noTransferTo")} >
                 <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
               </div>
             )

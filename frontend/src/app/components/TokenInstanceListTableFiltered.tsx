@@ -6,7 +6,7 @@ import SortIcon from "@Components/SortIcon";
 // Translation
 import { useTranslation } from "react-i18next";
 // Icons
-import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
+import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon, InformationCircleIcon, BackspaceIcon } from '@heroicons/react/24/solid'
 // Styles
 import { clsLoadingTokenLists, clsIconStatusSize, clsIconMedium } from "@uiconsts/twDaisyUiStyles";
 
@@ -129,7 +129,8 @@ const TokenInstanceListTableFiltered = (
 
   // ---
 
-  const clsIconBigInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
+  const clsIconBig = "w-6 h-6 sm:w-10 sm:h-10"
+  const clsIconBigInvert = clsIconBig + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
   // const clsIcon = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2' 
 
   const clsStatus = "flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl" // 'flex justify-center font-semibold pt-2 pb-3 text-md sm:text-base md:text-xl'
@@ -143,76 +144,136 @@ const TokenInstanceListTableFiltered = (
 
         <div className="min-w-full rounded-lg border border-neutral">
 
-          <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
+          <div className="flex min-w-full px-1">
 
-            <thead className="min-w-full bg-base-200 text-left">
-              <tr className=" text-xs sm:text-sm md:text-base font-semibold">
-                <th className="p-2 font-medium">{t("moveTokens.stepTwo.tokensTable.search.name")}</th>
-                <th className="p-2 font-medium">{t("moveTokens.stepTwo.tokensTable.search.balance")}</th>
-                <th className="p-2 font-medium">{t("moveTokens.stepTwo.tokensTable.search.balanceGt0")}</th>
-                <th className="p-2 font-medium">{t("moveTokens.stepTwo.tokensTable.search.selectAll")}</th>
-                <th className="p-2 font-medium">{t("moveTokens.stepTwo.tokensTable.search.invertSelection")}</th>
-              </tr>
-            </thead>
-            <tbody className="min-w-full text-xs sm:text-sm md:text-base">
-              <tr className="bg-base-300">
-                <td className="p-2">
-                  <input className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md w-full"
-                    type="text"
-                    value={tokensInstancesListTablePropsHandlers.filterStates.name}
-                    onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateNameFilter(e)}}
-                    placeholder="..." spellCheck="false" >
-                  </input>
-                </td>
-                <td className="p-2">
-                  <input className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md"
-                    type="number"
-                    value={tokensInstancesListTablePropsHandlers.filterStates.balance.valueOf()}
-                    onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateBalanceFilter(e)}}
-                    step={0.001} min={0} max={10000000000000}
-                    placeholder="...">
-                  </input>
-                </td>
-                <td className="p-2">
-                  <label>
-                    {/* Balance greater than 0 filter checkbox */}
-                    <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
-                      type="checkbox"
-                      checked={tokensInstancesListTablePropsHandlers.filterStates.balanceGt0} onChange={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.switchBalanceGt0Filter()}}
-                      disabled={!tokensInstances?.length}
-                      />
-                  </label>
-                </td>
-                <td className="p-2">
-                  <label>
-                    {/* Select ALL checkbox */}
-                    <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
-                      type="checkbox"
-                      checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
-                      onChange={(/* e */)=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
-                      disabled={selectAllDisabled}
-                      />
-                  </label>
-                </td>
-                <td className="p-2">
-                  <label>
-                    {/* INVERT ALL checkbox */}
-                    <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
-                  </label>
-                </td>
+            <div className="flex w-3/4 rounded-lg border border-neutral">
 
-              </tr>
-            </tbody>
-          </table> {/* MAIN search PARAMETERS table */}
+              <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
+                <thead className="min-w-full bg-base-200 text-left">
+                  <tr className=" text-xs sm:text-sm md:text-base font-semibold">
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.name")}</th>
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balance")}</th>
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balanceGt0")}</th>
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.clear")}</th>
+  {/* 
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.selectAll")}</th>
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.invertSelection")}</th>
+  */}
+                  </tr>
+                </thead>
+                <tbody className="min-w-full text-xs sm:text-sm md:text-base">
+                  <tr className="bg-base-300">
+                    <td className="p-2">
+                      <input className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md w-full"
+                        type="text"
+                        value={tokensInstancesListTablePropsHandlers.filterStates.name}
+                        onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateNameFilter(e)}}
+                        placeholder="..." spellCheck="false" >
+                      </input>
+                    </td>
+                    <td className="p-2">
+                      <input className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md"
+                        type="number"
+                        value={tokensInstancesListTablePropsHandlers.filterStates.balance.valueOf()}
+                        onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateBalanceFilter(e)}}
+                        step={0.001} min={0} max={10000000000000}
+                        placeholder="...">
+                      </input>
+                    </td>
+                    <td className="p-2">
+                      <label>
+                        {/* Balance greater than 0 filter checkbox */}
+                        <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
+                          type="checkbox"
+                          checked={tokensInstancesListTablePropsHandlers.filterStates.balanceGt0} onChange={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.switchBalanceGt0Filter()}}
+                          disabled={!tokensInstances?.length}
+                          />
+                      </label>
+                    </td>
+                    <td className="p-2">
+{/* 
+                      <label>
+                        <button className="btn btn-xs sm:btn-md md:btn-md"
+                          onClick={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.clearAllFilters()}}
+                          disabled={!tokensInstances?.length}
+                          />
+                      </label>
+ */}
+                      <label>
+                        {/* Clear filters */}
+                        <BackspaceIcon className={clsIconBig} onClick={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.clearAllFilters()}} />
+                      </label>
 
-          <div className="px-2">
+                    </td>
+
+  {/* 
+                    <td className="p-2">
+                      <label>
+                        <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
+                          type="checkbox"
+                          checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
+                          onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
+                          disabled={selectAllDisabled}
+                          />
+                      </label>
+                    </td>
+                    <td className="p-2">
+                      <label>
+                        <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
+                      </label>
+                    </td>
+  */}
+                  </tr>
+                </tbody>
+              </table> {/* MAIN search PARAMETERS table */}
+            </div>
+
+            <div className="flex w-1/4 rounded-lg border border-neutral">
+
+              <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
+
+                <thead className="min-w-full bg-base-200 text-left">
+                  <tr className=" text-xs sm:text-sm md:text-base font-semibold">
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.selectAll")}</th>
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.invertSelection")}</th>
+                  </tr>
+                </thead>
+                <tbody className="min-w-full text-xs sm:text-sm md:text-base">
+                  <tr className="bg-base-300">
+                    <td className="p-2">
+                      <label>
+                        {/* Select ALL checkbox */}
+                        <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
+                          type="checkbox"
+                          checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
+                          onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
+                          disabled={selectAllDisabled}
+                          />
+                      </label>
+                    </td>
+                    <td className="p-2">
+                      <label>
+                        {/* INVERT ALL checkbox */}
+                        <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
+                      </label>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table> {/* SELECT table */}
+
+            </div>
+
+          </div>
+
+          <div className="px-2 pt-1">
             <div className="collapse collapse-arrow border border-neutral bg-base-100">
               <input type="checkbox" /> 
               <div className="collapse-title text-xs sm:text-sm md:text-base font-light justify-center flex">
-                {t("moveTokens.stepTwo.tokensTable.search.additional.title")}
+                {t("moveTokens.stepAny.tokensTable.search.additional.title")}
                   <FunnelIcon className={clsIconMedium} />
-                {/* {t("moveTokens.stepTwo.tokensTable.search.additional.title")}  */}
+                {/* {t("moveTokens.stepAny.tokensTable.search.additional.title")}  */}
               </div>
               <div className="collapse-content"> 
 
@@ -221,7 +282,7 @@ const TokenInstanceListTableFiltered = (
 
                   <thead className="min-w-full bg-base-200 text-left">
                     <tr className=" text-xs sm:text-sm md:text-base font-semibold">
-                      <th className="p-2 font-medium">{t("moveTokens.stepTwo.tokensTable.search.additional.address")}</th>
+                      <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.additional.address")}</th>
                       <th className="p-2"></th>
                     </tr>
                   </thead>
@@ -246,19 +307,19 @@ const TokenInstanceListTableFiltered = (
           <div className="flex justify-center items-center mx-2">
 
             <div className={"flex-grow text-center " + (countSelected(tokensInstances)?"font-semibold":"font-normal")}>
-              {t("moveTokens.stepTwo.tokensTable.results.found.selected")}: {countSelected(tokensInstances)}
+              {t("moveTokens.stepAny.tokensTable.results.found.selected")}: {countSelected(tokensInstances)}
             </div>
 
             <div className="flex-grow text-center">
-              {t("moveTokens.stepTwo.tokensTable.results.found.visible")}: {countDisplayed(tokensInstances)}
+              {t("moveTokens.stepAny.tokensTable.results.found.visible")}: {countDisplayed(tokensInstances)}
             </div>
 
             <div className="flex-grow text-center">
-              {t("moveTokens.stepTwo.tokensTable.results.found.hidden")}: { (tokensInstances? (tokensInstances?.length||0)-countDisplayed(tokensInstances) : 0 ) }
+              {t("moveTokens.stepAny.tokensTable.results.found.hidden")}: { (tokensInstances? (tokensInstances?.length||0)-countDisplayed(tokensInstances) : 0 ) }
             </div>
 
             <div className="flex-grow text-center">
-              {t("moveTokens.stepTwo.tokensTable.results.found.total")}:  {tokensInstances?.length||0}
+              {t("moveTokens.stepAny.tokensTable.results.found.total")}:  {tokensInstances?.length||0}
             </div>
 
           </div> {/* Tokens list summary : selected/total/... */}
@@ -276,35 +337,35 @@ const TokenInstanceListTableFiltered = (
                     <th className="p-2 font-medium justify-center flex-none">
                       <div className="flex  w-min-full">
                         <SortIcon sortOrder={tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenDisplayId} changeSortFnCb={tokensInstancesListTablePropsHandlers.sortHandlers.sortByTokenDisplayId} />
-                        {t("moveTokens.stepTwo.tokensTable.results.titles.tokenId")}
+                        {t("moveTokens.stepAny.tokensTable.results.titles.tokenId")}
                       </div>
                     </th>
                     <th className="p-2 font-medium  flex">
                       <div className="flex justify-left w-min-full">
                         <SortIcon sortOrder={tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenName} changeSortFnCb={tokensInstancesListTablePropsHandlers.sortHandlers.sortByTokenName} />
-                        {t("moveTokens.stepTwo.tokensTable.results.titles.tokenName")}
+                        {t("moveTokens.stepAny.tokensTable.results.titles.tokenName")}
                       </div>
                     </th>
                     <th className="p-2 font-medium flex-none">
                       <div className="flex justify-end grow-0">
                         <SortIcon sortOrder={tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenBalance} changeSortFnCb={tokensInstancesListTablePropsHandlers.sortHandlers.sortByTokenBalance} />
-                        {t("moveTokens.stepTwo.tokensTable.results.titles.tokenBalance")}
+                        {t("moveTokens.stepAny.tokensTable.results.titles.tokenBalance")}
                       </div>
                     </th>
                     { enableEditable
                       &&
                     <>
                       <th className="p-2 font-medium">
-                        {enableCheckboxes?t("moveTokens.stepTwo.tokensTable.results.titles.selected"):""}
+                        {enableCheckboxes?t("moveTokens.stepAny.tokensTable.results.titles.selected"):""}
                       </th>
                       <th className="p-2 font-medium">
-                        {t("moveTokens.stepTwo.tokensTable.results.titles.tokenAmount")}
+                        {t("moveTokens.stepAny.tokensTable.results.titles.tokenAmount")}
                       </th>
                     </>
                     }
                     
                     <th className="p-2 font-medium flex-none">
-                      {t("moveTokens.stepTwo.tokensTable.results.titles.tokenInfo")}
+                      {t("moveTokens.stepAny.tokensTable.results.titles.tokenInfo")}
                     </th>
                   </tr>
                 </thead>
