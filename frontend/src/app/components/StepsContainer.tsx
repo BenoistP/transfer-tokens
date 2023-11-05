@@ -71,7 +71,7 @@ const StepsContainer = ( {
 
   // Filtering
   const [nameFilter, setnameFilter] = useState<string>("")
-  const [balanceGt0Filter, setBalanceGt0Filter] = useState<boolean>(false)
+  const [balanceGt0Filter, setBalanceGt0Filter] = useState<boolean>(true) // set checked by default (display only balance > 0)
   const [balanceFilter, setBalanceFilter] = useState<string>("")
   const [addressFilter, setaddressFilter] = useState<string>("")
 
@@ -1829,9 +1829,6 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
                 
           <MainContentContainer>
               <Step0
-                // selectableTokensLists={selectableTokensLists}
-                tokensLists={tokensLists}
-                // changeTokensListCheckboxStatus={changeTokensListCheckboxStatus}
                 // setpreviousDisabled={setpreviousDisabled}
                 setNextDisabled={setNextDisabled}
                 // tokenChainDataArray={selectedTokensChainDataArray}
