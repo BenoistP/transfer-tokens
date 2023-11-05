@@ -1,7 +1,7 @@
+// React
 import { useEffect } from "react";
-
+// Components
 import TokensListsSelect from "@Components/TokensListsSelect";
-// import TokenInstanceListTable from "@Components/TokenInstanceListTable";
 import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
 
 // ------------------------------
@@ -23,28 +23,12 @@ const Step0 = (  {
 
   // ---
 
-  // console.debug(`Step0.tsx render`)
   const someTokensListsSelected = selectableTokensLists?.some ( (tokensList) => tokensList.selected ) || false
-
-  // ---
-
-  useEffect( () =>
-    {
-      // console.debug(`Step0.tsx useEffect`)
-      // setpreviousDisabled(true)
-      setNextDisabled(true)
-    },
-    [setNextDisabled]
-  )
 
     // ---
 
     useEffect( () =>
     {
-      // setpreviousDisabled(false)
-      // setNextDisabled(!tokenChainDataArray || tokenChainDataArray.length <= 0)
-      // const someTokensListsSelected = selectableTokensLists?.some ( (tokensList) => tokensList.selected )
-      // console.log(`Step0.tsx useEffect: someSelected=${someSelected}`);
       setNextDisabled(!someTokensListsSelected || isLoadingTokensLists || isErrorTokensLists)
     },
     [setNextDisabled, someTokensListsSelected, isLoadingTokensLists, isErrorTokensLists]
@@ -69,16 +53,6 @@ const Step0 = (  {
           { someTokensListsSelected &&
           <div className="w-full py-4 bg-base-100">
             <div className="min-w-fit m-0 p-1 rounded-box border border-neutral ">
-{/* 
-              <TokenInstanceListTable
-                tokensInstances={tokensInstances}
-                accountAddress={accountAddress}
-                // chainId={chainId}
-                targetAddress={targetAddress}
-                isLoading={isLoadingTokensInstances} isError={isErrorTokensInstances}
-                tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
-              />
- */}
               <TokenInstanceListTableFiltered
                 tokensInstances={tokensInstances}
                 // settokensInstances={settokensInstances}
@@ -86,7 +60,6 @@ const Step0 = (  {
                 // chainId={chainId}
                 enableCheckboxes={true}
                 targetAddress={targetAddress}
-                // isError={isError}
                 isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 enableEditable={false}

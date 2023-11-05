@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import AddressInput from "@Components/AddressInput";
 // import TokenInstanceListTable from "@Components/TokenInstanceListTable";
 import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
-
 // Utils
 import { isValidAddress } from "@jsutils/blockchainUtils";
 
@@ -18,7 +17,6 @@ const Step1 = ( {
   settargetAddress,
   // setShowProgressBar,
   // chainId,
-  // isLoading, isError,
   isLoadingTokensInstances, isErrorTokensInstances,
   tokensInstancesListTablePropsHandlers }: IStep1Props ) =>
 {
@@ -27,10 +25,9 @@ const Step1 = ( {
 
   useEffect( () =>
     {
-      // setNextDisabled(! isValidAddress(targetAddress) || targetAddress == accountAddress || /* isLoading */isLoadingTokensInstances || /* isError */isErrorTokensInstances)
       setNextDisabled(! isValidAddress(targetAddress) || targetAddress == accountAddress || isLoadingTokensInstances || isErrorTokensInstances)
     },
-    [accountAddress, targetAddress, /* isLoading, isError,  */isLoadingTokensInstances, isErrorTokensInstances, setNextDisabled]
+    [accountAddress, targetAddress, isLoadingTokensInstances, isErrorTokensInstances, setNextDisabled]
   )
 
   // ---
@@ -48,24 +45,12 @@ const Step1 = ( {
 
         <div className="w-full py-4 bg-base-100">
             <div className="min-w-fit m-0 p-1 rounded-box border border-neutral ">
-{/* 
-              <TokenInstanceListTable
-                tokensInstances={tokensInstances}
-                accountAddress={accountAddress}
-                // chainId={chainId}
-                targetAddress={targetAddress}
-                isLoading={isLoading} isError={isError}
-                tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
-              />
- */}
               <TokenInstanceListTableFiltered
                 tokensInstances={tokensInstances}
-                // settokensInstances={settokensInstances}
                 accountAddress={accountAddress}
                 // chainId={chainId}
                 enableCheckboxes={true}
                 targetAddress={targetAddress}
-                // isError={isError}
                 isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 enableEditable={false}

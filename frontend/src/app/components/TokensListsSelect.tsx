@@ -32,10 +32,12 @@ const TokensListsSelect = ( {
   const isAllChecked = useCallback( () =>
     {
       try {
-// console.debug(`TokensListsSelect.tsx: isAllChecked`)
+console.debug(`TokensListsSelect.tsx: isAllChecked`)
         if (selectableTokensLists) {
           const isAllChecked = selectableTokensLists.every(
             (selectableTokensList) => {
+console.debug(`TokensListsSelect.tsx: isAllChecked selectableTokensList.selected || !selectableTokensList.selectable=${selectableTokensList.selected || !selectableTokensList.selectable} selectableTokensList=`)
+console.dir(selectableTokensList)
               return (
                 selectableTokensList.selected || !selectableTokensList.selectable // === true
               )
@@ -267,20 +269,27 @@ const TokensListsSelect = ( {
   useEffect( () =>
     {
       try {
-        const _isAllChecked = isAllChecked();
-        if (_isAllChecked) {
-          setCheckAll(_isAllChecked);
-        }
+        // const _isAllChecked = isAllChecked();
+        // console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists] isAllChecked=${_isAllChecked}`)
+        console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists] `)
+        updateCheckAll(selectableTokensLists);
+        // if (_isAllChecked) {
+        //   setCheckAll(true);
+        // } else {
+        //   setCheckAll(false);
+        // }
 // console.debug(`TokensListsSelect.tsx: useEffect[selectableTokensLists] isAllChecked=${_isAllChecked}`)
         
         // updateCheckAll(selectableTokensLists);
       }
       catch (error) {
-// console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
+        console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
       }
 
     }
-    , [selectableTokensLists, updateCheckAll, isAllChecked]
+    , [selectableTokensLists, updateCheckAll
+      // , isAllChecked
+    ]
   )
 
   const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
