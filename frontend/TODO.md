@@ -51,8 +51,6 @@ All Steps : 🚧
 - 🚧 Handle chain change
 - 🚧 Set default language cookie (invisible flag)
 
-
-
 Step 0: 🚧
 - ☑️ check transferability for connected account
 - 🚧 Watch for balances changes 👀
@@ -63,7 +61,7 @@ Step 0: 🚧
 Step 2: 🚧 
 - ☑️ Fix list loading bug/missing icons (all/none & lock)
 - ☑️ Update transfer amount
-- display target address
+- 🚧 display target address
 - ☑️ Sort tokens: ☑️ by Id  ☑️ By Name  ☑️ by Balance
 - ☑️ fix tokens numbering in lists (filtering changes numbers)
 - ☑️ Unselect token on target address change (if not transferrable)
