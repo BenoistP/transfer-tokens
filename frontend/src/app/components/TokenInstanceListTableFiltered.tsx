@@ -146,7 +146,7 @@ const TokenInstanceListTableFiltered = (
 
           <div className="flex min-w-full px-1">
 
-            <div className="flex w-3/4 rounded-lg border border-neutral">
+            <div className="flex w-3/4 rounded-lg border border-neutral m-2">
 
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
@@ -229,7 +229,7 @@ const TokenInstanceListTableFiltered = (
               </table> {/* MAIN search PARAMETERS table */}
             </div>
 
-            <div className="flex w-1/4 rounded-lg border border-neutral">
+            <div className="flex w-1/4 rounded-lg border border-neutral m-2 ml-0">
 
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
