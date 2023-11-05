@@ -1,81 +1,71 @@
 // React
 import { useEffect, useCallback, useState } from "react";
-
 // Icons
-import { PlusCircleIcon, XCircleIcon, LockClosedIcon, LockOpenIcon
-  // , ArrowSmallUpIcon, ArrowSmallDownIcon, MinusCircleIcon, NoSymbolIcon,
-} from '@heroicons/react/24/solid'
+import { PlusCircleIcon, XCircleIcon, LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
 const TokenInstanceEditableAmount = ( { selectable, balance,
   amount, setamount,
-  transferAmountLock, settransferAmountLock, decimals, unSelect }: ITokenInstanceAmountProps ) => {
+  transferAmountLock, settransferAmountLock,
+  decimals, unSelect }: ITokenInstanceAmountProps ) => {
 
-  // console.debug(`TokenInstanceEditableAmount.tsx (${index}) RealToken render realTokenInstance.userData.address=${realTokenInstance.userData.address} realTokenInstance.address=${realTokenInstance.address} realTokenInstance.userData.amount=${realTokenInstance.userData.amount}`)
- 
-// ---
+  // ---
 
-//  const [decimals, setdecimals] = useState<bigint>(BigInt(tokenInstance.decimals)) as [bigint, (balance:bigint) => void];
   const [editableAmountString, seteditableAmountString] = useState("0") as [string, (balance:string) => void];
-  // const [lock, setlock] = useState<boolean>(false)
   const [editable, seteditable] = useState<boolean>(selectable)
- // ---
+
+  // ---
 
   const Decimals = BigInt(decimals);
-  const max = balance/*  * (10n**BigInt(decimals)) */;
-  // const maxDisplay = balance / (10n**BigInt(decimals));
+  const MAX = balance;
+
+  // ---
 
   const setMaxAmount = useCallback( () =>
     {
-      // console.debug(`TokenInstanceEditableAmount.tsx setMaxAmount editableAmountString:${editableAmountString} `)
-      seteditableAmountString(max.toString());
-      setamount(max);
+      seteditableAmountString(MAX.toString());
+      setamount(MAX);
     },
-    [max, setamount]
+    [MAX, setamount]
   );
 
   // ---
 
   const setZeroAmount = useCallback( () =>
     {
-      // console.debug(`TokenInstanceEditableAmount.tsx setZeroAmount editableAmountString:${editableAmountString} `)
       seteditableAmountString("0.0");
       setamount(0n);
       if (unSelect) {unSelect()}
     },
-    [editableAmountString, setamount, unSelect] // eslint-disable-line react-hooks/exhaustive-deps
+    [setamount, unSelect]
   );
 
   // ---
 
   const setLockAmount = useCallback( () =>
     {
-      // seteditableAmountString(max.toString());
-      // setamount(max);
       settransferAmountLock(true);
     },
-    [settransferAmountLock] // Xeslint-disable-line react-hooks/exhaustive-deps
+    [settransferAmountLock]
   );
 
   // ---
 
   const setUnLockAmount = useCallback( () =>
     {
-      // seteditableAmountString("0.0");
-      // setamount(0n);
       settransferAmountLock(false);
     },
-    [settransferAmountLock] // Xeslint-disable-line react-hooks/exhaustive-deps
+    [settransferAmountLock]
   );
 
   // ---
 
-  useEffect( () => {
-      // console.debug(`TokenInstanceEditableAmount.tsx useEffect  selectable:${selectable}`)
+  useEffect( () =>
+    {
       seteditable(selectable)
     },
-    [selectable] // Xeslint-disable-line react-hooks/exhaustive-deps
+    [selectable]
   );
 
   // ---
@@ -84,7 +74,6 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
   (e: React.FormEvent<HTMLInputElement>): void =>
     {
       try {
-        // console.debug(`updateAmount e.currentTarget.value: ${e.currentTarget.value} typeof= ${typeof e.currentTarget.value}`);
         const strValue = e.currentTarget.value;
 
         const strInt = strValue.split('.')[0]
@@ -97,99 +86,37 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
         const amountValueInt =  BigInt(Math.pow(10, decimals)) * intValue ;
         const amountValueFloat = BigInt(Math.pow(10, decimals-(/* 1+ */leadingZeros+floatValue.toString().length))) * floatValue ;
 
-        // const num = Number.parseFloat( strValue )
-        // const floatP = num.toFixed(19)
-        // console.debug(`updateAmount e.currentTarget.value: ${e.currentTarget.value} typeof e.currentTarget.value= ${typeof e.currentTarget.value} strInt=${strInt} strFloat=${strFloat} leadingZeros=${leadingZeros} floatValue=${floatValue} intValue=${intValue} amountValueInt=${amountValueInt} amountValueFloat=${amountValueFloat} floatValue.toString().length=${floatValue.toString().length}`);
-
         const value = amountValueInt + amountValueFloat
 
-        if (value > max) {
-          // console.debug(`updateAmount value: ${value} > max ${max} maxDisplay.toString()=${maxDisplay.toString()}}`);
-          setamount(max);
-          // seteditableAmountString(maxDisplay.toString());
+        if (value > MAX) {
+          setamount(MAX);
         } else {
-          // console.debug(`updateAmount value: ${value} <= max ${max}`);
           setamount(value);
-          // seteditableAmountString(strValue);
         }
-
-        // const intValueBI = BigInt(e.currentTarget.value.toFixed(0))
-        // e.currentTarget.value
-
-
-        // const balance = BigInt(e.currentTarget.value);
-        // setamount();
-        // setBalanceFilter(balance.toString());
-        // setamount(BigInt(e.currentTarget.value));
-        // seteditableAmountString(e.currentTarget.value);
-
       } catch (error) {
         console.error(`updateAmount e.currentTarget.value: ${e.currentTarget.value} error: ${error}`);
       }
     }
-  /*   ,
-    [editableAmountString]
-  ); */
- // updateAmount
 
-// ---
-/*
-  // trigger Balance computations for display
+  // ---
+
+  /**
+   * trigger Balance computations for display
+   */
   useEffect(() => {
-    // console.debug(`TokenInstanceEditableAmount.tsx useEffect balance:${balance} decimals:${decimals} `)
-    if (amount) {
-      const balanceValue = balance.valueOf();// + 1n;
-      // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} `)
-      const intValue = ( balanceValue / (10n**BigInt(decimals)) );
-      // console.debug(`TokenInstanceEditableAmount.tsx useEffect balance:${balance} decimals:${decimals} intValue:${intValue} `)
-      // console.dir(intValue)
-      const decimalValue = (balanceValue - intValue * (10n**(Decimals)));
-      // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalValue:${decimalValue} `)
-      if (decimalValue > 0) {
-        const decimalDisplay = decimalValue.toString().padStart( decimals, "0");
-        seteditableAmountString(`${intValue}.${decimalDisplay}`)
-        // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalDisplay:${decimalDisplay} `)
-      } else {
-        seteditableAmountString(`${intValue}.0`)
-      }
-    } // if amount
-    else {
-      // console.debug(`TokenInstanceEditableAmount.tsx useEffect amount is null/0`)
-      seteditableAmountString(`0`)
-    }
-
-    return () => { };
-  }, [ // balance,
-  decimals,
-  // , status 
-  , // tokenInstance.userData[accountAddress as any]?.amount]
-   amount]);
-*/
-
-  // trigger Balance computations for display
-  useEffect(() => {
-    // console.debug(`TokenInstanceEditableAmount.tsx useEffect balance:${balance} decimals:${decimals} `)
     try {
-      
       if (amount) {
         const amountValue = amount.valueOf();// + 1n;
-        // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} `)
-        // const intValue = ( amountValue / (10n**BigInt(decimals)) );
         const intValue = ( amountValue / (10n**(Decimals)) );
-        // console.debug(`TokenInstanceEditableAmount.tsx useEffect balance:${balance} decimals:${decimals} intValue:${intValue} `)
-        // console.dir(intValue)
         const decimalValue = (amountValue - intValue * (10n**(Decimals)));
-        // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalValue:${decimalValue} `)
         if (decimalValue > 0) {
           const decimalDisplay = decimalValue.toString().padStart( decimals, "0");
           seteditableAmountString(`${intValue}.${decimalDisplay}`)
-          // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalDisplay:${decimalDisplay} `)
         } else {
           seteditableAmountString(`${intValue}.0`)
         }
       } // if amount
       else {
-        // console.debug(`TokenInstanceEditableAmount.tsx useEffect amount is null/0`)
         seteditableAmountString(`0`)
       }
     } catch (error) {
@@ -198,48 +125,19 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
   }, [decimals, amount, Decimals]);
 
   // ---
-/* 
-  useEffect(() =>
-    {
-      console.debug(`TokenInstanceEditableAmount.tsx useEffect editableAmountString:${editableAmountString} amount:${amount} `)
-      // if (editableAmountString == "0") {
-      if (amount == 0n) {
-        // seteditable(false);
-        if (unSelect) {unSelect()};
-      }
-    },
-    [editableAmountString,]
-  );
- */
-  // ---
 
   useEffect(() =>
     {
-      // console.debug(`TokenInstanceEditableAmount.tsx useEffect editableAmountString:${editableAmountString} amount:${amount} `)
-      // if (editableAmountString == "0") {
       try {
         if (amount == 0n) {
-          // seteditable(false);
           if (unSelect) {unSelect()}
         }
-          
       } catch (error) {
         console.error(`TokenInstanceEditableAmount.tsx useEffect error:${error} `)
       }
     },
     [ amount, unSelect ]
   );
-
-  // ---
-
-  // const clsTextSize = "text-xs sm:text-sm md:text-base"
-  // const clsTextThin = "font-light " + clsTextSize
-  // const clsTextBold = "font-normal " + clsTextSize
-  // const clsTextPadding = "p-2 "
-  // const clsText = clsTextPadding + (balance.valueOf() > 0n ? clsTextBold : clsTextThin)
-  // const clsTextDisabled = clsText + " text-center opacity-60"
-
-  // console.debug(`TokenInstanceEditableAmount.tsx render`)
 
   // ------------------------------
 
