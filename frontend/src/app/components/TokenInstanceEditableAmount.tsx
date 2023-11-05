@@ -169,29 +169,32 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
   // trigger Balance computations for display
   useEffect(() => {
     // console.debug(`TokenInstanceEditableAmount.tsx useEffect balance:${balance} decimals:${decimals} `)
-    if (amount) {
-      const amountValue = amount.valueOf();// + 1n;
-      // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} `)
-      // const intValue = ( amountValue / (10n**BigInt(decimals)) );
-      const intValue = ( amountValue / (10n**(Decimals)) );
-      // console.debug(`TokenInstanceEditableAmount.tsx useEffect balance:${balance} decimals:${decimals} intValue:${intValue} `)
-      // console.dir(intValue)
-      const decimalValue = (amountValue - intValue * (10n**(Decimals)));
-      // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalValue:${decimalValue} `)
-      if (decimalValue > 0) {
-        const decimalDisplay = decimalValue.toString().padStart( decimals, "0");
-        seteditableAmountString(`${intValue}.${decimalDisplay}`)
-        // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalDisplay:${decimalDisplay} `)
-      } else {
-        seteditableAmountString(`${intValue}.0`)
+    try {
+      
+      if (amount) {
+        const amountValue = amount.valueOf();// + 1n;
+        // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} `)
+        // const intValue = ( amountValue / (10n**BigInt(decimals)) );
+        const intValue = ( amountValue / (10n**(Decimals)) );
+        // console.debug(`TokenInstanceEditableAmount.tsx useEffect balance:${balance} decimals:${decimals} intValue:${intValue} `)
+        // console.dir(intValue)
+        const decimalValue = (amountValue - intValue * (10n**(Decimals)));
+        // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalValue:${decimalValue} `)
+        if (decimalValue > 0) {
+          const decimalDisplay = decimalValue.toString().padStart( decimals, "0");
+          seteditableAmountString(`${intValue}.${decimalDisplay}`)
+          // console.debug(`TokenInstanceEditableAmount.tsx useEffect balanceValue:${balanceValue} decimals:${decimals} decimalDisplay:${decimalDisplay} `)
+        } else {
+          seteditableAmountString(`${intValue}.0`)
+        }
+      } // if amount
+      else {
+        // console.debug(`TokenInstanceEditableAmount.tsx useEffect amount is null/0`)
+        seteditableAmountString(`0`)
       }
-    } // if amount
-    else {
-      // console.debug(`TokenInstanceEditableAmount.tsx useEffect amount is null/0`)
-      seteditableAmountString(`0`)
+    } catch (error) {
+      console.error(`TokenInstanceEditableAmount.tsx useEffect error:${error} `)
     }
-
-    return () => { };
   }, [decimals, amount, Decimals]);
 
   // ---
@@ -214,9 +217,14 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
     {
       // console.debug(`TokenInstanceEditableAmount.tsx useEffect editableAmountString:${editableAmountString} amount:${amount} `)
       // if (editableAmountString == "0") {
-      if (amount == 0n) {
-        // seteditable(false);
-        if (unSelect) {unSelect()}
+      try {
+        if (amount == 0n) {
+          // seteditable(false);
+          if (unSelect) {unSelect()}
+        }
+          
+      } catch (error) {
+        console.error(`TokenInstanceEditableAmount.tsx useEffect error:${error} `)
       }
     },
     [ amount, unSelect ]
