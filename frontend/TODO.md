@@ -53,6 +53,7 @@ All Steps : 🚧
 - 🚧 Add reset all filters
 - 🚧 Add fetch loading indicator in bottom bar
 - 🚧 use filtered tokens table in all screens
+- 🚧 Add colors to icons in filtered tokens table
 
 
 Step 0: 🚧
