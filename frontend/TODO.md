@@ -54,9 +54,10 @@ All Steps : 🚧
 - ☑️ use filtered tokens table in all screens
 
 filtered tokens table: 🚧 
+- 🚧 show target address balance
 - 🚧 Add reset all filters
-- 🚧 Check "amount > 0" checkbox
-- 🚧 Add colors to icons
+- 🚧 pre-Check "amount > 0" checkbox
+- ☑️ Add colors to icons
 
 
 Step 0: 🚧
@@ -68,7 +69,6 @@ Step 0: 🚧
 
 
 Step 1: 🚧
-- 🚧 show target address balance
 - ☑️ Error handling
 
 
