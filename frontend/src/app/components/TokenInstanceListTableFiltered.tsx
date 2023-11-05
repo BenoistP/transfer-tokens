@@ -156,10 +156,6 @@ const TokenInstanceListTableFiltered = (
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balance")}</th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balanceGt0")}</th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.clear")}</th>
-  {/* 
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.selectAll")}</th>
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.invertSelection")}</th>
-  */}
                   </tr>
                 </thead>
                 <tbody className="min-w-full text-xs sm:text-sm md:text-base">
@@ -191,39 +187,12 @@ const TokenInstanceListTableFiltered = (
                           />
                       </label>
                     </td>
-                    <td className="p-2">
-{/* 
-                      <label>
-                        <button className="btn btn-xs sm:btn-md md:btn-md"
-                          onClick={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.clearAllFilters()}}
-                          disabled={!tokensInstances?.length}
-                          />
-                      </label>
- */}
+                    <td className="p-2 pt-1 md:pt-0">
                       <label>
                         {/* Clear filters */}
                         <BackspaceIcon className={clsIconBig} onClick={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.clearAllFilters()}} />
                       </label>
-
                     </td>
-
-  {/* 
-                    <td className="p-2">
-                      <label>
-                        <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
-                          type="checkbox"
-                          checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
-                          onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
-                          disabled={selectAllDisabled}
-                          />
-                      </label>
-                    </td>
-                    <td className="p-2">
-                      <label>
-                        <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
-                      </label>
-                    </td>
-  */}
                   </tr>
                 </tbody>
               </table> {/* MAIN search PARAMETERS table */}
