@@ -22,8 +22,8 @@ const TokenInstanceListTableFiltered = (
       tokensInstancesListTablePropsHandlers }: ITokensListTableFilteredProps )  =>
   {
 
-  // console.log(`TokenInstanceListTableFiltered.tsx render chainId: ${chainId} accountAddress: ${accountAddress}`);
-  // console.dir(tokensInstances)
+  console.log(`TokenInstanceListTableFiltered.tsx render chainId: accountAddress:${accountAddress} targetAddress=${targetAddress} tokensInstances=`);
+  console.dir(tokensInstances)
 
   const { t } = useTranslation()
   const [selectAllDisabled, setSelectAllDisabled] = useState(false)
@@ -34,7 +34,7 @@ const TokenInstanceListTableFiltered = (
     {
       // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokensInstances] tokensInstances?.length: ${tokensInstances?.length}`)
       // setSelectAllDisabled(!tokensInstances?.length)
-      if (tokensInstances?.length) {
+      if (tokensInstances?.length && enableEditable) {
         const noneSelectable = tokensInstances.every( (tokenInstance) => {
           // const notSelectable = ( !tokenInstance.selectable || !tokenInstance.userData[accountAddress as any]?.canTransfer || !tokenInstance.userData[targetAddress as any]?.canTransfer )
           // console.debug(`selectable :${tokenInstance.selectable} accountAddress: ${tokenInstance.userData[accountAddress as any]?.canTransfer} targetAddress: ${tokenInstance.userData[targetAddress as any]?.canTransfer} notSelectable: ${notSelectable}`)
@@ -47,7 +47,7 @@ const TokenInstanceListTableFiltered = (
         setSelectAllDisabled(true)
       }
     },
-    [tokensInstances, accountAddress, targetAddress]
+    [tokensInstances, accountAddress, targetAddress, enableEditable]
   )
 
   // ---
