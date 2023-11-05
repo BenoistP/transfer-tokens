@@ -53,6 +53,9 @@
         "noTransferFrom": "Transfert (envoi) interdit DEPUIS cette addresse",
         "noTransferTo": "Transfert interdit VERS cette addresse",
         "details": "Détails"
+      },
+      "address": {
+        "placeholder": "0x..."
       }
     },
     "stepZero": {

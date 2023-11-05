@@ -290,7 +290,7 @@ const TokenInstanceListTableFiltered = (
                     <tr className="bg-base-300">
                       <td className="p-2">
                         <input type="text" value={tokensInstancesListTablePropsHandlers.filterStates.address} onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateAddressFilter(e)}}
-                        className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md w-full" placeholder="..." >
+                        className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md w-full" placeholder={t("moveTokens.stepAny.address.placeholder")} >
                         </input>
                       </td>
                       <td className="p-2"></td>

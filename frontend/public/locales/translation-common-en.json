@@ -53,6 +53,9 @@
         "noTransferFrom": "Can't transfer (send) FROM this address",
         "noTransferTo": "Can't transfer TO this address",
         "details": "Details"
+      },
+      "address": {
+        "placeholder": "0x..."
       }
     },
     "stepZero": {
