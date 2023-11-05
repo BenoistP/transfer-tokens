@@ -1364,21 +1364,19 @@ const StepsContainer = ( {
                 } // if (chainTokensList.loadState == EChainTokensListLoadState.symbols)
                 else {
                   console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState <> SYMBOLS targetAddress is set`)
-
-                  // Check targetAddress
-                  const allInstancesWithTarget = _tokensInstances?.every( (_tokenInstance:TTokenInstance) => {
+                  // Check targetAddress for missing data
+                  const allInstancesWithTargetData = _tokensInstances?.every( (_tokenInstance:TTokenInstance) => {
                     return ( _tokenInstance.userData && _tokenInstance.userData[targetAddress as any] &&
                       !(_tokenInstance.userData[targetAddress as any].balance == undefined || _tokenInstance.userData[targetAddress as any].balance == null
                       || _tokenInstance.userData[targetAddress as any].canTransfer == undefined || _tokenInstance.userData[targetAddress as any].canTransfer == null)
                     )
                   })
 
-                  if (!allInstancesWithTarget) {
+                  if (!allInstancesWithTargetData) {
                     console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState <> SYMBOLS ; targetAddress is set ; NOT ALLINSTANCESWITHTARGET LOADING TARGET DATA`)
-
                     const _tokensInstancesTargetData = await loadTargetData(_tokensInstances, targetAddress)
-                    console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER loadTargetData _tokensInstancesTargetData =`)
-                    console.dir(_tokensInstancesTargetData)
+                    // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER loadTargetData _tokensInstancesTargetData =`)
+                    // console.dir(_tokensInstancesTargetData)
                     if (_tokensInstancesTargetData && _tokensInstancesTargetData.length ) {
                       _tokensInstances = _tokensInstancesTargetData
                     }
