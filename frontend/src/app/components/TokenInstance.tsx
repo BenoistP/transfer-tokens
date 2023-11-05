@@ -287,7 +287,7 @@ const TokenInstance = ( {
                 decimals={Number(decimals)}
                 unSelect={unSelect} />
               :
-              <div className="flex justify-center">
+              <div className="flex justify-center text-neutral">
                 <MinusSmallIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
               </div>
             }
@@ -306,11 +306,11 @@ const TokenInstance = ( {
           </div>
         }
         { canTransferFrom ?
-          <div className={clsTooltipLeft + "pl-1 tooltip-info"} data-tip={t(canTransferFrom?"moveTokens.stepTwo.token.canTransferFrom":"moveTokens.stepTwo.token.noTransferFrom")} >
+          <div className={clsTooltipLeft + "pl-1 text-info tooltip-info"} data-tip={t(canTransferFrom?"moveTokens.stepTwo.token.canTransferFrom":"moveTokens.stepTwo.token.noTransferFrom")} >
             <ArrowSend className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
           </div>
           :
-          <div className={clsTooltipLeft + "pl-1 tooltip-warning"} data-tip={t(canTransferFrom?"moveTokens.stepTwo.token.canTransferFrom":"moveTokens.stepTwo.token.noTransferFrom")} >
+          <div className={clsTooltipLeft + "pl-1 text-warning tooltip-warning"} data-tip={t(canTransferFrom?"moveTokens.stepTwo.token.canTransferFrom":"moveTokens.stepTwo.token.noTransferFrom")} >
             <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
           </div>
         }
@@ -318,11 +318,11 @@ const TokenInstance = ( {
             null
           :
             (canTransferTo ?
-              <div className={clsTooltipLeft + "pl-1 tooltip-info"} data-tip={t("moveTokens.stepTwo.token.canTransferTo")} >
+              <div className={clsTooltipLeft + "pl-1 text-info tooltip-info"} data-tip={t("moveTokens.stepTwo.token.canTransferTo")} >
                 <ArrowReceive className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
               </div>
               :
-              <div className={clsTooltipLeft + "pl-1 tooltip-warning"} data-tip={t("moveTokens.stepTwo.token.noTransferTo")} >
+              <div className={clsTooltipLeft + "pl-1 text-warning tooltip-warning"} data-tip={t("moveTokens.stepTwo.token.noTransferTo")} >
                 <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
               </div>
             )
@@ -362,6 +362,4 @@ const Loading = (  ) => {
 }
 // ------------------------------
 
-export { TokenInstance,
-  //  TokenError,
-  };
+export { TokenInstance };
