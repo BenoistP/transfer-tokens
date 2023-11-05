@@ -157,21 +157,27 @@ const TokenInstanceListTableFiltered = (
             <tbody className="min-w-full text-xs sm:text-sm md:text-base">
               <tr className="bg-base-300">
                 <td className="p-2">
-                  <input type="text" value={tokensInstancesListTablePropsHandlers.filterStates.name} onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateNameFilter(e)}}
-                    className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md w-full" placeholder="..." >
+                  <input className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md w-full"
+                    type="text"
+                    value={tokensInstancesListTablePropsHandlers.filterStates.name}
+                    onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateNameFilter(e)}}
+                    placeholder="..." >
                   </input>
                 </td>
                 <td className="p-2">
-                  <input type="number"
-                    value={tokensInstancesListTablePropsHandlers.filterStates.balance.valueOf()} onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateBalanceFilter(e)}}
+                  <input className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md"
+                    type="number"
+                    value={tokensInstancesListTablePropsHandlers.filterStates.balance.valueOf()}
+                    onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateBalanceFilter(e)}}
                     step={0.001} min={0} max={10000000000000}
-                    className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md" placeholder="...">
+                    placeholder="...">
                   </input>
                 </td>
                 <td className="p-2">
                   <label>
                     {/* Balance greater than 0 filter checkbox */}
-                    <input type="checkbox" className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
+                    <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
+                      type="checkbox"
                       checked={tokensInstancesListTablePropsHandlers.filterStates.balanceGt0} onChange={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.switchBalanceGt0Filter()}}
                       disabled={!tokensInstances?.length}
                       />
@@ -180,7 +186,8 @@ const TokenInstanceListTableFiltered = (
                 <td className="p-2">
                   <label>
                     {/* Select ALL checkbox */}
-                    <input type="checkbox" className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
+                    <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
+                      type="checkbox"
                       checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
                       onChange={(/* e */)=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
                       disabled={selectAllDisabled}
