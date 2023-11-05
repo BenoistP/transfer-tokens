@@ -50,6 +50,7 @@ https://play.tailwindcss.com/OPAsySKNCd
 All Steps : 🚧 
 - 🚧 Handle chain change (back to step 0, remove checked token lists)
 - ☑️ Set default language cookie (invisible flag)
+- 🚧 Add reset all filters
 - 🚧 use filtered tokens table in all screens
 - 🚧 show target address balance
 
