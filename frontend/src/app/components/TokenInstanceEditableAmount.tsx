@@ -32,7 +32,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
       seteditableAmountString(max.toString());
       setamount(max);
     },
-    [editableAmountString, max, setamount]
+    [max, setamount]
   );
 
   // ---
@@ -42,7 +42,6 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
       // console.debug(`TokenInstanceEditableAmount.tsx setZeroAmount editableAmountString:${editableAmountString} `)
       seteditableAmountString("0.0");
       setamount(0n);
-      console.dir(unSelect)
       if (unSelect) {unSelect()}
     },
     [editableAmountString, setamount, unSelect] // eslint-disable-line react-hooks/exhaustive-deps
@@ -56,7 +55,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
       // setamount(max);
       settransferAmountLock(true);
     },
-    [] // Xeslint-disable-line react-hooks/exhaustive-deps
+    [settransferAmountLock] // Xeslint-disable-line react-hooks/exhaustive-deps
   );
 
   // ---
@@ -67,7 +66,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
       // setamount(0n);
       settransferAmountLock(false);
     },
-    [] // Xeslint-disable-line react-hooks/exhaustive-deps
+    [settransferAmountLock] // Xeslint-disable-line react-hooks/exhaustive-deps
   );
 
   // ---
