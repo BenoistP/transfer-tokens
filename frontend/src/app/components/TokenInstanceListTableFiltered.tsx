@@ -161,7 +161,7 @@ const TokenInstanceListTableFiltered = (
                     type="text"
                     value={tokensInstancesListTablePropsHandlers.filterStates.name}
                     onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateNameFilter(e)}}
-                    placeholder="..." >
+                    placeholder="..." spellCheck="false" >
                   </input>
                 </td>
                 <td className="p-2">
