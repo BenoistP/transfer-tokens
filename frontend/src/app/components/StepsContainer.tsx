@@ -1760,6 +1760,58 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
     [selectedChainsTokensList]
   ) // useEffect [selectedChainsTokensList]
 
+
+  // ---
+
+  const initSelectableTokensLists = useCallback( async(/* _selectableTokensLists: TSelectableTokensLists */) =>
+    {
+
+      try {
+        
+        // if (!_selectableTokensLists || !_selectableTokensLists.length) {
+console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselectableTokensLists] INitializing _selectableTokensLists`)
+          const filteredSelectableTokensLists: TSelectableTokensLists = []
+          tokensLists?.forEach( (tokensList: TTokensList) => {
+            const chainTokensList = getChainTokensList(tokensList, chainId)
+            const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
+            const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
+            const selectableTokensList = {
+              tokensList,
+              chainId,
+              selected: false,
+              selectable,
+              currentChainTokensCount
+            } // as TSelectableTokensList
+  
+            filteredSelectableTokensLists.push(selectableTokensList)
+          })
+          setselectableTokensLists(filteredSelectableTokensLists)
+        // } // if (!_selectableTokensLists || !_selectableTokensLists.length)
+          
+
+      } catch (error) {
+        console.error(`TokensListsSelect.tsx: initSelectableTokensLists: error=${error}`);
+      }
+
+    },
+    [chainId, setselectableTokensLists, tokensLists]
+  );
+
+  // ---
+
+  useEffect( () =>
+    {
+      try {
+      // console.debug(`StepsContainer.tsx useEffect [INIT SELECTABLE TOKENSLISTS]`)
+      initSelectableTokensLists()
+        
+      } catch (error) {
+        console.error(`StepsContainer.tsx useEffect [INIT SELECTABLE TOKENSLISTS] error: ${error}`);
+      }
+    },
+    [initSelectableTokensLists]
+  )
+
   // ---------------------------------------------------
 
   return (
