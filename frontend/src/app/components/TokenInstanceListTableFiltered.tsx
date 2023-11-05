@@ -6,7 +6,7 @@ import SortIcon from "@Components/SortIcon";
 // Translation
 import { useTranslation } from "react-i18next";
 // Icons
-import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon, InformationCircleIcon, BackspaceIcon } from '@heroicons/react/24/solid'
+import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon, InformationCircleIcon, BackspaceIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 // Styles
 import { clsLoadingTokenLists, clsIconStatusSize, clsIconMedium } from "@uiconsts/twDaisyUiStyles";
 
@@ -203,13 +203,56 @@ const TokenInstanceListTableFiltered = (
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
                 <thead className="min-w-full bg-base-200 text-left">
-                  <tr className=" text-xs sm:text-sm md:text-base font-semibold">
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.selectAll")}</th>
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.invertSelection")}</th>
+                  <tr className="text-xs sm:text-sm md:text-base font-semibold">
+                    <th colSpan={2} className="p-2 font-medium"><EyeSlashIcon className={clsIconBig}/></th>
+                    <th colSpan={2} className="p-2 font-medium"><EyeIcon className={clsIconBig}/></th>
                   </tr>
                 </thead>
                 <tbody className="min-w-full text-xs sm:text-sm md:text-base">
+
+                  <tr className="bg-base-300 text-xs sm:text-sm md:text-base font-thin">
+                    <td className="">
+                      <label>
+                        {t("moveTokens.stepAny.tokensTable.select.selectAll")}
+                      </label>
+                    </td>
+                    <td className="">
+                      <label>
+                        {t("moveTokens.stepAny.tokensTable.select.invertSelection")}
+                      </label>
+                    </td>
+                    <td className="">
+                      <label>
+                        {t("moveTokens.stepAny.tokensTable.select.selectAll")}
+                      </label>
+                    </td>
+                    <td className="">
+                      <label>
+                        {t("moveTokens.stepAny.tokensTable.select.invertSelection")}
+                      </label>
+                    </td>
+                  </tr>
+
                   <tr className="bg-base-300">
+
+                    <td className="p-2">
+                      <label>
+                        {/* Select ALL checkbox */}
+                        <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
+                          type="checkbox"
+                          checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
+                          onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
+                          disabled={selectAllDisabled}
+                          />
+                      </label>
+                    </td>
+                    <td className="p-2">
+                      <label>
+                        {/* INVERT ALL checkbox */}
+                        <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
+                      </label>
+                    </td>
+
                     <td className="p-2">
                       <label>
                         {/* Select ALL checkbox */}
