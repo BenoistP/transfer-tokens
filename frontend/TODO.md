@@ -50,19 +50,22 @@ https://play.tailwindcss.com/OPAsySKNCd
 All Steps : 🚧 
 - 🚧 Handle chain change (back to step 0, remove checked token lists)
 - ☑️ Set default language cookie (invisible flag)
-- 🚧 Add reset all filters
 - 🚧 Add fetch loading indicator in bottom bar
-- 🚧 use filtered tokens table in all screens
-- 🚧 Add colors to icons in filtered tokens table
+- ☑️ use filtered tokens table in all screens
+
+filtered tokens table: 🚧 
+- 🚧 Add reset all filters
+- 🚧 Check "amount > 0" checkbox
+- 🚧 Add colors to icons
 
 
 Step 0: 🚧
 - ☑️ check transferability for connected account
-- 🚧 Watch for balances changes 👀
 - ☑️ Ethereum data is not loaded
 - ☑️ Add loading indicator when loading tokens lists
 - ☑️ Error handling
-- 🚧 Check amount > 0
+- 🚧 Watch for balances changes 👀
+
 
 Step 1: 🚧
 - 🚧 show target address balance
