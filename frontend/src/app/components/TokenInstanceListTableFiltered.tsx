@@ -22,8 +22,8 @@ const TokenInstanceListTableFiltered = (
       tokensInstancesListTablePropsHandlers }: ITokensListTableFilteredProps )  =>
   {
 
-  console.log(`TokenInstanceListTableFiltered.tsx render chainId: accountAddress:${accountAddress} targetAddress=${targetAddress} tokensInstances=`);
-  console.dir(tokensInstances)
+  // console.log(`TokenInstanceListTableFiltered.tsx render chainId: accountAddress:${accountAddress} targetAddress=${targetAddress} tokensInstances=`);
+  // console.dir(tokensInstances)
 
   const { t } = useTranslation()
   const [selectAllDisabled, setSelectAllDisabled] = useState(false)
