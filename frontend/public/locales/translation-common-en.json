@@ -19,17 +19,31 @@
         "search" : {
           "name": "Name",
           "balance": "Balance",
-          "balanceGt0": "> 0",
-          "clear": "Clear",
+          "balanceGt0": {
+            "label": "> 0",
+            "hint": "Display only tokens with balance"
+          },
+          "clearAll": {
+            "label": "Clear",
+            "hint": "Clear all filters"
+          },
           "additional": {
             "title": "Additional filters",
             "address": "Address"
           }
         },
         "select": {
-          "selectAll": "Select all",
-          "invertSelection": "Invert"
-        },
+          "any" : {
+            "hint": "Select ALL tokens",
+            "selectAll": "All",
+            "invertSelection": "Invert"
+            },
+          "visible" : {
+            "hint": "Select VISIBLE only",
+            "selectAll": "All visible",
+            "invertSelection": "Invert"
+            }
+          },
         "results": {
           "found": {
             "selected": "Selected",
@@ -53,6 +67,9 @@
         "noTransferFrom": "Can't transfer (send) FROM this address",
         "noTransferTo": "Can't transfer TO this address",
         "details": "Details"
+      },
+      "address": {
+        "placeholder": "0x..."
       }
     },
     "stepZero": {

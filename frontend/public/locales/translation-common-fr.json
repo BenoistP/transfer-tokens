@@ -19,16 +19,30 @@
         "search" : {
           "name": "Nom",
           "balance": "Solde",
-          "balanceGt0": "> 0",
-          "clear": "Effacer",
+          "balanceGt0": {
+            "label": "> 0",
+            "hint": "N'afficher que les tokens avec un solde > 0"
+          },
+          "clearAll": {
+            "label": "Effacer",
+            "hint": "Effacer tous les filtres"
+          },
           "additional": {
             "title": "Critères supplémentaires",
             "address": "Adresse"
           }
         },
         "select" : {
-          "selectAll": "Tout",
-          "invertSelection": "Inverser"
+          "any" : {
+            "hint": "TOUT sélectionner",
+            "selectAll": "Tout",
+            "invertSelection": "Inverser"
+            },
+          "visible" : {
+            "hint": "VISIBLES seulement",
+            "selectAll": "Tout les visibles",
+            "invertSelection": "Inverser visibles"
+            }
         },
         "results": {
           "found": {
@@ -53,6 +67,9 @@
         "noTransferFrom": "Transfert (envoi) interdit DEPUIS cette addresse",
         "noTransferTo": "Transfert interdit VERS cette addresse",
         "details": "Détails"
+      },
+      "address": {
+        "placeholder": "0x..."
       }
     },
     "stepZero": {

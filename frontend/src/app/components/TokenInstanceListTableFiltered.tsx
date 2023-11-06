@@ -6,7 +6,7 @@ import SortIcon from "@Components/SortIcon";
 // Translation
 import { useTranslation } from "react-i18next";
 // Icons
-import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon, InformationCircleIcon, BackspaceIcon } from '@heroicons/react/24/solid'
+import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon, InformationCircleIcon, BackspaceIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 // Styles
 import { clsLoadingTokenLists, clsIconStatusSize, clsIconMedium } from "@uiconsts/twDaisyUiStyles";
 
@@ -129,11 +129,18 @@ const TokenInstanceListTableFiltered = (
 
   // ---
 
-  const clsIconBig = "w-6 h-6 sm:w-10 sm:h-10"
-  const clsIconBigInvert = clsIconBig + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
+  const clsIconSizeMedium = "w-6 h-6 sm:w-8 sm:h-8 md:w-8 md:h-8"
+  const clsIconSizeSmall = "w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7"
+  const clsIconSizeBig = "w-6 h-6 sm:w-10 sm:h-10 md:w-12 md:h-12"
+  const clsCheckboxSizeBig = "checkbox-xs sm:checkbox-md md:checkbox-lg"
+  const clsCheckboxSizeSmall = "checkbox-xs sm:checkbox-sm md:checkbox-md"
+  const clsIconSelectSmall = clsIconSizeSmall + (selectAllDisabled ? " fill-neutral-content opacity-70" : " fill-base-content") ;
+  // const clsIconBigInvert = clsIconSizeBig + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
+  const clsIconMediumInvert = clsIconSizeMedium + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content cursor-not-allowed" : "fill-base-content opacity-50 cursor-pointer") ;
   // const clsIcon = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2' 
 
   const clsStatus = "flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl" // 'flex justify-center font-semibold pt-2 pb-3 text-md sm:text-base md:text-xl'
+  const clsTextSize = "text-xs sm:text-sm md:text-base"
 
   // ---
 
@@ -151,29 +158,27 @@ const TokenInstanceListTableFiltered = (
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
                 <thead className="min-w-full bg-base-200 text-left">
-                  <tr className=" text-xs sm:text-sm md:text-base font-semibold">
+                  <tr className={clsTextSize+" font-semibold"}>
+                    <th className="p-0 pl-1 font-medium"><FunnelIcon className={clsIconMedium} /></th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.name")}</th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balance")}</th>
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balanceGt0")}</th>
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.clear")}</th>
-  {/* 
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.selectAll")}</th>
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.invertSelection")}</th>
-  */}
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balanceGt0.label")}</th>
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.clearAll.label")}</th>
                   </tr>
                 </thead>
-                <tbody className="min-w-full text-xs sm:text-sm md:text-base">
+                <tbody className={"min-w-full"+clsTextSize}>
                   <tr className="bg-base-300">
-                    <td className="p-2">
-                      <input className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md w-full"
+                    <td className="p-0"></td>
+                    <td className="p-2 pl-0 w-full">
+                      <input className={"w-full input input-bordered input-xs sm:input-sm md:input-md " + clsTextSize}
                         type="text"
                         value={tokensInstancesListTablePropsHandlers.filterStates.name}
                         onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateNameFilter(e)}}
                         placeholder="..." spellCheck="false" >
                       </input>
                     </td>
-                    <td className="p-2">
-                      <input className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md"
+                    <td className="p-2 pl-0">
+                      <input className="input input-bordered input-xs sm:input-sm md:input-md"
                         type="number"
                         value={tokensInstancesListTablePropsHandlers.filterStates.balance.valueOf()}
                         onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateBalanceFilter(e)}}
@@ -181,49 +186,26 @@ const TokenInstanceListTableFiltered = (
                         placeholder="...">
                       </input>
                     </td>
-                    <td className="p-2">
+                    <td className="p-2 pl-0">
                       <label>
                         {/* Balance greater than 0 filter checkbox */}
-                        <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
-                          type="checkbox"
-                          checked={tokensInstancesListTablePropsHandlers.filterStates.balanceGt0} onChange={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.switchBalanceGt0Filter()}}
-                          disabled={!tokensInstances?.length}
-                          />
+                        <div className="tooltip tooltip-left" data-tip={t("moveTokens.stepAny.tokensTable.search.balanceGt0.hint")}>
+                          <input className={"checkbox " + clsCheckboxSizeBig}
+                            type="checkbox"
+                            checked={tokensInstancesListTablePropsHandlers.filterStates.balanceGt0} onChange={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.switchBalanceGt0Filter()}}
+                            disabled={!tokensInstances?.length}
+                            />
+                        </div>
                       </label>
                     </td>
-                    <td className="p-2">
-{/* 
-                      <label>
-                        <button className="btn btn-xs sm:btn-md md:btn-md"
-                          onClick={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.clearAllFilters()}}
-                          disabled={!tokensInstances?.length}
-                          />
-                      </label>
- */}
+                    <td className="p-2 pl-0">
                       <label>
                         {/* Clear filters */}
-                        <BackspaceIcon className={clsIconBig} onClick={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.clearAllFilters()}} />
-                      </label>
-
-                    </td>
-
-  {/* 
-                    <td className="p-2">
-                      <label>
-                        <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
-                          type="checkbox"
-                          checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
-                          onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
-                          disabled={selectAllDisabled}
-                          />
+                        <div className="tooltip tooltip-left" data-tip={t("moveTokens.stepAny.tokensTable.search.clearAll.hint")}>
+                          <BackspaceIcon className={clsIconSizeBig} onClick={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.clearAllFilters()}} />
+                        </div>
                       </label>
                     </td>
-                    <td className="p-2">
-                      <label>
-                        <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
-                      </label>
-                    </td>
-  */}
                   </tr>
                 </tbody>
               </table> {/* MAIN search PARAMETERS table */}
@@ -234,20 +216,72 @@ const TokenInstanceListTableFiltered = (
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
                 <thead className="min-w-full bg-base-200 text-left">
-                  <tr className=" text-xs sm:text-sm md:text-base font-semibold">
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.selectAll")}</th>
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.select.invertSelection")}</th>
+                  <tr className={clsTextSize + " font-semibold"}>
+                    <th colSpan={2} className="p-0 pl-12 font-medium">
+                      <div className="tooltip tooltip-right" data-tip={t("moveTokens.stepAny.tokensTable.select.any.hint")}>
+                        <EyeSlashIcon className={clsIconSelectSmall}/>
+                      </div>
+                    </th>
+                    <th colSpan={2} className="p-0 pl-12 font-medium">
+                      <div className="tooltip tooltip-bottom" data-tip={t("moveTokens.stepAny.tokensTable.select.visible.hint")}>
+                        <EyeIcon className={clsIconSelectSmall}/>
+                      </div>
+                    </th>
                   </tr>
                 </thead>
-                <tbody className="min-w-full text-xs sm:text-sm md:text-base">
+                <tbody className={clsTextSize + " min-w-full"}>
+
+                  <tr className="bg-base-300 text-center font-thin">
+                    <td className="">
+                      <label>
+                        {t("moveTokens.stepAny.tokensTable.select.any.selectAll")}
+                      </label>
+                    </td>
+                    <td className="">
+                      <label>
+                        {t("moveTokens.stepAny.tokensTable.select.any.invertSelection")}
+                      </label>
+                    </td>
+                    <td className="">
+                      <label>
+                        {t("moveTokens.stepAny.tokensTable.select.visible.selectAll")}
+                      </label>
+                    </td>
+                    <td className="">
+                      <label>
+                        {t("moveTokens.stepAny.tokensTable.select.visible.invertSelection")}
+                      </label>
+                    </td>
+                  </tr>
+
                   <tr className="bg-base-300">
+
                     <td className="p-2">
                       <label>
                         {/* Select ALL checkbox */}
-                        <input className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
+                        <input className={"checkbox " + clsCheckboxSizeSmall}
                           type="checkbox"
                           checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
                           onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
+                          disabled={selectAllDisabled}
+
+                          />
+                      </label>
+                    </td>
+                    <td className="p-2">
+                      <label>
+                        {/* INVERT ALL checkbox */}
+                        <ArrowPathRoundedSquareIcon className={clsIconMediumInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
+                      </label>
+                    </td>
+
+                    <td className="p-2">
+                      <label>
+                        {/* Select ALL checkbox */}
+                        <input className={"checkbox " + clsCheckboxSizeSmall}
+                          type="checkbox"
+                          checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
+                          onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll(true)}}
                           disabled={selectAllDisabled}
                           />
                       </label>
@@ -255,7 +289,7 @@ const TokenInstanceListTableFiltered = (
                     <td className="p-2">
                       <label>
                         {/* INVERT ALL checkbox */}
-                        <ArrowPathRoundedSquareIcon className={clsIconBigInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
+                        <ArrowPathRoundedSquareIcon className={clsIconMediumInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks(true)} } } />
                       </label>
                     </td>
 
@@ -270,9 +304,9 @@ const TokenInstanceListTableFiltered = (
           <div className="px-2 pt-1">
             <div className="collapse collapse-arrow border border-neutral bg-base-100">
               <input type="checkbox" /> 
-              <div className="collapse-title text-xs sm:text-sm md:text-base font-light justify-center flex">
+              <div className={"collapse-title font-light justify-left flex " + clsTextSize}>
+                <FunnelIcon className={clsIconMedium} />
                 {t("moveTokens.stepAny.tokensTable.search.additional.title")}
-                  <FunnelIcon className={clsIconMedium} />
                 {/* {t("moveTokens.stepAny.tokensTable.search.additional.title")}  */}
               </div>
               <div className="collapse-content"> 
@@ -281,16 +315,16 @@ const TokenInstanceListTableFiltered = (
                 <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
                   <thead className="min-w-full bg-base-200 text-left">
-                    <tr className=" text-xs sm:text-sm md:text-base font-semibold">
+                    <tr className={clsTextSize + " font-semibold"}>
                       <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.additional.address")}</th>
                       <th className="p-2"></th>
                     </tr>
                   </thead>
-                  <tbody className="min-w-full text-xs sm:text-sm md:text-base">
+                  <tbody className={"min-w-full " + clsTextSize}>
                     <tr className="bg-base-300">
                       <td className="p-2">
                         <input type="text" value={tokensInstancesListTablePropsHandlers.filterStates.address} onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateAddressFilter(e)}}
-                        className="input input-bordered input-xs text-xs sm:text-sm sm:input-sm md:text-base md:input-md w-full" placeholder="..." >
+                        className={"input input-bordered input-xs sm:input-sm md:input-md w-full " + clsTextSize} placeholder={t("moveTokens.stepAny.address.placeholder")} >
                         </input>
                       </td>
                       <td className="p-2"></td>
@@ -333,7 +367,7 @@ const TokenInstanceListTableFiltered = (
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
 
                 <thead className="min-w-full text-neutral-content text-left">
-                  <tr className="bg-neutral text-xs sm:text-sm md:text-base font-semibold">
+                  <tr className={clsTextSize + " font-semibold bg-neutral"}>
                     <th className="p-2 font-medium justify-center flex-none">
                       <div className="flex  w-min-full">
                         <SortIcon sortOrder={tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenDisplayId} changeSortFnCb={tokensInstancesListTablePropsHandlers.sortHandlers.sortByTokenDisplayId} />
@@ -371,7 +405,7 @@ const TokenInstanceListTableFiltered = (
                 </thead>
 
 
-                <tbody className="min-w-full mt-2 text-xs sm:text-sm md:text-base">
+                <tbody className={"min-w-full mt-2 " + clsTextSize}>
                   { TokenInstanceListFilteredMemo }
                 </tbody>
 
