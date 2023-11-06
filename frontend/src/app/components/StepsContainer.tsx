@@ -393,28 +393,29 @@ const StepsContainer = ( {
 
     // ---
 
-  const updateCheckAllVisible = useCallback(  (tokensInstances:TTokensInstances) => {
-    try {
-      
-      // console.debug(`StepsContainer.tsx x realTokensList: ${realTokensList}`);
-      if (tokensInstances && /*accountAddress*/ connectedAddress) {
-        const isAllChecked = tokensInstances.every( (tokensInstance) => {
-            if (tokensInstance.selectable && tokensInstance.transferAmount&&filterTokenInstance(tokensInstance)) {
-                return tokensInstance.selected;
-            }
-            return true; // not selectable OR no amount : RETURN TRUE
-          } // every
-        );
-        setselectAllVisible(isAllChecked);
-      } else {
-        // Empty list
-        setselectAllVisible(false);
+  const updateCheckAllVisible = useCallback(  (tokensInstances:TTokensInstances) =>
+    {
+      try {
+        // console.debug(`StepsContainer.tsx x realTokensList: ${realTokensList}`);
+        if (tokensInstances && /*accountAddress*/ connectedAddress) {
+          const isAllChecked = tokensInstances.every( (tokensInstance) => {
+              if (tokensInstance.selectable && tokensInstance.transferAmount&&filterTokenInstance(tokensInstance)) {
+                  return tokensInstance.selected;
+              }
+              return true; // not selectable OR no amount : RETURN TRUE
+            } // every
+          );
+          setselectAllVisible(isAllChecked);
+        } else {
+          // Empty list
+          setselectAllVisible(false);
+        }
+      } catch (error) {
+        console.error(`StepsContainer.tsx updateCheckAll error: ${error}`);
       }
-    } catch (error) {
-      console.error(`StepsContainer.tsx updateCheckAll error: ${error}`);
-    }
     },
-    [/*accountAddress*/ connectedAddress]); // updateCheckAllVisible
+    [connectedAddress, filterTokenInstance]
+  ); // updateCheckAllVisible
 
   // ---
 
@@ -464,8 +465,10 @@ const StepsContainer = ( {
             // updateCheckAll(tokensInstancesCheckAll);
             if (filter) {
               setselectAllVisible(newCheckAll);
+              updateCheckAll(tokensInstancesCheckAll);
             } else {
               setselectAll(newCheckAll);
+              updateCheckAllVisible(tokensInstancesCheckAll);
             }
 
             // console.debug(`handleCheckSelectAll newCheckAll: ${newCheckAll}`);
@@ -476,8 +479,8 @@ const StepsContainer = ( {
       },
       [tokensInstances, /*accountAddress*/ /* connectedAddress, */ connectedAddress, targetAddress, selectAll,
       filterTokenInstance,
-      // updateCheckAll,
-      selectAllVisible
+      updateCheckAll,
+      selectAllVisible, updateCheckAllVisible
     ]
   ); // handleCheckSelectAll
 
@@ -515,11 +518,17 @@ const StepsContainer = ( {
               // setinvertAll(!invertAll); // just for style
               if (filter) {
                 setinvertAllVisible(!invertAllVisible);
+                // updateCheckAll(tokensInstancesInvertCheck);
+                // updateCheckAllVisible(tokensInstancesInvertCheck);
               } else {
                 setinvertAll(!invertAll);
+                // updateCheckAllVisible(tokensInstancesInvertCheck);
+                // updateCheckAll(tokensInstancesInvertCheck);
               }
               // updateCheckAll(tokensInstances);
-            // console.debug(`handleInvertAllChecks invertAll: ${!invertAll}`);
+              updateCheckAll(tokensInstancesInvertCheck);
+              updateCheckAllVisible(tokensInstancesInvertCheck);
+          // console.debug(`handleInvertAllChecks invertAll: ${!invertAll}`);
           }
         } catch (error) {
           console.error(`StepsContainer.tsx handleInvertAllChecks error: ${error}`);
@@ -527,7 +536,7 @@ const StepsContainer = ( {
       },
       [tokensInstances, invertAll, connectedAddress, targetAddress,
       filterTokenInstance,
-      // updateCheckAll,
+      updateCheckAll, updateCheckAllVisible,
       invertAllVisible,
     ]
   ); // handleInvertAllChecks
