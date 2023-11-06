@@ -203,9 +203,12 @@ const StepsContainer = ( {
 
   // ---
 
-  const tokenInstanceFilterParams = {
-    name: nameFilter, balanceGt0: balanceGt0Filter, balance: balanceFilter, address: addressFilter
-  } as ITokenInstanceListFilterStates // ITokenInstanceListFilterProps
+  const tokenInstanceFilterParams = useMemo(() => {
+    return {
+      name: nameFilter, balanceGt0: balanceGt0Filter, balance: balanceFilter, address: addressFilter
+    } as ITokenInstanceListFilterStates // ITokenInstanceListFilterProps
+  }, [nameFilter, balanceGt0Filter, balanceFilter, addressFilter]);
+
 
   // ---
 /* 
