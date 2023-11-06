@@ -131,13 +131,10 @@ const TokenInstanceListTableFiltered = (
 
   const clsIconSizeMedium = "w-6 h-6 sm:w-8 sm:h-8 md:w-8 md:h-8"
   const clsIconSizeSmall = "w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7"
-  const clsIconSizeBig = "w-6 h-6 sm:w-10 sm:h-10"
-
+  const clsIconSizeBig = "w-6 h-6 sm:w-10 sm:h-10 md:w-12 md:h-12"
   const clsCheckboxSizeBig = "checkbox-xs sm:checkbox-md md:checkbox-lg"
   const clsCheckboxSizeSmall = "checkbox-xs sm:checkbox-sm md:checkbox-md"
-  
-  const clsIconSelectMedium = clsIconSizeSmall + (selectAllDisabled ? " fill-neutral-content opacity-70" : " fill-base-content opacity-40") ;
-
+  const clsIconSelectSmall = clsIconSizeSmall + (selectAllDisabled ? " fill-neutral-content opacity-70" : " fill-base-content opacity-40") ;
   // const clsIconBigInvert = clsIconSizeBig + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
   const clsIconMediumInvert = clsIconSizeMedium + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
   // const clsIcon = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2' 
@@ -162,6 +159,7 @@ const TokenInstanceListTableFiltered = (
 
                 <thead className="min-w-full bg-base-200 text-left">
                   <tr className={clsTextSize+" font-semibold"}>
+                    <th className="p-0 pl-1 font-medium"><FunnelIcon className={clsIconMedium} /></th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.name")}</th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balance")}</th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balanceGt0")}</th>
@@ -170,7 +168,8 @@ const TokenInstanceListTableFiltered = (
                 </thead>
                 <tbody className={"min-w-full"+clsTextSize}>
                   <tr className="bg-base-300">
-                    <td className="p-2">
+                    <td className="p-0"></td>
+                    <td className="p-2 pl-0 w-full">
                       <input className={"w-full input input-bordered input-xs sm:input-sm md:input-md " + clsTextSize}
                         type="text"
                         value={tokensInstancesListTablePropsHandlers.filterStates.name}
@@ -178,7 +177,7 @@ const TokenInstanceListTableFiltered = (
                         placeholder="..." spellCheck="false" >
                       </input>
                     </td>
-                    <td className="p-2">
+                    <td className="p-2 pl-0">
                       <input className="input input-bordered input-xs sm:input-sm md:input-md"
                         type="number"
                         value={tokensInstancesListTablePropsHandlers.filterStates.balance.valueOf()}
@@ -187,7 +186,7 @@ const TokenInstanceListTableFiltered = (
                         placeholder="...">
                       </input>
                     </td>
-                    <td className="p-2">
+                    <td className="p-2 pl-0">
                       <label>
                         {/* Balance greater than 0 filter checkbox */}
                         <input className={"checkbox " + clsCheckboxSizeBig}
@@ -197,7 +196,7 @@ const TokenInstanceListTableFiltered = (
                           />
                       </label>
                     </td>
-                    <td className="p-2 pt-1 md:pt-0">
+                    <td className="p-2 pl-0 pt-1 md:pt-0">
                       <label>
                         {/* Clear filters */}
                         <BackspaceIcon className={clsIconSizeBig} onClick={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.clearAllFilters()}} />
@@ -216,12 +215,12 @@ const TokenInstanceListTableFiltered = (
                   <tr className={clsTextSize + " font-semibold"}>
                     <th colSpan={2} className="p-0 pl-12 font-medium">
                       <div className="tooltip tooltip-right" data-tip={t("moveTokens.stepAny.tokensTable.select.any.hint")}>
-                        <EyeSlashIcon className={clsIconSelectMedium}/>
+                        <EyeSlashIcon className={clsIconSelectSmall}/>
                       </div>
                     </th>
                     <th colSpan={2} className="p-0 pl-12 font-medium">
                       <div className="tooltip tooltip-bottom" data-tip={t("moveTokens.stepAny.tokensTable.select.visible.hint")}>
-                        <EyeIcon className={clsIconSelectMedium}/>
+                        <EyeIcon className={clsIconSelectSmall}/>
                       </div>
                     </th>
                   </tr>
@@ -301,9 +300,9 @@ const TokenInstanceListTableFiltered = (
           <div className="px-2 pt-1">
             <div className="collapse collapse-arrow border border-neutral bg-base-100">
               <input type="checkbox" /> 
-              <div className={"collapse-title font-light justify-center flex " + clsTextSize}>
+              <div className={"collapse-title font-light justify-left flex " + clsTextSize}>
+                <FunnelIcon className={clsIconMedium} />
                 {t("moveTokens.stepAny.tokensTable.search.additional.title")}
-                  <FunnelIcon className={clsIconMedium} />
                 {/* {t("moveTokens.stepAny.tokensTable.search.additional.title")}  */}
               </div>
               <div className="collapse-content"> 
