@@ -547,8 +547,8 @@ interface IsortTokensInstancesMethods {
 }
 
 interface IselectTokensInstancesMethods {
-  handleCheckSelectAll: () => void,
-  handleInvertAllChecks: () => void,
+  handleCheckSelectAll: (boolean?) => void,
+  handleInvertAllChecks: (boolean?) => void,
   updateCheckboxStatus: IUpdateCheckboxStatus,
   updateTransferAmount: IUpdateTransferAmount,
   updateTransferAmountLock: ITransferAmountLock;
@@ -556,7 +556,9 @@ interface IselectTokensInstancesMethods {
 
 interface IselectTokensInstancesStates {
   selectAll: boolean,
-  invertAll: boolean,
+  selectAllVisible: boolean,
+  // invertAll: boolean,
+  // invertAllVisible: boolean,
 }
 
 interface IfilterTokenInstanceMethods {
@@ -606,7 +608,6 @@ interface ITokensListTableFilteredProps {
   // chainId: ChainId;
   enableCheckboxes: boolean;
   targetAddress: TAddressEmpty,
-  // isError: boolean,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
   enableEditable: boolean,

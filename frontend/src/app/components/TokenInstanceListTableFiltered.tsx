@@ -277,7 +277,7 @@ const TokenInstanceListTableFiltered = (
                         <input className={"checkbox " + clsCheckboxSizeSmall}
                           type="checkbox"
                           checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
-                          onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()}}
+                          onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll(true)}}
                           disabled={selectAllDisabled}
                           />
                       </label>
@@ -285,7 +285,7 @@ const TokenInstanceListTableFiltered = (
                     <td className="p-2">
                       <label>
                         {/* INVERT ALL checkbox */}
-                        <ArrowPathRoundedSquareIcon className={clsIconMediumInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks()} } } />
+                        <ArrowPathRoundedSquareIcon className={clsIconMediumInvert} onClick={ ()=>{ if (!selectAllDisabled) {tokensInstancesListTablePropsHandlers.updateHandlers.handleInvertAllChecks(true)} } } />
                       </label>
                     </td>
 

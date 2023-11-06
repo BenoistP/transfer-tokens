@@ -77,7 +77,9 @@ const StepsContainer = ( {
 
   // Selection
   const [selectAll, setselectAll] = useState<boolean>(false);
+  const [selectAllVisible, setselectAllVisible] = useState<boolean>(false);
   const [invertAll, setinvertAll] = useState(false)
+  const [invertAllVisible, setinvertAllVisible] = useState(false)
 
   // ------------------------------
 
@@ -163,41 +165,41 @@ const StepsContainer = ( {
   const tokenInstanceFilterParamsUpdaters = {
     updateNameFilter, switchBalanceGt0Filter, updateBalanceFilter, updateAddressFilter, clearAllFilters
   } // as ItokenInstanceFilterParamsUpdaters
-    // ---
 
+  // ---
 
-  const filterTokenInstanceWithFilterProps = (filter: /* ITokenInstanceListFilterProps */ ITokenInstanceListFilterStates, token:TTokenInstance) =>
-  {
-    try {
-      // console.debug(`StepsContainer.tsx filterTokenInstanceWithFilterProps filter.name=${filter.name} accountAddress: ${accountAddress}`);
-      const nameFilter = filter.name && token.name ? token.name.toLowerCase().includes(filter.name.toLowerCase()) : true ;
+  // const filterTokenInstanceWithFilterProps = (filter: /* ITokenInstanceListFilterProps */ ITokenInstanceListFilterStates, token:TTokenInstance) =>
+  // {
+  //   try {
+  //     // console.debug(`StepsContainer.tsx filterTokenInstanceWithFilterProps filter.name=${filter.name} accountAddress: ${accountAddress}`);
+  //     const nameFilter = filter.name && token.name ? token.name.toLowerCase().includes(filter.name.toLowerCase()) : true ;
 
-      if (!nameFilter) return false ; // RETURN
-      const balanceGt0Filter = filter.balanceGt0 ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) > 0 : true ;
+  //     if (!nameFilter) return false ; // RETURN
+  //     const balanceGt0Filter = filter.balanceGt0 ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) > 0 : true ;
 
-      if (!balanceGt0Filter) return false ; // RETURN
+  //     if (!balanceGt0Filter) return false ; // RETURN
 
-      const balance = Number(filter.balance)
-      const intValueBI = BigInt(balance.toString())
-      const floatPart:string = balance.toString(10)?.split('.')[1]
-      const leadingZeros:number = floatPart?.match(/^0+/)?.[0].length || 0
-      const floatValue = floatPart ? BigInt(floatPart) : 0n
+  //     const balance = Number(filter.balance)
+  //     const intValueBI = BigInt(balance.toString())
+  //     const floatPart:string = balance.toString(10)?.split('.')[1]
+  //     const leadingZeros:number = floatPart?.match(/^0+/)?.[0].length || 0
+  //     const floatValue = floatPart ? BigInt(floatPart) : 0n
 
-      const filterValueInt =  BigInt(Math.pow(10, token.decimals)) * intValueBI
-      const filterValueFloat = BigInt(Math.pow(10, token.decimals-(leadingZeros+floatValue.toString().length))) * floatValue
-      const filterValue = filterValueInt + filterValueFloat
-      const balanceFilter = filter.balance && token.decimals ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) >= filterValue : true ;
+  //     const filterValueInt =  BigInt(Math.pow(10, token.decimals)) * intValueBI
+  //     const filterValueFloat = BigInt(Math.pow(10, token.decimals-(leadingZeros+floatValue.toString().length))) * floatValue
+  //     const filterValue = filterValueInt + filterValueFloat
+  //     const balanceFilter = filter.balance && token.decimals ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) >= filterValue : true ;
 
-      if (!balanceFilter) return false ;
+  //     if (!balanceFilter) return false ;
 
-      const addressFilter = filter.address && token.address ? token.address.toLowerCase().includes(filter.address.toLowerCase()) : true ;
+  //     const addressFilter = filter.address && token.address ? token.address.toLowerCase().includes(filter.address.toLowerCase()) : true ;
 
-      return addressFilter; // RETURN
-    } catch (error) {
-      console.error(`StepsContainer.tsx filterTokenInstanceWithFilterProps error: ${error}`);
-      return true; // error : skip and RETURN TRUE
-    }
-  }
+  //     return addressFilter; // RETURN
+  //   } catch (error) {
+  //     console.error(`StepsContainer.tsx filterTokenInstanceWithFilterProps error: ${error}`);
+  //     return true; // error : skip and RETURN TRUE
+  //   }
+  // }
 
   // ---
 
@@ -206,7 +208,7 @@ const StepsContainer = ( {
   } as ITokenInstanceListFilterStates // ITokenInstanceListFilterProps
 
   // ---
-
+/* 
   const filterTokenInstance = (token:TTokenInstance) =>
   {
     try {
@@ -216,6 +218,51 @@ const StepsContainer = ( {
       return true; // error : skip and RETURN TRUE
     }
   }
+ */
+  const filterTokenInstance = useCallback( (token:TTokenInstance) =>
+    {
+      const filterTokenInstanceWithFilterProps = (filter: /* ITokenInstanceListFilterProps */ ITokenInstanceListFilterStates, token:TTokenInstance) =>
+      {
+        try {
+          // console.debug(`StepsContainer.tsx filterTokenInstanceWithFilterProps filter.name=${filter.name} accountAddress: ${accountAddress}`);
+          const nameFilter = filter.name && token.name ? token.name.toLowerCase().includes(filter.name.toLowerCase()) : true ;
+    
+          if (!nameFilter) return false ; // RETURN
+          const balanceGt0Filter = filter.balanceGt0 ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) > 0 : true ;
+    
+          if (!balanceGt0Filter) return false ; // RETURN
+    
+          const balance = Number(filter.balance)
+          const intValueBI = BigInt(balance.toString())
+          const floatPart:string = balance.toString(10)?.split('.')[1]
+          const leadingZeros:number = floatPart?.match(/^0+/)?.[0].length || 0
+          const floatValue = floatPart ? BigInt(floatPart) : 0n
+    
+          const filterValueInt =  BigInt(Math.pow(10, token.decimals)) * intValueBI
+          const filterValueFloat = BigInt(Math.pow(10, token.decimals-(leadingZeros+floatValue.toString().length))) * floatValue
+          const filterValue = filterValueInt + filterValueFloat
+          const balanceFilter = filter.balance && token.decimals ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) >= filterValue : true ;
+    
+          if (!balanceFilter) return false ;
+    
+          const addressFilter = filter.address && token.address ? token.address.toLowerCase().includes(filter.address.toLowerCase()) : true ;
+    
+          return addressFilter; // RETURN
+        } catch (error) {
+          console.error(`StepsContainer.tsx filterTokenInstanceWithFilterProps error: ${error}`);
+          return true; // error : skip and RETURN TRUE
+        }
+      }
+
+      try {
+        return filterTokenInstanceWithFilterProps(tokenInstanceFilterParams, token)
+      } catch (error) {
+        console.error(`StepsContainer.tsx filterTokenInstance error: ${error}`);
+        return true; // error : skip and RETURN TRUE
+      }
+    },
+    [tokenInstanceFilterParams]
+  ) // filterTokenInstance
 
   // ------------------------------
 
@@ -320,42 +367,69 @@ const StepsContainer = ( {
 
   // Selection
 
-  const updateCheckAll = useCallback(  (tokensInstances:TTokensInstances) => {
+  const updateCheckAll = useCallback(  (tokensInstances:TTokensInstances) =>
+    {
+      try {
+        // console.debug(`StepsContainer.tsx x realTokensList: ${realTokensList}`);
+        if (tokensInstances && /*accountAddress*/ connectedAddress) {
+          const isAllChecked = tokensInstances.every( (tokensInstance) => {
+              if (tokensInstance.selectable && tokensInstance.transferAmount) {
+                  return tokensInstance.selected;
+              }
+              return true; // not selectable OR no amount : RETURN TRUE
+            } // every
+          );
+          setselectAll(isAllChecked);
+        } else {
+          // Empty list
+          setselectAll(false);
+        }
+      } catch (error) {
+        console.error(`StepsContainer.tsx updateCheckAll error: ${error}`);
+      }
+    },
+    [/*accountAddress*/ connectedAddress]
+  ); // updateCheckAll
+
+    // ---
+
+  const updateCheckAllVisible = useCallback(  (tokensInstances:TTokensInstances) => {
     try {
       
       // console.debug(`StepsContainer.tsx x realTokensList: ${realTokensList}`);
       if (tokensInstances && /*accountAddress*/ connectedAddress) {
-        const isAllChecked = tokensInstances.every(
-          (tokensInstance) => {
-            if (tokensInstance.selectable) {
-              if (tokensInstance.transferAmount)
+        const isAllChecked = tokensInstances.every( (tokensInstance) => {
+            if (tokensInstance.selectable && tokensInstance.transferAmount&&filterTokenInstance(tokensInstance)) {
                 return tokensInstance.selected;
             }
             return true; // not selectable OR no amount : RETURN TRUE
           } // every
         );
-        setselectAll(isAllChecked);
+        setselectAllVisible(isAllChecked);
       } else {
         // Empty list
-        setselectAll(false);
+        setselectAllVisible(false);
       }
     } catch (error) {
       console.error(`StepsContainer.tsx updateCheckAll error: ${error}`);
     }
-
-  }, [/*accountAddress*/ connectedAddress]); // updateCheckAll
+    },
+    [/*accountAddress*/ connectedAddress]); // updateCheckAllVisible
 
   // ---
 
   const handleCheckSelectAll = useCallback(
-    () =>
+    (filter:boolean=false) =>
       {
         try {
           
           // console.debug(`handleCheckSelectAll selectAll: ${selectAll}`);
           if (tokensInstances) {
-            const newCheckAll = !selectAll
+            const newCheckAll = (filter?!selectAll:!selectAllVisible);
+            // filterTokenInstance
+            
             const tokensInstancesCheckAll = tokensInstances.map((tokensInstance) => {
+            
               // if (tokensInstance.address.toUpperCase() == "0X8D1090DF790FFAFDACCDA03015C05DF3B4CC9C21") {
                 // console.debug(`handleCheckSelectAll tokensInstance=`);
                 // console.dir(tokensInstance)
@@ -369,7 +443,13 @@ const StepsContainer = ( {
                   )
               {
                 // tokensInstance.userData[targetAddress as any].selected = newCheckAll;
-                tokensInstance.selected = newCheckAll;
+                if (filter) {
+                  if (filterTokenInstance(tokensInstance)) {
+                    tokensInstance.selected = newCheckAll;
+                  }
+                } else {
+                  tokensInstance.selected = newCheckAll;
+                }
               }
               return {
                 ...tokensInstance,
@@ -377,26 +457,37 @@ const StepsContainer = ( {
             });
             settokensInstances(tokensInstancesCheckAll);
             // console.dir(tokensInstancesCheckAll);
-            setselectAll(newCheckAll);
+            // // setselectAll(newCheckAll);
+            // if (!filter) {
+            //   setselectAll(newCheckAll);
+            // }
+            // updateCheckAll(tokensInstancesCheckAll);
+            if (filter) {
+              setselectAllVisible(newCheckAll);
+            } else {
+              setselectAll(newCheckAll);
+            }
+
             // console.debug(`handleCheckSelectAll newCheckAll: ${newCheckAll}`);
           } // if (tokensInstances)
         } catch (error) {
           console.error(`StepsContainer.tsx handleCheckSelectAll error: ${error}`);
         }
       },
-      [tokensInstances, /*accountAddress*/ /* connectedAddress, */ connectedAddress, targetAddress, selectAll]
+      [tokensInstances, /*accountAddress*/ /* connectedAddress, */ connectedAddress, targetAddress, selectAll,
+      filterTokenInstance,
+      // updateCheckAll,
+      selectAllVisible
+    ]
   ); // handleCheckSelectAll
 
   // ---
   
   const handleInvertAllChecks = useCallback(
-    () =>
+    (filter:boolean=false) =>
       {
         // console.debug(`handleInvertAllChecks invertAll: ${invertAll}`);
         try {
-          
-          if (tokensInstances) {
-
             if (tokensInstances) {
               const tokensInstancesInvertCheck = tokensInstances.map((tokensInstance) => {
                 if (tokensInstance.selectable) {
@@ -405,10 +496,14 @@ const StepsContainer = ( {
                     && tokensInstance.userData[/*accountAddress*/ targetAddress as any].canTransfer
                     && tokensInstance.transferAmount>0
                     ) {
-                    // if (tokensInstance.userData[/*accountAddress*/ connectedAddress as any].transferAmount>0) {
-                      // tokensInstance.userData[/*accountAddress*/ connectedAddress as any].selected = ! tokensInstance.userData[/*accountAddress*/ connectedAddress as any].selected;
+                    // tokensInstance.selected = ! tokensInstance.selected;
+                    if (filter) {
+                      if (filterTokenInstance(tokensInstance)) {
+                        tokensInstance.selected = ! tokensInstance.selected;
+                      }
+                    } else {
                       tokensInstance.selected = ! tokensInstance.selected;
-                    // }
+                    }
                   }
                 }
                 return {
@@ -417,16 +512,24 @@ const StepsContainer = ( {
               });
               settokensInstances(tokensInstancesInvertCheck);
               // console.dir(tokensInstancesInvertCheck);
+              // setinvertAll(!invertAll); // just for style
+              if (filter) {
+                setinvertAllVisible(!invertAllVisible);
+              } else {
+                setinvertAll(!invertAll);
               }
-            setinvertAll(!invertAll); // just for style
-            updateCheckAll(tokensInstances);
+              // updateCheckAll(tokensInstances);
             // console.debug(`handleInvertAllChecks invertAll: ${!invertAll}`);
           }
         } catch (error) {
           console.error(`StepsContainer.tsx handleInvertAllChecks error: ${error}`);
         }
       },
-      [tokensInstances, invertAll, updateCheckAll, connectedAddress, targetAddress]
+      [tokensInstances, invertAll, connectedAddress, targetAddress,
+      filterTokenInstance,
+      // updateCheckAll,
+      invertAllVisible,
+    ]
   ); // handleInvertAllChecks
 
   // ---
@@ -457,6 +560,7 @@ const StepsContainer = ( {
           })
           settokensInstances(tokensInstancesUpdated);
           updateCheckAll(tokensInstancesUpdated);
+          updateCheckAllVisible(tokensInstancesUpdated);
         } catch (error) {
           console.error(`StepsContainer.tsx updateCheckboxStatus error: ${error}`);
         }
@@ -485,7 +589,7 @@ const StepsContainer = ( {
             } as TTokenInstance;
           })
           settokensInstances(tokensInstancesUpdated);
-          updateCheckAll(tokensInstancesUpdated);
+          // updateCheckAll(tokensInstancesUpdated);
         } catch (error) {
           console.error(`StepsContainer.tsx updateTransferAmount error: ${error}`);
         }
@@ -516,7 +620,7 @@ const StepsContainer = ( {
             } as TTokenInstance;
           })
           settokensInstances(tokensInstancesUpdated);
-          updateCheckAll(tokensInstancesUpdated);
+          // updateCheckAll(tokensInstancesUpdated);
         } catch (error) {
           console.error(`StepsContainer.tsx updateTransferAmountLock error: ${error}`);
         }
@@ -542,7 +646,9 @@ const StepsContainer = ( {
     },
     selectStates: {
       selectAll,
-      invertAll
+      selectAllVisible,
+      // invertAll,
+      // invertAllVisible
     },
     updateHandlers: {
       handleCheckSelectAll,
