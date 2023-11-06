@@ -58,6 +58,7 @@ filtered tokens table: 🚧
 - ☑️ Add reset all filters
 - ☑️ pre-Check "amount > 0" checkbox
 - ☑️ Add colors to icons
+- 🚧 BUG: Error when input balance such as 0.1
 
 
 Step 0: 🚧
