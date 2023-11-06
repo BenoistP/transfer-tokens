@@ -229,27 +229,29 @@ const StepsContainer = ( {
         try {
           // console.debug(`StepsContainer.tsx filterTokenInstanceWithFilterProps filter.name=${filter.name} accountAddress: ${accountAddress}`);
           const nameFilter = filter.name && token.name ? token.name.toLowerCase().includes(filter.name.toLowerCase()) : true ;
-    
           if (!nameFilter) return false ; // RETURN
+
           const balanceGt0Filter = filter.balanceGt0 ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) > 0 : true ;
-    
           if (!balanceGt0Filter) return false ; // RETURN
     
-          const balance = Number(filter.balance)
-          const intValueBI = BigInt(balance.toString())
-          const floatPart:string = balance.toString(10)?.split('.')[1]
-          const leadingZeros:number = floatPart?.match(/^0+/)?.[0].length || 0
-          const floatValue = floatPart ? BigInt(floatPart) : 0n
-    
-          const filterValueInt =  BigInt(Math.pow(10, token.decimals)) * intValueBI
-          const filterValueFloat = BigInt(Math.pow(10, token.decimals-(leadingZeros+floatValue.toString().length))) * floatValue
-          const filterValue = filterValueInt + filterValueFloat
-          const balanceFilter = filter.balance && token.decimals ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) >= filterValue : true ;
-    
-          if (!balanceFilter) return false ;
-    
+          if (filter.balance) {
+            // const balance = Number(filter.balance)
+            const balanceSplit = filter.balance.split('.')
+            const intPart:string = balanceSplit[0]
+            const intValueBI = BigInt(intPart)
+            // const intValueBI = BigInt(balance.toString())
+            const floatPart:string = balanceSplit[1]
+            const leadingZeros:number = floatPart?.match(/^0+/)?.[0].length || 0
+            const floatValue = floatPart ? BigInt(floatPart) : 0n
+      
+            const filterValueInt =  BigInt(Math.pow(10, token.decimals)) * intValueBI
+            const filterValueFloat = BigInt(Math.pow(10, token.decimals-(leadingZeros+floatValue.toString().length))) * floatValue
+            const filterValue = filterValueInt + filterValueFloat
+            const balanceFilter = filter.balance && token.decimals ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) >= filterValue : true ;
+            if (!balanceFilter) return false ; // RETURN
+          }
+
           const addressFilter = filter.address && token.address ? token.address.toLowerCase().includes(filter.address.toLowerCase()) : true ;
-    
           return addressFilter; // RETURN
         } catch (error) {
           console.error(`StepsContainer.tsx filterTokenInstanceWithFilterProps error: ${error}`);
