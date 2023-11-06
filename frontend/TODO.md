@@ -59,6 +59,7 @@ filtered tokens table: 🚧
 - ☑️ pre-Check "amount > 0" checkbox
 - ☑️ Add colors to icons
 - 🚧 BUG: Error when input balance such as 0.1
+- 🚧 BUG: On filter update: update selectAll/All visible checks
 
 
 Step 0: 🚧
