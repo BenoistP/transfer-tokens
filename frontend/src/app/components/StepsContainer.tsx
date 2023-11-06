@@ -261,7 +261,7 @@ const StepsContainer = ( {
         return true; // error : skip and RETURN TRUE
       }
     },
-    [tokenInstanceFilterParams]
+    [connectedAddress, tokenInstanceFilterParams]
   ) // filterTokenInstance
 
   // ------------------------------
