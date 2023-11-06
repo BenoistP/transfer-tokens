@@ -27,8 +27,16 @@
           }
         },
         "select" : {
-          "selectAll": "Tout",
-          "invertSelection": "Inverser"
+          "any" : {
+            "hint": "TOUT sélectionner",
+            "selectAll": "Tout",
+            "invertSelection": "Inverser"
+            },
+          "visible" : {
+            "hint": "VISIBLES seulement",
+            "selectAll": "Tout les visibles",
+            "invertSelection": "Inverser visibles"
+            }
         },
         "results": {
           "found": {

@@ -27,9 +27,17 @@
           }
         },
         "select": {
-          "selectAll": "Select all",
-          "invertSelection": "Invert"
-        },
+          "any" : {
+            "hint": "Select ALL tokens",
+            "selectAll": "All",
+            "invertSelection": "Invert"
+            },
+          "visible" : {
+            "hint": "Select VISIBLE only",
+            "selectAll": "All visible",
+            "invertSelection": "Invert"
+            }
+          },
         "results": {
           "found": {
             "selected": "Selected",
