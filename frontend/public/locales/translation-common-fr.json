@@ -19,8 +19,14 @@
         "search" : {
           "name": "Nom",
           "balance": "Solde",
-          "balanceGt0": "> 0",
-          "clear": "Effacer",
+          "balanceGt0": {
+            "label": "> 0",
+            "hint": "N'afficher que les tokens avec un solde > 0"
+          },
+          "clearAll": {
+            "label": "Effacer",
+            "hint": "Effacer tous les filtres"
+          },
           "additional": {
             "title": "Critères supplémentaires",
             "address": "Adresse"

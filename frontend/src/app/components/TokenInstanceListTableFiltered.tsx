@@ -162,8 +162,8 @@ const TokenInstanceListTableFiltered = (
                     <th className="p-0 pl-1 font-medium"><FunnelIcon className={clsIconMedium} /></th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.name")}</th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balance")}</th>
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balanceGt0")}</th>
-                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.clear")}</th>
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balanceGt0.label")}</th>
+                    <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.clearAll.label")}</th>
                   </tr>
                 </thead>
                 <tbody className={"min-w-full"+clsTextSize}>
@@ -189,17 +189,21 @@ const TokenInstanceListTableFiltered = (
                     <td className="p-2 pl-0">
                       <label>
                         {/* Balance greater than 0 filter checkbox */}
-                        <input className={"checkbox " + clsCheckboxSizeBig}
-                          type="checkbox"
-                          checked={tokensInstancesListTablePropsHandlers.filterStates.balanceGt0} onChange={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.switchBalanceGt0Filter()}}
-                          disabled={!tokensInstances?.length}
-                          />
+                        <div className="tooltip tooltip-left" data-tip={t("moveTokens.stepAny.tokensTable.search.balanceGt0.hint")}>
+                          <input className={"checkbox " + clsCheckboxSizeBig}
+                            type="checkbox"
+                            checked={tokensInstancesListTablePropsHandlers.filterStates.balanceGt0} onChange={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.switchBalanceGt0Filter()}}
+                            disabled={!tokensInstances?.length}
+                            />
+                        </div>
                       </label>
                     </td>
-                    <td className="p-2 pl-0 pt-1 md:pt-0">
+                    <td className="p-2 pl-0">
                       <label>
                         {/* Clear filters */}
-                        <BackspaceIcon className={clsIconSizeBig} onClick={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.clearAllFilters()}} />
+                        <div className="tooltip tooltip-left" data-tip={t("moveTokens.stepAny.tokensTable.search.clearAll.hint")}>
+                          <BackspaceIcon className={clsIconSizeBig} onClick={()=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.clearAllFilters()}} />
+                        </div>
                       </label>
                     </td>
                   </tr>
