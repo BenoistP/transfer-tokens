@@ -26,7 +26,7 @@ import CoinBridgeToken from "@abis/CoinBridgeToken.json";
 
 // Consts & Enums
 import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT } from "@uiconsts/misc";
-import { EStepsLoadTokensData, EChainTokensListLoadState } from "@jsconsts/enums"; 
+import { EStepsLoadTokensData, EChainTokensListLoadState, Steps } from "@jsconsts/enums"; 
 
 // ------------------------------
 
@@ -56,6 +56,7 @@ const StepsContainer = ( {
 
   const [selectedChainsTokensList, setselectedChainsTokensList] = useState<TChainsTokensListArrayNullUndef>(null)
   const [tokensInstances, settokensInstances] = useState<TTokensInstances>(null)
+  const [tokensInstancesToMigrate, settokensInstancesToMigrate] = useState<TTokensInstances>(null)
 
   const [targetAddress, settargetAddress] = useState<TAddressEmpty>("")
 
@@ -1277,12 +1278,75 @@ const StepsContainer = ( {
       loadTokensOnChainData_decimals, loadTokensOnChainData_names, loadTokensOnChainData_symbols ]
   ); // loadTokensOnChainData
 
+  // ---
+
+  const getTokensToMigrate = useCallback( (/* tokensInstances:TTokensInstances */):TTokensInstances =>
+    {
+      try {
+        
+        console.debug(`StepsContainer.tsx getTokensToMigrate`)
+
+        return tokensInstances?.filter( (tokenInstance:TTokenInstance) => {
+          return tokenInstance.selected && tokenInstance.transferAmount > 0n
+        })
+
+      } catch (error) {
+        console.error(`StepsContainer.tsx getTokensToMigrate error: ${error}`);
+      }
+    },
+    [tokensInstances]
+  ) // getTokensToMigrate
+
+  // ---
+
+/* 
+  const updateTokensToMigrate = useCallback( () : void =>
+    {
+      try {
+        console.debug(`StepsContainer.tsx updateTokensToMigrate step=${step}`)
+        if (step == Steps.migration) {
+          const tokensToMigrate = getTokensToMigrate()
+          console.dir(getTokensToMigrate())
+          settokensInstancesToMigrate(tokensToMigrate)
+        } // if (step == Steps.migration)
+      } catch (error) {
+        console.error(`StepsContainer.tsx updateTokensToMigrate error: ${error}`);  
+      }
+    },
+    [Steps.migration, getTokensToMigrate, step]
+  ) // updateTokensToMigrate
+ */
+
   // ----------------------------------------------
 
   // USE EFFECTS
 
+  // ---
+
+  /**
+   * Sets tokensInstances to migrate
+   */
   useEffect( () =>
-  {
+    {
+      try {
+        console.debug(`StepsContainer.tsx updateTokensToMigrate step=${step}`)
+        if (step == Steps.migration) {
+          console.debug(`StepsContainer.tsx updateTokensToMigrate MIGRATION step=${step}`)
+          const tokensToMigrate = getTokensToMigrate()
+          console.dir(getTokensToMigrate())
+          settokensInstancesToMigrate(tokensToMigrate)
+        } // if (step == Steps.migration)
+      } catch (error) {
+        console.error(`StepsContainer.tsx updateTokensToMigrate error: ${error}`);  
+      }
+    },
+    [getTokensToMigrate, step]
+  ) // useEffect
+
+  // ---
+
+  useEffect( () =>
+    {
 
       const loadTargetData = async( _tokensInstances:TTokensInstances, targetAddress:TAddressEmpty) : Promise<TTokenInstance[]> =>
       {
@@ -2034,7 +2098,7 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
           <MainContentContainer>
             <Step3
                 setNextDisabled={setNextDisabled}
-                tokensInstances={tokensInstances}
+                tokensInstances={tokensInstancesToMigrate}
                 setShowProgressBar={setShowProgressBar}
                 accountAddress={connectedAddress}
                 targetAddress={targetAddress}
