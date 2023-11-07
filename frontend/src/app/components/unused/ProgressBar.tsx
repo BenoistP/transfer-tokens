@@ -2,12 +2,12 @@
 
 // ------------------------------
 
-const ProgressBar = ({ showProgressBar=false, progressPercentage }: ITF_ProgressBar ) => {
+const ProgressBar = ({ showProgressBar=false, /* progressPercentage */ }: ITF_ProgressBar ) => {
   // console.debug(`ProgressBar.tsx render progressPercentage=${progressPercentage}`)
 
   return (
       <div className={'h-2 sm:h-4 md:h-6 '+(showProgressBar?"w-full":"invisible")}>
-          <div style={{ width: `${progressPercentage}%`}}
+          <div style={{ width: `${/* progressPercentage */50}%`}}
 
             className={`h-full rounded-lg ease-in-out duration-1000 ${ 
               'bg-gradient-to-r from-base-100 to-base-content '

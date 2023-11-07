@@ -40,7 +40,8 @@ const StepsContainer = ( {
   isErrorTokensLists,
   // setisErrorTokensLists,
   // setisLoadingTokensLists,
-  // setShowProgressBar, setProgressBarPercentage,
+  setShowProgressBar,
+  // setProgressBarPercentage,
  } :IStepsContainerProps ) => {
 
   // console.debug(`StepsContainer.tsx render`)
@@ -2014,7 +2015,7 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
               <Step2
                 setNextDisabled={setNextDisabled}
                 tokensInstances={tokensInstances}
-                // setShowProgressBar={setShowProgressBar}
+                setShowProgressBar={setShowProgressBar}
                 // setProgressBarPercentage={setProgressBarPercentage}
                 accountAddress={connectedAddress}
                 // chainId={chainId}
@@ -2032,8 +2033,12 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
         <div className="w-full" >
           <MainContentContainer>
             <Step3
-              // setShowProgressBar={setShowProgressBar}
-              // setProgressBarPercentage={setProgressBarPercentage}
+                setNextDisabled={setNextDisabled}
+                tokensInstances={tokensInstances}
+                setShowProgressBar={setShowProgressBar}
+                accountAddress={connectedAddress}
+                targetAddress={targetAddress}
+                tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
             />
           </MainContentContainer>
         </div>

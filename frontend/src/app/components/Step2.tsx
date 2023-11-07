@@ -7,6 +7,7 @@ import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFi
 
 const Step2 = ( {
   setNextDisabled,
+  setShowProgressBar,
   tokensInstances,
   accountAddress,
   // chainId,
@@ -19,8 +20,7 @@ const Step2 = ( {
 
   useEffect( () =>
     {
-      // setShowProgressBar(true)
-      // setProgressBarPercentage(50)
+      setShowProgressBar(false)
 
       const someSelected = tokensInstances?.some( (tokensInstance) => {
           return tokensInstance.selected;
@@ -29,7 +29,7 @@ const Step2 = ( {
       setNextDisabled(!someSelected || isErrorTokensInstances)
 
     },
-    [tokensInstances, isErrorTokensInstances, setNextDisabled]
+    [tokensInstances, isErrorTokensInstances, setNextDisabled, setShowProgressBar]
   )
 
   // ---

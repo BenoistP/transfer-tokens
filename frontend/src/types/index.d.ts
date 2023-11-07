@@ -15,11 +15,29 @@ enum EChainTokensListLoadState {
 
 // Types to remove ->
 
+interface ITokensInstancesListTableProps {
+  tokensInstances:TTokensInstances;
+  accountAddress:TAddressNullUndef;
+  // chainId: ChainId;
+  targetAddress: TAddressEmpty,
+  isLoading: boolean,
+  isError: boolean,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
+}
 
+
+type TmigrationState = {
+  totalItemsCount: number;
+  successItemsCount: number;
+  errorItemsCount: number;
+  skippedItemsCount: number;
+
+}
 
 interface ITF_ProgressBar {
-  showProgressBar: boolean;
-  progressPercentage: number;
+  showProgressBar?: boolean;
+  // progressPercentage: number;
+  migrationState: TmigrationState;
 }
 
 // interface ITF_ProgressBarColor {
@@ -367,7 +385,7 @@ interface ITransferAmountLock {
 interface ITF_ProgressContainer {
   previousDisabled: boolean;
   nextDisabled: boolean;
-  // showProgressBar: boolean;
+  showProgressBar: boolean;
   // progressBarPercentage: number;
 }
 interface IAddressInputProps {
@@ -384,7 +402,7 @@ interface IStepsContainerProps {
   setNextDisabled: TsetNextDisabled,
   isErrorTokensLists: boolean,
   isLoadingTokensLists : boolean,
-  // setShowProgressBar: TsetShowProgressBar
+  setShowProgressBar: TsetShowProgressBar
   // setProgressBarPercentage: TsetProgressBarPercentage
 }
 
@@ -429,7 +447,7 @@ interface IStep1Props {
 interface IStep2Props {
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
-  // setShowProgressBar: TsetShowProgressBar
+  setShowProgressBar: TsetShowProgressBar
   // setProgressBarPercentage: TsetProgressBarPercentage,
   accountAddress: TAddressNullUndef,
   // chainId: ChainId;
@@ -441,8 +459,13 @@ interface IStep2Props {
 }
 
 interface IStep3Props {
-  // setShowProgressBar: TsetShowProgressBar
-  // setProgressBarPercentage: TsetProgressBarPercentage
+  // chainId: ChainId;
+  setNextDisabled: TsetNextDisabled,
+  tokensInstances: TTokensInstances,
+  setShowProgressBar: TsetShowProgressBar
+  accountAddress: TAddressNullUndef,
+  targetAddress: TAddressEmpty,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
 interface IChangeTokensListCheckboxStatus {
@@ -575,15 +598,16 @@ interface ITokensInstancesListTableStatesHandlers {
   filterHandlers: IfilterTokenInstanceMethods,
 }
 
-interface ITokensInstancesListTableProps {
+interface ITokenInstancesigrationListTableProps {
   tokensInstances:TTokensInstances;
   accountAddress:TAddressNullUndef;
   // chainId: ChainId;
   targetAddress: TAddressEmpty,
-  isLoading: boolean,
-  isError: boolean,
+  // isLoading: boolean,
+  // isError: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }
+
 
 interface ISortIconProps {
   sortOrder: TsortOrder,

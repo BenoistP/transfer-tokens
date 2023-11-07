@@ -1,13 +1,35 @@
 // React
+import { useEffect } from "react";
+// Components
+import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationListTable";
 
 // ------------------------------
 
 
 // const Step3 = ( { setShowProgressBar, setProgressBarPercentage }: IStep3Props ) => {
-const Step3 = ( ) => {
+const Step3 = ( {
+  tokensInstances,
+  setNextDisabled,
+  setShowProgressBar,
+  accountAddress,
+  targetAddress,
+  tokensInstancesListTablePropsHandlers
+  }: IStep3Props ) => {
+
+   // ---
 
   console.debug(`Step3.tsx render`)
- 
+
+  // ---
+
+   useEffect( () =>
+   {
+     setShowProgressBar(true)
+     setNextDisabled(true)
+   },
+   [setNextDisabled, setShowProgressBar]
+ )
+
   // ---
 
   // setShowProgressBar(true)
@@ -18,20 +40,34 @@ const Step3 = ( ) => {
 
   return (
     <>
+      <div className="w-full p-0 m-0">
+          <TokenInstanceMigrationListTable
+            // chainId={chainId}
+            tokensInstances={tokensInstances}
+            accountAddress={accountAddress}
+            targetAddress={targetAddress}
+            // isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
+            tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+          />
+      </div>
+  </>
+  );
+}
+
+/*
+  return (
+    <>
       <div className="bg-neutral w-full m-2 p-2 rounded-box border border-neutral-content">
           <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-accent">
             {"COMING"}
-            {/* getAddress()={getAddress()} */}
           </p>&nbsp;
           <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-warning font-extrabold">
             {"SOON"}
-            {/* getAddress()={getAddress()} */}
           </p>
       </div>
     </>
   );
-}
-
+*/
 
 
 // ------------------------------

@@ -3,6 +3,7 @@
 // Components
 import ProgressStepBar from "@Components/ProgressStepBar";
 // import ProgressBar from "@Components/ProgressBar";
+import MigrationProgressBar from "./MigrationProgressBar"; "@Components/MigrationProgressBar";
 
 // Context
 import { useMoveTokensAppContext } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
@@ -12,7 +13,10 @@ import { useTranslation } from 'react-i18next';
 
 // ------------------------------
 
-const ProgressContainer = ( { previousDisabled, nextDisabled/* , showProgressBar, progressBarPercentage */ }: ITF_ProgressContainer ) => {
+const ProgressContainer = ( {
+  previousDisabled, nextDisabled, showProgressBar,
+  // progressBarPercentage
+  }: ITF_ProgressContainer ) => {
 
   // console.debug(`ProgressContainer.tsx render previousNextDisabled=${previousNextDisabled}`)
   // console.debug(`ProgressContainer.tsx render`)
@@ -101,6 +105,11 @@ const ProgressContainer = ( { previousDisabled, nextDisabled/* , showProgressBar
         </div>
 */}
 
+        {/* showProgressBar */true &&
+        <div className="grid-cols-1 col-span-8 sm:grid-cols-3 sm:col-span-10 mt-1">
+          <MigrationProgressBar showProgressBar={showProgressBar} migrationState={{totalItemsCount:8,errorItemsCount:1,skippedItemsCount:3,successItemsCount:3}} />
+        </div>
+        }
       </div>
     </>
   );

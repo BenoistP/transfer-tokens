@@ -26,7 +26,7 @@ export const MainContent = ( ) => {
   const [isLoadingTokensLists, setisLoadingTokensLists] = useState<boolean>(false)
   const [isErrorTokensLists, setisErrorTokensLists] = useState(false)
 
-  // const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
+  const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
   // const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
 
   // ---
@@ -112,7 +112,8 @@ export const MainContent = ( ) => {
                     <div className="w-full p-0 m-0 mb-1 base-100 text-primary-content" >
                         <ProgressContainer
                           previousDisabled={previousDisabled} nextDisabled={nextDisabled}
-                          // showProgressBar={showProgressBar} progressBarPercentage={progressBarPercentage}
+                          showProgressBar={showProgressBar}
+                          // progressBarPercentage={progressBarPercentage}
                         />
                     </div>
                     <div className="w-full p-0 m-0 mt-1 base-100 text-primary-content" >
@@ -121,7 +122,8 @@ export const MainContent = ( ) => {
                         chainId={chain?.id}
                         setpreviousDisabled={setpreviousDisabled} setNextDisabled={setNextDisabled}
                         isLoadingTokensLists={isLoadingTokensLists} isErrorTokensLists={isErrorTokensLists}
-                        // setShowProgressBar={setshowProgressBar} setProgressBarPercentage={setprogressBarPercentage}
+                        setShowProgressBar={setshowProgressBar}
+                        // setProgressBarPercentage={setprogressBarPercentage}
                       />
                     </div>
                   </div>
