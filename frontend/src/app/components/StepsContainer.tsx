@@ -52,7 +52,7 @@ const StepsContainer = ( {
 // ------------------------------
 
   const { address: connectedAddress, /* status, isConnected ,  isConnecting,  isDisconnected*/ } = useAccount()
-  const { moveTokensAppData: { step = -1 } } = useMoveTokensAppContext()
+  const { moveTokensAppData: { step = -1 }, moveTokensAppDataHandlers: { resetToInitialStep } } = useMoveTokensAppContext()
 
   const [selectableTokensLists, setselectableTokensLists] = useState<TSelectableTokensLists>(null)
 
@@ -1402,28 +1402,38 @@ const StepsContainer = ( {
     [/* setmigrationState, */ transfertToken]
   ) // transferTokens
 
+  // ---
+
+  const resetToInitialStepCB = useCallback( () =>
+    {
+      resetToInitialStep()
+    },
+    [resetToInitialStep]
+  ) // resetToInitialStep
+
   // ----------------------------------------------
+
 
   // USE EFFECTS
 
+  /**
+   * Reset to initial step when chainId or connectedAddress changes
+   */
   useEffect( () =>
-  {
-    try {
-      console.debug(`StepsContainer.tsx useEffect [chainId, connectedAddress] step=${step}`)
-      if (step != Steps.tokenLists) {
-        console.debug(`StepsContainer.tsx useEffect [chainId, connectedAddress] CHANGE step=${step}`)
-        // setStep(Steps.tokenLists)
-      } // if (step <> Steps.tokenLists)
-    } catch (error) {
-      console.error(`StepsContainer.tsx updateTokensToMigrate error: ${error}`);  
-    }
-  },
-  [chainId, connectedAddress, step]
-) // useEffect
+    {
+      try {
+        // console.debug(`StepsContainer.tsx useEffect [chainId, connectedAddress, resetToInitialStep, step] step=${step}`)
+        console.log(`Switching to chainId=${chainId} connectedAddress=${connectedAddress}`)
+          resetToInitialStepCB()
+          settokensInstances(null)
+      } catch (error) {
+        console.error(`StepsContainer.tsx useEffect [chainId, connectedAddress, resetToInitialStepCB] error: ${error}`);  
+      }
+    },
+    [chainId, connectedAddress, resetToInitialStepCB]
+  ) // useEffect
 
   // ---
-
-  
 
   /**
    * Sets tokensInstances to migrate
