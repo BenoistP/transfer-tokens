@@ -106,6 +106,16 @@
       "titleStep": "Migration",
       "tokensMigrationListTable": {
         "noTokens": "No token found"
+      },
+      "migrationProgressBar": {
+        "success": "Success",
+        "skipped": "Skipped",
+        "failed": "Failed",
+        "status": {
+          "label": "Status",
+          "progress": "In progress",
+          "completed": "Completed"
+          }
       }
     },
 
@@ -116,7 +126,7 @@
       },
       "center": ""
     }
-  
+
   }
 
 }
