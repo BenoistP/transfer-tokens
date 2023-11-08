@@ -1341,28 +1341,8 @@ const StepsContainer = ( {
           const migrationState = {totalItemsCount:_tokensInstancesToTransfer.length,
             errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
             // setmigrationState( migrationState )
-/* 
-          _tokensInstancesToTransfer.forEach( (tokenInstanceToTransfer:TTokenInstance) => {
 
-            try {
-              sleep(2_000)
 
-              console.debug(`StepsContainer.tsx transferTokens tokenInstanceToTransfer TRANSFER OK ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
-              tokenInstanceToTransfer.processed = true;
-              migrationState.successItemsCount++;
-
-              sleep(2_000)
-
-            } catch (error) {
-              console.error(`StepsContainer.tsx transferTokens tokenInstanceToTransfer TRANSFER ERROR ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
-              migrationState.errorItemsCount++;
-              
-            }
-            finally {
-              setmigrationState( migrationState )
-            }
-          })
- */
           for (let tokenInstanceIndex = 0; tokenInstanceIndex < _tokensInstancesToTransfer.length; tokenInstanceIndex++) {
             const tokenInstanceToTransfer = _tokensInstancesToTransfer[tokenInstanceIndex];
             try {
