@@ -34,7 +34,7 @@ type TmigrationState = {
 
 }
 
-interface ITF_ProgressBar {
+interface ITF_TransferProgressBar {
   // showProgressBar?: boolean;
   // progressPercentage: number;
   migrationState: TmigrationState;
@@ -397,10 +397,7 @@ interface IAddressInputProps {
   settargetAddress:TsettargetAddress
 }
 
-// type TreactSetMigrationState = React.Dispatch<React.SetStateAction<TmigrationState>>
 type TSetMigrationState = React.Dispatch<React.SetStateAction<TmigrationState>>
-// type TSetMigrationState = (TmigrationState) => void;
-// type TSetMigrationState = (TmigrationState,TmigrationState) => void;
 
 interface IStepsContainerProps {
   tokensLists: TTokensLists|null|undefined,
@@ -410,8 +407,6 @@ interface IStepsContainerProps {
   isErrorTokensLists: boolean,
   isLoadingTokensLists : boolean,
   setShowProgressBar: TsetShowProgressBar
-  // setProgressBarPercentage: TsetProgressBarPercentage
-  // migrationState: TmigrationState,
   setmigrationState: TSetMigrationState
 }
 
@@ -426,7 +421,6 @@ interface IStep0Props {
   setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
-  // setShowProgressBar: TsetShowProgressBar,
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstances: TTokensInstances,
@@ -446,8 +440,6 @@ interface IStep1Props {
   targetAddress: TAddressEmpty,
   settargetAddress:TsettargetAddress
   chainId: ChainId;
-  // isLoading: boolean,
-  // isError: boolean,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
@@ -457,18 +449,15 @@ interface IStep2Props {
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
   setShowProgressBar: TsetShowProgressBar
-  // setProgressBarPercentage: TsetProgressBarPercentage,
   accountAddress: TAddressNullUndef,
   // chainId: ChainId;
   targetAddress: TAddressEmpty,
-  // isError: boolean,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
-// type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void;
-type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef, ) => void;
+type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void;
 
 interface IStep3Props {
   // chainId: ChainId;
@@ -478,8 +467,6 @@ interface IStep3Props {
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
-  // migrationState: TmigrationState,
-  // setmigrationState: TSetMigrationState,
   transferTokens: TtransferTokens
 }
 
@@ -568,7 +555,7 @@ interface ITokenInstanceAmountProps {
   settransferAmountLock: TsetamountLock,
 
   decimals: number,
-  unSelect: (/* tokenInstance: TTokenInstance */) => void,
+  unSelect: () => void,
 }
 
 interface IsortTokensInstancesOrdersStates {
@@ -595,8 +582,6 @@ interface IselectTokensInstancesMethods {
 interface IselectTokensInstancesStates {
   selectAll: boolean,
   selectAllVisible: boolean,
-  // invertAll: boolean,
-  // invertAllVisible: boolean,
 }
 
 interface IfilterTokenInstanceMethods {
@@ -613,16 +598,13 @@ interface ITokensInstancesListTableStatesHandlers {
   filterHandlers: IfilterTokenInstanceMethods,
 }
 
-interface ITokenInstancesigrationListTableProps {
+interface ITokenInstancesMigrationListTableProps {
   tokensInstances:TTokensInstances;
   accountAddress:TAddressNullUndef;
   // chainId: ChainId;
   targetAddress: TAddressEmpty,
-  // isLoading: boolean,
-  // isError: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }
-
 
 interface ISortIconProps {
   sortOrder: TsortOrder,

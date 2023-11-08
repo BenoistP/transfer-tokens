@@ -2,7 +2,7 @@
 
 // ------------------------------
 
-const ProgressBar = ({ showProgressBar=false, /* progressPercentage */ }: ITF_ProgressBar ) => {
+const ProgressBar = ({ showProgressBar=false, /* progressPercentage */ }: ITF_TransferProgressBar ) => {
   // console.debug(`ProgressBar.tsx render progressPercentage=${progressPercentage}`)
 
   return (

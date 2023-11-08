@@ -20,7 +20,7 @@ const TokenInstanceMigrationListTable = (
     // isLoading,
     // isError,
     tokensInstancesListTablePropsHandlers,
-    }: ITokenInstancesigrationListTableProps )  => {
+    }: ITokenInstancesMigrationListTableProps )  => {
 
   // ---
 

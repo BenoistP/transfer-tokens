@@ -98,18 +98,13 @@ const ProgressContainer = ( {
         {/* </div> */}
 
 
- {/* TODO: Transfer(s) progress */}
-{/* 
-        <div className="grid-cols-1 sm:grid-cols-3 bg-blue-600">
-          <ProgressBar progressPercentage={ 0  } />
-        </div>
-*/}
-
-        { (showProgressBar /* TODO: remove || true */ || true) &&
+        { showProgressBar
+        &&
         <div className="grid-cols-1 col-span-8 sm:grid-cols-3 sm:col-span-10 mt-1">
           <MigrationProgressBar /* showProgressBar={showProgressBar} */ migrationState={migrationState} />
         </div>
         }
+
       </div>
     </>
   );

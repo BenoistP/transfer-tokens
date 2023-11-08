@@ -1,12 +1,12 @@
 // React
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 // ------------------------------
 
-const MigrationProgressBar = ({ /* showProgressBar=false, */ migrationState }: ITF_ProgressBar ) => {
+const MigrationProgressBar = ({ migrationState }: ITF_TransferProgressBar ) => {
 
-  console.debug(`MigrationProgressBar.tsx render migrationState=`)
-  console.dir(migrationState)
+  // console.debug(`MigrationProgressBar.tsx render migrationState=`)
+  // console.dir(migrationState)
 
   // const [total, settotal] = useState(migrationState.totalItemsCount)
   // const [success, setsuccess] = useState(migrationState.successItemsCount)
