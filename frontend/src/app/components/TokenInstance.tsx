@@ -7,7 +7,8 @@ import { ERC20_DECIMALS_DEFAULT } from "@uiconsts/misc";
 // Translation
 import { useTranslation } from "react-i18next";
 // Icons
-import { NoSymbolIcon, MinusSmallIcon, ArrowLeftOnRectangleIcon as ArrowReceive, ArrowRightOnRectangleIcon as ArrowSend } from '@heroicons/react/24/solid'
+import { NoSymbolIcon, MinusSmallIcon, CheckCircleIcon, ExclamationCircleIcon, StopCircleIcon,
+  ArrowLeftOnRectangleIcon as ArrowReceive, ArrowRightOnRectangleIcon as ArrowSend, } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
@@ -234,6 +235,7 @@ const TokenInstance = ( {
   const clsTextPaddingLeft = "pl-2 "
   const clsText = clsTextPaddingLeft + (balance && balance.valueOf() > 0n ? clsTextReadable : clsTextLight)
   const clsTooltipLeft = "tooltip tooltip-left " + clsTextReadable
+  const clsIconSize = "w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
 
   // ------------------------------
 
@@ -288,7 +290,7 @@ const TokenInstance = ( {
                 unSelect={unSelect} />
               :
               <div className="flex justify-center text-neutral">
-                <MinusSmallIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+                <MinusSmallIcon className={clsIconSize+" fill-current"} />
               </div>
             }
           </td>
@@ -307,11 +309,11 @@ const TokenInstance = ( {
         }
         { canTransferFrom ?
           <div className={clsTooltipLeft + "pl-1 text-info tooltip-info"} data-tip={t(canTransferFrom?"moveTokens.stepAny.token.canTransferFrom":"moveTokens.stepAny.token.noTransferFrom")} >
-            <ArrowSend className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+            <ArrowSend className={clsIconSize+" fill-current"} />
           </div>
           :
           <div className={clsTooltipLeft + "pl-1 text-warning tooltip-warning"} data-tip={t(canTransferFrom?"moveTokens.stepAny.token.canTransferFrom":"moveTokens.stepAny.token.noTransferFrom")} >
-            <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+            <NoSymbolIcon className={clsIconSize+" fill-current"} />
           </div>
         }
         { targetAddress == "" ?
@@ -319,13 +321,28 @@ const TokenInstance = ( {
           :
             (canTransferTo ?
               <div className={clsTooltipLeft + "pl-1 text-info tooltip-info"} data-tip={t("moveTokens.stepAny.token.canTransferTo")} >
-                <ArrowReceive className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+                <ArrowReceive className={clsIconSize+" fill-current"} />
               </div>
               :
               <div className={clsTooltipLeft + "pl-1 text-warning tooltip-warning"} data-tip={t("moveTokens.stepAny.token.noTransferTo")} >
-                <NoSymbolIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+                <NoSymbolIcon className={clsIconSize+" fill-current"} />
               </div>
             )
+        }
+        {tokenInstance.tr_processed &&
+          <div className={clsTooltipLeft + "pl-1 text-info tooltip-success"} data-tip={t("moveTokens.stepAny.token.transfer.success")} >
+            <CheckCircleIcon className={clsIconSize+" fill-success"} />
+          </div>
+        }
+        {tokenInstance.tr_skipped &&
+          <div className={clsTooltipLeft + "pl-1  "} data-tip={t("moveTokens.stepAny.token.transfer.skipped")} >
+            <StopCircleIcon className={clsIconSize+" "} />
+          </div>
+        }
+        {tokenInstance.tr_error &&
+          <div className={clsTooltipLeft + "pl-1 text-info tooltip-error"} data-tip={t("moveTokens.stepAny.token.transfer.error")} >
+            <ExclamationCircleIcon className={clsIconSize+" fill-error"} />
+          </div>
         }
         </div>
       </td>
