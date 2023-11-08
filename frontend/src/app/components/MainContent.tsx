@@ -29,11 +29,11 @@ export const MainContent = ( ) => {
   const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
   // const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
 
-  // const initialMigrationState = useMemo( () => {
-  //   return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
-  // }, [])
-  // const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
-  const [migrationState, setmigrationState] = useState<TmigrationState>({totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0})
+  const initialMigrationState = useMemo( () => {
+    return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
+  }, [])
+  const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
+  // const [migrationState, setmigrationState] = useState<TmigrationState>({totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0})
 
 
   // ---
