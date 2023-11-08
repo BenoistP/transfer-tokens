@@ -1,7 +1,7 @@
 // React
 
 // Components
-import ProgressStepBar from "@Components/ProgressStepBar";
+import StepProgressBar from "@Components/StepProgressBar";
 // import ProgressBar from "@Components/ProgressBar";
 import MigrationProgressBar from "./MigrationProgressBar"; "@Components/MigrationProgressBar";
 
@@ -33,7 +33,7 @@ const ProgressContainer = ( {
   // const clsBtnRing = "ring-1 ring-black "
   const clsBtnBase = ""// clsBtnRounding + " " // + clsBtnRing + " "
 
-  const clsBtnNextPrevious = clsBtnBase + "btn btn-neutral btn-outline shadow-xl text py-2 px-1 sm:px-1 md:px-2 m-1 md:m-2" +
+  const clsBtnNextPrevious = clsBtnBase + "btn shadow-xl text py-2 px-1 sm:px-1 md:px-2 m-1 md:m-2" +
   " ease-in-out duration-300 sm:h-10 md:h-12" +
   " disabled:btn disabled:btn-disabled disabled:cursor-no-drop"
 
@@ -60,7 +60,7 @@ const ProgressContainer = ( {
         </div>
 
         <div className="w-full col-start-3 sm:col-start-3 col-span-8 sm:col-span-6 row-span-1 sm:row-span-1 justify-self-start sm:justify-self-start base-100 px-2">
-          <ProgressStepBar step={step} />
+          <StepProgressBar step={step} />
        </div>
 
         <div className={"col-start-1 sm:col-start-10 col-span-2 sm:col-span-2 justify-self-start sm:justify-self-end base-100 "}>
@@ -73,12 +73,12 @@ const ProgressContainer = ( {
           </button>
         </div>
 
-{ showProgressBar &&
-
+        { showProgressBar
+        &&
         <div className="grid-cols-1 col-span-8 sm:grid-cols-3 sm:col-span-10 mt-1">
           <MigrationProgressBar migrationState={migrationState} />
         </div>
-}
+        }
 
       </div>
     </>

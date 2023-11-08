@@ -52,7 +52,7 @@ const StepsContainer = ( {
 // ------------------------------
 
   const { address: connectedAddress, /* status, isConnected ,  isConnecting,  isDisconnected*/ } = useAccount()
-  const { moveTokensAppData: { step = -1 } } = useMoveTokensAppContext()
+  const { moveTokensAppData: { step = -1 }, moveTokensAppDataHandlers: { resetToInitialStep } } = useMoveTokensAppContext()
 
   const [selectableTokensLists, setselectableTokensLists] = useState<TSelectableTokensLists>(null)
 
@@ -1402,9 +1402,36 @@ const StepsContainer = ( {
     [/* setmigrationState, */ transfertToken]
   ) // transferTokens
 
+  // ---
+
+  const resetToInitialStepCB = useCallback( () =>
+    {
+      resetToInitialStep()
+    },
+    [resetToInitialStep]
+  ) // resetToInitialStep
+
   // ----------------------------------------------
 
+
   // USE EFFECTS
+
+  /**
+   * Reset to initial step when chainId or connectedAddress changes
+   */
+  useEffect( () =>
+    {
+      try {
+        // console.debug(`StepsContainer.tsx useEffect [chainId, connectedAddress, resetToInitialStep, step] step=${step}`)
+        console.log(`Switching to chainId=${chainId} connectedAddress=${connectedAddress}`)
+          resetToInitialStepCB()
+          settokensInstances(null)
+      } catch (error) {
+        console.error(`StepsContainer.tsx useEffect [chainId, connectedAddress, resetToInitialStepCB] error: ${error}`);  
+      }
+    },
+    [chainId, connectedAddress, resetToInitialStepCB]
+  ) // useEffect
 
   // ---
 
@@ -1414,11 +1441,11 @@ const StepsContainer = ( {
   useEffect( () =>
     {
       try {
-        console.debug(`StepsContainer.tsx updateTokensToMigrate step=${step}`)
+        // console.debug(`StepsContainer.tsx updateTokensToMigrate [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState] step=${step}`)
         if (step == Steps.migration) {
-          console.debug(`StepsContainer.tsx updateTokensToMigrate MIGRATION step=${step}`)
+          // console.debug(`StepsContainer.tsx updateTokensToMigrate [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState] MIGRATION step=${step}`)
           const tokensToMigrate = getTokensToMigrate()
-          console.dir(getTokensToMigrate())
+          // console.dir(tokensToMigrate)
           settokensInstancesToMigrate(tokensToMigrate)
           if (tokensToMigrate && tokensToMigrate.length) {
           const migrationState = {totalItemsCount:tokensToMigrate.length,
@@ -1427,10 +1454,10 @@ const StepsContainer = ( {
           }
         } // if (step == Steps.migration)
       } catch (error) {
-        console.error(`StepsContainer.tsx updateTokensToMigrate error: ${error}`);  
+        console.error(`StepsContainer.tsx updateTokensToMigrate [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState] error: ${error}`);  
       }
     },
-    [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState]
+    [step, getTokensToMigrate, settokensInstancesToMigrate, setmigrationState]
   ) // useEffect
 
   // ---
@@ -2184,7 +2211,7 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
       }
 
       { step === 3 &&
-        <div className="w-full" >
+        <div className="w-full px-1" >
           <MainContentContainer>
             <Step3
                 setNextDisabled={setNextDisabled}

@@ -10,6 +10,7 @@ const initialMoveTokensAppData: TMoveTokensAppDataContext = {
 const initialMoveTokensAppDataHandlers: TMoveTokensAppDataHandlersContext = {
   nextStep: () => {},
   prevStep: () => {},
+  resetToInitialStep: () => {},
 }
 
 const MoveTokensAppContext = createContext<TMoveTokensAppContext>(
@@ -145,6 +146,14 @@ const MoveTokensAppProvider = ( { children }:any ) => {
           return {
             ...prevAppData,
             step: (prevAppData.step > prevAppData.minStep ? prevAppData.step - 1 : prevAppData.step ),
+          }
+        })
+      },
+      resetToInitialStep: () => {
+        setmoveTokensAppData( (prevAppData) => {
+          return {
+            ...prevAppData,
+            step: prevAppData.minStep,
           }
         })
       },

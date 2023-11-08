@@ -184,15 +184,14 @@ const TokensListsSelect = ( {
 
   return (
     <>
-      <div className="w-full bg-base-300 items-center justify-center gap-2 overflow-x-hidden border border-neutral shadow-xl rounded-box bg-cover bg-top p-4 ">
+      <div className="w-full bg-base-200 overflow-x-hidden shadow-xl rounded-box bg-cover bg-top p-4 ">
 
         <div className="overflow-x-auto scrollbar scrollbar-thumb-neutral scrollbar-track-base-100">
 
-        <div className="min-w-full rounded-lg border border-neutral">
+        <div className="min-w-full rounded-lg">
 
-        <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
-
-            <thead className="bg-base-200 text-accent-content text-sm sm:text-md md:text-base font-semibold">
+          <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
+            <thead className="bg-base-300 text-accent-content text-sm sm:text-md md:text-base font-semibold">
               <tr>
                 <th className="p-2 flex w-10">
                   <label className="m-0 mr-2">
@@ -213,9 +212,7 @@ const TokensListsSelect = ( {
             </thead>
             <tbody>
             </tbody>
-
           </table>
-
         </div>
 
           <table className="table table-zebra">

@@ -50,7 +50,7 @@ const Step0 = (  {
 
           { someTokensListsSelected &&
           <div className="w-full py-4 bg-base-100">
-            <div className="min-w-fit m-0 p-1 rounded-box border border-neutral ">
+            <div className="min-w-fit m-0 p-1 rounded-box border border-base-300 ">
               <TokenInstanceListTableFiltered
                 tokensInstances={tokensInstances}
                 // settokensInstances={settokensInstances}

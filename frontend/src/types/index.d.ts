@@ -133,6 +133,7 @@ type TMoveTokensAppDataContext = {
 type TMoveTokensAppDataHandlersContext = {
   nextStep: () => void,
   prevStep: () => void,
+  resetToInitialStep: () => void,
 }
 
 // Tokens list
