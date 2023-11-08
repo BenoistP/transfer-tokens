@@ -85,6 +85,9 @@ Step 2: 🚧
 - ☑️ Keep transfer amount and lock state between screens
 - ☑️ Error handling
 
+Step 2: 🚧 
+- 🚧 display target address
+- 🚧 Show amount, not balance
 
 
 🚧 avatar list/select style
