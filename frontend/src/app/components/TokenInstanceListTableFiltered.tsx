@@ -134,10 +134,8 @@ const TokenInstanceListTableFiltered = (
   const clsIconSizeBig = "w-6 h-6 sm:w-10 sm:h-10 md:w-12 md:h-12"
   const clsCheckboxSizeBig = "checkbox-xs sm:checkbox-md md:checkbox-lg"
   const clsCheckboxSizeSmall = "checkbox-xs sm:checkbox-sm md:checkbox-md"
-  const clsIconSelectSmall = clsIconSizeSmall + (selectAllDisabled ? " fill-neutral-content opacity-70" : " fill-base-content") ;
-  // const clsIconBigInvert = clsIconSizeBig + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
-  const clsIconMediumInvert = clsIconSizeMedium + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content cursor-not-allowed" : "fill-base-content opacity-50 cursor-pointer") ;
-  // const clsIcon = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2' 
+  const clsIconSelectSmall = clsIconSizeSmall + (selectAllDisabled ? " fill-base-content opacity-50" : " fill-base-content") ;
+  const clsIconMediumInvert = clsIconSizeMedium + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-base-content opacity-30 cursor-not-allowed" : "fill-base-content opacity-50 cursor-pointer") ;
 
   const clsStatus = "flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl" // 'flex justify-center font-semibold pt-2 pb-3 text-md sm:text-base md:text-xl'
   const clsTextSize = "text-xs sm:text-sm md:text-base"
