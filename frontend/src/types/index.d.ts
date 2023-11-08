@@ -353,7 +353,10 @@ type TTokenInstance = {
   selected: boolean,
   transferAmount: TTokenAmount;
   transferAmountLock: boolean;
-  processed: boolean;
+
+  tr_processed: boolean;
+  tr_error: boolean;
+  tr_skipped: boolean;
 
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x...)
 }

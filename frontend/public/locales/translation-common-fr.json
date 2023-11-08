@@ -66,7 +66,13 @@
         "canTransferTo": "Réception du token autorisé par le destinataire",
         "noTransferFrom": "Transfert (envoi) interdit DEPUIS cette addresse",
         "noTransferTo": "Transfert interdit VERS cette addresse",
-        "details": "Détails"
+        "details": "Détails",
+        "transfer": {
+          "success": "Succès",
+          "error": "Erreur",
+          "skipped": "Omis"
+        }
+
       },
       "address": {
         "placeholder": "0x..."
