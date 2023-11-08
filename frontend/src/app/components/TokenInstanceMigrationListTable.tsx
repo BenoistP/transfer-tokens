@@ -50,9 +50,9 @@ const TokenInstanceMigrationListTable = (
   // ----------------------------
 
   return (
-    <div className="w-full">
+    <div className="w-full p-1">
 
-      <div className="min-w-full rounded-lg border border-neutral my-2 transition-all" id="currenttop">
+      <div className="min-w-full rounded-lg my-1 transition-all" id="currenttop">
 
       { (tokensInstances?.length) ?
 

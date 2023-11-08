@@ -2184,7 +2184,7 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
       }
 
       { step === 3 &&
-        <div className="w-full" >
+        <div className="w-full px-1" >
           <MainContentContainer>
             <Step3
                 setNextDisabled={setNextDisabled}

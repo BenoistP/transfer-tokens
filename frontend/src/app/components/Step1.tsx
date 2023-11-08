@@ -36,8 +36,8 @@ const Step1 = ( {
     <>
       <div className="w-full p-0 m-0">
 
-      <div className="w-full flex bg-base-300 gap-2 overflow-x-hidden border border-neutral shadow-xl rounded-box bg-cover bg-top p-4 ">
-          <div className="bg-neutral min-w-fit m-0 p-1 rounded-box border border-neutral ">
+      <div className="w-full flex bg-base-300 gap-2 overflow-x-hidden border border-neutral rounded-box bg-cover bg-top py-2 px-4 ">
+          <div className="bg-neutral min-w-fit m-0 p-1 rounded-box">
             <AddressInput sourceAddress={accountAddress} targetAddress={targetAddress} settargetAddress={settargetAddress} />
           </div>
           <div className="flex min-w-fit"></div>
