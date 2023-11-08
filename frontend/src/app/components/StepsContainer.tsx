@@ -42,6 +42,8 @@ const StepsContainer = ( {
   // setisLoadingTokensLists,
   setShowProgressBar,
   // setProgressBarPercentage,
+  // migrationState,
+  setmigrationState
  } :IStepsContainerProps ) => {
 
   // console.debug(`StepsContainer.tsx render`)
@@ -741,6 +743,7 @@ const StepsContainer = ( {
           selected: false,
           transferAmount: 0n,
           transferAmountLock: false,
+          processed: false,
           userData: tokenInstanceUserDataArray,
         } // as TTokenInstance
         // console.dir(_tokenInstance)
@@ -1286,9 +1289,16 @@ const StepsContainer = ( {
         
         console.debug(`StepsContainer.tsx getTokensToMigrate`)
 
-        return tokensInstances?.filter( (tokenInstance:TTokenInstance) => {
+        const selectedTokensInstances = tokensInstances?.filter( (tokenInstance:TTokenInstance) => {
           return tokenInstance.selected && tokenInstance.transferAmount > 0n
         })
+
+        selectedTokensInstances?.forEach( (tokenInstance:TTokenInstance) => {
+          // console.debug(`StepsContainer.tsx getTokensToMigrate tokenInstance.selected=${tokenInstance.selected} tokenInstance.transferAmount=${tokenInstance.transferAmount}`)
+          tokenInstance.processed = false;
+        })
+        
+        return selectedTokensInstances;
 
       } catch (error) {
         console.error(`StepsContainer.tsx getTokensToMigrate error: ${error}`);
@@ -1316,6 +1326,90 @@ const StepsContainer = ( {
     [Steps.migration, getTokensToMigrate, step]
   ) // updateTokensToMigrate
  */
+
+  // ---
+
+  const transferTokens = useCallback( async( _tokensInstancesToTransfer:TTokensInstances, _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef ) =>
+    {
+      const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms))
+      const random0_99 = () => Math.floor(Math.random() * 100);
+
+      try {
+        console.debug(`StepsContainer.tsx transferTokens`)
+
+        if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length) {
+          const migrationState = {totalItemsCount:_tokensInstancesToTransfer.length,
+            errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
+            // setmigrationState( migrationState )
+/* 
+          _tokensInstancesToTransfer.forEach( (tokenInstanceToTransfer:TTokenInstance) => {
+
+            try {
+              sleep(2_000)
+
+              console.debug(`StepsContainer.tsx transferTokens tokenInstanceToTransfer TRANSFER OK ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
+              tokenInstanceToTransfer.processed = true;
+              migrationState.successItemsCount++;
+
+              sleep(2_000)
+
+            } catch (error) {
+              console.error(`StepsContainer.tsx transferTokens tokenInstanceToTransfer TRANSFER ERROR ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
+              migrationState.errorItemsCount++;
+              
+            }
+            finally {
+              setmigrationState( migrationState )
+            }
+          })
+ */
+          for (let tokenInstanceIndex = 0; tokenInstanceIndex < _tokensInstancesToTransfer.length; tokenInstanceIndex++) {
+            const tokenInstanceToTransfer = _tokensInstancesToTransfer[tokenInstanceIndex];
+            try {
+              const random = random0_99();
+              setmigrationState( migrationState )
+              // setmigrationState( null, migrationState )
+              await sleep(2_000)
+              // debugger;
+              if (random < 50) {
+                // Success
+                console.debug(`StepsContainer.tsx transferTokens tokenInstanceToTransfer TRANSFER OK ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
+                tokenInstanceToTransfer.processed = true;
+                tokenInstanceToTransfer.selected = false;
+                migrationState.successItemsCount++;
+                setmigrationState( migrationState )
+                // setmigrationState( migrationState, {...migrationState, successItemsCount: migrationState.successItemsCount+1} )
+              } else if (random < 75) {
+                // Error
+                throw "Random transfer error"
+              } else {
+                // Skipped
+                console.debug(`StepsContainer.tsx transferTokens tokenInstanceToTransfer TRANSFER SKIPPED ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
+                migrationState.skippedItemsCount++;
+                setmigrationState( migrationState )
+                // setmigrationState( migrationState, {...migrationState, skippedItemsCount: migrationState.skippedItemsCount+1} )
+              }
+
+              // await sleep(5_000)
+
+            } catch (error) {
+              console.error(`StepsContainer.tsx transferTokens tokenInstanceToTransfer TRANSFER ERROR ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
+              migrationState.errorItemsCount++;
+              setmigrationState( migrationState )
+              // setmigrationState( migrationState, {...migrationState, errorItemsCount: migrationState.errorItemsCount+1} )
+            }
+            finally {
+              console.debug(`StepsContainer.tsx transferTokens UPDATE STATE`)
+              setmigrationState( migrationState )
+            }
+          } // for (let tokenInstanceIndex = 0 ...
+        } // if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length)
+      } catch (error) {
+        console.error(`StepsContainer.tsx transferTokens error: ${error}`);
+      }
+    },
+    [setmigrationState]
+  ) // transferTokens
 
   // ----------------------------------------------
 
@@ -2103,6 +2197,8 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
                 accountAddress={connectedAddress}
                 targetAddress={targetAddress}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+                // migrationState={migrationState} setmigrationState={setmigrationState}
+                transferTokens={transferTokens}
             />
           </MainContentContainer>
         </div>

@@ -13,12 +13,14 @@ const Step3 = ( {
   setShowProgressBar,
   accountAddress,
   targetAddress,
-  tokensInstancesListTablePropsHandlers
+  tokensInstancesListTablePropsHandlers,
+  // migrationState, setmigrationState,
+  transferTokens,
   }: IStep3Props ) => {
 
    // ---
 
-  console.debug(`Step3.tsx render`)
+  console.debug(`Step3.tsx render `)
 
   // ---
 
@@ -26,8 +28,9 @@ const Step3 = ( {
    {
      setShowProgressBar(true)
      setNextDisabled(true)
+     transferTokens(tokensInstances, accountAddress, targetAddress)
    },
-   [setNextDisabled, setShowProgressBar]
+   [transferTokens, setNextDisabled, setShowProgressBar, tokensInstances, accountAddress, targetAddress]
  )
 
   // ---

@@ -1,5 +1,5 @@
 // React
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 // Components
 import ProgressContainer from "@Components/ProgressContainer";
 import StepsContainer from "@Components/StepsContainer";
@@ -29,6 +29,13 @@ export const MainContent = ( ) => {
   const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
   // const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
 
+  // const initialMigrationState = useMemo( () => {
+  //   return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
+  // }, [])
+  // const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
+  const [migrationState, setmigrationState] = useState<TmigrationState>({totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0})
+
+
   // ---
 
   const setStateLoadingTokensLists = useCallback( (isLoading:boolean) =>
@@ -44,7 +51,30 @@ export const MainContent = ( ) => {
       setisErrorTokensLists(isError)
     }, []
   )
+  // ---
 
+  const setStateMigration = useCallback( (_migrationState:TmigrationState) =>
+    {
+    console.debug(`MainContent.tsx setStateMigration _migrationState=`)
+    console.dir(_migrationState)
+      setmigrationState(_migrationState)
+    }, []
+  )
+
+/*
+  const setStateMigration = useCallback( (_migrationState1:TmigrationState, _migrationState2:TmigrationState) =>
+    {
+      console.debug(`MainContent.tsx setStateMigration _migrationState1=`)
+console.dir(_migrationState1)
+      console.debug(`MainContent.tsx setStateMigration _migrationState2=`)
+console.dir(_migrationState2)
+
+
+      setmigrationState( {..._migrationState1,
+        ..._migrationState2})
+    }, []
+  )
+*/
   // ---
 
   useEffect(() =>
@@ -113,6 +143,8 @@ export const MainContent = ( ) => {
                         <ProgressContainer
                           previousDisabled={previousDisabled} nextDisabled={nextDisabled}
                           showProgressBar={showProgressBar}
+                          migrationState={migrationState}
+
                           // progressBarPercentage={progressBarPercentage}
                         />
                     </div>
@@ -123,6 +155,10 @@ export const MainContent = ( ) => {
                         setpreviousDisabled={setpreviousDisabled} setNextDisabled={setNextDisabled}
                         isLoadingTokensLists={isLoadingTokensLists} isErrorTokensLists={isErrorTokensLists}
                         setShowProgressBar={setshowProgressBar}
+                        // migrationState={migrationState}
+                        // setmigrationState={setmigrationState}
+                        setmigrationState={setStateMigration}
+                        
                         // setProgressBarPercentage={setprogressBarPercentage}
                       />
                     </div>

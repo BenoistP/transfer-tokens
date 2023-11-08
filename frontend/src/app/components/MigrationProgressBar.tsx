@@ -2,9 +2,9 @@
 
 // ------------------------------
 
-const MigrationProgressBar = ({ showProgressBar=false, migrationState }: ITF_ProgressBar ) => {
+const MigrationProgressBar = ({ /* showProgressBar=false, */ migrationState }: ITF_ProgressBar ) => {
 
-  console.debug(`MigrationProgressBar.tsx render showProgressBar=${showProgressBar} migrationState=`)
+  console.debug(`MigrationProgressBar.tsx render migrationState=`)
   console.dir(migrationState)
 
   return (

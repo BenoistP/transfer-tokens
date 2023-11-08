@@ -35,7 +35,7 @@ type TmigrationState = {
 }
 
 interface ITF_ProgressBar {
-  showProgressBar?: boolean;
+  // showProgressBar?: boolean;
   // progressPercentage: number;
   migrationState: TmigrationState;
 }
@@ -347,10 +347,13 @@ type TTokenInstance = {
   displayed: boolean;
   displayId: TDisplayId;
   selectID: TSelectId;
+
   selectable: boolean;
   selected: boolean,
   transferAmount: TTokenAmount;
   transferAmountLock: boolean;
+  processed: boolean;
+
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x...)
 }
 
@@ -386,7 +389,7 @@ interface ITF_ProgressContainer {
   previousDisabled: boolean;
   nextDisabled: boolean;
   showProgressBar: boolean;
-  // progressBarPercentage: number;
+  migrationState: TmigrationState;
 }
 interface IAddressInputProps {
   sourceAddress: TAddressNullUndef,
@@ -394,6 +397,9 @@ interface IAddressInputProps {
   settargetAddress:TsettargetAddress
 }
 
+// type TreactSetMigrationState = React.Dispatch<React.SetStateAction<TmigrationState>>
+type TSetMigrationState = (TmigrationState) => void;
+// type TSetMigrationState = (TmigrationState,TmigrationState) => void;
 
 interface IStepsContainerProps {
   tokensLists: TTokensLists|null|undefined,
@@ -404,6 +410,8 @@ interface IStepsContainerProps {
   isLoadingTokensLists : boolean,
   setShowProgressBar: TsetShowProgressBar
   // setProgressBarPercentage: TsetProgressBarPercentage
+  // migrationState: TmigrationState,
+  setmigrationState: TSetMigrationState
 }
 
 interface IStepErrorProps {
@@ -466,6 +474,9 @@ interface IStep3Props {
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
+  // migrationState: TmigrationState,
+  // setmigrationState: TSetMigrationState,
+  transferTokens: (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void,
 }
 
 interface IChangeTokensListCheckboxStatus {

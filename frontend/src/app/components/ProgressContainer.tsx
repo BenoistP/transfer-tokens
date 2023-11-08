@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 // ------------------------------
 
 const ProgressContainer = ( {
-  previousDisabled, nextDisabled, showProgressBar,
+  previousDisabled, nextDisabled, showProgressBar, migrationState
   // progressBarPercentage
   }: ITF_ProgressContainer ) => {
 
@@ -105,9 +105,9 @@ const ProgressContainer = ( {
         </div>
 */}
 
-        {/* showProgressBar */true &&
+        { (showProgressBar /* TODO: remove || true */ || true) &&
         <div className="grid-cols-1 col-span-8 sm:grid-cols-3 sm:col-span-10 mt-1">
-          <MigrationProgressBar showProgressBar={showProgressBar} migrationState={{totalItemsCount:8,errorItemsCount:1,skippedItemsCount:3,successItemsCount:3}} />
+          <MigrationProgressBar /* showProgressBar={showProgressBar} */ migrationState={migrationState} />
         </div>
         }
       </div>
