@@ -102,8 +102,11 @@
     },
 
     "stepThree": {
-      "title": "Confirm",
-      "titleStep": "Confirm"
+      "title": "Migration",
+      "titleStep": "Migration",
+      "tokensMigrationListTable": {
+        "noTokens": "No token found"
+      }
     },
 
     "Footer": {

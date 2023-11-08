@@ -23,3 +23,10 @@ export enum EStepsLoadTokensData {
   targetTransferAbility = 7,
   // watchTransfers, // TODO
 }
+
+export enum Steps {
+  tokenLists = 0,
+  targetAddress,
+  tokensToMigrate,
+  migration,
+}

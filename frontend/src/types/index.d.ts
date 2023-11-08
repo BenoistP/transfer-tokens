@@ -15,11 +15,29 @@ enum EChainTokensListLoadState {
 
 // Types to remove ->
 
+interface ITokensInstancesListTableProps {
+  tokensInstances:TTokensInstances;
+  accountAddress:TAddressNullUndef;
+  // chainId: ChainId;
+  targetAddress: TAddressEmpty,
+  isLoading: boolean,
+  isError: boolean,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
+}
 
 
-interface ITF_ProgressBar {
-  showProgressBar: boolean;
-  progressPercentage: number;
+type TmigrationState = {
+  totalItemsCount: number;
+  successItemsCount: number;
+  errorItemsCount: number;
+  skippedItemsCount: number;
+
+}
+
+interface ITF_TransferProgressBar {
+  // showProgressBar?: boolean;
+  // progressPercentage: number;
+  migrationState: TmigrationState;
 }
 
 // interface ITF_ProgressBarColor {
@@ -115,6 +133,7 @@ type TMoveTokensAppDataContext = {
 type TMoveTokensAppDataHandlersContext = {
   nextStep: () => void,
   prevStep: () => void,
+  resetToInitialStep: () => void,
 }
 
 // Tokens list
@@ -329,10 +348,13 @@ type TTokenInstance = {
   displayed: boolean;
   displayId: TDisplayId;
   selectID: TSelectId;
+
   selectable: boolean;
   selected: boolean,
   transferAmount: TTokenAmount;
   transferAmountLock: boolean;
+  processed: boolean;
+
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x...)
 }
 
@@ -367,8 +389,8 @@ interface ITransferAmountLock {
 interface ITF_ProgressContainer {
   previousDisabled: boolean;
   nextDisabled: boolean;
-  // showProgressBar: boolean;
-  // progressBarPercentage: number;
+  showProgressBar: boolean;
+  migrationState: TmigrationState;
 }
 interface IAddressInputProps {
   sourceAddress: TAddressNullUndef,
@@ -376,6 +398,7 @@ interface IAddressInputProps {
   settargetAddress:TsettargetAddress
 }
 
+type TSetMigrationState = React.Dispatch<React.SetStateAction<TmigrationState>>
 
 interface IStepsContainerProps {
   tokensLists: TTokensLists|null|undefined,
@@ -384,8 +407,8 @@ interface IStepsContainerProps {
   setNextDisabled: TsetNextDisabled,
   isErrorTokensLists: boolean,
   isLoadingTokensLists : boolean,
-  // setShowProgressBar: TsetShowProgressBar
-  // setProgressBarPercentage: TsetProgressBarPercentage
+  setShowProgressBar: TsetShowProgressBar
+  setmigrationState: TSetMigrationState
 }
 
 interface IStepErrorProps {
@@ -399,7 +422,6 @@ interface IStep0Props {
   setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
-  // setShowProgressBar: TsetShowProgressBar,
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstances: TTokensInstances,
@@ -419,8 +441,6 @@ interface IStep1Props {
   targetAddress: TAddressEmpty,
   settargetAddress:TsettargetAddress
   chainId: ChainId;
-  // isLoading: boolean,
-  // isError: boolean,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
@@ -429,20 +449,26 @@ interface IStep1Props {
 interface IStep2Props {
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
-  // setShowProgressBar: TsetShowProgressBar
-  // setProgressBarPercentage: TsetProgressBarPercentage,
+  setShowProgressBar: TsetShowProgressBar
   accountAddress: TAddressNullUndef,
   // chainId: ChainId;
   targetAddress: TAddressEmpty,
-  // isError: boolean,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
+type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void;
+
 interface IStep3Props {
-  // setShowProgressBar: TsetShowProgressBar
-  // setProgressBarPercentage: TsetProgressBarPercentage
+  // chainId: ChainId;
+  setNextDisabled: TsetNextDisabled,
+  tokensInstances: TTokensInstances,
+  setShowProgressBar: TsetShowProgressBar
+  accountAddress: TAddressNullUndef,
+  targetAddress: TAddressEmpty,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
+  transferTokens: TtransferTokens
 }
 
 interface IChangeTokensListCheckboxStatus {
@@ -530,7 +556,7 @@ interface ITokenInstanceAmountProps {
   settransferAmountLock: TsetamountLock,
 
   decimals: number,
-  unSelect: (/* tokenInstance: TTokenInstance */) => void,
+  unSelect: () => void,
 }
 
 interface IsortTokensInstancesOrdersStates {
@@ -557,8 +583,6 @@ interface IselectTokensInstancesMethods {
 interface IselectTokensInstancesStates {
   selectAll: boolean,
   selectAllVisible: boolean,
-  // invertAll: boolean,
-  // invertAllVisible: boolean,
 }
 
 interface IfilterTokenInstanceMethods {
@@ -575,13 +599,11 @@ interface ITokensInstancesListTableStatesHandlers {
   filterHandlers: IfilterTokenInstanceMethods,
 }
 
-interface ITokensInstancesListTableProps {
+interface ITokenInstancesMigrationListTableProps {
   tokensInstances:TTokensInstances;
   accountAddress:TAddressNullUndef;
   // chainId: ChainId;
   targetAddress: TAddressEmpty,
-  isLoading: boolean,
-  isError: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }
 

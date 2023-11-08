@@ -73,7 +73,6 @@ const TokenInstanceListTableFiltered = (
         tokensInstances={tokensInstances}
         // chainId={chainId}
         accountAddress={accountAddress}
-        // updateCheckboxStatus={enableCheckboxes?updateCheckboxStatus:null}
         targetAddress={targetAddress}
         tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
         enableEditable={enableEditable}
@@ -134,10 +133,8 @@ const TokenInstanceListTableFiltered = (
   const clsIconSizeBig = "w-6 h-6 sm:w-10 sm:h-10 md:w-12 md:h-12"
   const clsCheckboxSizeBig = "checkbox-xs sm:checkbox-md md:checkbox-lg"
   const clsCheckboxSizeSmall = "checkbox-xs sm:checkbox-sm md:checkbox-md"
-  const clsIconSelectSmall = clsIconSizeSmall + (selectAllDisabled ? " fill-neutral-content opacity-70" : " fill-base-content") ;
-  // const clsIconBigInvert = clsIconSizeBig + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content opacity-70 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
-  const clsIconMediumInvert = clsIconSizeMedium + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-neutral-content cursor-not-allowed" : "fill-base-content opacity-50 cursor-pointer") ;
-  // const clsIcon = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2' 
+  const clsIconSelectSmall = clsIconSizeSmall + (selectAllDisabled ? " fill-base-content opacity-50" : " fill-base-content") ;
+  const clsIconMediumInvert = clsIconSizeMedium + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-base-content opacity-30 cursor-not-allowed" : "fill-base-content opacity-50 cursor-pointer") ;
 
   const clsStatus = "flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl" // 'flex justify-center font-semibold pt-2 pb-3 text-md sm:text-base md:text-xl'
   const clsTextSize = "text-xs sm:text-sm md:text-base"
@@ -149,15 +146,15 @@ const TokenInstanceListTableFiltered = (
 
       <div className="w-full">
 
-        <div className="min-w-full rounded-lg border border-neutral">
+        <div className="min-w-full rounded-lg ">
 
-          <div className="flex min-w-full px-1">
+          <div className="flex min-w-full px-0">
 
-            <div className="flex w-3/4 rounded-lg border border-neutral m-2">
+            <div className="flex w-3/4 rounded-lg p-1 m-1 pr-0">
 
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
-                <thead className="min-w-full bg-base-200 text-left">
+                <thead className="min-w-full bg-base-300 text-left">
                   <tr className={clsTextSize+" font-semibold"}>
                     <th className="p-0 pl-1 font-medium"><FunnelIcon className={clsIconMedium} /></th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.name")}</th>
@@ -211,11 +208,11 @@ const TokenInstanceListTableFiltered = (
               </table> {/* MAIN search PARAMETERS table */}
             </div>
 
-            <div className="flex w-1/4 rounded-lg border border-neutral m-2 ml-0">
+            <div className="flex w-1/4 rounded-lg p-1 m-1 pl-0">
 
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
-                <thead className="min-w-full bg-base-200 text-left">
+                <thead className="min-w-full bg-base-300 text-left">
                   <tr className={clsTextSize + " font-semibold"}>
                     <th colSpan={2} className="p-0 pl-12 font-medium">
                       <div className="tooltip tooltip-right" data-tip={t("moveTokens.stepAny.tokensTable.select.any.hint")}>
@@ -301,8 +298,8 @@ const TokenInstanceListTableFiltered = (
 
           </div>
 
-          <div className="px-2 pt-1">
-            <div className="collapse collapse-arrow border border-neutral bg-base-100">
+          <div className="px-1 pt-1">
+            <div className="collapse collapse-arrow bg-base-300">
               <input type="checkbox" /> 
               <div className={"collapse-title font-light justify-left flex " + clsTextSize}>
                 <FunnelIcon className={clsIconMedium} />
@@ -316,12 +313,12 @@ const TokenInstanceListTableFiltered = (
 
                   <thead className="min-w-full bg-base-200 text-left">
                     <tr className={clsTextSize + " font-semibold"}>
-                      <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.additional.address")}</th>
+                      <th className="p-0 pl-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.additional.address")}</th>
                       <th className="p-2"></th>
                     </tr>
                   </thead>
                   <tbody className={"min-w-full " + clsTextSize}>
-                    <tr className="bg-base-300">
+                    <tr className="bg-base-200">
                       <td className="p-2">
                         <input type="text" value={tokensInstancesListTablePropsHandlers.filterStates.address} onChange={(e)=>{tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateAddressFilter(e)}}
                         className={"input input-bordered input-xs sm:input-sm md:input-md w-full " + clsTextSize} placeholder={t("moveTokens.stepAny.address.placeholder")} >
@@ -360,7 +357,7 @@ const TokenInstanceListTableFiltered = (
 
         </div> {/* Search parameters */}
 
-        <div className="min-w-full rounded-lg border border-neutral mt-2 transition-all">
+        <div className="min-w-full rounded-lg  mt-2 transition-all">
 
           { (!isErrorTokensInstances && tokensInstances?.length) ?
 
