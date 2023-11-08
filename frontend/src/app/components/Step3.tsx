@@ -5,8 +5,6 @@ import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationL
 
 // ------------------------------
 
-
-// const Step3 = ( { setShowProgressBar, setProgressBarPercentage }: IStep3Props ) => {
 const Step3 = ( {
   tokensInstances,
   setNextDisabled,
@@ -14,13 +12,8 @@ const Step3 = ( {
   accountAddress,
   targetAddress,
   tokensInstancesListTablePropsHandlers,
-  // migrationState, setmigrationState,
   transferTokens,
   }: IStep3Props ) => {
-
-   // ---
-
-  console.debug(`Step3.tsx render `)
 
   // ---
 
@@ -35,11 +28,6 @@ const Step3 = ( {
 
   // ---
 
-  // setShowProgressBar(true)
-  // setProgressBarPercentage(0)
-
-  // ---
-
 
   return (
     <>
@@ -49,7 +37,6 @@ const Step3 = ( {
             tokensInstances={tokensInstances}
             accountAddress={accountAddress}
             targetAddress={targetAddress}
-            // isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
             tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
           />
       </div>

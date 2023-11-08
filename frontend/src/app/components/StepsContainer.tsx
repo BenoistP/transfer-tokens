@@ -1333,7 +1333,7 @@ const StepsContainer = ( {
     {
 
       try {
-        console.debug(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
+        // console.debug(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
         const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms))
         const random0_99 = () => Math.floor(Math.random() * 100);
     
@@ -1366,11 +1366,12 @@ const StepsContainer = ( {
           _migrationState.errorItemsCount++;
           // setmigrationState( _migrationState )
       }
-
-      try {
-        setmigrationState( {..._migrationState} )
-      } catch (error) {
-        console.error(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR STATE ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
+      finally {
+        try {
+          setmigrationState( {..._migrationState} )
+        } catch (error) {
+          console.error(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR STATE ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
+        }
       }
 
     } // transfertToken
@@ -1381,8 +1382,7 @@ const StepsContainer = ( {
   const transferTokens = useCallback( async( _tokensInstancesToTransfer:TTokensInstances, _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef ) =>
     {
       try {
-        console.debug(`StepsContainer.tsx transferTokenS`)
-
+        // console.debug(`StepsContainer.tsx transferTokenS`)
         if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length) {
           const migrationState = {totalItemsCount:_tokensInstancesToTransfer.length,
             errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
