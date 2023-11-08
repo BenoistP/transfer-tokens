@@ -21,7 +21,7 @@ const ProgressStepBar = ( { step }: any ) => {
   return (
     <>
       <div className="flex justify-center text-xs sm:text-sm md:text-md transition-all m-0 my-1 p-0">
-        <ul className="w-full steps steps-horizontal step-neutral bg-base rounded-box border border-neutral px-2 m-0 shadow-xl">
+        <ul className="w-full steps steps-horizontal step-neutral bg-base rounded-box bg-base-200 px-2 m-0 shadow-xl">
           <li className={clsStep0}>{t("moveTokens.stepZero.titleStep")}</li>
           <li className={clsStep1}>{t("moveTokens.stepOne.titleStep")}</li>
           <li className={clsStep2}>{t("moveTokens.stepTwo.titleStep")}</li>

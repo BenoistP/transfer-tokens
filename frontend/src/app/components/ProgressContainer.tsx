@@ -33,7 +33,7 @@ const ProgressContainer = ( {
   // const clsBtnRing = "ring-1 ring-black "
   const clsBtnBase = ""// clsBtnRounding + " " // + clsBtnRing + " "
 
-  const clsBtnNextPrevious = clsBtnBase + "btn btn-neutral btn-outline shadow-xl text py-2 px-1 sm:px-1 md:px-2 m-1 md:m-2" +
+  const clsBtnNextPrevious = clsBtnBase + "btn   shadow-xl text py-2 px-1 sm:px-1 md:px-2 m-1 md:m-2" +
   " ease-in-out duration-300 sm:h-10 md:h-12" +
   " disabled:btn disabled:btn-disabled disabled:cursor-no-drop"
 

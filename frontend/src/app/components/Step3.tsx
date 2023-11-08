@@ -47,7 +47,7 @@ const Step3 = ( {
 /*
   return (
     <>
-      <div className="bg-neutral w-full m-2 p-2 rounded-box border border-neutral-content">
+      <div className="bg-neutral w-full m-2 p-2 rounded-box border border-base-300-content">
           <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-accent">
             {"COMING"}
           </p>&nbsp;
