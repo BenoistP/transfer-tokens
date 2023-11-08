@@ -2,9 +2,7 @@ import { useTranslation } from "react-i18next";
 
 // ------------------------------
 
-const ProgressStepBar = ( { step }: any ) => {
-
-  // console.debug(`ProgressStepBar.tsx render`)
+const StepProgressBar = ( { step }: any ) => {
 
   const { t } = useTranslation();
   const clsStepBase = "step "
@@ -34,4 +32,4 @@ const ProgressStepBar = ( { step }: any ) => {
 
 // ------------------------------
 
-export default ProgressStepBar;
+export default StepProgressBar;

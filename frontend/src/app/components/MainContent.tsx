@@ -1,7 +1,5 @@
 // React
-import { useCallback, useEffect, useState,
-  // useMemo
- } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 // Components
 import ProgressContainer from "@Components/ProgressContainer";
 import StepsContainer from "@Components/StepsContainer";
@@ -29,13 +27,12 @@ export const MainContent = ( ) => {
   const [isErrorTokensLists, setisErrorTokensLists] = useState(false)
 
   const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
-  // const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
 
-  // const initialMigrationState = useMemo( () => {
-  //   return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
-  // }, [])
-  // const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
-  const [migrationState, setmigrationState] = useState<TmigrationState>({totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0})
+  const initialMigrationState = useMemo( () => {
+    return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
+  }, [])
+  const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
+  // const [migrationState, setmigrationState] = useState<TmigrationState>({totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0})
 
   // ---
 

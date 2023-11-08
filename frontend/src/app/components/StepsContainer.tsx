@@ -1406,7 +1406,24 @@ const StepsContainer = ( {
 
   // USE EFFECTS
 
+  useEffect( () =>
+  {
+    try {
+      console.debug(`StepsContainer.tsx useEffect [chainId, connectedAddress] step=${step}`)
+      if (step != Steps.tokenLists) {
+        console.debug(`StepsContainer.tsx useEffect [chainId, connectedAddress] CHANGE step=${step}`)
+        // setStep(Steps.tokenLists)
+      } // if (step <> Steps.tokenLists)
+    } catch (error) {
+      console.error(`StepsContainer.tsx updateTokensToMigrate error: ${error}`);  
+    }
+  },
+  [chainId, connectedAddress, step]
+) // useEffect
+
   // ---
+
+  
 
   /**
    * Sets tokensInstances to migrate
@@ -1414,11 +1431,11 @@ const StepsContainer = ( {
   useEffect( () =>
     {
       try {
-        console.debug(`StepsContainer.tsx updateTokensToMigrate step=${step}`)
+        // console.debug(`StepsContainer.tsx updateTokensToMigrate [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState] step=${step}`)
         if (step == Steps.migration) {
-          console.debug(`StepsContainer.tsx updateTokensToMigrate MIGRATION step=${step}`)
+          // console.debug(`StepsContainer.tsx updateTokensToMigrate [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState] MIGRATION step=${step}`)
           const tokensToMigrate = getTokensToMigrate()
-          console.dir(getTokensToMigrate())
+          // console.dir(tokensToMigrate)
           settokensInstancesToMigrate(tokensToMigrate)
           if (tokensToMigrate && tokensToMigrate.length) {
           const migrationState = {totalItemsCount:tokensToMigrate.length,
@@ -1427,10 +1444,10 @@ const StepsContainer = ( {
           }
         } // if (step == Steps.migration)
       } catch (error) {
-        console.error(`StepsContainer.tsx updateTokensToMigrate error: ${error}`);  
+        console.error(`StepsContainer.tsx updateTokensToMigrate [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState] error: ${error}`);  
       }
     },
-    [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState]
+    [step, getTokensToMigrate, settokensInstancesToMigrate, setmigrationState]
   ) // useEffect
 
   // ---
