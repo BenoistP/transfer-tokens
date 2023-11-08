@@ -1424,8 +1424,8 @@ const StepsContainer = ( {
       try {
         // console.debug(`StepsContainer.tsx useEffect [chainId, connectedAddress, resetToInitialStep, step] step=${step}`)
         console.log(`Switching to chainId=${chainId} connectedAddress=${connectedAddress}`)
-          resetToInitialStepCB()
-          settokensInstances(null)
+        resetToInitialStepCB()
+        settokensInstances(null)
       } catch (error) {
         console.error(`StepsContainer.tsx useEffect [chainId, connectedAddress, resetToInitialStepCB] error: ${error}`);  
       }
