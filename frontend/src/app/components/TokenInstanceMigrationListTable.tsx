@@ -4,11 +4,11 @@ import { useMemo } from "react";
 import TokenInstanceMigrationList from "@Components/TokenInstanceMigrationList";
 import SortIcon from "@Components/SortIcon";
 // Icons
-// import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
+import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
 // Translation
 import { useTranslation } from "react-i18next";
 // Styles
-// import { clsLoadingTokenLists, clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
+import { clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
 
 // ------------------------------
 
@@ -54,7 +54,7 @@ const TokenInstanceMigrationListTable = (
 
       <div className="min-w-full rounded-lg border border-neutral my-2 transition-all" id="currenttop">
 
-      { (tokensInstances?.length) &&
+      { (tokensInstances?.length) ?
 
             <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
 
@@ -90,7 +90,29 @@ const TokenInstanceMigrationListTable = (
 
             </table>
 
-          
+          :
+/*             
+              <div className="w-full p-0 m-0 base-100 text-primary-content" >
+                <div className="flex flex-col justify-center items-center">
+                  <div className="flex flex-col justify-center items-center">
+                    <div className="flex flex-row justify-center items-center">
+                      {<ExclamationCircleIcon className={clsIconStatusSize} />}
+                      <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-warning">
+                        {t('moveTokens.warnings.nofoundtokens')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+ */
+              <div className="flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl text-warning pb-2">
+                <div className="pt-0">
+                  <ExclamationCircleIcon className={clsIconStatusSize} />
+                </div>
+                <div className="pt-0 pr-3 ">
+                  {t("moveTokens.stepThree.tokensMigrationListTable.noTokens")}
+                </div>
+              </div>
       }
 
       </div>

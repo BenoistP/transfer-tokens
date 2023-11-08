@@ -1329,13 +1329,62 @@ const StepsContainer = ( {
 
   // ---
 
-  const transferTokens = useCallback( async( _tokensInstancesToTransfer:TTokensInstances, _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef ) =>
+  const transfertToken = useCallback( async( _tokenInstanceToTransfer:TTokenInstance, _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef, _migrationState: TmigrationState ) =>
     {
-      const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms))
-      const random0_99 = () => Math.floor(Math.random() * 100);
 
       try {
-        console.debug(`StepsContainer.tsx transferTokens`)
+        console.debug(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
+        const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms))
+        const random0_99 = () => Math.floor(Math.random() * 100);
+    
+        const random = random0_99();
+        setmigrationState( {..._migrationState} )
+        // setmigrationState( null, _migrationState )
+        await sleep(2_000)
+        // debugger;
+        if (random < 50) {
+          // Success
+          console.debug(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER OK ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
+          _tokenInstanceToTransfer.processed = true;
+          _tokenInstanceToTransfer.selected = false;
+          _migrationState.successItemsCount++;
+          // setmigrationState( _migrationState )
+          // setmigrationState( _migrationState, {..._migrationState, successItemsCount: _migrationState.successItemsCount+1} )
+        } else if (random < 75) {
+          // Error
+          throw "Random transfer error"
+        } else {
+          // Skipped
+          console.debug(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER SKIPPED ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
+          _migrationState.skippedItemsCount++;
+          // setmigrationState( _migrationState )
+          // setmigrationState( _migrationState, {..._migrationState, skippedItemsCount: _migrationState.skippedItemsCount+1} )
+        }
+
+      } catch (error) {
+        console.error(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
+          _migrationState.errorItemsCount++;
+          // setmigrationState( _migrationState )
+      }
+
+      try {
+        setmigrationState( {..._migrationState} )
+      } catch (error) {
+        console.error(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR STATE ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
+      }
+
+    } // transfertToken
+    ,
+    [setmigrationState]
+  ) // transferToken
+
+  const transferTokens = useCallback( async( _tokensInstancesToTransfer:TTokensInstances, _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef ) =>
+    {
+
+
+
+      try {
+        console.debug(`StepsContainer.tsx transferTokenS`)
 
         if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length) {
           const migrationState = {totalItemsCount:_tokensInstancesToTransfer.length,
@@ -1346,49 +1395,28 @@ const StepsContainer = ( {
           for (let tokenInstanceIndex = 0; tokenInstanceIndex < _tokensInstancesToTransfer.length; tokenInstanceIndex++) {
             const tokenInstanceToTransfer = _tokensInstancesToTransfer[tokenInstanceIndex];
             try {
-              const random = random0_99();
-              setmigrationState( migrationState )
-              // setmigrationState( null, migrationState )
-              await sleep(2_000)
-              // debugger;
-              if (random < 50) {
-                // Success
-                console.debug(`StepsContainer.tsx transferTokens tokenInstanceToTransfer TRANSFER OK ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
-                tokenInstanceToTransfer.processed = true;
-                tokenInstanceToTransfer.selected = false;
-                migrationState.successItemsCount++;
-                setmigrationState( migrationState )
-                // setmigrationState( migrationState, {...migrationState, successItemsCount: migrationState.successItemsCount+1} )
-              } else if (random < 75) {
-                // Error
-                throw "Random transfer error"
-              } else {
-                // Skipped
-                console.debug(`StepsContainer.tsx transferTokens tokenInstanceToTransfer TRANSFER SKIPPED ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
-                migrationState.skippedItemsCount++;
-                setmigrationState( migrationState )
-                // setmigrationState( migrationState, {...migrationState, skippedItemsCount: migrationState.skippedItemsCount+1} )
-              }
+
+              await transfertToken(tokenInstanceToTransfer, _from, _to, migrationState)
 
               // await sleep(5_000)
 
             } catch (error) {
-              console.error(`StepsContainer.tsx transferTokens tokenInstanceToTransfer TRANSFER ERROR ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
-              migrationState.errorItemsCount++;
-              setmigrationState( migrationState )
+              console.error(`StepsContainer.tsx transferTokenS tokenInstanceToTransfer TRANSFER ERROR ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
+              // migrationState.errorItemsCount++;
+              // setmigrationState( migrationState )
               // setmigrationState( migrationState, {...migrationState, errorItemsCount: migrationState.errorItemsCount+1} )
             }
-            finally {
-              console.debug(`StepsContainer.tsx transferTokens UPDATE STATE`)
-              setmigrationState( migrationState )
-            }
+            // finally {
+            //   console.debug(`StepsContainer.tsx transferTokenS UPDATE STATE`)
+            //   setmigrationState( migrationState )
+            // }
           } // for (let tokenInstanceIndex = 0 ...
         } // if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length)
       } catch (error) {
-        console.error(`StepsContainer.tsx transferTokens error: ${error}`);
+        console.error(`StepsContainer.tsx transferTokenS error: ${error}`);
       }
     },
-    [setmigrationState]
+    [/* setmigrationState, */ transfertToken]
   ) // transferTokens
 
   // ----------------------------------------------
@@ -1409,12 +1437,17 @@ const StepsContainer = ( {
           const tokensToMigrate = getTokensToMigrate()
           console.dir(getTokensToMigrate())
           settokensInstancesToMigrate(tokensToMigrate)
+          if (tokensToMigrate && tokensToMigrate.length) {
+          const migrationState = {totalItemsCount:tokensToMigrate.length,
+            errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
+            setmigrationState( migrationState )
+          }
         } // if (step == Steps.migration)
       } catch (error) {
         console.error(`StepsContainer.tsx updateTokensToMigrate error: ${error}`);  
       }
     },
-    [getTokensToMigrate, step]
+    [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState]
   ) // useEffect
 
   // ---

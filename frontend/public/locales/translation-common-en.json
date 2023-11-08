@@ -103,7 +103,10 @@
 
     "stepThree": {
       "title": "Migration",
-      "titleStep": "Migration"
+      "titleStep": "Migration",
+      "tokensMigrationListTable": {
+        "noTokens": "No token found"
+      }
     },
 
     "Footer": {

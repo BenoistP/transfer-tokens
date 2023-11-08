@@ -1,5 +1,7 @@
 // React
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState,
+  // useMemo
+ } from "react";
 // Components
 import ProgressContainer from "@Components/ProgressContainer";
 import StepsContainer from "@Components/StepsContainer";
@@ -29,12 +31,11 @@ export const MainContent = ( ) => {
   const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
   // const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
 
-  const initialMigrationState = useMemo( () => {
-    return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
-  }, [])
-  const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
-  // const [migrationState, setmigrationState] = useState<TmigrationState>({totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0})
-
+  // const initialMigrationState = useMemo( () => {
+  //   return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
+  // }, [])
+  // const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
+  const [migrationState, setmigrationState] = useState<TmigrationState>({totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0})
 
   // ---
 
@@ -53,13 +54,13 @@ export const MainContent = ( ) => {
   )
   // ---
 
-  const setStateMigration = useCallback( (_migrationState:TmigrationState) =>
-    {
-    console.debug(`MainContent.tsx setStateMigration _migrationState=`)
-    console.dir(_migrationState)
-      setmigrationState(_migrationState)
-    }, []
-  )
+  // const setStateMigration = useCallback( (_migrationState:TmigrationState) =>
+  //   {
+  //   console.debug(`MainContent.tsx setStateMigration _migrationState=`)
+  //   console.dir(_migrationState)
+  //     setmigrationState(_migrationState)
+  //   }, []
+  // )
 
 /*
   const setStateMigration = useCallback( (_migrationState1:TmigrationState, _migrationState2:TmigrationState) =>
@@ -156,8 +157,8 @@ console.dir(_migrationState2)
                         isLoadingTokensLists={isLoadingTokensLists} isErrorTokensLists={isErrorTokensLists}
                         setShowProgressBar={setshowProgressBar}
                         // migrationState={migrationState}
-                        // setmigrationState={setmigrationState}
-                        setmigrationState={setStateMigration}
+                        setmigrationState={setmigrationState}
+                        // setmigrationState={setStateMigration}
                         
                         // setProgressBarPercentage={setprogressBarPercentage}
                       />

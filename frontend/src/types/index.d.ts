@@ -398,7 +398,8 @@ interface IAddressInputProps {
 }
 
 // type TreactSetMigrationState = React.Dispatch<React.SetStateAction<TmigrationState>>
-type TSetMigrationState = (TmigrationState) => void;
+type TSetMigrationState = React.Dispatch<React.SetStateAction<TmigrationState>>
+// type TSetMigrationState = (TmigrationState) => void;
 // type TSetMigrationState = (TmigrationState,TmigrationState) => void;
 
 interface IStepsContainerProps {
@@ -466,6 +467,9 @@ interface IStep2Props {
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
+// type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void;
+type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef, ) => void;
+
 interface IStep3Props {
   // chainId: ChainId;
   setNextDisabled: TsetNextDisabled,
@@ -476,7 +480,7 @@ interface IStep3Props {
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
   // migrationState: TmigrationState,
   // setmigrationState: TSetMigrationState,
-  transferTokens: (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void,
+  transferTokens: TtransferTokens
 }
 
 interface IChangeTokensListCheckboxStatus {
