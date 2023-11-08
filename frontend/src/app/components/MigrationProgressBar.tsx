@@ -23,6 +23,7 @@ const MigrationProgressBar = ({ migrationState }: ITF_TransferProgressBar ) => {
   //     seterror(migrationState.errorItemsCount)
   //   }, [migrationState, migrationState.errorItemsCount, migrationState.skippedItemsCount, migrationState.successItemsCount, migrationState.totalItemsCount]
   // )
+  const processed = migrationState.errorItemsCount+migrationState.skippedItemsCount+migrationState.successItemsCount;
 
   return (
       <div className="w-full h-full ">
@@ -37,6 +38,7 @@ const MigrationProgressBar = ({ migrationState }: ITF_TransferProgressBar ) => {
           </div>
         </div>
  */}
+
         <div className="flex w-full pr-2">
           <div className="px-2">
             Succes: {migrationState.successItemsCount} / {migrationState.totalItemsCount}
@@ -64,8 +66,13 @@ const MigrationProgressBar = ({ migrationState }: ITF_TransferProgressBar ) => {
           </div>
         </div>
 
-        <div className="flex-grow px-2">
-            <progress className="progress progress-info w-full" value={migrationState.errorItemsCount+migrationState.skippedItemsCount+migrationState.successItemsCount} max={migrationState.totalItemsCount}></progress>
+        <div className="flex w-full pr-2">
+          <div className={"px-2 text-base font-semibold "+(processed==migrationState.totalItemsCount?"text-info":"text-warning")}>
+            Status: {processed==migrationState.totalItemsCount?"Completed":"In progress"}
+          </div>
+          <div className="flex-grow">
+            <progress className="progress progress-info w-full" value={processed}></progress>
+          </div>
         </div>
 
 {/* 
