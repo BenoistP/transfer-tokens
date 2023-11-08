@@ -71,7 +71,7 @@ const MigrationProgressBar = ({ migrationState }: ITF_TransferProgressBar ) => {
             Status: {processed==migrationState.totalItemsCount?"Completed":"In progress"}
           </div>
           <div className="flex-grow">
-            <progress className="progress progress-info w-full" value={processed}></progress>
+            <progress className="progress progress-info w-full" value={processed} max={migrationState.totalItemsCount}></progress>
           </div>
         </div>
 
