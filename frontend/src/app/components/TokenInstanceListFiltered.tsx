@@ -61,6 +61,7 @@ const TokenInstanceListFiltered = ( {
                 updateTransferAmountLock={tokensInstancesListTablePropsHandlers.updateHandlers.updateTransferAmountLock}
                 targetAddress={targetAddress}
                 enableEditable={enableEditable}
+                showTransferAmountReadOnly={false}
               />
             </tr>
           )
