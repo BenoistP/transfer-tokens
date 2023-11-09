@@ -23,8 +23,7 @@ const TokenInstanceList = ( {
     <>
       {
         tokensInstances?.sort(sortTokensInstances).map( (tokenInstance:TTokenInstance/* , index:number */) => {
-          const key = accountAddress+'-'+tokenInstance.address;
-          // console.debug(`TokenInstanceList.tsx render realTokenInstance key:${key}`);
+          const key = accountAddress+'-'+tokenInstance.address; // TODO: use selectID ?
           return (
             <tr className="min-w-full even:bg-base-300 odd:bg-base-200 hover:bg-base-100"
               key={key}

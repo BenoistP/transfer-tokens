@@ -15,7 +15,7 @@ import { NoSymbolIcon, MinusSmallIcon, CheckCircleIcon, ExclamationCircleIcon, S
 const TokenInstance = ( {
   tokenInstance, accountAddress, targetAddress,
   updateCheckboxStatus, updateTransferAmount, updateTransferAmountLock,
-  enableEditable }: ITokenProps ) => {
+  enableEditable, showTransferAmountReadOnly }: ITokenProps ) => {
 
   // console.debug(`TokenInstance.tsx render`)
 
@@ -97,7 +97,7 @@ const TokenInstance = ( {
       if (transferAmount != null && tokenInstance.transferAmount != transferAmount && updateTransferAmount) {
         updateTransferAmount(tokenInstance.selectID, transferAmount);
       }
-    }, // X eslint-disable-next-line react-hooks/exhaustive-deps
+    }, // eslint-disable-next-line react-hooks/exhaustive-deps
     [transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID]
   );
 
@@ -108,7 +108,7 @@ const TokenInstance = ( {
       if (tokenInstance.transferAmountLock != transferAmountLock && updateTransferAmountLock) {
         updateTransferAmountLock(tokenInstance.selectID, transferAmountLock);
       }
-    }, // X eslint-disable-next-line react-hooks/exhaustive-deps
+    }, // eslint-disable-next-line react-hooks/exhaustive-deps
     [transferAmountLock, tokenInstance.transferAmountLock, tokenInstance.selectID, updateTransferAmountLock]
   );
 
@@ -281,6 +281,7 @@ const TokenInstance = ( {
             { canTransferTo ?
               <TokenInstanceEditableAmount
                 selectable={tokenInstance.selectable}
+                readonly={false}
                 balance={(balance && balance.valueOf()?balance.valueOf(): 0n)}
                 amount={(transferAmount && transferAmount.valueOf()?transferAmount.valueOf():0n)}
                 setamount={settransferAmount}
@@ -295,7 +296,23 @@ const TokenInstance = ( {
             }
           </td>
         :
+
+        showTransferAmountReadOnly ?
+          <td className="p-1 ">
+              <TokenInstanceEditableAmount
+                selectable={false}
+                readonly={true}
+                balance={(balance && balance.valueOf()?balance.valueOf(): 0n)}
+                amount={(transferAmount && transferAmount.valueOf()?transferAmount.valueOf():0n)}
+                setamount={settransferAmount}
+                transferAmountLock={transferAmountLock}
+                settransferAmountLock={settransferAmountLock}
+                decimals={Number(decimals)}
+                unSelect={unSelect} />
+          </td>
+          :
           null
+
       }
       <td className="min-h-full">
         <div className="flex ml-1 justify-start">
@@ -351,20 +368,6 @@ const TokenInstance = ( {
 }
 
 // ------------------------------
-
-// const TokenError = (  ) => {
-//   return (
-//   <>
-//     <td>❌ID</td>
-//     <td>❌Token Address</td>
-//     <td>❌Token Name</td>
-//     <td>❌Status</td>
-//     <td>❌Amount</td>
-//     <td>❌Selected</td>
-//     <td>❌Name</td>
-//   </>
-//   );
-// }
 
 const Loading = (  ) => {
   return (
