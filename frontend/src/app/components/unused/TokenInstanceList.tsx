@@ -36,6 +36,7 @@ const TokenInstanceList = ( {
                 updateCheckboxStatus={null}
                 updateTransferAmount={null}
                 updateTransferAmountLock={null}
+                showTransferAmountReadOnly={false}
               />
             </tr>
           )
