@@ -32,6 +32,7 @@ const TokenInstanceMigrationList = ( {
                 updateCheckboxStatus={null}
                 updateTransferAmount={null}
                 updateTransferAmountLock={null}
+                showTransferAmountReadOnly={true}
               />
             </tr>
           )

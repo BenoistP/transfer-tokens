@@ -13,21 +13,16 @@ import { clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
 // ------------------------------
 
 const TokenInstanceMigrationListTable = (
-   {tokensInstances, // settokensInstances,
+   {tokensInstances,
     accountAddress,
     // chainId,
     targetAddress,
-    // isLoading,
-    // isError,
     tokensInstancesListTablePropsHandlers,
     }: ITokenInstancesMigrationListTableProps )  => {
 
   // ---
 
   const { t } = useTranslation()
-
-  // const [showIsLoading, setshowIsLoading] = useState<boolean>(false);
-  // const [showIsEmpty, setshowIsEmpty] = useState<boolean>(false);
 
   // ---
   
@@ -79,6 +74,9 @@ const TokenInstanceMigrationListTable = (
                     </div>
                   </th>
                   <th className="p-2 font-medium flex-none">
+                    {t("moveTokens.stepAny.tokensTable.results.titles.tokenAmount")}
+                  </th>
+                  <th className="p-2 font-medium flex-none">
                     {t("moveTokens.stepAny.tokensTable.results.titles.tokenInfo")}
                   </th>
                 </tr>
@@ -91,28 +89,15 @@ const TokenInstanceMigrationListTable = (
             </table>
 
           :
-/*             
-              <div className="w-full p-0 m-0 base-100 text-primary-content" >
-                <div className="flex flex-col justify-center items-center">
-                  <div className="flex flex-col justify-center items-center">
-                    <div className="flex flex-row justify-center items-center">
-                      {<ExclamationCircleIcon className={clsIconStatusSize} />}
-                      <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-warning">
-                        {t('moveTokens.warnings.nofoundtokens')}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+
+            <div className="flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl text-warning pb-2">
+              <div className="pt-0">
+                <ExclamationCircleIcon className={clsIconStatusSize} />
               </div>
- */
-              <div className="flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl text-warning pb-2">
-                <div className="pt-0">
-                  <ExclamationCircleIcon className={clsIconStatusSize} />
-                </div>
-                <div className="pt-0 pr-3 ">
-                  {t("moveTokens.stepThree.tokensMigrationListTable.noTokens")}
-                </div>
+              <div className="pt-0 pr-3 ">
+                {t("moveTokens.stepThree.tokensMigrationListTable.noTokens")}
               </div>
+            </div>
       }
 
       </div>

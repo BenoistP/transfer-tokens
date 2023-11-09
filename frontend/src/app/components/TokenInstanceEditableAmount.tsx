@@ -5,7 +5,8 @@ import { PlusCircleIcon, XCircleIcon, LockClosedIcon, LockOpenIcon } from '@hero
 
 // ------------------------------
 
-const TokenInstanceEditableAmount = ( { selectable, balance,
+const TokenInstanceEditableAmount = ( {
+  selectable, readonly, balance,
   amount, setamount,
   transferAmountLock, settransferAmountLock,
   decimals, unSelect }: ITokenInstanceAmountProps ) => {
@@ -45,7 +46,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
 
   const setLockAmount = useCallback( () =>
     {
-      settransferAmountLock(true);
+      if (settransferAmountLock) settransferAmountLock(true);
     },
     [settransferAmountLock]
   );
@@ -54,7 +55,7 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
 
   const setUnLockAmount = useCallback( () =>
     {
-      settransferAmountLock(false);
+      if (settransferAmountLock) settransferAmountLock(false);
     },
     [settransferAmountLock]
   );
@@ -172,24 +173,32 @@ const TokenInstanceEditableAmount = ( { selectable, balance,
             </div>
           </>
           :
-          <div className="flex flex-row justify-left">
-            <div className="flex grow-0 m-0 pr-1 p-0 invisible">
-              <label className="swap swap-rotate">
-                <input type="checkbox" />
-                  <LockClosedIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={()=>{}} />
-                  <LockOpenIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={()=>{}} />
-              </label>
+            readonly ?
+
+            <div className="flex flex-row justify-left">
+              {editableAmountString}
             </div>
-            <div className={"join join-vertical " + "font-light text-base-content opacity-60"}>
-              <input type="text"
-                  value={editableAmountString}
-                  readOnly={true}
-                  className="input input-bordered text-xs sm:text-sm md:text-base h-6">
-                </input>
+
+
+            :
+            <div className="flex flex-row justify-left">
+              <div className="flex grow-0 m-0 pr-1 p-0 invisible">
+                <label className="swap swap-rotate">
+                  <input type="checkbox" />
+                    <LockClosedIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current" onClick={()=>{}} />
+                    <LockOpenIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current" onClick={()=>{}} />
+                </label>
+              </div>
+              <div className={"join join-vertical " + "font-light text-base-content opacity-60"}>
+                <input type="text"
+                    value={editableAmountString}
+                    readOnly={true}
+                    className="input input-bordered text-xs sm:text-sm md:text-base h-6">
+                  </input>
+              </div>
+              <div className="block grow-0 m-0 p-0">
+              </div>
             </div>
-            <div className="block grow-0 m-0 p-0">
-            </div>
-          </div>
       }
     </>
   );

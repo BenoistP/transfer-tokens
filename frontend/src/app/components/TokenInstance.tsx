@@ -15,7 +15,7 @@ import { NoSymbolIcon, MinusSmallIcon, CheckCircleIcon, ExclamationCircleIcon, S
 const TokenInstance = ( {
   tokenInstance, accountAddress, targetAddress,
   updateCheckboxStatus, updateTransferAmount, updateTransferAmountLock,
-  enableEditable }: ITokenProps ) => {
+  enableEditable, showTransferAmountReadOnly }: ITokenProps ) => {
 
   // console.debug(`TokenInstance.tsx render`)
 
@@ -281,6 +281,7 @@ const TokenInstance = ( {
             { canTransferTo ?
               <TokenInstanceEditableAmount
                 selectable={tokenInstance.selectable}
+                readonly={false}
                 balance={(balance && balance.valueOf()?balance.valueOf(): 0n)}
                 amount={(transferAmount && transferAmount.valueOf()?transferAmount.valueOf():0n)}
                 setamount={settransferAmount}
@@ -295,7 +296,23 @@ const TokenInstance = ( {
             }
           </td>
         :
+
+        showTransferAmountReadOnly ?
+          <td className="p-1 ">
+              <TokenInstanceEditableAmount
+                selectable={false}
+                readonly={true}
+                balance={(balance && balance.valueOf()?balance.valueOf(): 0n)}
+                amount={(transferAmount && transferAmount.valueOf()?transferAmount.valueOf():0n)}
+                setamount={settransferAmount}
+                transferAmountLock={transferAmountLock}
+                settransferAmountLock={settransferAmountLock}
+                decimals={Number(decimals)}
+                unSelect={unSelect} />
+          </td>
+          :
           null
+
       }
       <td className="min-h-full">
         <div className="flex ml-1 justify-start">

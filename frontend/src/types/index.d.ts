@@ -544,6 +544,7 @@ interface ITokenProps {
   updateTransferAmountLock: ITransferAmountLock|null;
   targetAddress: TAddressEmpty,
   enableEditable: boolean,
+  showTransferAmountReadOnly: boolean,
 }
 
 
@@ -552,6 +553,7 @@ type TsetamountLock = TreactSetState_boolean;
 
 interface ITokenInstanceAmountProps {
   selectable: boolean,
+  readonly: boolean,
   balance: TTokenAmount,
   amount: TTokenAmount,
   setamount: Tsetamount,
