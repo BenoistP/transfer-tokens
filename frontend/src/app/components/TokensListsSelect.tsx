@@ -2,14 +2,10 @@
 import { useCallback, useEffect, useState } from "react"
 // Components
 import SelectableTokensLists from "@Components/SelectableTokensLists"
-// // Utils
-// import { getChainTokensList } from "@jsutils/tokensListsUtils"
-// Icons
-import { ArrowPathRoundedSquareIcon } from '@heroicons/react/24/solid'
 // Translation
 import { useTranslation } from "react-i18next"
 // Icons
-import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
+import { ArrowPathRoundedSquareIcon, ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
 // Styles
 import { clsLoadingTokenLists, clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
 
@@ -35,7 +31,7 @@ const TokensListsSelect = ( {
           const isAllChecked = selectableTokensLists.every(
             (selectableTokensList) => {
               return (
-                selectableTokensList.selected || !selectableTokensList.selectable // === true
+                selectableTokensList.selected || !selectableTokensList.selectable
               )
             }
           ) // every

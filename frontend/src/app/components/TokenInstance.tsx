@@ -97,7 +97,7 @@ const TokenInstance = ( {
       if (transferAmount != null && tokenInstance.transferAmount != transferAmount && updateTransferAmount) {
         updateTransferAmount(tokenInstance.selectID, transferAmount);
       }
-    }, // X eslint-disable-next-line react-hooks/exhaustive-deps
+    }, // eslint-disable-next-line react-hooks/exhaustive-deps
     [transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID]
   );
 
@@ -108,7 +108,7 @@ const TokenInstance = ( {
       if (tokenInstance.transferAmountLock != transferAmountLock && updateTransferAmountLock) {
         updateTransferAmountLock(tokenInstance.selectID, transferAmountLock);
       }
-    }, // X eslint-disable-next-line react-hooks/exhaustive-deps
+    }, // eslint-disable-next-line react-hooks/exhaustive-deps
     [transferAmountLock, tokenInstance.transferAmountLock, tokenInstance.selectID, updateTransferAmountLock]
   );
 
@@ -351,20 +351,6 @@ const TokenInstance = ( {
 }
 
 // ------------------------------
-
-// const TokenError = (  ) => {
-//   return (
-//   <>
-//     <td>❌ID</td>
-//     <td>❌Token Address</td>
-//     <td>❌Token Name</td>
-//     <td>❌Status</td>
-//     <td>❌Amount</td>
-//     <td>❌Selected</td>
-//     <td>❌Name</td>
-//   </>
-//   );
-// }
 
 const Loading = (  ) => {
   return (
