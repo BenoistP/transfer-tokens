@@ -10,7 +10,6 @@ const Step2 = ( {
   setShowProgressBar,
   tokensInstances,
   accountAddress,
-  // chainId,
   targetAddress,
   isLoadingTokensInstances, isErrorTokensInstances,
   tokensInstancesListTablePropsHandlers,
@@ -40,7 +39,6 @@ const Step2 = ( {
           <TokenInstanceListTableFiltered
             tokensInstances={tokensInstances}
             accountAddress={accountAddress}
-            // chainId={chainId}
             enableCheckboxes={true}
             targetAddress={targetAddress}
             isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}

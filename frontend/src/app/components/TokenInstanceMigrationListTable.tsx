@@ -15,7 +15,6 @@ import { clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
 const TokenInstanceMigrationListTable = (
    {tokensInstances,
     accountAddress,
-    // chainId,
     targetAddress,
     tokensInstancesListTablePropsHandlers,
     }: ITokenInstancesMigrationListTableProps )  => {
@@ -30,17 +29,12 @@ const TokenInstanceMigrationListTable = (
     () =>
       <TokenInstanceMigrationList
         tokensInstances={tokensInstances}
-        // chainId={chainId}
         accountAddress={accountAddress}
         targetAddress={targetAddress}
         sortTokensInstances={tokensInstancesListTablePropsHandlers.sortHandlers.sortTokensInstances}
       />
     , [tokensInstances, accountAddress, targetAddress, tokensInstancesListTablePropsHandlers.sortHandlers.sortTokensInstances]
   );
-
-  // ---
-
-  // const clsStatus = 'flex justify-center font-semibold pt-2 pb-3 text-md sm:text-base md:text-xl'
 
   // ----------------------------
 

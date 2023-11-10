@@ -1172,7 +1172,7 @@ const StepsContainer = ( {
 
   // ---
 
-  const getTokensToMigrate = useCallback( (/* tokensInstances:TTokensInstances */):TTokensInstances =>
+  const getTokensToMigrate = useCallback( ():TTokensInstances =>
     {
       try {
         
@@ -1183,7 +1183,6 @@ const StepsContainer = ( {
         })
 
         selectedTokensInstances?.forEach( (tokenInstance:TTokenInstance) => {
-          // console.debug(`StepsContainer.tsx getTokensToMigrate tokenInstance.selected=${tokenInstance.selected} tokenInstance.transferAmount=${tokenInstance.transferAmount}`)
           tokenInstance.tr_processed = false;
           tokenInstance.tr_skipped = false;
           tokenInstance.tr_error = false;
@@ -1200,47 +1199,22 @@ const StepsContainer = ( {
 
   // ---
 
-/* 
-  const updateTokensToMigrate = useCallback( () : void =>
-    {
-      try {
-        console.debug(`StepsContainer.tsx updateTokensToMigrate step=${step}`)
-        if (step == Steps.migration) {
-          const tokensToMigrate = getTokensToMigrate()
-          console.dir(getTokensToMigrate())
-          settokensInstancesToMigrate(tokensToMigrate)
-        } // if (step == Steps.migration)
-      } catch (error) {
-        console.error(`StepsContainer.tsx updateTokensToMigrate error: ${error}`);  
-      }
-    },
-    [Steps.migration, getTokensToMigrate, step]
-  ) // updateTokensToMigrate
- */
-
-  // ---
-
   const transfertToken = useCallback( async( _tokenInstanceToTransfer:TTokenInstance, _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef, _migrationState: TmigrationState ) =>
     {
 
       try {
-        // console.debug(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
         const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms))
         const random0_99 = () => Math.floor(Math.random() * 100);
-    
+
         const random = random0_99();
         setmigrationState( {..._migrationState} )
-        // setmigrationState( null, _migrationState )
         await sleep(2_000)
-        // debugger;
         if (random < 50) {
           // Success
           console.debug(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER OK ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
           _tokenInstanceToTransfer.tr_processed = true;
           _tokenInstanceToTransfer.selected = false;
           _migrationState.successItemsCount++;
-          // setmigrationState( _migrationState )
-          // setmigrationState( _migrationState, {..._migrationState, successItemsCount: _migrationState.successItemsCount+1} )
         } else if (random < 75) {
           // Error
           throw "Random transfer error"
@@ -1249,15 +1223,12 @@ const StepsContainer = ( {
           console.debug(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER SKIPPED ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
           _tokenInstanceToTransfer.tr_skipped = true;
           _migrationState.skippedItemsCount++;
-          // setmigrationState( _migrationState )
-          // setmigrationState( _migrationState, {..._migrationState, skippedItemsCount: _migrationState.skippedItemsCount+1} )
         }
 
       } catch (error) {
         console.error(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
         _tokenInstanceToTransfer.tr_error = true;
           _migrationState.errorItemsCount++;
-          // setmigrationState( _migrationState )
       }
       finally {
         try {
@@ -1266,7 +1237,6 @@ const StepsContainer = ( {
           console.error(`StepsContainer.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR STATE ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
         }
       }
-
     } // transfertToken
     ,
     [setmigrationState]
@@ -1275,7 +1245,6 @@ const StepsContainer = ( {
   const transferTokens = useCallback( async( _tokensInstancesToTransfer:TTokensInstances, _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef ) =>
     {
       try {
-        // console.debug(`StepsContainer.tsx transferTokenS`)
         if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length) {
           const migrationState = {totalItemsCount:_tokensInstancesToTransfer.length,
             errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
@@ -1315,7 +1284,6 @@ const StepsContainer = ( {
   useEffect( () =>
     {
       try {
-        // console.debug(`StepsContainer.tsx useEffect [chainId, connectedAddress, resetToInitialStep, step] step=${step}`)
         console.log(`Switching to chainId=${chainId} connectedAddress=${connectedAddress}`)
         resetToInitialStepCB()
         settokensInstances(null)
@@ -1334,11 +1302,8 @@ const StepsContainer = ( {
   useEffect( () =>
     {
       try {
-        // console.debug(`StepsContainer.tsx updateTokensToMigrate [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState] step=${step}`)
         if (step == Steps.migration) {
-          // console.debug(`StepsContainer.tsx updateTokensToMigrate [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState] MIGRATION step=${step}`)
           const tokensToMigrate = getTokensToMigrate()
-          // console.dir(tokensToMigrate)
           settokensInstancesToMigrate(tokensToMigrate)
           if (tokensToMigrate && tokensToMigrate.length) {
           const migrationState = {totalItemsCount:tokensToMigrate.length,
@@ -1362,29 +1327,17 @@ const StepsContainer = ( {
       {
         let tokensInstancesData:TTokenInstance[] = []
         try {
-          // console.debug(`StepsContainer.tsx loadTargetData _tokensInstances =`)
-          // console.dir(_tokensInstances)
           if (_tokensInstances && targetAddress) {
             // Load target balances
             // tokens target user balances
             const targetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true);
             // tokens transfer ability
-            // const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,connectedAddress,targetAddress, true);
             const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,null,targetAddress, true);
             // Wait for all promises to resolve
             const loadTokensOnChainDataPromises = await Promise.all([targetBalances, canTransfer]);
-            // console.debug(`StepsContainer.tsx loadTargetData AFTER await Promise.all`)
-            // console.dir(loadTokensOnChainDataPromises[0])
-            // console.dir(loadTokensOnChainDataPromises[1])
             // Merge loadTokensOnChainDataPromises results
             tokensInstancesData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
               if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] ) {
-                // console.dir(_tokenInstance.userData[targetAddress as any])
-                // _tokenInstance.userData = {
-                //   ..._tokenInstance.userData,
-                //   ...loadTokensOnChainDataPromises[0][index].userData, // target balances
-                //   ...loadTokensOnChainDataPromises[1][index].userData, // can transfer
-                // }
                 _tokenInstance.userData[targetAddress as any] = {
                   ..._tokenInstance.userData[targetAddress as any],
                   ...loadTokensOnChainDataPromises[0][index], // target balances
@@ -1393,13 +1346,7 @@ const StepsContainer = ( {
               } // if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] )
               return _tokenInstance;
             })
-            // console.debug(`StepsContainer.tsx loadTargetData AFTER MERGE promises (target balances, cantransfer) tokensInstancesData =`)
-            // console.dir(tokensInstancesData)
-            // // update chainTokensList
-            // chainTokensList.tokensInstances = tokensInstancesData;
-            // // Everything up to transferAbility included is loaded
-            // chainTokensList.loadState = EChainTokensListLoadState.transferAbility
-            // return tokensInstancesData;
+
           } // if (_tokensInstances && targetAddress)
         } catch (error) {
           console.error(`StepsContainer.tsx loadTargetData error: ${error}`);
@@ -1921,18 +1868,14 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
       } catch (error) {
         console.error(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: error=${error}`)
       }
-      finally {
-        // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances elapsed=${Date.now() - start}ms`)
-        // setLoadingDataState(false)
-      }
+      // finally {
+      //   // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances elapsed=${Date.now() - start}ms`)
+      //   // setLoadingDataState(false)
+      // }
     },
     [ tokensLists, selectableTokensLists,
-      // getUpdatedChainTokensListTokensInstances,
       chainId, targetAddress, connectedAddress,
       getSelectedTokenLists, initTokenInstance, loadTokensOnChainData,
-      // setLoadingDataState, setErrorLoadingDataState,
-      // setisError, setisLoading
-      // setisLoadingTokensInstances, setisErrorTokensInstances,
       setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances
     ]
   ) // useEffect
@@ -1946,24 +1889,15 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
 
   useEffect( () =>
     {
-      // console.debug(`StepsContainer.tsx useEffect [SELECTEDCHAINSTOKENSLIST]`)
-      // console.debug(`StepsContainer.tsx useEffect [SELECTEDCHAINSTOKENSLIST] = selectedChainsTokensList[]=`)
-      // console.dir(selectedChainsTokensList)
-
       const tokensInstancesFromSelectedTokensLists: TTokensInstances = []
       if (selectedChainsTokensList && selectedChainsTokensList.length) {
         selectedChainsTokensList.forEach( (selectedChainsTokensList:TChainsTokensListNullUndef) => {
-        
           if (selectedChainsTokensList && selectedChainsTokensList.tokensInstances && selectedChainsTokensList.tokensInstances.length) {
             tokensInstancesFromSelectedTokensLists.push(...selectedChainsTokensList.tokensInstances)
-          }
+            }
           })
-
         settokensInstances(tokensInstancesFromSelectedTokensLists)
-        // console.debug(`StepsContainer.tsx useEffect [SELECTED CHAINSTOKENSLIST] = tokensInstancesFromSelectedTokensLists[]=`)
-        // console.dir(tokensInstancesFromSelectedTokensLists)
       }
-    
     },
     [selectedChainsTokensList]
   ) // useEffect [selectedChainsTokensList]
@@ -1971,32 +1905,25 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
 
   // ---
 
-  const initSelectableTokensLists = useCallback( async(/* _selectableTokensLists: TSelectableTokensLists */) =>
+  const initSelectableTokensLists = useCallback( async() =>
     {
 
       try {
-        
-        // if (!_selectableTokensLists || !_selectableTokensLists.length) {
-console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselectableTokensLists] INitializing _selectableTokensLists`)
-          const filteredSelectableTokensLists: TSelectableTokensLists = []
-          tokensLists?.forEach( (tokensList: TTokensList) => {
-            const chainTokensList = getChainTokensList(tokensList, chainId)
-            const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
-            const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
-            const selectableTokensList = {
-              tokensList,
-              chainId,
-              selected: false,
-              selectable,
-              currentChainTokensCount
-            } // as TSelectableTokensList
-  
-            filteredSelectableTokensLists.push(selectableTokensList)
-          })
-          setselectableTokensLists(filteredSelectableTokensLists)
-        // } // if (!_selectableTokensLists || !_selectableTokensLists.length)
-          
-
+        const filteredSelectableTokensLists: TSelectableTokensLists = []
+        tokensLists?.forEach( (tokensList: TTokensList) => {
+          const chainTokensList = getChainTokensList(tokensList, chainId)
+          const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
+          const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
+          const selectableTokensList = {
+            tokensList,
+            chainId,
+            selected: false,
+            selectable,
+            currentChainTokensCount
+          }
+          filteredSelectableTokensLists.push(selectableTokensList)
+        })
+        setselectableTokensLists(filteredSelectableTokensLists)
       } catch (error) {
         console.error(`TokensListsSelect.tsx: initSelectableTokensLists: error=${error}`);
       }
@@ -2010,9 +1937,7 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
   useEffect( () =>
     {
       try {
-      // console.debug(`StepsContainer.tsx useEffect [INIT SELECTABLE TOKENSLISTS]`)
       initSelectableTokensLists()
-        
       } catch (error) {
         console.error(`StepsContainer.tsx useEffect [INIT SELECTABLE TOKENSLISTS] error: ${error}`);
       }
@@ -2039,18 +1964,13 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
                 
           <MainContentContainer>
               <Step0
-                // setpreviousDisabled={setpreviousDisabled}
                 setNextDisabled={setNextDisabled}
-                // tokenChainDataArray={selectedTokensChainDataArray}
-                // setSelectedTokensChainDataArray={setSelectedTokensChainDataArray}
                 selectableTokensLists={selectableTokensLists}
                 setselectableTokensLists={setselectableTokensLists}
-                // setShowProgressBar={setShowProgressBar}
                 accountAddress={connectedAddress}
                 targetAddress={targetAddress}
                 tokensInstances={tokensInstances}
                 chainId={chainId}
-                // isLoading={isLoading} isError={isError}
                 isLoadingTokensLists={isLoadingTokensLists}
                 isErrorTokensLists={isErrorTokensLists}
                 isLoadingTokensInstances={isLoadingTokensInstances}
@@ -2073,9 +1993,6 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
                 chainId={chainId}
                 targetAddress={targetAddress}
                 settargetAddress={settargetAddress}
-                // setShowProgressBar={setShowProgressBar}
-                // isLoading={isLoading} isError={isError}
-                // isLoading={isLoadingTokensInstances} isError={isErrorTokensInstances}
                 isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
               />
@@ -2090,12 +2007,8 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
                 setNextDisabled={setNextDisabled}
                 tokensInstances={tokensInstances}
                 setShowProgressBar={setShowProgressBar}
-                // setProgressBarPercentage={setProgressBarPercentage}
                 accountAddress={connectedAddress}
-                // chainId={chainId}
                 targetAddress={targetAddress}
-                // isError={isError}
-                // isError={isErrorTokensInstances}
                 isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 />
@@ -2113,7 +2026,6 @@ console.debug(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselecta
                 accountAddress={connectedAddress}
                 targetAddress={targetAddress}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
-                // migrationState={migrationState} setmigrationState={setmigrationState}
                 transferTokens={transferTokens}
             />
           </MainContentContainer>

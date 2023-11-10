@@ -414,7 +414,6 @@ interface IStep1Props {
   setNextDisabled: TsetNextDisabled,
   accountAddress: TAddressNullUndef,
   tokensInstances: TTokensInstances,
-  // chainId: TChainId,
   targetAddress: TAddressEmpty,
   settargetAddress:TsettargetAddress
   chainId: ChainId;
@@ -428,7 +427,6 @@ interface IStep2Props {
   tokensInstances: TTokensInstances,
   setShowProgressBar: TsetShowProgressBar
   accountAddress: TAddressNullUndef,
-  // chainId: ChainId;
   targetAddress: TAddressEmpty,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
@@ -438,7 +436,6 @@ interface IStep2Props {
 type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void;
 
 interface IStep3Props {
-  // chainId: ChainId;
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
   setShowProgressBar: TsetShowProgressBar
@@ -454,7 +451,6 @@ interface IChangeTokensListCheckboxStatus {
 
 interface ITokensListsSelectProps {
   chainId: TChainId
-  // setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
   isLoading: boolean,
@@ -469,7 +465,6 @@ interface ISelectableTokensListsProps
 
 interface ISelectableTokensListProps
 {
-//  chainId: TChainId,
   selectableTokensList: TSelectableTokensList,
   changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
 }
@@ -495,7 +490,6 @@ type TsortTokensInstances = any;
 
 interface ITokenListProps {
   tokensInstances: TTokensInstances,
-  // chainId: ChainId;
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   sortTokensInstances: TsortTokensInstances,
@@ -503,7 +497,6 @@ interface ITokenListProps {
 
 interface ITokenListFilteredProps {
   tokensInstances: TTokensInstances,
-  // chainId: ChainId;
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   enableEditable: boolean,
@@ -581,7 +574,6 @@ interface ITokensInstancesListTableStatesHandlers {
 interface ITokenInstancesMigrationListTableProps {
   tokensInstances:TTokensInstances;
   accountAddress:TAddressNullUndef;
-  // chainId: ChainId;
   targetAddress: TAddressEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }
@@ -606,7 +598,6 @@ interface ItokenInstanceFilterParamsUpdaters {
 interface ITokensListTableFilteredProps {
   tokensInstances:TTokensInstances;
   accountAddress:TAddressNullUndef;
-  // chainId: ChainId;
   enableCheckboxes: boolean;
   targetAddress: TAddressEmpty,
   isLoadingTokensInstances: boolean,
@@ -618,7 +609,6 @@ interface ITokensListTableFilteredProps {
 interface ITokensInstancesListTableProps {
   tokensInstances:TTokensInstances;
   accountAddress:TAddressNullUndef;
-  // chainId: ChainId;
   targetAddress: TAddressEmpty,
   isLoading: boolean,
   isError: boolean,

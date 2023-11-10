@@ -16,7 +16,6 @@ import {clsFlagIcon} from "@uiconsts/twDaisyUiStyles"
 // ------------------------------
 
 const FlagIcon = ({flagIconCountryCode = ""}: FlagIconProps) => {
-  console.debug(`FlagIcon.tsx render flagIconCountryCode=${flagIconCountryCode}`)
   return (
       <span>
           { flagIconCountryCode=="GB" &&
