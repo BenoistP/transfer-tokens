@@ -46,6 +46,7 @@ https://play.tailwindcss.com/OPAsySKNCd
 ☑️ 🚧 Move tokens 🏠🏡
 ☑️ progressive list loading
 
+🚧 More languages
 
 All Steps : 🚧 
 - 🚧 Handle chain change (back to step 0, remove checked token lists)
@@ -60,7 +61,7 @@ filtered tokens table: 🚧
 - ☑️ Add colors to icons
 - 🚧 Add Lock/unlock all
 - ☑️ BUG: Error when input balance such as 0.1
-- 🚧 BUG: On filter update: update selectAll/All visible checks
+- ☑️ BUG: On filter update: update selectAll/All visible checks
 
 
 Step 0: 🚧
@@ -87,7 +88,7 @@ Step 2: 🚧
 
 Step 2: 🚧 
 - 🚧 display target address
-- 🚧 Show amount, not balance
+- ☑️ Show amount, not balance
 
 
 🚧 avatar list/select style
@@ -97,7 +98,7 @@ Step 2: 🚧
 
 
 Bugs :
-  🐜 refresh DESTINATION address list on address update
+  🐜 
 
 
 🚧 disclaimer
