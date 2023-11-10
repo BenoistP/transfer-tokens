@@ -1118,18 +1118,15 @@ const StepsContainer = ( {
    * as well as contract instances initialization
    */
   const loadTokensOnChainData = useCallback( async(
-    _tokensInstances: TTokensInstances, step:number, _showProgressBar:boolean,
+    _tokensInstances: TTokensInstances, step:number,
     _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef, _resultOnly:boolean
     ): Promise<TTokensInstances> =>
     {
       try {
-        // console.debug(`StepsContainer.tsx loadTokensOnChainData ProgressBar _tokensInstances?.length=${_tokensInstances?.length}}, step=${step}`)
         if (_tokensInstances && _tokensInstances.length) {
           switch (step) {
             // Step contracts: get tokens contracts
             case EStepsLoadTokensData.contracts:
-              // console.debug(`StepsContainer.tsx loadTokensOnChainData Step EStepsLoadTokensData.contracts: GET TOKENS CONTRACTS`)
-              // tokensInstancesResults = await loadTokensContracts(_tokensInstances)
               return await loadTokensContracts(_tokensInstances)
             // Step sourceBalances: get tokens source user balances
             case EStepsLoadTokensData.sourceBalances:
@@ -1157,9 +1154,6 @@ const StepsContainer = ( {
               console.error(`StepsContainer.tsx loadTokensOnChainData error: step=${step} not found`)
               return _tokensInstances;
           } // switch (step)
-          // if (_showProgressBar) {
-          //   setProgressBarPercentage(progress)
-          // }
         } // if (tokens?.length > 0)
       } // try
       catch (error) {
@@ -1330,9 +1324,9 @@ const StepsContainer = ( {
           if (_tokensInstances && targetAddress) {
             // Load target balances
             // tokens target user balances
-            const targetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true);
+            const targetBalances = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances, null, targetAddress, true);
             // tokens transfer ability
-            const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,null,targetAddress, true);
+            const canTransfer = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility, null,targetAddress, true);
             // Wait for all promises to resolve
             const loadTokensOnChainDataPromises = await Promise.all([targetBalances, canTransfer]);
             // Merge loadTokensOnChainDataPromises results
@@ -1375,7 +1369,7 @@ const StepsContainer = ( {
             if (chainTokensList.loadState == EChainTokensListLoadState.notLoaded) {
               console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EStepsLoadTokensData == NOTLOADED`)
               // Load contracts
-              _tokensInstances = await loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.contracts,true,null,"", true)
+              _tokensInstances = await loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.contracts, null, null, true)
               chainTokensList.loadState = EChainTokensListLoadState.contracts // EChainTokensListLoadState.contracts
               // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EStepsLoadTokensData.contracts _tokensInstances =`)
               // console.dir(_tokensInstances)
@@ -1385,25 +1379,25 @@ const StepsContainer = ( {
               console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.loadState == EChainTokensListLoadState.CONTRACTS`)
               // Load everything else : sourceBalances, decimals, names, symbols
               // tokens names
-              const tokensNamesPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.names,true,null,"", true)
+              const tokensNamesPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.names, null, null, true)
 
               // tokens connected user (source) balances
-              const tokensSourceBalancesPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.sourceBalances,true,connectedAddress,"", true)
+              const tokensSourceBalancesPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.sourceBalances, connectedAddress, null, true)
 
               // tokens source transferability
-              const tokensSourceCanTransferPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.sourceTransferAbility,true,connectedAddress,connectedAddress, true);
+              const tokensSourceCanTransferPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.sourceTransferAbility, connectedAddress, connectedAddress, true);
 
               // tokens decimals
-              const tokensDecimalsPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.decimals,true,null,"", true)
+              const tokensDecimalsPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.decimals, null, null, true)
               // tokens symbols
-              const tokensSymbolsPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.symbols,true,null,"", true)
+              const tokensSymbolsPromises = loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.symbols, null, null, true)
 
               // If targetAddress is already set, load Additionnal data: targetBalances, transferAbility
               // tokens target user balances
-              const tokensTargetBalancesPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances,true,"", targetAddress, true) : null ;
+              const tokensTargetBalancesPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetBalances, null, targetAddress, true) : null ;
               // tokens target transferability
               // const tokensTargetCanTransferToPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,connectedAddress,targetAddress, true) : null ;
-              const tokensTargetCanTransferToPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility,true,null,targetAddress, true) : null ;
+              const tokensTargetCanTransferToPromises = targetAddress ? loadTokensOnChainData(_tokensInstances,EStepsLoadTokensData.targetTransferAbility, null, targetAddress, true) : null ;
 
               // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances BEFORE Promise.all`)
 
