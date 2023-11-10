@@ -277,7 +277,7 @@ const TokenInstanceListTableFiltered = (
                         {/* Select ALL checkbox */}
                         <input className={"checkbox " + clsCheckboxSizeSmall}
                           type="checkbox"
-                          checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
+                          checked={tokensInstancesListTablePropsHandlers.selectStates.selectAllVisible}
                           onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll(true)}}
                           disabled={selectAllDisabled}
                           />
