@@ -33,7 +33,6 @@ const Step3 = ( {
     <>
       <div className="w-full p-0 m-0">
           <TokenInstanceMigrationListTable
-            // chainId={chainId}
             tokensInstances={tokensInstances}
             accountAddress={accountAddress}
             targetAddress={targetAddress}
@@ -43,22 +42,6 @@ const Step3 = ( {
   </>
   );
 }
-
-/*
-  return (
-    <>
-      <div className="bg-neutral w-full m-2 p-2 rounded-box border border-base-300-content">
-          <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-accent">
-            {"COMING"}
-          </p>&nbsp;
-          <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-warning font-extrabold">
-            {"SOON"}
-          </p>
-      </div>
-    </>
-  );
-*/
-
 
 // ------------------------------
 

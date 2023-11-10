@@ -13,35 +13,24 @@ import { clsLoadingTokenLists, clsIconStatusSize, clsIconMedium } from "@uiconst
 const TokenInstanceListTableFiltered = (
     { tokensInstances,
       accountAddress,
-      // chainId, // , transferTokens,
       enableCheckboxes,
       targetAddress,
-      // isError,
       isLoadingTokensInstances, isErrorTokensInstances,
       enableEditable,
       tokensInstancesListTablePropsHandlers }: ITokensListTableFilteredProps )  =>
   {
 
-  // console.log(`TokenInstanceListTableFiltered.tsx render chainId: accountAddress:${accountAddress} targetAddress=${targetAddress} tokensInstances=`);
-  // console.dir(tokensInstances)
+  // ---
 
   const { t } = useTranslation()
   const [selectAllDisabled, setSelectAllDisabled] = useState(false)
 
-  // ---
-
   useEffect( () =>
     {
-      // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokensInstances] tokensInstances?.length: ${tokensInstances?.length}`)
-      // setSelectAllDisabled(!tokensInstances?.length)
       if (tokensInstances?.length && enableEditable) {
         const noneSelectable = tokensInstances.every( (tokenInstance) => {
-          // const notSelectable = ( !tokenInstance.selectable || !tokenInstance.userData[accountAddress as any]?.canTransfer || !tokenInstance.userData[targetAddress as any]?.canTransfer )
-          // console.debug(`selectable :${tokenInstance.selectable} accountAddress: ${tokenInstance.userData[accountAddress as any]?.canTransfer} targetAddress: ${tokenInstance.userData[targetAddress as any]?.canTransfer} notSelectable: ${notSelectable}`)
-          // return ( notSelectable )
           return !tokenInstance.selectable
         })
-        // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokenInstances] noneSelectable: ${noneSelectable}`)
         setSelectAllDisabled(noneSelectable)
       } else {
         setSelectAllDisabled(true)
@@ -54,11 +43,8 @@ const TokenInstanceListTableFiltered = (
 
   useEffect( () =>
     {
-      // console.debug(`TokenInstanceListTableFiltered.tsx useEffect [tokensInstances] tokensInstances?.length: ${tokensInstances?.length}`)
-      // setSelectAllDisabled(!tokensInstances?.length)
       if (selectAllDisabled && tokensInstancesListTablePropsHandlers.selectStates.selectAll) {
         tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll()
-        // tokensInstancesListTablePropsHandlers.updateHandlers.handleUnselectAll()
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,7 +57,6 @@ const TokenInstanceListTableFiltered = (
     () =>
       <TokenInstanceListFiltered
         tokensInstances={tokensInstances}
-        // chainId={chainId}
         accountAddress={accountAddress}
         targetAddress={targetAddress}
         tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
@@ -83,31 +68,23 @@ const TokenInstanceListTableFiltered = (
   // ---
 
   const countSelected = 
-  // useCallback(
     (tokensInstances:TTokensInstances) =>
-    // const countSelected =  (tokensInstances:TTokensInstances) =>
     {
       let selectedCount = 0;
       try {
-        // console.debug(`TokenInstanceListTableFiltered.tsx countSelected tokensInstances.length: ${tokensInstances?.length} accountAddress: ${accountAddress}`);
         if (tokensInstances && tokensInstances.length>0 && accountAddress && typeof accountAddress == "string") {
           selectedCount = tokensInstances.reduce( (selectedCount,tokensInstance) => selectedCount + ((tokensInstance.selected==true)?1:0),0 )
         }
-        // console.debug(`TokenInstanceListTableFiltered.tsx countSelected = ${selectedCount}`);
         return selectedCount;
       } catch (error) {
         console.error(`countSelected error: ${error}`);
         return selectedCount;
       }
     }
-  //   ,
-  //   [/* accountAddress, */ tokensInstances]
-  // ); // countSelected
 
   // ---
 
   const countDisplayed =
-  // useCallback(
     (tokensInstances:TTokensInstances) =>
     {
       let displayedCount = 0;
@@ -115,16 +92,12 @@ const TokenInstanceListTableFiltered = (
         if (tokensInstances && tokensInstances.length>0) {
           displayedCount = tokensInstances.filter(tokensInstancesListTablePropsHandlers.filterHandlers.filterTokenInstance).length
         }
-        // console.debug(`TokenInstanceListTableFiltered.tsx countDisplayed = ${displayedCount}`);
         return displayedCount;
       } catch (error) {
         console.error(`countDisplayed error: ${error}`);
         return displayedCount;
       }
     }
-  //   ,
-  //   [/* accountAddress, */ tokensInstances]
-  // ); // countDisplayed
 
   // ---
 
@@ -134,9 +107,10 @@ const TokenInstanceListTableFiltered = (
   const clsCheckboxSizeBig = "checkbox-xs sm:checkbox-md md:checkbox-lg"
   const clsCheckboxSizeSmall = "checkbox-xs sm:checkbox-sm md:checkbox-md"
   const clsIconSelectSmall = clsIconSizeSmall + (selectAllDisabled ? " fill-base-content opacity-50" : " fill-base-content") ;
-  const clsIconMediumInvert = clsIconSizeMedium + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out " + ( selectAllDisabled ? "fill-base-content opacity-30 cursor-not-allowed" : "fill-base-content opacity-50 cursor-pointer") ;
+  const clsIconMediumInvert = clsIconSizeMedium + " -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
+    + ( selectAllDisabled ? "fill-base-content opacity-30 cursor-not-allowed" : "fill-base-content opacity-50 cursor-pointer") ;
 
-  const clsStatus = "flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl" // 'flex justify-center font-semibold pt-2 pb-3 text-md sm:text-base md:text-xl'
+  const clsStatus = "flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl"
   const clsTextSize = "text-xs sm:text-sm md:text-base"
 
   // ---
@@ -277,7 +251,7 @@ const TokenInstanceListTableFiltered = (
                         {/* Select ALL checkbox */}
                         <input className={"checkbox " + clsCheckboxSizeSmall}
                           type="checkbox"
-                          checked={tokensInstancesListTablePropsHandlers.selectStates.selectAll}
+                          checked={tokensInstancesListTablePropsHandlers.selectStates.selectAllVisible}
                           onChange={()=>{tokensInstancesListTablePropsHandlers.updateHandlers.handleCheckSelectAll(true)}}
                           disabled={selectAllDisabled}
                           />
@@ -304,7 +278,6 @@ const TokenInstanceListTableFiltered = (
               <div className={"collapse-title font-light justify-left flex " + clsTextSize}>
                 <FunnelIcon className={clsIconMedium} />
                 {t("moveTokens.stepAny.tokensTable.search.additional.title")}
-                {/* {t("moveTokens.stepAny.tokensTable.search.additional.title")}  */}
               </div>
               <div className="collapse-content"> 
 
@@ -449,9 +422,7 @@ const TokenInstanceListTableFiltered = (
 
     </>
   );
-  
-// }
+
 }
-// );
 
 export default TokenInstanceListTableFiltered;
