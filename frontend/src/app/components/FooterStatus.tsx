@@ -8,7 +8,7 @@ import { useEffect, useState} from "react";
 import { watchBlockNumber/* , watchAccount, fetchBalance */ } from '@wagmi/core'
 
 
-export const FooterStatus = () => {
+export const FooterStatus = ({showActivity=false}:iFooterStatus) => {
 
   // const { t } = useTranslation();
   // const { address:connectedAddress } = useAccount()
@@ -100,8 +100,16 @@ export const FooterStatus = () => {
 
 
   return (
-    <div className="">
+    <div className="flex">
+
         <div className="w-16 text-xs text-content">
+          { showActivity &&
+          <progress className="progress progress-info w-32 z-0"></progress>
+          }
+        </div>
+
+
+        <div className="w-16 text-xs text-content z-10">
             {/* {isLoadingBalance?"Loading...":isErrorBalance?"Error":balanceData?.formatted}
             {isLoadingBlockNumber?"Loading...":isErrorBlockNumber?"Error":blockNumberData?.toString()} */}
           {blockNumber}

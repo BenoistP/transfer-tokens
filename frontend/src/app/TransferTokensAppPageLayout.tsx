@@ -2,9 +2,9 @@
 import { ReactNode, useCallback, useState } from 'react'
 // Components
 import { Navbar } from '@Components/Navbar'
-import { Footer } from '@Components/Footer'
+// import { Footer } from '@Components/Footer'
 import { MoveTokensAppProvider } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
-import { ContentBottomPadding } from '@Components/ContentBottomPadding'
+// import { ContentBottomPadding } from '@Components/ContentBottomPadding'
 // Context
 import { ThemeProvider, useTheme } from "next-themes";
 import { GlobalAppProvider, useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
@@ -135,6 +135,8 @@ const testnetChains = [
   return (
       <MoveTokensAppProvider>
 
+        <ThemeProvider enableSystem={false} themes={THEMES_NAMES}>
+
           <div className="flex flex-col w-full h-screen pt-0 bg-base-100">
 
             { config && chains ?
@@ -142,13 +144,15 @@ const testnetChains = [
 
                   <GlobalAppProvider>
 
-                    <ThemeProvider enableSystem={false} themes={THEMES_NAMES}>
-
                       <RainbowOutletWrapper 
                         children={
                           <>
                             <Navbar/>
                             {children}
+{/* 
+                            <ContentBottomPadding/>
+                            <Footer showActivity={true}/>
+*/}
                           </>
                         }
                         chains={chains}
@@ -156,7 +160,6 @@ const testnetChains = [
 
                       {/* {children} */}
 
-                    </ThemeProvider>
 
                   </GlobalAppProvider>
 
@@ -164,11 +167,14 @@ const testnetChains = [
               :
                 null
             }
-
+{/* 
             <ContentBottomPadding/>
-            <Footer/>
-
+            <Footer showActivity={true}/>
+ */}
           </div>
+
+          </ThemeProvider>
+
       </MoveTokensAppProvider>
   )
 } // App

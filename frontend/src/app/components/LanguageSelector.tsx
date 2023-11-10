@@ -15,7 +15,7 @@ import {clsFlagIcon} from "@uiconsts/twDaisyUiStyles"
 
 // ------------------------------
 
-const FlagIcon = ({flagIconCountryCode = ""}: FlagIconProps) => {
+const FlagIcon = ({flagIconCountryCode = ""}: iFlagIconProps) => {
   return (
       <span>
           { flagIconCountryCode=="GB" &&
