@@ -15,37 +15,11 @@ enum EChainTokensListLoadState {
 
 // Types to remove ->
 
-interface ITokensInstancesListTableProps {
-  tokensInstances:TTokensInstances;
-  accountAddress:TAddressNullUndef;
-  // chainId: ChainId;
-  targetAddress: TAddressEmpty,
-  isLoading: boolean,
-  isError: boolean,
-  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
-}
 
-
-type TmigrationState = {
-  totalItemsCount: number;
-  successItemsCount: number;
-  errorItemsCount: number;
-  skippedItemsCount: number;
-
-}
-
-interface ITF_TransferProgressBar {
-  // showProgressBar?: boolean;
-  // progressPercentage: number;
-  migrationState: TmigrationState;
-}
-
-// interface ITF_ProgressBarColor {
-//   progressPercentage: number;
-// }
 
 // type TsetShowProgressBar = TreactSetState_boolean;
 // type TsetProgressBarPercentage = React.Dispatch<React.SetStateAction<number>>
+
 
 // <- Types to remove
 
@@ -77,7 +51,6 @@ type TPrivateEnv = {
 interface iLanguage {
   key: string;
   name: string;
-  // flagIconCountryCode: string; // corresponding flag-icons library code (https://www.npmjs.com/package/flag-icons , https://github.com/lipis/flag-icons)
   flagCountryCode: string; // corresponding country-flag-icons library code (https://www.npmjs.com/package/country-flag-icons , https://gitlab.com/catamphetamine/country-flag-icons#readme)
 }
 
@@ -641,3 +614,27 @@ interface ITokensListTableFilteredProps {
   enableEditable: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }
+
+interface ITokensInstancesListTableProps {
+  tokensInstances:TTokensInstances;
+  accountAddress:TAddressNullUndef;
+  // chainId: ChainId;
+  targetAddress: TAddressEmpty,
+  isLoading: boolean,
+  isError: boolean,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
+}
+
+
+type TmigrationState = {
+  totalItemsCount: number;
+  successItemsCount: number;
+  errorItemsCount: number;
+  skippedItemsCount: number;
+
+}
+
+interface ITF_TransferProgressBar {
+  migrationState: TmigrationState;
+}
+

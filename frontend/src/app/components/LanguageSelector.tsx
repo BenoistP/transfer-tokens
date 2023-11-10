@@ -14,15 +14,7 @@ import { GB, FR } from 'country-flag-icons/react/3x2'
 import {clsFlagIcon} from "@uiconsts/twDaisyUiStyles"
 
 // ------------------------------
-/* 
-const FlagIcon = ({flagIconCountryCode = ""}: FlagIconProps) => {
-    return (
-        <span
-            className={`ml-2 fi fis fiCircle inline-block mr-2 fi-${flagIconCountryCode}`}
-        />
-    );
-}
- */
+
 const FlagIcon = ({flagIconCountryCode = ""}: FlagIconProps) => {
   console.debug(`FlagIcon.tsx render flagIconCountryCode=${flagIconCountryCode}`)
   return (
@@ -36,8 +28,6 @@ const FlagIcon = ({flagIconCountryCode = ""}: FlagIconProps) => {
       </span>
   );
 }
-
-
 
 // ---
 
@@ -95,21 +85,19 @@ export const LanguageSelector = () =>
       try {
         if (languages && languages.length > 0) {
             for (let index = 0; index < languages.length; index++) {
-                if (languages[index].key == languageKey) return languages[index].flagCountryCode // flagIconCountryCode;
+                if (languages[index].key == languageKey) return languages[index].flagCountryCode;
             }
             // console.warn(`getFlagIconCountryCode: languageKey not found: ${languageKey}`)
         }
       } catch (error) {
         console.error(`LanguageSelector.tsx error=${error}`);
       }
-      return DEFAULT_LANGUAGE.flagCountryCode // DEFAULT_LANGUAGE.flagIconCountryCode;
+      return DEFAULT_LANGUAGE.flagCountryCode;
     },
     [languages],
   ) // getFlagIconCountryCode
 
   // ---
-
-  //  console.debug(`LanguageSelector.tsx render i18n.language=${i18n.language} getFlagIconCountryCode=${getFlagIconCountryCode(i18n.language)}`)
 
   return (
     <div className="dropdown bg-base-200">
