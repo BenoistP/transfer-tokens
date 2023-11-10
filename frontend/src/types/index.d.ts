@@ -77,7 +77,8 @@ type TPrivateEnv = {
 interface iLanguage {
   key: string;
   name: string;
-  flagIconCountryCode: string; // corresponding flag-icons library code (https://www.npmjs.com/package/flag-icons , https://github.com/lipis/flag-icons)
+  // flagIconCountryCode: string; // corresponding flag-icons library code (https://www.npmjs.com/package/flag-icons , https://github.com/lipis/flag-icons)
+  flagCountryCode: string; // corresponding country-flag-icons library code (https://www.npmjs.com/package/country-flag-icons , https://gitlab.com/catamphetamine/country-flag-icons#readme)
 }
 
 interface FlagIconProps {

@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -20,12 +20,12 @@ dependencies:
   '@wagmi/core':
     specifier: ^1.4.4
     version: 1.4.4(@types/react@18.2.15)(react@18.2.0)(typescript@5.0.2)(viem@1.16.6)
+  country-flag-icons:
+    specifier: ^1.5.7
+    version: 1.5.7
   exiftool-vendored:
     specifier: ^23.3.0
     version: 23.3.0
-  flag-icons:
-    specifier: ^6.11.1
-    version: 6.11.1
   i18next:
     specifier: ^23.6.0
     version: 23.6.0
@@ -2598,6 +2598,10 @@ packages:
       toggle-selection: 1.0.6
     dev: false
 
+  /country-flag-icons@1.5.7:
+    resolution: {integrity: sha512-AdvXhMcmSp7nBSkpGfW4qR/luAdRUutJqya9PuwRbsBzuoknThfultbv7Ib6fWsHXC43Es/4QJ8gzQQdBNm75A==}
+    dev: false
+
   /cross-fetch@3.1.6:
     resolution: {integrity: sha512-riRvo06crlE8HiqOwIpQhxwdOk4fOeR7FVM/wXoxchFEqMNUjvbs3bfo4OTgMEMHzppd4DxFBDbyySj8Cv781g==}
     dependencies:
@@ -3129,10 +3133,6 @@ packages:
       locate-path: 6.0.0
       path-exists: 4.0.0
     dev: true
-
-  /flag-icons@6.11.1:
-    resolution: {integrity: sha512-c2UMJTFZoVQ47/sE1mb+9b5S1pi8SjXsx0MR063O31GV+O2EN4FMwMdEYSQItpien2bl9w1viLUoo2R3r6OK3g==}
-    dev: false
 
   /flat-cache@3.1.1:
     resolution: {integrity: sha512-/qM2b3LUIaIgviBQovTLvijfyOQXPtSRnRK26ksj2J7rzPIecePUIpJsZ4T02Qg+xiAEKIs5K8dsHEd+VaKa/Q==}
