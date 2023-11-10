@@ -219,7 +219,6 @@ const StepsContainer = ( {
   // Sort
 
   const sortByTokenDisplayId = useCallback( () => {
-    // console.log(`StepsContainer.tsx sortByTokenDisplayId sortOrderTokenDisplayId: ${sortOrderTokenDisplayId}`);
     if (sortOrderTokenDisplayId === 0) {
       setsortOrderTokenDisplayId(1)
     } else if (sortOrderTokenDisplayId === 1) {
@@ -227,13 +226,11 @@ const StepsContainer = ( {
     } else {
       setsortOrderTokenDisplayId(0)
     }
-    // console.log(`StepsContainer.tsx sortByTokenDisplayId sortOrderTokenDisplayId: ${sortOrderTokenDisplayId}`);
-  }, [/* tokensInstances, */ sortOrderTokenDisplayId] );
+  }, [sortOrderTokenDisplayId] );
 
   // ---
 
   const sortByTokenName = useCallback( () => {
-    // console.log(`StepsContainer.tsx sortByTokenName sortOrderTokenName: ${sortOrderTokenName}`);
     if (sortOrderTokenName === 0) {
       setsortOrderTokenName(1)
     } else if (sortOrderTokenName === 1) {
@@ -241,13 +238,11 @@ const StepsContainer = ( {
     } else {
       setsortOrderTokenName(0)
     }
-    // console.log(`StepsContainer.tsx sortByTokenName sortOrderTokenName: ${sortOrderTokenName}`);
-  }, [/* tokensInstances, */ sortOrderTokenName] );
+  }, [sortOrderTokenName] );
 
   // ---
 
   const sortByTokenBalance = useCallback( () => {
-    // console.log(`StepsContainer.tsx sortByTokenBalance sortOrderTokenBalance: ${sortOrderTokenBalance}`);
     if (sortOrderTokenBalance === 0) {
       setsortOrderTokenBalance(1)
     } else if (sortOrderTokenBalance === 1) {
@@ -255,8 +250,7 @@ const StepsContainer = ( {
     } else {
       setsortOrderTokenBalance(0)
     }
-    // console.log(`StepsContainer.tsx sortByTokenBalance sortOrderTokenBalance: ${sortOrderTokenBalance}`);
-  }, [/* tokensInstances, */ sortOrderTokenBalance] );
+  }, [sortOrderTokenBalance] );
 
   // ---
 
@@ -266,7 +260,6 @@ const StepsContainer = ( {
 
   const sortTokensInstances = (a:TTokenInstance, b:TTokenInstance) =>
   {
-    // console.debug(`StepsContainer.tsx sortTokensInstances sortOrderParams.displayId=${sortOrderParams.displayId} sortOrderParams.tokenName=${sortOrderParams.tokenName} sortOrderParams.tokenBalance=${sortOrderParams.tokenBalance}`);
     try {
       if (sortOrderParams.displayId === 0) {
         if (sortOrderParams.tokenName === 0) {
@@ -277,23 +270,19 @@ const StepsContainer = ( {
           const bBalance = b.userData?.[connectedAddress as any].balance || 0n
           if (sortOrderParams.tokenBalance === 1) {
             const compAMinusB = aBalance - bBalance
-            // console.debug(`StepsContainer.tsx sortTokensInstances 1 ${aBalance} , ${bBalance} compAMinusB: ${compAMinusB}`);
             return Number(compAMinusB)
           } else {
             const compBMinusA = bBalance - aBalance
-            // console.debug(`StepsContainer.tsx sortTokensInstances 2 ${bBalance} , ${aBalance} compBMinusA: ${compBMinusA}`);
             return Number(compBMinusA)
           }
         }
         else if (sortOrderParams.tokenName === 1) {
-          // return a.name?.localeCompare(b.name??"")
           if (a.name) {
             return a.name?.localeCompare(b.name??"")
           }
           return -1
         }
         else {
-          // return b.name?.localeCompare(a.name??"")
           if (b.name) {
             return b.name?.localeCompare(a.name??"")
           }
@@ -306,9 +295,6 @@ const StepsContainer = ( {
       }
     } catch (error) {
       console.error(`StepsContainer.tsx sortTokensInstances error: ${error} connectedAddress=${connectedAddress}`);
-      // console.debug(`StepsContainer.tsx sortTokensInstances error: ${error} connectedAddress=${connectedAddress}`);
-      // console.dir(a)
-      // console.dir(b)
       return 0
     }
   } // sortTokensInstances
@@ -320,7 +306,6 @@ const StepsContainer = ( {
   const updateCheckAll = useCallback(  (tokensInstances:TTokensInstances) =>
     {
       try {
-        // console.debug(`StepsContainer.tsx x realTokensList: ${realTokensList}`);
         if (tokensInstances && connectedAddress) {
           const isAllChecked = tokensInstances.every( (tokensInstance) => {
               if (tokensInstance.selectable && tokensInstance.transferAmount) {
@@ -348,11 +333,10 @@ const StepsContainer = ( {
       try {
         if (tokensInstances && connectedAddress) {
           const isAllChecked = tokensInstances.every( (tokensInstance) => {
-              // if (tokensInstance.selectable && tokensInstance.transferAmount&&filterTokenInstance(tokensInstance)) {
               if (tokensInstance.selectable && tokensInstance.transferAmount&&filterTokenInstance(tokensInstance)) {
                   return tokensInstance.selected;
               }
-              return true; // not selectable OR no amount : RETURN TRUE
+              return true; // not selectable OR no amount OR not visible : RETURN TRUE
             } // every
           );
           setselectAllVisible(isAllChecked);
@@ -383,7 +367,6 @@ const StepsContainer = ( {
                     tokensInstance.transferAmount > 0n
                   )
               {
-                // tokensInstance.userData[targetAddress as any].selected = newCheckAll;
                 if (filter) {
                   if (filterTokenInstance(tokensInstance)) {
                     tokensInstance.selected = newCheckAll;
@@ -409,7 +392,7 @@ const StepsContainer = ( {
           console.error(`StepsContainer.tsx handleCheckSelectAll error: ${error}`);
         }
       },
-      [tokensInstances, /* connectedAddress, */ connectedAddress, targetAddress, selectAll,
+      [tokensInstances, connectedAddress, targetAddress, selectAll,
       filterTokenInstance,
       updateCheckAll,
       selectAllVisible, updateCheckAllVisible
@@ -538,7 +521,6 @@ const StepsContainer = ( {
             } as TTokenInstance;
           })
           settokensInstances(tokensInstancesUpdated);
-          // updateCheckAll(tokensInstancesUpdated);
         } catch (error) {
           console.error(`StepsContainer.tsx updateTransferAmountLock error: ${error}`);
         }
@@ -615,7 +597,7 @@ const StepsContainer = ( {
           tokenInstanceUserDataArray[connectedAddress as any] = {
             balance: null,
             canTransfer: true, // warn: COULD BE FALSE for non transferable tokens, should be defaulted to false then checked with a multicall
-          } // as TTokenInstanceUserData
+          }
         }
         // debugger;
         const _tokenInstance = {
@@ -636,8 +618,7 @@ const StepsContainer = ( {
           transferAmountLock: false,
           tr_processed: false, tr_error: false, tr_skipped: false,
           userData: tokenInstanceUserDataArray,
-        } // as TTokenInstance
-        // console.dir(_tokenInstance)
+        }
         return _tokenInstance
       }
     },
@@ -645,32 +626,6 @@ const StepsContainer = ( {
   )
 
 // ---
-
-/*
-   const decreaseAndHideProgressBar = useCallback(
-    () => {
-      setProgressBarPercentage(0)
-      setTimeout( () => {
-        console.debug(`StepsContainer useEffect ProgressBar settimeout`)
-        // setShowProgressBar(false), 1_000
-      })
-    },
-    [],
-  )
- */
-
-  // const decreaseAndHideProgressBar = 
-  //   useCallback(() => {
-  //     setProgressBarPercentage(0)
-  //     setTimeout( () => {
-  //       // console.debug(`StepsContainer decreaseAndHideProgressBar ProgressBar`)
-  //       // setShowProgressBar(false), 1_000
-  //     })
-  //   },
-  //   [setProgressBarPercentage]
-  // )
-
-  // // ---
 
   const setStateLoadingTokensInstances = useCallback( (isLoading:boolean) =>
     {
@@ -750,34 +705,20 @@ const StepsContainer = ( {
       //  throw new Error("fetchOnChainData error test")
        for (let i = 0; i < Math.ceil(multicallInput.length / MAXBATCHSIZE); i++) {
          const batch = multicallInput.slice(i * MAXBATCHSIZE, (i + 1) * MAXBATCHSIZE);
-         // console.debug(`StepsContainer.tsx fetchOnChainData batch.length: ${batch.length}`);
-         // console.dir(batch);
          const multicallBatchResult = await multicall({
            contracts: batch,
            // allowFailure: false, // disable error throwing
          }) // multicall
-         // console.debug(`StepsContainer.tsx fetchOnChainData result.length: ${multicallBatchResult.length}`);
-         // console.dir(multicallBatchResult);
-         multicallAllBatchesResult = multicallAllBatchesResult.concat(multicallBatchResult);
-       } // for (let i = 0; i < Math.ceil(multicall.length / MAXBATCHSIZE); i++)
 
-       // console.debug(`StepsContainer.tsx fetchOnChainData setErrorLoadingDataState(false)`);
-      //  setErrorLoadingDataState(false)
+         multicallAllBatchesResult = multicallAllBatchesResult.concat(multicallBatchResult);
+       } // for (let i = 0; ...
+
      } // try
      catch (error) {
        console.error(`StepsContainer.tsx fetchOnChainData error: ${error}`);
-      //  setisLoading(false)
-       // console.debug(`StepsContainer.tsx fetchOnChainData setErrorLoadingDataState(TRUE)`);
-      //  setErrorLoadingDataState(true)
-      // setisLoading(false)
-      // setisError(true)
-      // setisLoadingTokensInstances(false)
       setStateLoadingTokensInstances(false)
-      // setisErrorTokensInstances(true)
       setStateErrorLoadingTokensInstances(true)
      } // catch (error)
-     // console.debug(`StepsContainer.tsx fetchOnChainData result.length: ${multicallAllBatchesResult.length}`);
-     // console.dir(multicallAllBatchesResult);
      return multicallAllBatchesResult;
     }
     ,
@@ -791,8 +732,6 @@ const StepsContainer = ( {
       let multicallRes : any[] = [];
 
       try {
-        // console.debug(`StepsContainer.tsx fetchOnChainDataWrapper multicallInput.length: ${multicallInput.length} multicallInput=`);
-        // console.dir(multicallInput);
         const multicallInputCall = [] as any[] // contains real multicall inputs
         const inputRes = [] as any[] // contains inputs
 
@@ -802,11 +741,11 @@ const StepsContainer = ( {
           if ( typeof(element) != "object" || !element.abi || !element.address || !element.functionName) {
             inputRes.push(element);
           }
-          else { // if ('abi' in element && 'address' in element /* && 'args' in element */ && 'functionName' in element) {
+          else { // if (typeof(element) != "object" || !element.abi ...
             multicallInputCall.push(element);
             inputRes.push(null);
           }
-        } // for (let i = 0; i < multicallInput.length; i++)
+        } // for (let i = 0; ...
         let multicallFetchRes = [] as any[] // contains multicall results
         if (multicallInputCall.length>0) {
           multicallFetchRes = await fetchOnChainData(multicallInputCall);
@@ -870,12 +809,9 @@ const StepsContainer = ( {
               }
               const tokenInstanceUserDataArray:TTokenInstanceUserData[] = tokenInstance.userData;
               if (_address /* && typeof _from == 'string' */) {
-                // debugger
                 tokenInstanceUserDataArray[_address as any] = ({
-                  // selected: false,
                   ...tokenInstanceUserDataArray[_address as any],
                   balance: userBalance,
-                  // transferAmount: userBalance,
                 }) // as TTokenInstanceUserData)
               } // if (_from && typeof _from == 'string')
               return {
@@ -885,9 +821,6 @@ const StepsContainer = ( {
               } // as TTokenInstance;
 
             }); // _tokensInstances.map
-            // const allPromiseResolved = // await
-            //                                      Promise.all(tokensInstancesWithOnchainData);
-            // return allPromiseResolved as Promise<TTokensInstances>;
             return Promise.all(tokensInstancesWithOnchainData) as Promise<TTokensInstances>;
           } // if (onchainData?.length > 0
         } // if (_tokensInstances && _tokensInstances.length)
