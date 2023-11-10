@@ -1,4 +1,5 @@
 // React
+// ---
 // Components
 import { FooterStatus } from "@Components/FooterStatus";
 // Translation
