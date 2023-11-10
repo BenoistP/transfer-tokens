@@ -1,16 +1,20 @@
 // React
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react"
 // Context
-import { useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
+import { useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext"
 // Translation
-import { useTranslation } from "react-i18next";
-import {SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE} from "@uiconsts/languages";
+import { useTranslation } from "react-i18next"
+import {SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE} from "@uiconsts/languages"
 // Cookies
-import { useCookies } from "react-cookie";
-import { COOKIE_LANGUAGE } from "@uiconsts/misc";
+import { useCookies } from "react-cookie"
+import { COOKIE_LANGUAGE } from "@uiconsts/misc"
+// country-flag-icons
+import { GB, FR } from 'country-flag-icons/react/3x2'
+// Styles
+import {clsFlagIcon} from "@uiconsts/twDaisyUiStyles"
 
 // ------------------------------
-
+/* 
 const FlagIcon = ({flagIconCountryCode = ""}: FlagIconProps) => {
     return (
         <span
@@ -18,6 +22,22 @@ const FlagIcon = ({flagIconCountryCode = ""}: FlagIconProps) => {
         />
     );
 }
+ */
+const FlagIcon = ({flagIconCountryCode = ""}: FlagIconProps) => {
+  console.debug(`FlagIcon.tsx render flagIconCountryCode=${flagIconCountryCode}`)
+  return (
+      <span>
+          { flagIconCountryCode=="GB" &&
+              <GB title="United Kingdom" className={clsFlagIcon}/>
+          }
+          { flagIconCountryCode=="FR" &&
+              <FR title="France" className={clsFlagIcon}/>
+          }
+      </span>
+  );
+}
+
+
 
 // ---
 
@@ -75,14 +95,14 @@ export const LanguageSelector = () =>
       try {
         if (languages && languages.length > 0) {
             for (let index = 0; index < languages.length; index++) {
-                if (languages[index].key == languageKey) return languages[index].flagIconCountryCode;
+                if (languages[index].key == languageKey) return languages[index].flagCountryCode // flagIconCountryCode;
             }
             // console.warn(`getFlagIconCountryCode: languageKey not found: ${languageKey}`)
         }
       } catch (error) {
         console.error(`LanguageSelector.tsx error=${error}`);
       }
-      return DEFAULT_LANGUAGE.flagIconCountryCode;
+      return DEFAULT_LANGUAGE.flagCountryCode // DEFAULT_LANGUAGE.flagIconCountryCode;
     },
     [languages],
   ) // getFlagIconCountryCode
@@ -104,9 +124,9 @@ export const LanguageSelector = () =>
                     onClick={() => handleLanguageChange(language)}
                 >
                     <div className="">
-                        <FlagIcon flagIconCountryCode={language.flagIconCountryCode} />
+                        <FlagIcon flagIconCountryCode={language.flagCountryCode} />
                     </div>
-                    <div className="bg-base-300 text-accent-content opacity-100">
+                    <div className=" text-accent-content opacity-100">
                         {language.name}
                     </div>
                 </button>
