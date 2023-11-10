@@ -33,12 +33,9 @@ use tokens lists in context to display tokens list in client
 
 🚧 Enhancements
 - ☑️ Load tokens data in parallel
-- Move tokens lists to app context ?
 
 🚧 Transitions
 
-🚧 Spinners
-https://play.tailwindcss.com/OPAsySKNCd
 
 🚧 Modals
 
@@ -49,9 +46,9 @@ https://play.tailwindcss.com/OPAsySKNCd
 🚧 More languages
 
 All Steps : 🚧 
-- 🚧 Handle chain change (back to step 0, remove checked token lists)
+- ☑️ Handle chain change (back to step 0, remove checked token lists)
 - ☑️ Set default language cookie (invisible flag)
-- 🚧 Add fetch loading indicator in bottom bar
+- ☑️ Add fetch loading indicator in bottom bar
 - ☑️ use filtered tokens table in all screens
 
 filtered tokens table: 🚧 
