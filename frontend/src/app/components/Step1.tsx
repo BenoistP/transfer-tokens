@@ -2,7 +2,6 @@
 import { useEffect } from "react";
 // Components
 import AddressInput from "@Components/AddressInput";
-// import TokenInstanceListTable from "@Components/TokenInstanceListTable";
 import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
 // Utils
 import { isValidAddress } from "@jsutils/blockchainUtils";
@@ -15,8 +14,6 @@ const Step1 = ( {
   tokensInstances,
   targetAddress,
   settargetAddress,
-  // setShowProgressBar,
-  // chainId,
   isLoadingTokensInstances, isErrorTokensInstances,
   tokensInstancesListTablePropsHandlers }: IStep1Props ) =>
 {
@@ -48,7 +45,6 @@ const Step1 = ( {
               <TokenInstanceListTableFiltered
                 tokensInstances={tokensInstances}
                 accountAddress={accountAddress}
-                // chainId={chainId}
                 enableCheckboxes={true}
                 targetAddress={targetAddress}
                 isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}

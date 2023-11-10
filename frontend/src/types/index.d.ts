@@ -15,37 +15,11 @@ enum EChainTokensListLoadState {
 
 // Types to remove ->
 
-interface ITokensInstancesListTableProps {
-  tokensInstances:TTokensInstances;
-  accountAddress:TAddressNullUndef;
-  // chainId: ChainId;
-  targetAddress: TAddressEmpty,
-  isLoading: boolean,
-  isError: boolean,
-  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
-}
 
-
-type TmigrationState = {
-  totalItemsCount: number;
-  successItemsCount: number;
-  errorItemsCount: number;
-  skippedItemsCount: number;
-
-}
-
-interface ITF_TransferProgressBar {
-  // showProgressBar?: boolean;
-  // progressPercentage: number;
-  migrationState: TmigrationState;
-}
-
-// interface ITF_ProgressBarColor {
-//   progressPercentage: number;
-// }
 
 // type TsetShowProgressBar = TreactSetState_boolean;
 // type TsetProgressBarPercentage = React.Dispatch<React.SetStateAction<number>>
+
 
 // <- Types to remove
 
@@ -77,7 +51,7 @@ type TPrivateEnv = {
 interface iLanguage {
   key: string;
   name: string;
-  flagIconCountryCode: string; // corresponding flag-icons library code (https://www.npmjs.com/package/flag-icons , https://github.com/lipis/flag-icons)
+  flagCountryCode: string; // corresponding country-flag-icons library code (https://www.npmjs.com/package/country-flag-icons , https://gitlab.com/catamphetamine/country-flag-icons#readme)
 }
 
 interface FlagIconProps {
@@ -440,7 +414,6 @@ interface IStep1Props {
   setNextDisabled: TsetNextDisabled,
   accountAddress: TAddressNullUndef,
   tokensInstances: TTokensInstances,
-  // chainId: TChainId,
   targetAddress: TAddressEmpty,
   settargetAddress:TsettargetAddress
   chainId: ChainId;
@@ -454,7 +427,6 @@ interface IStep2Props {
   tokensInstances: TTokensInstances,
   setShowProgressBar: TsetShowProgressBar
   accountAddress: TAddressNullUndef,
-  // chainId: ChainId;
   targetAddress: TAddressEmpty,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
@@ -464,7 +436,6 @@ interface IStep2Props {
 type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void;
 
 interface IStep3Props {
-  // chainId: ChainId;
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
   setShowProgressBar: TsetShowProgressBar
@@ -480,7 +451,6 @@ interface IChangeTokensListCheckboxStatus {
 
 interface ITokensListsSelectProps {
   chainId: TChainId
-  // setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
   isLoading: boolean,
@@ -495,7 +465,6 @@ interface ISelectableTokensListsProps
 
 interface ISelectableTokensListProps
 {
-//  chainId: TChainId,
   selectableTokensList: TSelectableTokensList,
   changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
 }
@@ -521,7 +490,6 @@ type TsortTokensInstances = any;
 
 interface ITokenListProps {
   tokensInstances: TTokensInstances,
-  // chainId: ChainId;
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   sortTokensInstances: TsortTokensInstances,
@@ -529,7 +497,6 @@ interface ITokenListProps {
 
 interface ITokenListFilteredProps {
   tokensInstances: TTokensInstances,
-  // chainId: ChainId;
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   enableEditable: boolean,
@@ -607,7 +574,6 @@ interface ITokensInstancesListTableStatesHandlers {
 interface ITokenInstancesMigrationListTableProps {
   tokensInstances:TTokensInstances;
   accountAddress:TAddressNullUndef;
-  // chainId: ChainId;
   targetAddress: TAddressEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }
@@ -632,7 +598,6 @@ interface ItokenInstanceFilterParamsUpdaters {
 interface ITokensListTableFilteredProps {
   tokensInstances:TTokensInstances;
   accountAddress:TAddressNullUndef;
-  // chainId: ChainId;
   enableCheckboxes: boolean;
   targetAddress: TAddressEmpty,
   isLoadingTokensInstances: boolean,
@@ -640,3 +605,26 @@ interface ITokensListTableFilteredProps {
   enableEditable: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }
+
+interface ITokensInstancesListTableProps {
+  tokensInstances:TTokensInstances;
+  accountAddress:TAddressNullUndef;
+  targetAddress: TAddressEmpty,
+  isLoading: boolean,
+  isError: boolean,
+  tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
+}
+
+
+type TmigrationState = {
+  totalItemsCount: number;
+  successItemsCount: number;
+  errorItemsCount: number;
+  skippedItemsCount: number;
+
+}
+
+interface ITF_TransferProgressBar {
+  migrationState: TmigrationState;
+}
+
