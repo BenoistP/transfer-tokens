@@ -346,9 +346,9 @@ const StepsContainer = ( {
   const updateCheckAllVisible = useCallback(  (tokensInstances:TTokensInstances) =>
     {
       try {
-        // console.debug(`StepsContainer.tsx x realTokensList: ${realTokensList}`);
         if (tokensInstances && connectedAddress) {
           const isAllChecked = tokensInstances.every( (tokensInstance) => {
+              // if (tokensInstance.selectable && tokensInstance.transferAmount&&filterTokenInstance(tokensInstance)) {
               if (tokensInstance.selectable && tokensInstance.transferAmount&&filterTokenInstance(tokensInstance)) {
                   return tokensInstance.selected;
               }
@@ -373,17 +373,9 @@ const StepsContainer = ( {
     (filter:boolean=false) =>
       {
         try {
-          // console.debug(`handleCheckSelectAll selectAll: ${selectAll}`);
           if (tokensInstances) {
             const newCheckAll = (filter?!selectAll:!selectAllVisible);
-            // filterTokenInstance
-            
             const tokensInstancesCheckAll = tokensInstances.map((tokensInstance) => {
-            
-              // if (tokensInstance.address.toUpperCase() == "0X8D1090DF790FFAFDACCDA03015C05DF3B4CC9C21") {
-                // console.debug(`handleCheckSelectAll tokensInstance=`);
-                // console.dir(tokensInstance)
-              // } // debug
               if (  tokensInstance.selectable && targetAddress && tokensInstance.userData &&
                     tokensInstance.userData[targetAddress as any].canTransfer &&
                     tokensInstance.userData[connectedAddress as any].canTransfer &&
@@ -412,7 +404,6 @@ const StepsContainer = ( {
               setselectAll(newCheckAll);
               updateCheckAllVisible(tokensInstancesCheckAll);
             }
-            // console.debug(`handleCheckSelectAll newCheckAll: ${newCheckAll}`);
           } // if (tokensInstances)
         } catch (error) {
           console.error(`StepsContainer.tsx handleCheckSelectAll error: ${error}`);
@@ -430,7 +421,6 @@ const StepsContainer = ( {
   const handleInvertAllChecks = useCallback(
     (filter:boolean=false) =>
       {
-        // console.debug(`handleInvertAllChecks invertAll: ${invertAll}`);
         try {
             if (tokensInstances) {
               const tokensInstancesInvertCheck = tokensInstances.map((tokensInstance) => {
@@ -454,21 +444,13 @@ const StepsContainer = ( {
                 } as TTokenInstance;
               });
               settokensInstances(tokensInstancesInvertCheck);
-              // console.dir(tokensInstancesInvertCheck);
-              // setinvertAll(!invertAll); // just for style
               if (filter) {
                 setinvertAllVisible(!invertAllVisible);
-                // updateCheckAll(tokensInstancesInvertCheck);
-                // updateCheckAllVisible(tokensInstancesInvertCheck);
               } else {
                 setinvertAll(!invertAll);
-                // updateCheckAllVisible(tokensInstancesInvertCheck);
-                // updateCheckAll(tokensInstancesInvertCheck);
               }
-              // updateCheckAll(tokensInstances);
               updateCheckAll(tokensInstancesInvertCheck);
               updateCheckAllVisible(tokensInstancesInvertCheck);
-          // console.debug(`handleInvertAllChecks invertAll: ${!invertAll}`);
           }
         } catch (error) {
           console.error(`StepsContainer.tsx handleInvertAllChecks error: ${error}`);
@@ -487,7 +469,6 @@ const StepsContainer = ( {
     (id: string, value: TChecked | undefined) =>
       {
         try {
-          // console.info(`updateCheckboxStatus id=${id} `);
           const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
             if (tokenInstance.selectID === id) {
               if (connectedAddress && tokenInstance.userData && tokenInstance.userData[connectedAddress as any]) {
@@ -610,14 +591,9 @@ const StepsContainer = ( {
   const getSelectedTokenLists = useCallback( (selectableTokensLists:TSelectableTokensLists):TSelectableTokensLists =>
     {
       try {
-        // console.debug(`StepsContainer.tsx getSelectedTokenLists selectableTokensLists=${selectableTokensLists}`)
-        // let selectedTokenList:TSelectableTokensList = null
         const selectedTokensLists = selectableTokensLists?.filter( (selectableTokensList:TSelectableTokensList) => {
-          // console.debug(`StepsContainer.tsx getSelectedTokenLists selectableTokensList=${selectableTokensList}`)
           return selectableTokensList.selected && selectableTokensList.chainId == chainId
         })
-        // console.debug(`StepsContainer.tsx getSelectedTokenLists selectedTokensLists?.length = ${selectedTokensLists?.length} `)
-        // console.dir(selectedTokensLists)
         return selectedTokensLists;
       } catch (error) {
         console.error(`StepsContainer.tsx getSelectedTokenLists error: ${error}`);
@@ -637,9 +613,7 @@ const StepsContainer = ( {
         const tokenInstanceUserDataArray:TTokenInstanceUserData[] = new Array<TTokenInstanceUserData>()
         if (connectedAddress && typeof connectedAddress == 'string') {
           tokenInstanceUserDataArray[connectedAddress as any] = {
-            // selected: false,
             balance: null,
-            // transferAmount: 0n,
             canTransfer: true, // warn: COULD BE FALSE for non transferable tokens, should be defaulted to false then checked with a multicall
           } // as TTokenInstanceUserData
         }
@@ -718,8 +692,7 @@ const StepsContainer = ( {
   {
    let MAXBATCHSIZE = defaultBatchSize;
    try {
-     const val = // getPublicEnv("PUBLIC_MULTICALL_MAX_BATCH_SIZE")
-      import.meta.env.PUBLIC_MULTICALL_MAX_BATCH_SIZE
+     const val = import.meta.env.PUBLIC_MULTICALL_MAX_BATCH_SIZE
      if (val) {
        MAXBATCHSIZE = Number.isSafeInteger(Number.parseFloat(val))
          ? Number.parseInt(val, 10)
@@ -741,14 +714,13 @@ const StepsContainer = ( {
 
   // ---
 
-  const loadTokensContracts = useCallback( async(tokensInstances:TTokensInstances/* TTokenChainDataArray */):Promise<TTokensInstances> =>
+  const loadTokensContracts = useCallback( async(tokensInstances:TTokensInstances):Promise<TTokensInstances> =>
     {
       try {
         console.debug(`StepsContainer.tsx loadTokensContracts`)
         const contractCoinBridgeTokenABI = JSON.parse(CoinBridgeToken.ABI)
 
-        tokensInstances?.forEach( (tokenInstance:TTokenInstance/* TTokenChainData */) => {
-          // console.debug(`${tokenInstance}`)
+        tokensInstances?.forEach( (tokenInstance:TTokenInstance) => {
           const abi = tokenInstance.type == "COINBRIDGE" as TTokenType ? contractCoinBridgeTokenABI : erc20ABI;
           if (tokenInstance?.address) {
             const contract = getContract({
@@ -765,7 +737,7 @@ const StepsContainer = ( {
         console.error(`loadTokensContracts error: ${error}`);
       } // catch (error)
     },
-    [/* tokens *//* , chainId */]
+    []
   ); // loadTokensContracts
 
   // ---
