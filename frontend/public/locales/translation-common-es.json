@@ -1,8 +1,8 @@
 {
   "moveTokens": {
     "warnings": {
-      "connectawallet": "Por favor conecta o desbloquea tu billetera",
-      "wrongchain": "Cambie a una cadena compatible: Ethereum o Gnosis"
+      "connectawallet": "Por favor conecta o desbloquea tu cartera",
+      "wrongchain": "Cambie a una red compatible: Ethereum o Gnosis"
     },
     "common": {
       "notAvailable": "Indisponible"
@@ -54,10 +54,11 @@
           "titles": {
             "tokenId": "Identificación.",
             "tokenName": "Nombre",
-            "tokenBalance": "Balance",
+            "sourceTokenBalance": "Balance",
             "selected": "",
             "tokenAmount": "Cantidad",
-            "tokenInfo": "Información."
+            "tokenInfo": "Información.",
+            "targetTokenBalance": "Balance"
           }
         }
       },

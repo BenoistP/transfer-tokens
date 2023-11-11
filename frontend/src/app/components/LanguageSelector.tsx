@@ -9,7 +9,7 @@ import {SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE} from "@uiconsts/languages"
 import { useCookies } from "react-cookie"
 import { COOKIE_LANGUAGE } from "@uiconsts/misc"
 // country-flag-icons
-import { GB, FR } from 'country-flag-icons/react/3x2'
+import { GB, FR, ES } from 'country-flag-icons/react/3x2'
 // Styles
 import {clsFlagIcon} from "@uiconsts/twDaisyUiStyles"
 
@@ -23,6 +23,9 @@ const FlagIcon = ({flagIconCountryCode = ""}: iFlagIconProps) => {
           }
           { flagIconCountryCode=="FR" &&
               <FR title="France" className={clsFlagIcon}/>
+          }
+          { flagIconCountryCode=="ES" &&
+              <ES title="España" className={clsFlagIcon}/>
           }
       </span>
   );
