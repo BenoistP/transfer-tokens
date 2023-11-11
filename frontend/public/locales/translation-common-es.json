@@ -13,7 +13,7 @@
     },
     "stepAny": {
       "tokensTable": {
-        "loadingTokens": "Cargando fichas",
+        "loadingTokens": "Cargando tókenes",
         "errorLoadingTokens": "Error al cargar tokens",
         "noTokens": "No se encontró ningún token",
         "search": {
@@ -34,7 +34,7 @@
         },
         "select": {
           "any": {
-            "hint": "Seleccione TODAS las fichas",
+            "hint": "Seleccione TODOS lOs tókenes",
             "selectAll": "Todo",
             "invertSelection": "Invertir"
           },
@@ -101,8 +101,8 @@
       "destinationOk": "La dirección es válida."
     },
     "stepTwo": {
-      "title": "Seleccionar fichas",
-      "titleStep": "Fichas"
+      "title": "Seleccionar tókenes",
+      "titleStep": "Tókenes"
     },
     "stepThree": {
       "title": "Migración",
@@ -124,7 +124,7 @@
     "Footer": {
       "info": {
         "title": "©",
-        "text": "Pronto Pronto Laboratorios de Investigación"
+        "text": "Pronto Pronto Research Laboratories"
       },
       "center": ""
     }
