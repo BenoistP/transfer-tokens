@@ -2,9 +2,7 @@
 import { ReactNode, useCallback, useState } from 'react'
 // Components
 import { Navbar } from '@Components/Navbar'
-import { Footer } from '@Components/Footer'
 import { MoveTokensAppProvider } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
-import { ContentBottomPadding } from '@Components/ContentBottomPadding'
 // Context
 import { ThemeProvider, useTheme } from "next-themes";
 import { GlobalAppProvider, useGlobalAppContext } from "@Providers/GlobalAppProvider/GlobalAppContext";
@@ -58,20 +56,8 @@ const testnetChains = [
     testnetChains.forEach( () => {
       testnetChainsProviders.push(publicProvider());
     });
-    // const mainnetChainsProviders:any = [
-    //   infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA||"" }), // Ethereum
-    //   alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY||"" }), // Gnosis
-    //   publicProvider(),
-    //  ];
     const mainnetChainsProviders:any = [
-      // infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA||"" }), // Ethereum
-      // alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY||"" }), // Gnosis
-      // publicProvider(),
      ];
-
-    //  infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA||"" }), // Ethereum
-    //  alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY||"" }), // Gnosis
-    //  publicProvider(),
 
     mainnetChains?.forEach( (/* chain */) => {
       if (import.meta.env.APIKEY_ALCHEMY||"") {
@@ -134,16 +120,11 @@ const testnetChains = [
 
   return (
       <MoveTokensAppProvider>
-
+        <ThemeProvider enableSystem={false} themes={THEMES_NAMES}>
           <div className="flex flex-col w-full h-screen pt-0 bg-base-100">
-
             { config && chains ?
                 <WagmiConfig config={config}>
-
                   <GlobalAppProvider>
-
-                    <ThemeProvider enableSystem={false} themes={THEMES_NAMES}>
-
                       <RainbowOutletWrapper 
                         children={
                           <>
@@ -153,22 +134,13 @@ const testnetChains = [
                         }
                         chains={chains}
                       />
-
-                      {/* {children} */}
-
-                    </ThemeProvider>
-
                   </GlobalAppProvider>
-
                 </WagmiConfig>
               :
                 null
             }
-
-            <ContentBottomPadding/>
-            <Footer/>
-
           </div>
+          </ThemeProvider>
       </MoveTokensAppProvider>
   )
 } // App

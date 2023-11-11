@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import ProgressContainer from "@Components/ProgressContainer";
 import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
+import { Footer } from '@Components/Footer'
+import { ContentBottomPadding } from '@Components/ContentBottomPadding'
 // Utils
 import { isChainSupported } from "@jsutils/blockchainUtils";
 import { getTokenLists } from '@jsutils/tokensLists';
@@ -27,12 +29,12 @@ export const MainContent = ( ) => {
   const [isErrorTokensLists, setisErrorTokensLists] = useState(false)
 
   const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
+  const [showActivity, setshowActivity] = useState<boolean>(false)
 
   const initialMigrationState = useMemo( () => {
-    return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
-  }, [])
+      return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
+    }, [])
   const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
-  // const [migrationState, setmigrationState] = useState<TmigrationState>({totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0})
 
   // ---
 
@@ -51,30 +53,6 @@ export const MainContent = ( ) => {
   )
   // ---
 
-  // const setStateMigration = useCallback( (_migrationState:TmigrationState) =>
-  //   {
-  //   console.debug(`MainContent.tsx setStateMigration _migrationState=`)
-  //   console.dir(_migrationState)
-  //     setmigrationState(_migrationState)
-  //   }, []
-  // )
-
-/*
-  const setStateMigration = useCallback( (_migrationState1:TmigrationState, _migrationState2:TmigrationState) =>
-    {
-      console.debug(`MainContent.tsx setStateMigration _migrationState1=`)
-console.dir(_migrationState1)
-      console.debug(`MainContent.tsx setStateMigration _migrationState2=`)
-console.dir(_migrationState2)
-
-
-      setmigrationState( {..._migrationState1,
-        ..._migrationState2})
-    }, []
-  )
-*/
-  // ---
-
   useEffect(() =>
     {
       const initTokensLists = async () => {
@@ -88,17 +66,21 @@ console.dir(_migrationState2)
       try {
         setStateLoadingTokensLists(true)
         setStateIsErrorTokensLists(false)
+        setshowActivity(true)
         initTokensLists().
           then( () => {
             setStateLoadingTokensLists(false)
+            setshowActivity(false)
           }).
           catch( (error) => {
             console.error(`MainContent.tsx useEffect initTokensLists error: ${error}`);
             setStateIsErrorTokensLists(true)
             setStateLoadingTokensLists(false)
+            setshowActivity(false)
           })
       } catch (error) {
         setStateLoadingTokensLists(false)
+        setshowActivity(false)
         setisErrorTokensLists(true)
         console.error(`MainContent.tsx useEffect initTokensLists error: ${error}`);
       }
@@ -142,8 +124,6 @@ console.dir(_migrationState2)
                           previousDisabled={previousDisabled} nextDisabled={nextDisabled}
                           showProgressBar={showProgressBar}
                           migrationState={migrationState}
-
-                          // progressBarPercentage={progressBarPercentage}
                         />
                     </div>
                     <div className="w-full p-0 m-0 mt-1 base-100 text-primary-content" >
@@ -153,12 +133,12 @@ console.dir(_migrationState2)
                         setpreviousDisabled={setpreviousDisabled} setNextDisabled={setNextDisabled}
                         isLoadingTokensLists={isLoadingTokensLists} isErrorTokensLists={isErrorTokensLists}
                         setShowProgressBar={setshowProgressBar}
-                        // migrationState={migrationState}
                         setmigrationState={setmigrationState}
-                        // setmigrationState={setStateMigration}
-                        
-                        // setProgressBarPercentage={setprogressBarPercentage}
+                        setshowActivity={setshowActivity}
                       />
+                      <ContentBottomPadding/>
+                      <Footer showActivity={showActivity}/>
+
                     </div>
                   </div>
           }

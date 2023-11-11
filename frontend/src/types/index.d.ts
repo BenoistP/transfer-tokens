@@ -12,41 +12,11 @@ enum EChainTokensListLoadState {
   // watchTransfers = , // TODO
 }
 
-
-// Types to remove ->
-
-
-
-// type TsetShowProgressBar = TreactSetState_boolean;
-// type TsetProgressBarPercentage = React.Dispatch<React.SetStateAction<number>>
-
-
-// <- Types to remove
-
-
-
 // Types & Interfaces
 
 type TAvatarComponent = any;
 type TAvatarImgUri = string|undefined;
 type TAvatarSvg = any;
-
-type TPublicEnv = {
-  publicKeys: {
-    PUBLIC_ENABLE_TESTNETS?: string,
-    PUBLIC_APPNAME?: string,
-    PUBLIC_REALT_API_BASE_URL?: string,
-    PUBLIC_REALT_API_LIST_ALL_TOKENS?: string,
-    PUBLIC_MULTICALL_MAX_BATCH_SIZE?: string,
-  }
-};
-type TPrivateEnv = {
-  privateKeys: {
-    ALCHEMY_APIKEY?: string,
-    INFURA_APIKEY?: string,
-    WALLET_CONNECT_APIKEY?: string
-  }
-};
 
 interface iLanguage {
   key: string;
@@ -54,7 +24,7 @@ interface iLanguage {
   flagCountryCode: string; // corresponding country-flag-icons library code (https://www.npmjs.com/package/country-flag-icons , https://gitlab.com/catamphetamine/country-flag-icons#readme)
 }
 
-interface FlagIconProps {
+interface iFlagIconProps {
   flagIconCountryCode: string;
 }
 
@@ -199,11 +169,8 @@ type TTokensList = {
   summaryURI?: TTokenListUri,
   status: TTokensListStatus,
   error?: TTokensListError,
-  
-  // metaUri: TTokenListUri,
   logoURI?: TTokenList_TokensListImageUri,
   allTokensChainData?: TTokenChainDataArray, // for temporary data: hold all tokens for all chains before dipatching them in chainsTokenLists
-  // tokens: TTokensList_TokenData
   lists?: TTokensMetaLists,
   listsCount?: number,
   chainsTokenLists?: TChainsTokensListArrayNullUndef,
@@ -386,6 +353,7 @@ interface IStepsContainerProps {
   isLoadingTokensLists : boolean,
   setShowProgressBar: TsetShowProgressBar
   setmigrationState: TSetMigrationState
+  setshowActivity: TreactSetState_boolean
 }
 
 interface IStepErrorProps {
@@ -628,3 +596,9 @@ interface ITF_TransferProgressBar {
   migrationState: TmigrationState;
 }
 
+interface iFooter {
+  showActivity: boolean;
+}
+interface iFooterStatus {
+  showActivity: boolean;
+}
