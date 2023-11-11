@@ -21,7 +21,7 @@
           "balance": "Balance",
           "balanceGt0": {
             "label": "> 0",
-            "hint": "Display only tokens with balance"
+            "hint": "filter out tokens without balance for source"
           },
           "clearAll": {
             "label": "Clear",
@@ -54,10 +54,11 @@
           "titles" : {
             "tokenId": "Id.",
             "tokenName": "Name",
-            "tokenBalance": "Balance",
+            "sourceTokenBalance": "Balance",
             "selected": "",
             "tokenAmount": "Amount",
-            "tokenInfo": "Info."
+            "tokenInfo": "Info.",
+            "targetTokenBalance": "Balance"
           }
         }
       },

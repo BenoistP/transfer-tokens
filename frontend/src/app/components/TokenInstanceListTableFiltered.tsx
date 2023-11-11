@@ -6,9 +6,11 @@ import SortIcon from "@Components/SortIcon";
 // Translation
 import { useTranslation } from "react-i18next";
 // Icons
-import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon, InformationCircleIcon, BackspaceIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
+import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon,
+  InformationCircleIcon, BackspaceIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 // Styles
 import { clsLoadingTokenLists, clsIconStatusSize, clsIconMedium } from "@uiconsts/twDaisyUiStyles";
+import { shortenAddress } from "@App/js/utils/blockchainUtils";
 
 const TokenInstanceListTableFiltered = (
     { tokensInstances,
@@ -353,7 +355,7 @@ const TokenInstanceListTableFiltered = (
                     <th className="p-2 font-medium flex-none">
                       <div className="flex justify-end grow-0">
                         <SortIcon sortOrder={tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenBalance} changeSortFnCb={tokensInstancesListTablePropsHandlers.sortHandlers.sortByTokenBalance} />
-                        {t("moveTokens.stepAny.tokensTable.results.titles.tokenBalance")}
+                        {t("moveTokens.stepAny.tokensTable.results.titles.sourceTokenBalance")}
                       </div>
                     </th>
                     { enableEditable
@@ -367,10 +369,16 @@ const TokenInstanceListTableFiltered = (
                       </th>
                     </>
                     }
-                    
                     <th className="p-2 font-medium flex-none">
                       {t("moveTokens.stepAny.tokensTable.results.titles.tokenInfo")}
                     </th>
+                    { targetAddress &&
+                    <th className="p-2 font-light flex-none whitespace-nowrap text-ellipsis">
+                      <div className={"tooltip tooltip-bottom pl-1 text-neutral-content tooltip-info"} data-tip={targetAddress} >
+                        {t("moveTokens.stepAny.tokensTable.results.titles.targetTokenBalance")+ " " +shortenAddress(targetAddress)}
+                      </div>
+                    </th>
+                    }
                   </tr>
                 </thead>
 
