@@ -2,22 +2,17 @@
 import { useCallback, useEffect, useState } from "react"
 // Components
 import SelectableTokensLists from "@Components/SelectableTokensLists"
-// Utils
-import { getChainTokensList } from "@jsutils/tokensListsUtils"
-// Icons
-import { ArrowPathRoundedSquareIcon } from '@heroicons/react/24/solid'
 // Translation
 import { useTranslation } from "react-i18next"
 // Icons
-import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
+import { ArrowPathRoundedSquareIcon, ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
 // Styles
 import { clsLoadingTokenLists, clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
 
 // ------------------------------
 
 const TokensListsSelect = ( { 
-  tokensLists,
-  chainId,
+  // chainId,
   selectableTokensLists,
   setselectableTokensLists,
   isLoading, isError    }: ITokensListsSelectProps ) =>
@@ -36,7 +31,7 @@ const TokensListsSelect = ( {
           const isAllChecked = selectableTokensLists.every(
             (selectableTokensList) => {
               return (
-                selectableTokensList.selected || !selectableTokensList.selectable // === true
+                selectableTokensList.selected || !selectableTokensList.selectable
               )
             }
           ) // every
@@ -49,10 +44,6 @@ const TokensListsSelect = ( {
     },
     [selectableTokensLists]
   );
-
-  // ---
-
-  // const [checkAll, setCheckAll] = useState<boolean>(isAllChecked);
 
   // ---
 
@@ -89,34 +80,6 @@ const TokensListsSelect = ( {
       ]
   );
 */
-
-  // ---
-
-  useEffect( () =>
-    {
-      try {
-        const filteredSelectableTokensLists: TSelectableTokensLists = []
-        tokensLists?.forEach( (tokensList: TTokensList) => {
-          const chainTokensList = getChainTokensList(tokensList, chainId)
-          const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
-          const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
-          const selectableTokensList = {
-            tokensList,
-            chainId,
-            selected: false,
-            selectable,
-            currentChainTokensCount
-          } // as TSelectableTokensList
-
-          filteredSelectableTokensLists.push(selectableTokensList)
-        })
-        setselectableTokensLists(filteredSelectableTokensLists)
-      } catch (error) {
-        console.error(`TokensListsSelect.tsx: useEffect[tokensLists, chainId, setselectableTokensLists]: error=${error}`);
-      }
-    },
-    [tokensLists, chainId, setselectableTokensLists]
-  ) // useEffect
 
   // ---
 
@@ -159,7 +122,6 @@ const TokensListsSelect = ( {
   const handleInvertAllChecks = useCallback( () =>
     {
       try {
-        // console.debug(`TokensListsSelect.tsx: handleInvertAllChecks`);
         if (selectableTokensLists && selectableTokensLists.length > 0) {
           const new_selectableTokensLists = [...selectableTokensLists];
           selectableTokensLists.map((selectableTokensList) => {
@@ -199,6 +161,18 @@ const TokensListsSelect = ( {
 
   // ---
 
+  useEffect( () =>
+    {
+      try {
+        updateCheckAll(selectableTokensLists);
+      }
+      catch (error) {
+        console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
+      }
+    }
+    , [selectableTokensLists, updateCheckAll]
+  )
+
   const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
    + ( ((selectableTokensLists?.length||0)=== 0) ? "fill-base-content opacity-10 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
 
@@ -206,15 +180,14 @@ const TokensListsSelect = ( {
 
   return (
     <>
-      <div className="w-full bg-base-300 items-center justify-center gap-2 overflow-x-hidden border border-neutral shadow-xl rounded-box bg-cover bg-top p-4 ">
+      <div className="w-full bg-base-200 overflow-x-hidden shadow-xl rounded-box bg-cover bg-top p-4 ">
 
         <div className="overflow-x-auto scrollbar scrollbar-thumb-neutral scrollbar-track-base-100">
 
-        <div className="min-w-full rounded-lg border border-neutral">
+        <div className="min-w-full rounded-lg">
 
-        <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
-
-            <thead className="bg-base-200 text-accent-content text-sm sm:text-md md:text-base font-semibold">
+          <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
+            <thead className="bg-base-300 text-accent-content text-sm sm:text-md md:text-base font-semibold">
               <tr>
                 <th className="p-2 flex w-10">
                   <label className="m-0 mr-2">
@@ -235,9 +208,7 @@ const TokensListsSelect = ( {
             </thead>
             <tbody>
             </tbody>
-
           </table>
-
         </div>
 
           <table className="table table-zebra">
@@ -269,8 +240,11 @@ const TokensListsSelect = ( {
                 :
                   isLoading ?
                     <div className="flex justify-center pb-3 text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
-                        <div className="pt-0 pr-3 ">
-                        {t('moveTokens.stepZero.tokensListsTable.loadingTokensLists')}
+                      <div className="pt-0">
+                        <InformationCircleIcon className={clsIconStatusSize} />
+                      </div>
+                      <div className="pt-0 pr-3 ">
+                          {t('moveTokens.stepZero.tokensListsTable.loadingTokensLists')}
                         </div>
                         <div className={clsLoadingTokenLists}/>
                     </div>

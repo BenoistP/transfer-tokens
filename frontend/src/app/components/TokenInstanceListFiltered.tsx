@@ -12,6 +12,7 @@ const TokenInstanceListFiltered = ( {
   accountAddress,
   targetAddress,
   tokensInstancesListTablePropsHandlers,
+  enableEditable,
  }: ITokenListFilteredProps ) => {
 
   // console.debug(`TokenInstanceListFiltered.tsx render accountAddress: ${accountAddress}`);
@@ -47,8 +48,7 @@ const TokenInstanceListFiltered = ( {
     <>
       {
         tokensInstances?.filter(filterTokenInstanceCB).sort(sortTokensInstancesCB).map( (tokenInstance:TTokenInstance) => {
-          const key = accountAddress+'-'+tokenInstance.address;
-          // console.debug(`TokenInstanceListFiltered.tsx render realTokenInstance key:${key}`);
+          const key = accountAddress+'-'+tokenInstance.address; // TODO: use selectID ?
           return (
             <tr className="min-w-full even:bg-base-300 odd:bg-base-200 hover:bg-base-100"
               key={key}
@@ -60,7 +60,8 @@ const TokenInstanceListFiltered = ( {
                 updateTransferAmount={tokensInstancesListTablePropsHandlers.updateHandlers.updateTransferAmount}
                 updateTransferAmountLock={tokensInstancesListTablePropsHandlers.updateHandlers.updateTransferAmountLock}
                 targetAddress={targetAddress}
-                enableEditable={true}
+                enableEditable={enableEditable}
+                showTransferAmountReadOnly={false}
               />
             </tr>
           )

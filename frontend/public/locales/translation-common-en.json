@@ -1,19 +1,11 @@
 {
-  "test": "This is a test",
-  "test2": {
-    "test2": "This is a test2"
-  }
-  ,
-
   "moveTokens": {
-
     "warnings": {
       "connectawallet": "Please connect or unlock your wallet",
       "wrongchain": "Please switch to a supported chain: Ethereum or Gnosis"
     },
     "common": {
       "notAvailable": "Unavailable"
-
     },
     "progress": {
       "previous": "Previous",
@@ -23,7 +15,67 @@
       "tokensTable" : {
         "loadingTokens": "Loading tokens",
         "errorLoadingTokens": "Error loading tokens",
-        "noTokens": "No token found"
+        "noTokens": "No token found",
+        "search" : {
+          "name": "Name",
+          "balance": "Balance",
+          "balanceGt0": {
+            "label": "> 0",
+            "hint": "filter out tokens without balance for source"
+          },
+          "clearAll": {
+            "label": "Clear",
+            "hint": "Clear all filters"
+          },
+          "additional": {
+            "title": "Additional filters",
+            "address": "Address"
+          }
+        },
+        "select": {
+          "any" : {
+            "hint": "Select ALL tokens",
+            "selectAll": "All",
+            "invertSelection": "Invert"
+            },
+          "visible" : {
+            "hint": "Select VISIBLE only",
+            "selectAll": "All visible",
+            "invertSelection": "Invert"
+            }
+          },
+        "results": {
+          "found": {
+            "selected": "Selected",
+            "visible": "Visible",
+            "hidden": "Hidden",
+            "total": "Total"
+          },
+          "titles" : {
+            "tokenId": "Id.",
+            "tokenName": "Name",
+            "sourceTokenBalance": "Balance",
+            "selected": "",
+            "tokenAmount": "Amount",
+            "tokenInfo": "Info.",
+            "targetTokenBalance": "Balance"
+          }
+        }
+      },
+      "token": {
+        "canTransferFrom": "Can transfer (send) this token FROM this address",
+        "canTransferTo": "Target address can receive this token",
+        "noTransferFrom": "Can't transfer (send) FROM this address",
+        "noTransferTo": "Can't transfer TO this address",
+        "details": "Details",
+        "transfer": {
+          "success": "Success",
+          "error": "Error",
+          "skipped": "Skipped"
+        }
+      },
+      "address": {
+        "placeholder": "0x..."
       }
     },
     "stepZero": {
@@ -52,48 +104,25 @@
     
     "stepTwo": {
       "title": "Select tokens",
-      "titleStep": "Tokens",
-      "tokensTable" : {
-        "search" : {
-          "name": "Name",
-          "balance": "Balance",
-          "balanceGt0": "> 0",
-          "selectAll": "Select all",
-          "invertSelection": "Invert",
-          "additional": {
-            "title": "Additional filters",
-            "address": "Address"
-          }
-        },
-        "results": {
-          "found": {
-            "selected": "Selected",
-            "visible": "Visible",
-            "hidden": "Hidden",
-            "total": "Total"
-          },
-          "titles" : {
-            "tokenId": "Id.",
-            "tokenName": "Name",
-            "tokenBalance": "Balance",
-            "selected": "",
-            "tokenAmount": "Amount",
-            "tokenInfo": "Info."
-          }
-        }
-      },
-      "token": {
-        "canTransferFrom": "Can transfer (send) this token FROM this address",
-        "canTransferTo": "Target address can receive this token",
-        "noTransferFrom": "Can't transfer (send) FROM this address",
-        "noTransferTo": "Can't transfer TO this address",
-        "details": "Details"
-      }
+      "titleStep": "Tokens"
     },
 
     "stepThree": {
-      "title": "Confirm",
-      "titleStep": "Confirm"
+      "title": "Migration",
+      "titleStep": "Migration",
+      "tokensMigrationListTable": {
+        "noTokens": "No token found"
+      },
+      "migrationProgressBar": {
+        "success": "Success",
+        "skipped": "Skipped",
+        "failed": "Failed",
+        "status": {
+          "label": "Status",
+          "progress": "In progress",
+          "completed": "Completed"
+          }
+      }
     },
 
     "Footer": {
@@ -103,7 +132,7 @@
       },
       "center": ""
     }
-  
+
   }
 
 }

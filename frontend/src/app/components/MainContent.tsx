@@ -1,9 +1,11 @@
 // React
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 // Components
 import ProgressContainer from "@Components/ProgressContainer";
 import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
+import { Footer } from '@Components/Footer'
+import { ContentBottomPadding } from '@Components/ContentBottomPadding'
 // Utils
 import { isChainSupported } from "@jsutils/blockchainUtils";
 import { getTokenLists } from '@jsutils/tokensLists';
@@ -26,8 +28,13 @@ export const MainContent = ( ) => {
   const [isLoadingTokensLists, setisLoadingTokensLists] = useState<boolean>(false)
   const [isErrorTokensLists, setisErrorTokensLists] = useState(false)
 
-  // const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
-  // const [progressBarPercentage, setprogressBarPercentage] = useState<number>(0)
+  const [showProgressBar, setshowProgressBar] = useState<boolean>(false)
+  const [showActivity, setshowActivity] = useState<boolean>(false)
+
+  const initialMigrationState = useMemo( () => {
+      return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
+    }, [])
+  const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
 
   // ---
 
@@ -44,7 +51,6 @@ export const MainContent = ( ) => {
       setisErrorTokensLists(isError)
     }, []
   )
-
   // ---
 
   useEffect(() =>
@@ -60,17 +66,21 @@ export const MainContent = ( ) => {
       try {
         setStateLoadingTokensLists(true)
         setStateIsErrorTokensLists(false)
+        setshowActivity(true)
         initTokensLists().
           then( () => {
             setStateLoadingTokensLists(false)
+            setshowActivity(false)
           }).
           catch( (error) => {
             console.error(`MainContent.tsx useEffect initTokensLists error: ${error}`);
             setStateIsErrorTokensLists(true)
             setStateLoadingTokensLists(false)
+            setshowActivity(false)
           })
       } catch (error) {
         setStateLoadingTokensLists(false)
+        setshowActivity(false)
         setisErrorTokensLists(true)
         console.error(`MainContent.tsx useEffect initTokensLists error: ${error}`);
       }
@@ -112,7 +122,8 @@ export const MainContent = ( ) => {
                     <div className="w-full p-0 m-0 mb-1 base-100 text-primary-content" >
                         <ProgressContainer
                           previousDisabled={previousDisabled} nextDisabled={nextDisabled}
-                          // showProgressBar={showProgressBar} progressBarPercentage={progressBarPercentage}
+                          showProgressBar={showProgressBar}
+                          migrationState={migrationState}
                         />
                     </div>
                     <div className="w-full p-0 m-0 mt-1 base-100 text-primary-content" >
@@ -121,8 +132,13 @@ export const MainContent = ( ) => {
                         chainId={chain?.id}
                         setpreviousDisabled={setpreviousDisabled} setNextDisabled={setNextDisabled}
                         isLoadingTokensLists={isLoadingTokensLists} isErrorTokensLists={isErrorTokensLists}
-                        // setShowProgressBar={setshowProgressBar} setProgressBarPercentage={setprogressBarPercentage}
+                        setShowProgressBar={setshowProgressBar}
+                        setmigrationState={setmigrationState}
+                        setshowActivity={setshowActivity}
                       />
+                      <ContentBottomPadding/>
+                      <Footer showActivity={showActivity}/>
+
                     </div>
                   </div>
           }

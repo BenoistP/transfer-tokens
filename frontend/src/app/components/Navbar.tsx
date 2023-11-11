@@ -18,7 +18,7 @@ export const Navbar = () => {
             <LanguageSelector />
             <ThemeSwitch />
           </div>
-          <div className="navbar-center border border-neutral rounded-box p-2 bg-base-100">
+          <div className="navbar-center rounded-box p-2 bg-base-300">
             <div className="flex-auto justify-end ">
               <ConnectButton
                 accountStatus={{ smallScreen: 'address', largeScreen: 'address', }}

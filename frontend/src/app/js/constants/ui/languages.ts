@@ -3,18 +3,25 @@
 const LANGUAGE_EN: iLanguage = {
   key: 'en',
   name: 'English',
-  flagIconCountryCode: 'gb',
+  'flagCountryCode': 'GB'
 }
 
 const LANGUAGE_FR: iLanguage = {
   key: 'fr',
   name: 'Français',
-  flagIconCountryCode: 'fr',
+  'flagCountryCode': 'FR'
+}
+
+const LANGUAGE_ES: iLanguage = {
+  key: 'es',
+  name: 'Español',
+  'flagCountryCode': 'ES'
 }
 
 const SUPPORTED_LANGUAGES: iLanguage[] = [
   LANGUAGE_EN,
   LANGUAGE_FR,
+  LANGUAGE_ES
 ]
 
 const DEFAULT_LANGUAGE = LANGUAGE_EN;

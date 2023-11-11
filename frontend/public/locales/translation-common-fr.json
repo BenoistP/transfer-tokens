@@ -1,21 +1,12 @@
 {
-  "test": "Ceci est un test",
-  "test2": {
-    "test2": "Ceci est un test2"
-  }
-  ,
-
-  "moveTokens" :
-  {
+  "moveTokens" : {
     "warnings": {
       "connectawallet": "Connecter ou déverrouiller un portefeuille",
       "wrongchain": "Les chaînes supportées sont: Ethereum ou Gnosis"
     },
     "common": {
       "notAvailable": "Non disponible"
-
     },
-
     "progress": {
       "previous": "Précédent",
       "next": "Suivant"
@@ -24,7 +15,68 @@
       "tokensTable" : {
         "loadingTokens": "Chargement",
         "errorLoadingTokens": "Erreur de chargement des tokens",
-        "noTokens": "Aucun token trouvé"
+        "noTokens": "Aucun token trouvé",
+        "search" : {
+          "name": "Nom",
+          "balance": "Solde",
+          "balanceGt0": {
+            "label": "> 0",
+            "hint": "N'afficher que les tokens dont l'adresse a un solde > 0"
+          },
+          "clearAll": {
+            "label": "Effacer",
+            "hint": "Effacer tous les filtres"
+          },
+          "additional": {
+            "title": "Critères supplémentaires",
+            "address": "Adresse"
+          }
+        },
+        "select" : {
+          "any" : {
+            "hint": "TOUT sélectionner",
+            "selectAll": "Tout",
+            "invertSelection": "Inverser"
+            },
+          "visible" : {
+            "hint": "VISIBLES seulement",
+            "selectAll": "Tout les visibles",
+            "invertSelection": "Inverser visibles"
+            }
+        },
+        "results": {
+          "found": {
+            "selected": "Sélectionné(s)",
+            "visible": "Visible(s)",
+            "hidden": "Caché(s)",
+            "total": "Total"
+          },
+          "titles" : {
+            "tokenId": "Id.",
+            "tokenName": "Nom",
+            "sourceTokenBalance": "Quantité",
+            "selected": "",
+            "tokenAmount": "Montant",
+            "tokenInfo": "Info.",
+            "targetTokenBalance": "Quantité"
+          }
+        }
+      },
+      "token": {
+        "canTransferFrom": "Transfert (envoi) autorisé DEPUIS cette addresse",
+        "canTransferTo": "Réception du token autorisé par le destinataire",
+        "noTransferFrom": "Transfert (envoi) interdit DEPUIS cette addresse",
+        "noTransferTo": "Transfert interdit VERS cette addresse",
+        "details": "Détails",
+        "transfer": {
+          "success": "Succès",
+          "error": "Erreur",
+          "skipped": "Omis"
+        }
+
+      },
+      "address": {
+        "placeholder": "0x..."
       }
     },
     "stepZero": {
@@ -52,48 +104,25 @@
     
     "stepTwo": {
       "title": "Choisir des tokens",
-      "titleStep": "Tokens",
-      "tokensTable" : {
-        "search" : {
-          "name": "Nom",
-          "balance": "Solde",
-          "balanceGt0": "> 0",
-          "selectAll": "Tout",
-          "invertSelection": "Inverser",
-          "additional": {
-            "title": "Critères supplémentaires",
-            "address": "Adresse"
-          }
-        },
-        "results": {
-          "found": {
-            "selected": "Sélectionné(s)",
-            "visible": "Visible(s)",
-            "hidden": "Caché(s)",
-            "total": "Total"
-          },
-          "titles" : {
-            "tokenId": "Id.",
-            "tokenName": "Nom",
-            "tokenBalance": "Quantité",
-            "selected": "",
-            "tokenAmount": "Montant",
-            "tokenInfo": "Info."
-          }
-        }
-      },
-      "token": {
-        "canTransferFrom": "Transfert (envoi) autorisé DEPUIS cette addresse",
-        "canTransferTo": "Réception du token autorisé par le destinataire",
-        "noTransferFrom": "Transfert (envoi) interdit DEPUIS cette addresse",
-        "noTransferTo": "Transfert interdit VERS cette addresse",
-        "details": "Détails"
-      }
+      "titleStep": "Tokens"
     },
 
     "stepThree": {
-      "title": "Confirmation",
-      "titleStep": "Confirmation"
+      "title": "Migration",
+      "titleStep": "Migration",
+      "tokensMigrationListTable": {
+        "noTokens": "Aucun token trouvé"
+      },
+      "migrationProgressBar": {
+        "success": "Succès",
+        "skipped": "Omis",
+        "failed": "Erreurs",
+        "status": {
+          "label": "Etat",
+          "progress": "En cours",
+          "completed": "Terminé"
+          }
+      }
     },
 
     "Footer": {
@@ -103,6 +132,5 @@
       },
       "center": ""
     }
-
   }
 }

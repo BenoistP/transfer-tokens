@@ -1,7 +1,8 @@
 // React
 import { useMemo } from "react";
 // Components
-import TokenInstanceList from "@Components/TokenInstanceList";
+// import TokenInstanceList from "@Components/TokenInstanceList";
+import TokenInstanceList from "@Components/unused/TokenInstanceList";
 import SortIcon from "@Components/SortIcon";
 // Icons
 import { ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/react/24/solid'
@@ -62,23 +63,23 @@ const TokenInstanceListTable = (
                   <th className="p-2 font-medium justify-center flex-none">
                     <div className="flex">
                       <SortIcon sortOrder={tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenDisplayId} changeSortFnCb={tokensInstancesListTablePropsHandlers.sortHandlers.sortByTokenDisplayId} />
-                      {t("moveTokens.stepTwo.tokensTable.results.titles.tokenId")}
+                      {t("moveTokens.stepAny.tokensTable.results.titles.tokenId")}
                     </div>
                   </th>
                   <th className="p-2 font-medium w-96 flex">
                     <div className="flex justify-left">
                       <SortIcon sortOrder={tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenName} changeSortFnCb={tokensInstancesListTablePropsHandlers.sortHandlers.sortByTokenName} />
-                      {t("moveTokens.stepTwo.tokensTable.results.titles.tokenName")}
+                      {t("moveTokens.stepAny.tokensTable.results.titles.tokenName")}
                     </div>
                   </th>
                   <th className="p-2 font-medium flex-none">
                     <div className="flex justify-end grow-0">
                       <SortIcon sortOrder={tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenBalance} changeSortFnCb={tokensInstancesListTablePropsHandlers.sortHandlers.sortByTokenBalance} />
-                      {t("moveTokens.stepTwo.tokensTable.results.titles.tokenBalance")}
+                      {t("moveTokens.stepAny.tokensTable.results.titles.tokenBalance")}
                     </div>
                   </th>
                   <th className="p-2 font-medium flex-none">
-                    {t("moveTokens.stepTwo.tokensTable.results.titles.tokenInfo")}
+                    {t("moveTokens.stepAny.tokensTable.results.titles.tokenInfo")}
                   </th>
                 </tr>
               </thead>
