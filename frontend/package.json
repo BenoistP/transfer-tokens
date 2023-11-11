@@ -23,7 +23,6 @@
     "@rainbow-me/rainbowkit": "^1.1.2",
     "@wagmi/core": "^1.4.4",
     "country-flag-icons": "^1.5.7",
-    "exiftool-vendored": "^23.3.0",
     "i18next": "^23.6.0",
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-http-backend": "^2.2.2",
