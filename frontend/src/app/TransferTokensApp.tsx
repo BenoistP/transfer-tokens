@@ -25,7 +25,7 @@ return (
 
           <Routes>
 
-            <Route path={"/TransferTokens"}
+            <Route path={"/transferTokens"}
                 element={
                   <Suspense fallback="loading">
                     <MainContent />
@@ -34,7 +34,7 @@ return (
             ></Route>
 
             {/* default redirect to home page */}
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/transferTokens" />} />
 
           </Routes>
 
