@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 // Components
 import TokenInstanceListFiltered from "@Components/TokenInstanceListFiltered";
 import SortIcon from "@Components/SortIcon";
+// Utils
+import { shortenAddress } from "@App/js/utils/blockchainUtils";
 // Translation
 import { useTranslation } from "react-i18next";
 // Icons
@@ -10,7 +12,6 @@ import { ArrowPathRoundedSquareIcon, FunnelIcon, ExclamationCircleIcon,
   InformationCircleIcon, BackspaceIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid'
 // Styles
 import { clsLoadingTokenLists, clsIconStatusSize, clsIconMedium } from "@uiconsts/twDaisyUiStyles";
-import { shortenAddress } from "@App/js/utils/blockchainUtils";
 
 const TokenInstanceListTableFiltered = (
     { tokensInstances,
@@ -375,7 +376,7 @@ const TokenInstanceListTableFiltered = (
                     { targetAddress &&
                     <th className="p-2 font-light flex-none whitespace-nowrap text-ellipsis">
                       <div className={"tooltip tooltip-bottom pl-1 text-neutral-content tooltip-info"} data-tip={targetAddress} >
-                        {t("moveTokens.stepAny.tokensTable.results.titles.targetTokenBalance")+ " " +shortenAddress(targetAddress)}
+                        {t("moveTokens.stepAny.tokensTable.results.titles.targetTokenBalance")+ " " + shortenAddress(targetAddress)}
                       </div>
                     </th>
                     }
