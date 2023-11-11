@@ -33,10 +33,14 @@ const TokenInstance = ( {
   const [name, setname] = useState<string>("")
 
   const [balance, setbalance] = useState<TTokenAmount | null>(tokenInstance.userData[accountAddress as any]?.balance);
-  const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(false)
 
+  const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(false)
   const [shortBalanceString, setshortBalanceString] = useState("") as [string, (balance:string) => void];
   const [longBalanceString, setlongBalanceString] = useState("") as [string, (balance:string) => void];
+
+  const [isRoundedTargetDisplayAmount, setisRoundedTargetDisplayAmount] = useState<boolean>(false)
+  const [shortTargetBalanceString, setshortTargetBalanceString] = useState("") as [string, (balance:string) => void];
+  const [longTargetBalanceString, setlongTargetBalanceString] = useState("") as [string, (balance:string) => void];
 
   const [isSelected, setIsSelected] = useState<boolean>(false)
   const [isCheckboxDisabled, setisCheckboxDisabled] = useState<boolean>(true)
@@ -90,6 +94,46 @@ const TokenInstance = ( {
     [tokenInstance.userData[accountAddress as any]?.balance, accountAddress]
   );
 
+  useEffect(() =>
+  {
+    try {
+      if (targetAddress) {
+        const targetBalance = tokenInstance.userData[targetAddress as any]?.balance;
+        if (targetBalance) {
+          const balanceValue = targetBalance.valueOf();
+          const intValue = ( balanceValue / (10n**decimals) );
+          const decimalValue = balanceValue - intValue * (10n**decimals);
+          if (decimalValue > 0) {
+            // exact decimals display
+            const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
+            const zeroDecimalToFixed = Number("0."+longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+            const shortDecimalDisplay = zeroDecimalToFixed.substring(2);
+            const roundUpShortDisplay = (zeroDecimalToFixed.substring(0,2) =="1.")
+            const longBalanceString = intValue+"."+longDecimalDisplayPadded;
+            const shortBalanceString = `${(roundUpShortDisplay?intValue+1n:intValue)}.${shortDecimalDisplay}`
+            setlongTargetBalanceString(longBalanceString)
+            setshortTargetBalanceString(shortBalanceString)
+            if (roundUpShortDisplay || !longBalanceString.startsWith(shortBalanceString) || !longBalanceString.substring(shortBalanceString.length).match(/^0+$/)) {
+              // console.debug(`TokenInstance.tsx useEffect [compute target balance] isRoundedTargetDisplayAmount=true`)
+              setisRoundedTargetDisplayAmount(true)
+            }
+          } else {
+            setlongTargetBalanceString(intValue.toString()+"."+"0".repeat(Number(decimals)))
+            setshortTargetBalanceString(intValue.toString())
+          }
+        } else if (targetBalance == 0n) {
+          setlongTargetBalanceString("0."+"0".repeat(Number(decimals)))
+          setshortTargetBalanceString("0")
+        }
+      }
+      // console.debug(`TokenInstance.tsx useEffect [compute target balance] ${tokenInstance.userData[targetAddress as any]?.balance}`)
+      // setisRoundedTargetDisplayAmount(false)
+    } catch (error) {
+      console.error(`TokenInstance.tsx useEffect [decimals, balance] error=${error}`)
+    }
+  }, // X eslint-disable-next-line react-hooks/exhaustive-deps
+  [tokenInstance.userData[targetAddress as any]?.balance, targetAddress]
+);
   // ---
 
   useEffect(() =>
@@ -135,7 +179,7 @@ const TokenInstance = ( {
     {
       try {
         if (balance) {
-          const balanceValue = balance.valueOf();// + 1n;
+          const balanceValue = balance.valueOf();
           const intValue = ( balanceValue / (10n**decimals) );
           const decimalValue = balanceValue - intValue * (10n**decimals);
           if (decimalValue > 0) {
@@ -363,6 +407,13 @@ const TokenInstance = ( {
         }
         </div>
       </td>
+      { targetAddress &&
+      <td className="text-right pr-2 text-base-content">
+        <div className="tooltip tooltip-left tooltip-info opacity-80" data-tip={longTargetBalanceString}>
+          <p className={isRoundedTargetDisplayAmount?"italic font-medium":""}>{shortTargetBalanceString}</p>
+        </div>
+      </td>
+      }
     </>
   );
 }

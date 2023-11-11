@@ -1,8 +1,8 @@
 {
   "moveTokens": {
     "warnings": {
-      "connectawallet": "Por favor conecta o desbloquea tu billetera",
-      "wrongchain": "Cambie a una cadena compatible: Ethereum o Gnosis"
+      "connectawallet": "Por favor conecta o desbloquea tu cartera",
+      "wrongchain": "Cambie a una red compatible: Ethereum o Gnosis"
     },
     "common": {
       "notAvailable": "Indisponible"
@@ -13,7 +13,7 @@
     },
     "stepAny": {
       "tokensTable": {
-        "loadingTokens": "Cargando fichas",
+        "loadingTokens": "Cargando tókenes",
         "errorLoadingTokens": "Error al cargar tokens",
         "noTokens": "No se encontró ningún token",
         "search": {
@@ -34,7 +34,7 @@
         },
         "select": {
           "any": {
-            "hint": "Seleccione TODAS las fichas",
+            "hint": "Seleccione TODOS lOs tókenes",
             "selectAll": "Todo",
             "invertSelection": "Invertir"
           },
@@ -54,10 +54,11 @@
           "titles": {
             "tokenId": "Identificación.",
             "tokenName": "Nombre",
-            "tokenBalance": "Balance",
+            "sourceTokenBalance": "Balance",
             "selected": "",
             "tokenAmount": "Cantidad",
-            "tokenInfo": "Información."
+            "tokenInfo": "Información.",
+            "targetTokenBalance": "Balance"
           }
         }
       },
@@ -100,8 +101,8 @@
       "destinationOk": "La dirección es válida."
     },
     "stepTwo": {
-      "title": "Seleccionar fichas",
-      "titleStep": "Fichas"
+      "title": "Seleccionar tókenes",
+      "titleStep": "Tókenes"
     },
     "stepThree": {
       "title": "Migración",
@@ -123,7 +124,7 @@
     "Footer": {
       "info": {
         "title": "©",
-        "text": "Pronto Pronto Laboratorios de Investigación"
+        "text": "Pronto Pronto Research Laboratories"
       },
       "center": ""
     }

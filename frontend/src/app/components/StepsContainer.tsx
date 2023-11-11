@@ -1803,11 +1803,11 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
       //   // setLoadingDataState(false)
       // }
     },
-    [ tokensLists, selectableTokensLists,
+    [tokensLists, selectableTokensLists,
       chainId, targetAddress, connectedAddress,
       getSelectedTokenLists, initTokenInstance, loadTokensOnChainData,
-      setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances
-    ]
+      setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances,
+      setStateIsFetchingData]
   ) // useEffect
 
   // ---

@@ -25,7 +25,7 @@ return (
 
           <Routes>
 
-            <Route path={"/"}
+            <Route path={"/TransferTokens"}
                 element={
                   <Suspense fallback="loading">
                     <MainContent />
