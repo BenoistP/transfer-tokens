@@ -31,6 +31,7 @@ const TOAST_MESSAGE_TYPE_INFO = 20
 const TOAST_MESSAGE_TYPE_WARN = 30
 const TOAST_MESSAGE_TYPE_ERROR = 40
 
+const USER_REJECT_TX_REGEXP = /user\s+(rejected|denied)/i;
 
 export {
 
@@ -51,4 +52,5 @@ export {
   TOAST_MESSAGE_TYPE_WARN,
   TOAST_MESSAGE_TYPE_ERROR,
 
+  USER_REJECT_TX_REGEXP
 }

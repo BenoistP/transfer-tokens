@@ -24,7 +24,6 @@
 
 ☑️ Synchronize avatar in Rainbow wallet
 
-
 Save tokens list in context
 save tokens lists by chain id in context
 use tokens lists in context to display tokens list in client
@@ -34,7 +33,6 @@ use tokens lists in context to display tokens list in client
 - ☑️ Load tokens data in parallel
 
 🚧 Transitions
-
 
 🚧 Modals
 
@@ -47,6 +45,8 @@ use tokens lists in context to display tokens list in client
 All Steps : 🚧
 
 - ☑️ Handle chain change (back to step 0, remove checked token lists)
+
+  - 🚧 reset target address or clear existing data on chain change
 - ☑️ Set default language cookie (invisible flag)
 - ☑️ Add fetch loading indicator in bottom bar
 - ☑️ use filtered tokens table in all screens
