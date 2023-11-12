@@ -410,9 +410,10 @@ interface IStep3Props {
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
-  transferTokens: TtransferTokens,
-  stopTransfers: boolean, setstopTransfers: TreactSetState_boolean,
-  pauseTransfers: boolean, setpauseTransfers: TreactSetState_boolean
+  // transferTokens: TtransferTokens,
+  // stopTransfers: boolean, setstopTransfers: TreactSetState_boolean,
+  // pauseTransfers: boolean, setpauseTransfers: TreactSetState_boolean
+  setmigrationState: TSetMigrationState
 }
 
 interface IChangeTokensListCheckboxStatus {
