@@ -28,9 +28,9 @@ const Step0 = (  {
 
     useEffect( () =>
     {
-      setNextDisabled(!someTokensListsSelected || isLoadingTokensLists || isErrorTokensLists)
+      setNextDisabled(!someTokensListsSelected || isLoadingTokensLists || isErrorTokensLists || isLoadingTokensInstances)
     },
-    [setNextDisabled, someTokensListsSelected, isLoadingTokensLists, isErrorTokensLists]
+    [setNextDisabled, someTokensListsSelected, isLoadingTokensLists, isErrorTokensLists, isLoadingTokensInstances]
   )
 
 // ------------------------------
