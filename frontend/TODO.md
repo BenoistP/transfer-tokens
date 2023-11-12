@@ -88,6 +88,7 @@ Step 3:
 
 - ☑️ display target address
 - ☑️ Show amount, not balance
+- 🚧 Show success toast on txhash
 
 🚧 avatar list/select style
 
