@@ -31,6 +31,10 @@ const TOAST_MESSAGE_TYPE_INFO = 20
 const TOAST_MESSAGE_TYPE_WARN = 30
 const TOAST_MESSAGE_TYPE_ERROR = 40
 
+// Metamask: MetaMask Tx Signature: User denied transaction signature.
+// Rabby: TransactionExecutionError User rejected the request.
+
+
 const USER_REJECT_TX_REGEXP = /user\s+(rejected|denied)/i;
 
 export {

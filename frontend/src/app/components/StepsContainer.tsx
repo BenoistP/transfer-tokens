@@ -76,6 +76,10 @@ const StepsContainer = ( {
   const [invertAll, setinvertAll] = useState(false)
   const [invertAllVisible, setinvertAllVisible] = useState(false)
 
+  // Transfer controls
+  const [pauseTransfers, setpauseTransfers] = useState(false)
+  const [stopTransfers, setstopTransfers] = useState(false)
+
   // ------------------------------
 
   // Filter
@@ -1126,8 +1130,8 @@ const StepsContainer = ( {
     [tokensInstances]
   ) // getTokensToMigrate
 
-
   // ---
+
   const callTransferToken = useCallback( async ( _tokenAddress:TAddressString, _destinationAddress: TAddressString, _amount: TTokenAmount ) : Promise<boolean|undefined> =>
     {
       try {
@@ -1148,7 +1152,7 @@ const StepsContainer = ( {
         try {
           // console.error(`moveRealTokens._index.tsx: callTransferToken error: ${error}`)
           if (error instanceof Error) {
-            // console.debug(`moveRealTokens._index.tsx: callTransferToken error: ${error.name} ${error.message}`)
+            console.debug(`moveRealTokens._index.tsx: callTransferToken error: ${error.name} ${error.message}`)
               if (error.message.match(USER_REJECT_TX_REGEXP)) {
               return false; // RETURN User rejected
             } else {
@@ -1256,6 +1260,7 @@ const StepsContainer = ( {
   const transferTokens = useCallback( async( _tokensInstancesToTransfer:TTokensInstances, _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef ) =>
     {
       try {
+        console.debug(`StepsContainer.tsx transferTokens _tokensInstancesToTransfer.length=${_tokensInstancesToTransfer?.length} _from=${_from} _to=${_to}`)
         if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length) {
           const migrationState = {totalItemsCount:_tokensInstancesToTransfer.length,
             errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
@@ -2041,6 +2046,8 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
                 targetAddress={targetAddress}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 transferTokens={transferTokens}
+                stopTransfers={stopTransfers} setstopTransfers={setstopTransfers}
+                pauseTransfers={pauseTransfers} setpauseTransfers={setpauseTransfers}
             />
           </MainContentContainer>
         </div>

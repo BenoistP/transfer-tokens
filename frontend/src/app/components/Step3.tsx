@@ -3,7 +3,7 @@ import { useEffect } from "react";
 // Components
 import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationListTable";
 // Icons
-import { FaceSmileIcon } from '@heroicons/react/24/solid'
+// import { FaceSmileIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
@@ -15,6 +15,8 @@ const Step3 = ( {
   targetAddress,
   tokensInstancesListTablePropsHandlers,
   transferTokens,
+  stopTransfers, setstopTransfers,
+  pauseTransfers, setpauseTransfers
   }: IStep3Props ) => {
 
   // ---
@@ -30,12 +32,43 @@ const Step3 = ( {
 
   // ---
 
+  const handlePauseTransfers = () => {
+    setpauseTransfers(!pauseTransfers)
+  }
+
+  const handleStopTransfers = () => {
+    setstopTransfers(!stopTransfers)
+  }
+
+  // ------------------------------
 
   return (
     <>
 
-      <div className="w-full block p-2">
+<div className="">
+  
 
+      <div className="min-w-full ">
+        <div className="flex justify-center p-1 bg-base-300 rounded-lg">
+
+          {/* <div className="join"> */}
+
+            <input type="checkbox" className="toggle mt-1" checked={pauseTransfers} onChange={handlePauseTransfers}  /> 
+            <label className={(pauseTransfers?"animate-pulse text-warning font-semibold":"text-neutral font-bold")+" text-sm md:text-lg lg:text-lg ml-2 mr-2"}>
+              {"Pause"}
+            </label>
+
+            <button className="btn btn-xs sm:btn-sm btn-warning pl-4" onClick={handleStopTransfers}>Stop</button>
+
+          {/* </div> */}
+
+        </div>
+      </div>
+
+      <div className="min-w-full bg-base-100 my-2"></div>
+
+      <div className="w-full block p-2">
+{/* 
         <div className="bg-neutral w-full rounded-box border border-base-300-content p-2">
           <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-accent p-2 pb-0  animate-pulse">
             {"COMING"}
@@ -47,6 +80,10 @@ const Step3 = ( {
             {"SOON"}
           </p>
         </div>
+ */}
+
+
+
         <div className="w-full p-0 m-0">
             <TokenInstanceMigrationListTable
               tokensInstances={tokensInstances}
@@ -57,6 +94,7 @@ const Step3 = ( {
         </div>
 
       </div>
+</div>
   </>
   );
 }
