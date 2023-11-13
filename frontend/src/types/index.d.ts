@@ -592,7 +592,8 @@ type TmigrationState = {
   successItemsCount: number;
   errorItemsCount: number;
   skippedItemsCount: number;
-
+  paused: boolean;
+  stopped: boolean;
 }
 
 interface ITF_TransferProgressBar {

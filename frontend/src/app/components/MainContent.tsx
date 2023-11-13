@@ -32,7 +32,7 @@ export const MainContent = ( ) => {
   const [showActivity, setshowActivity] = useState<boolean>(false)
 
   const initialMigrationState = useMemo( () => {
-      return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
+      return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0, paused: false, stopped: false}
     }, [])
   const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
 

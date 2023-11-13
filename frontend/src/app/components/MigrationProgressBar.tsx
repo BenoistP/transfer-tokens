@@ -11,6 +11,8 @@ const MigrationProgressBar = ({ migrationState }: ITF_TransferProgressBar ) => {
 
   const processed = migrationState.errorItemsCount+migrationState.skippedItemsCount+migrationState.successItemsCount;
 
+  console.debug(`MigrationProgressBar: paused=${migrationState.paused} stopped=${migrationState.stopped}`);
+
   return (
       <div className="w-full h-full ">
         <div className="grid grid-cols-8 gap-2">
@@ -44,14 +46,14 @@ const MigrationProgressBar = ({ migrationState }: ITF_TransferProgressBar ) => {
               <progress className="progress progress-error w-full" value={migrationState.errorItemsCount} max={migrationState.totalItemsCount}></progress>
             </div>
           </div>
-          <div className="col-span-2 sm:col-span-1">
+          <div className={"col-span-2 sm:col-span-1"+((migrationState.paused && !migrationState.stopped)?" animate-pulse":"")}>
             <div className={"min-w-20 pl-2 text-sm md:text-base font-semibold hover:whitespace-normal hover:overflow-visible whitespace-nowrap overflow-hidden text-ellipsis "+(processed==migrationState.totalItemsCount?"text-info":"text-warning")}>
-              {t('moveTokens.stepThree.migrationProgressBar.status.label')}: {processed!=migrationState.totalItemsCount?t('moveTokens.stepThree.migrationProgressBar.status.progress'):t('moveTokens.stepThree.migrationProgressBar.status.completed')}
+              {t('moveTokens.stepThree.migrationProgressBar.status.label')}: {(processed!=migrationState.totalItemsCount&&!migrationState.stopped)?t('moveTokens.stepThree.migrationProgressBar.status.progress'):t('moveTokens.stepThree.migrationProgressBar.status.completed')}
             </div>
           </div>
           <div className="col-span-6 sm:col-span-7">
             <div className="px-1">
-              <progress className="progress progress-info w-full" value={processed} max={migrationState.totalItemsCount}></progress>
+              <progress className={"progress progress-info w-full"+((migrationState.paused && ! migrationState.stopped)?" animate-pulse":"")} value={processed} max={migrationState.totalItemsCount}></progress>
             </div>
           </div>
         </div>

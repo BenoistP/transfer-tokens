@@ -1,13 +1,10 @@
 // React
-
+// ---
 // Components
 import StepProgressBar from "@Components/StepProgressBar";
-// import ProgressBar from "@Components/ProgressBar";
 import MigrationProgressBar from "./MigrationProgressBar"; "@Components/MigrationProgressBar";
-
 // Context
 import { useMoveTokensAppContext } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
-
 // Translation
 import { useTranslation } from 'react-i18next';
 
@@ -15,31 +12,21 @@ import { useTranslation } from 'react-i18next';
 
 const ProgressContainer = ( {
   previousDisabled, nextDisabled, showProgressBar, migrationState
-  // progressBarPercentage
   }: ITF_ProgressContainer ) => {
-
-  // console.debug(`ProgressContainer.tsx render previousNextDisabled=${previousNextDisabled}`)
-  // console.debug(`ProgressContainer.tsx render`)
 
   const { moveTokensAppData: { step = -1, minStep , maxStep, } , moveTokensAppDataHandlers: { nextStep, prevStep } } = useMoveTokensAppContext()
   const { t } = useTranslation();
 
-
   const disablePrevious = previousDisabled || (step <= minStep)
   const disableNext = nextDisabled || (step >= maxStep)
 
-  // const clsBtnRounding = "flex-nowrap rounded-t-lg rounded-r-lg"
-  // const clsBtnRounding = "flex-nowrap"
-  // const clsBtnRing = "ring-1 ring-black "
-  const clsBtnBase = ""// clsBtnRounding + " " // + clsBtnRing + " "
-
-  const clsBtnNextPrevious = clsBtnBase + "btn shadow-xl text py-2 px-1 sm:px-1 md:px-2 m-1 md:m-2" +
+  const clsBtnBase = "btn shadow-xl text py-2 px-1 sm:px-1 md:px-2 m-1 md:m-2" +
   " ease-in-out duration-300 sm:h-10 md:h-12" +
   " disabled:btn disabled:btn-disabled disabled:cursor-no-drop"
 
    const clsBtnSize = " w-20 sm:w-32 md:w-36"
-   const clsBtnPrevious = clsBtnNextPrevious + clsBtnSize
-   const clsBtnNext = clsBtnNextPrevious + clsBtnSize
+   const clsBtnPrevious = clsBtnBase + clsBtnSize
+   const clsBtnNext = clsBtnBase + clsBtnSize
  
    const clsBtnTextSize = " text-xs sm:text-sm md:text-base "
    const clsBtnText = "p-0 m-0 overflow-hidden text-ellipsis normal-case font-medium" + clsBtnTextSize
