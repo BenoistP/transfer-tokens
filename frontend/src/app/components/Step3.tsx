@@ -34,8 +34,9 @@ const Step3 = ( {
   //   stopTransfers:boolean, setstopTransfers:React.Dispatch<React.SetStateAction<boolean>>
   // }
   const [pauseTransfers, setpauseTransfers] = useState(false)
-  // const [stopTransfers, setstopTransfers] = useState(false)
+  const [stopTransfers, setstopTransfers] = useState(false)
   const paused = useRef(false)
+  const stopped = useRef(false)
 
   // const first:TTransferControls = useMemo( () => {return {pauseTransfers:false, setpauseTransfers:()=>{}, stopTransfers:false, setstopTransfers:()=>{}}}, [] )
   // const [transferControls, settransferControls] = useState(first)
@@ -57,13 +58,14 @@ const Step3 = ( {
 
   }
 
-  // const handleStopTransfers = () => {
-  //   console.debug(`Steps3.tsx handleStopTransfers`)
-  //   setstopTransfers(!stopTransfers)
-  //   // stopped = !stopped
-  //   // settransferControls( {...transferControls, stopTransfers:!transferControls.stopTransfers} )
-  //   // transferControls.setstopTransfers(!transferControls.stopTransfers)
-  // }
+  const handleStopTransfers = () => {
+    console.debug(`Steps3.tsx handleStopTransfers`)
+    setstopTransfers(!stopTransfers)
+    stopped.current = !stopped.current
+    // stopped = !stopped
+    // settransferControls( {...transferControls, stopTransfers:!transferControls.stopTransfers} )
+    // transferControls.setstopTransfers(!transferControls.stopTransfers)
+  }
 
   // const handleResumeTransfers = () => {
   //   resumeHandler()
@@ -233,9 +235,10 @@ await new Promise(r => setTimeout(r, 3_000));
 
             while (paused.current) {
               console.debug(`Steps3.tsx transferTokens PAUSED for 500ms`)
-              await new Promise(r => setTimeout(r, 500));
-              if (!paused.current/* ||stopTransfers */) break;
+              await new Promise(r => setTimeout(r, 250));
+              if (!paused.current || stopped.current) break;
             }
+            if (stopped.current) break;
             // while (pauseTransfers) {
             //   await new Promise(r => setTimeout(r, 1_000));
             //   if (stopTransfers) break;
@@ -360,11 +363,11 @@ await new Promise(r => setTimeout(r, 3_000));
         <div className="flex justify-center mt-2 p-1 bg-base-300 rounded-lg">
           <div className="join">
             <input type="checkbox" className="toggle mt-1" checked={pauseTransfers} onChange={handlePauseTransfers}  /> 
-            <label className={(pauseTransfers?"animate-pulse text-info font-semibold":"text-neutral font-bold")+" text-sm md:text-lg lg:text-lg ml-2 mr-2"}>
+            <label className={(pauseTransfers?"animate-pulse text-info font-bold":"text-neutral font-semibold")+" text-sm md:text-lg lg:text-lg ml-2 mr-2"}>
               {"Pause"}
             </label>
 
-            {/* <button className={"btn btn-xs sm:btn-sm pl-4 "+(isStopBtnDisabled?"btn-disabled":"btn-warning")} onClick={handleStopTransfers}>Stop</button> */}
+            <button className={"btn btn-xs sm:btn-sm pl-4 "+(stopTransfers?"btn-disabled":"btn-warning")} onClick={handleStopTransfers}>Stop</button>
 
           </div>
         </div>
