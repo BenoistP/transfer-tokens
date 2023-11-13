@@ -1,5 +1,5 @@
 // React
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, /* useMemo, */ useState } from "react";
 // Components
 import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationListTable"
 import { erc20ABI, prepareWriteContract, writeContract } from '@wagmi/core'
@@ -23,12 +23,72 @@ const Step3 = ( {
   // pauseTransfers, setpauseTransfers
   }: IStep3Props ) => {
 
+  console.debug(`Steps3.tsx render`)
+
   // ---
   const [tokensInstancesToMigrate, settokensInstancesToMigrate] = useState<TTokensInstances>(null)
 
-  // Transfer controls
+  // // Transfer controls
+  // type TTransferControls = {
+  //   pauseTransfers:boolean, setpauseTransfers:React.Dispatch<React.SetStateAction<boolean>>,
+  //   stopTransfers:boolean, setstopTransfers:React.Dispatch<React.SetStateAction<boolean>>
+  // }
   const [pauseTransfers, setpauseTransfers] = useState(false)
-  const [stopTransfers, setstopTransfers] = useState(false)
+  // const [stopTransfers, setstopTransfers] = useState(false)
+  const paused = useRef(false)
+
+  // const first:TTransferControls = useMemo( () => {return {pauseTransfers:false, setpauseTransfers:()=>{}, stopTransfers:false, setstopTransfers:()=>{}}}, [] )
+  // const [transferControls, settransferControls] = useState(first)
+
+  // let paused = false
+  // let stopped = false
+
+
+  // ---
+
+  const handlePauseTransfers = () => {
+    console.debug(`Steps3.tsx handlePauseTransfers paused.current=${paused.current}`)
+    setpauseTransfers(!pauseTransfers)
+    paused.current = !paused.current
+    // paused = !paused
+    // settransferControls( {...transferControls, pauseTransfers:!transferControls.pauseTransfers} )
+    // transferControls.setpauseTransfers(!transferControls.pauseTransfers)
+    // settransferControls( (s) => {s.setpauseTransfers()} )
+
+  }
+
+  // const handleStopTransfers = () => {
+  //   console.debug(`Steps3.tsx handleStopTransfers`)
+  //   setstopTransfers(!stopTransfers)
+  //   // stopped = !stopped
+  //   // settransferControls( {...transferControls, stopTransfers:!transferControls.stopTransfers} )
+  //   // transferControls.setstopTransfers(!transferControls.stopTransfers)
+  // }
+
+  // const handleResumeTransfers = () => {
+  //   resumeHandler()
+  // }
+
+  // ---
+
+
+
+  // const isPaused = useCallback ( () =>
+  //   {
+  //     // return transferControls.pauseTransfers
+  //     return pauseTransfers
+  //     // return paused
+  //   }, [pauseTransfers/* paused */]
+  // )
+
+  // const isStopped = useCallback ( () =>
+  //   {
+  //     // return transferControls.stopTransfers
+  //     return stopTransfers
+  //     // return stopped
+  //   }, [stopTransfers/* stopped */]
+  // )
+
   // ---
 
   const callTransferToken = useCallback( async ( _tokenAddress:TAddressString, _destinationAddress: TAddressString, _amount: TTokenAmount ) : Promise<boolean|undefined> =>
@@ -162,7 +222,43 @@ const Step3 = ( {
         if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length) {
           const migrationState = {totalItemsCount:_tokensInstancesToTransfer.length,
             errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
-          for (let tokenInstanceIndex = 0; tokenInstanceIndex < _tokensInstancesToTransfer.length; tokenInstanceIndex++) {
+
+// DEBUG: initial PAUSE
+console.debug(`Steps3.tsx transferTokens PAUSE for 3s`)
+await new Promise(r => setTimeout(r, 3_000));
+
+          for (let tokenInstanceIndex = 0; ((tokenInstanceIndex < _tokensInstancesToTransfer.length)/* &&!stopTransfers */); tokenInstanceIndex++) {
+
+            console.debug(`Steps3.tsx transferTokens pauseTransfers=${paused.current} stopTransfers=${"stopTransfers"}`)
+
+            while (paused.current) {
+              console.debug(`Steps3.tsx transferTokens PAUSED for 500ms`)
+              await new Promise(r => setTimeout(r, 500));
+              if (!paused.current/* ||stopTransfers */) break;
+            }
+            // while (pauseTransfers) {
+            //   await new Promise(r => setTimeout(r, 1_000));
+            //   if (stopTransfers) break;
+            //   console.debug(`Steps3.tsx transferTokens PAUSED pauseTransfers=${pauseTransfers} stopTransfers=${stopTransfers}`)
+            // }
+            // if (stopTransfers) break;
+
+            // console.debug(`Steps3.tsx transferTokens tokenInstanceIndex=${tokenInstanceIndex} WAIT for 5s`)
+            // await new Promise(r => setTimeout(r, 5_000));
+            // console.debug(`Steps3.tsx transferTokens tokenInstanceIndex=${tokenInstanceIndex} AFTER WAIT`)
+
+            // if (pauseTransfers) {
+// debugger
+
+              // while (isPaused()) {
+              //   await new Promise(r => setTimeout(r, 1_000));
+              //   if (!pauseTransfers||stopTransfers) break;
+              // }
+              // if (stopTransfers) break;
+            //   console.debug(`Steps3.tsx transferTokens PAUSED pauseTransfers=${isPaused()} stopTransfers=${stopTransfers} tokenInstanceIndex=${tokenInstanceIndex}`)
+            // }
+            // if (stopTransfers) break;
+
             const tokenInstanceToTransfer = _tokensInstancesToTransfer[tokenInstanceIndex];
             try {
               await transferToken(tokenInstanceToTransfer, /* _from, */ _to, migrationState)
@@ -170,23 +266,15 @@ const Step3 = ( {
               console.error(`Steps3.tsx transferTokenS tokenInstanceToTransfer TRANSFER ERROR ${tokenInstanceToTransfer.address} ${tokenInstanceToTransfer.transferAmount} ${"_from"} ${_to} process error: ${error}`);
             }
           } // for (let tokenInstanceIndex = 0 ...
+
         } // if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length)
       } catch (error) {
         console.error(`Steps3.tsx transferTokenS error: ${error}`);
       }
-    },
-    [/* setmigrationState, */ transferToken]
+    }
+    ,
+    [/* pauseTransfers, stopTransfers, */ transferToken, /* transferControls ,*/ /* isPaused, isStopped */]
   ) // transferTokens
-
-  // ---
-
-  const handlePauseTransfers = () => {
-    setpauseTransfers(!pauseTransfers)
-  }
-
-  const handleStopTransfers = () => {
-    setstopTransfers(!stopTransfers)
-  }
 
   // ---
 
@@ -213,8 +301,13 @@ const Step3 = ( {
 
   // ---
 
+  /**
+   * Init
+   */
   useEffect( () =>
     {
+      // setstopTransfers(false)
+      setpauseTransfers(false)
       settokensInstancesToMigrate(null)
       setShowProgressBar(true)
       setNextDisabled(true)
@@ -223,11 +316,12 @@ const Step3 = ( {
   )
 
   // ---
-
+  /**
+   * Set tokensInstancesToMigrate
+   */
   useEffect( () =>
     {
       try {
-        // if (step == Steps.migration) {
           const tokensToMigrate = getTokensToMigrate()
           settokensInstancesToMigrate(tokensToMigrate)
           if (tokensToMigrate && tokensToMigrate.length) {
@@ -235,7 +329,6 @@ const Step3 = ( {
             errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
             setmigrationState( migrationState )
           }
-        // } // if (step == Steps.migration)
       } catch (error) {
         console.error(`Steps3.tsx updateTokensToMigrate [getTokensToMigrate, step, settokensInstancesToMigrate, setmigrationState] error: ${error}`);  
       }
@@ -243,57 +336,62 @@ const Step3 = ( {
     [getTokensToMigrate, settokensInstancesToMigrate, setmigrationState]
   ) // useEffect
 
-
-
-//   useEffect( () =>
-//   {
-//     console.debug(`Steps3.tsx useEffect [transferTokens, tokensInstances, targetAddress]`)
-//     transferTokens(tokensInstances, /* accountAddress, */ targetAddress)
-//   },
-//   [ tokensInstances, /* accountAddress, */ targetAddress]
-// )
-
   // ---
 
+  /**
+   * Call tokens transfers
+   */
   useEffect( () =>
     {
       console.debug(`Steps3.tsx useEffect [transferTokens, tokensInstancesToMigrate, targetAddress] tokensInstancesToMigrate.length=${tokensInstancesToMigrate?.length}`)
       if (tokensInstancesToMigrate && tokensInstancesToMigrate.length) {
-        transferTokens(tokensInstancesToMigrate, /* accountAddress, */ targetAddress)
+        transferTokens(tokensInstancesToMigrate, targetAddress)
       }
     },
-    [ tokensInstancesToMigrate, /* accountAddress, */ targetAddress, transferTokens]
+    [ tokensInstancesToMigrate, targetAddress/* , transferTokens */, transferTokens ]
   )
-
 
   // ------------------------------
 
   return (
-    <>
-
-<div className="">
-  
+    <div className="">
 
       <div className="min-w-full ">
         <div className="flex justify-center mt-2 p-1 bg-base-300 rounded-lg">
-
-          {/* <div className="join"> */}
-
+          <div className="join">
             <input type="checkbox" className="toggle mt-1" checked={pauseTransfers} onChange={handlePauseTransfers}  /> 
             <label className={(pauseTransfers?"animate-pulse text-info font-semibold":"text-neutral font-bold")+" text-sm md:text-lg lg:text-lg ml-2 mr-2"}>
               {"Pause"}
             </label>
 
-            <button className={"btn btn-xs sm:btn-sm pl-4 "+(stopTransfers?"btn-disabled":"btn-warning")} onClick={handleStopTransfers}>Stop</button>
+            {/* <button className={"btn btn-xs sm:btn-sm pl-4 "+(isStopBtnDisabled?"btn-disabled":"btn-warning")} onClick={handleStopTransfers}>Stop</button> */}
 
-          {/* </div> */}
-
+          </div>
         </div>
       </div>
 
-      <div className="min-w-full bg-base-100 my-2"></div>
+      <div className="min-w-full bg-base-100 my-2">
+      </div>
 
-      <div className="w-full block p-2">
+        <div className="w-full block p-2">
+          <div className="w-full p-0 m-0">
+            <TokenInstanceMigrationListTable
+              tokensInstances={tokensInstancesToMigrate}
+              accountAddress={accountAddress}
+              targetAddress={targetAddress}
+              tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+            />
+          </div>
+        </div>
+
+  </div>
+  );
+}
+
+// ------------------------------
+
+export default Step3;
+
 {/* 
         <div className="bg-neutral w-full rounded-box border border-base-300-content p-2">
           <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-accent p-2 pb-0  animate-pulse">
@@ -306,25 +404,4 @@ const Step3 = ( {
             {"SOON"}
           </p>
         </div>
- */}
-
-
-
-        <div className="w-full p-0 m-0">
-            <TokenInstanceMigrationListTable
-              tokensInstances={tokensInstancesToMigrate}
-              accountAddress={accountAddress}
-              targetAddress={targetAddress}
-              tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
-            />
-        </div>
-
-      </div>
-</div>
-  </>
-  );
-}
-
-// ------------------------------
-
-export default Step3;
+*/}
