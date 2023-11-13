@@ -11,7 +11,7 @@ const MigrationProgressBar = ({ migrationState }: ITF_TransferProgressBar ) => {
 
   const processed = migrationState.errorItemsCount+migrationState.skippedItemsCount+migrationState.successItemsCount;
 
-  console.debug(`MigrationProgressBar: paused=${migrationState.paused} stopped=${migrationState.stopped}`);
+  // console.debug(`MigrationProgressBar: paused=${migrationState.paused} stopped=${migrationState.stopped}`);
 
   return (
       <div className="w-full h-full ">

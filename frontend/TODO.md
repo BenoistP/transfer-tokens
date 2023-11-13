@@ -89,7 +89,7 @@ Step 3:
 - ☑️ display target address
 - ☑️ Show amount, not balance
 - ☑️ Pause, stop transfers
-- 🚧 Transfert progress state is not up to date on pause
+- ☑️ Transfer progress state is not up to date on resume from pause
 - 🚧 Show success toast on txhash
 
 🚧 avatar list/select style

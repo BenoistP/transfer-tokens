@@ -43,13 +43,6 @@ const Step3 = ( {
     return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0, paused: false, stopped: false}
   }, [])
   const migrationState = useRef(initialMigrationState)
-  
-  // const first:TTransferControls = useMemo( () => {return {pauseTransfers:false, setpauseTransfers:()=>{}, stopTransfers:false, setstopTransfers:()=>{}}}, [] )
-  // const [transferControls, settransferControls] = useState(first)
-
-  // let paused = false
-  // let stopped = false
-
 
   // ---
 
@@ -60,61 +53,17 @@ const Step3 = ( {
 
     migrationState.current = {...migrationState.current, paused: true}
     setmigrationState( migrationState.current )
-
-    // paused = !paused
-    // settransferControls( {...transferControls, pauseTransfers:!transferControls.pauseTransfers} )
-    // transferControls.setpauseTransfers(!transferControls.pauseTransfers)
-    // settransferControls( (s) => {s.setpauseTransfers()} )
-
   }
 
-  // const handleStopTransfers = () => {
-  //   console.debug(`Steps3.tsx handleStopTransfers`)
-  //   setstopTransfers(!stopTransfers)
-  //   stopped.current = !stopped.current
-  //   // stopped = !stopped
-  //   // settransferControls( {...transferControls, stopTransfers:!transferControls.stopTransfers} )
-  //   // transferControls.setstopTransfers(!transferControls.stopTransfers)
-  // }
+  // ---
 
   const handleStopTransfers = () => {
     // console.debug(`Steps3.tsx handleStopTransfers`)
     setstopTransfers(!stopTransfers)
     stopped.current = !stopped.current
-    // stopped = !stopped
-    // settransferControls( {...transferControls, stopTransfers:!transferControls.stopTransfers} )
-    // transferControls.setstopTransfers(!transferControls.stopTransfers)
-
-    // const migrationState = {totalItemsCount:_tokensInstancesToTransfer.length,
-    //   errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
-    //   setmigrationState( {..._migrationState} )
-
       migrationState.current = {...migrationState.current, stopped: true}
       setmigrationState( migrationState.current )
   }
-  // const handleResumeTransfers = () => {
-  //   resumeHandler()
-  // }
-
-  // ---
-
-
-
-  // const isPaused = useCallback ( () =>
-  //   {
-  //     // return transferControls.pauseTransfers
-  //     return pauseTransfers
-  //     // return paused
-  //   }, [pauseTransfers/* paused */]
-  // )
-
-  // const isStopped = useCallback ( () =>
-  //   {
-  //     // return transferControls.stopTransfers
-  //     return stopTransfers
-  //     // return stopped
-  //   }, [stopTransfers/* stopped */]
-  // )
 
   // ---
 
@@ -160,7 +109,9 @@ const Step3 = ( {
 
   const transferToken = useCallback( async( _tokenInstanceToTransfer:TTokenInstance, /* _from:TAddressEmptyNullUndef, */ _to:TAddressEmptyNullUndef, _migrationState: TmigrationState ) =>
     {
-
+      // let transfer_success = false;
+      // let transfer_error = false;
+      // let transfer_skipped = false;
       try {
         setmigrationState( {..._migrationState} )
 
@@ -170,12 +121,16 @@ const Step3 = ( {
             // Success
             // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER OK ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${"_from"} ${_to} process`)
             _tokenInstanceToTransfer.tr_processed = true;
+            _tokenInstanceToTransfer.tr_skipped = false;
+            _tokenInstanceToTransfer.tr_error = false;
             _tokenInstanceToTransfer.selected = false;
             _migrationState.successItemsCount++;
           } else {
             // Skipped
             // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER SKIPPED ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${"_from"} ${_to} process`)
             _tokenInstanceToTransfer.tr_skipped = true;
+            _tokenInstanceToTransfer.tr_processed = false;
+            _tokenInstanceToTransfer.tr_error = false;
             _migrationState.skippedItemsCount++;
           }
         } // if (_tokenInstanceToTransfer ...
@@ -183,11 +138,22 @@ const Step3 = ( {
       } catch (error) {
         // console.error(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${"_from"} ${_to} process error: ${error}`);
         _tokenInstanceToTransfer.tr_error = true;
+        _tokenInstanceToTransfer.tr_processed = false;
+        _tokenInstanceToTransfer.tr_skipped = false;
           _migrationState.errorItemsCount++;
       }
       finally {
         try {
-          setmigrationState( {..._migrationState, paused: paused.current, stopped: stopped.current} )
+          // setmigrationState( {..._migrationState, paused: paused.current, stopped: stopped.current} )
+          if (_tokenInstanceToTransfer.tr_processed) {
+            setmigrationState( {...migrationState.current, successItemsCount: migrationState.current.successItemsCount+1} )
+          } else if (_tokenInstanceToTransfer.tr_skipped) {
+            setmigrationState( {...migrationState.current, skippedItemsCount: migrationState.current.skippedItemsCount+1} )
+          } else if (_tokenInstanceToTransfer.tr_error) {
+            setmigrationState( {...migrationState.current, errorItemsCount: migrationState.current.errorItemsCount+1} )
+          }
+          
+
         } catch (error) {
           // console.error(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR STATE ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${"_from"} ${_to} process error: ${error}`);
         }
@@ -376,7 +342,7 @@ const Step3 = ( {
    */
   useEffect( () =>
     {
-      console.debug(`Steps3.tsx useEffect [transferTokens, tokensInstancesToMigrate, targetAddress] tokensInstancesToMigrate.length=${tokensInstancesToMigrate?.length}`)
+      // console.debug(`Steps3.tsx useEffect [transferTokens, tokensInstancesToMigrate, targetAddress] tokensInstancesToMigrate.length=${tokensInstancesToMigrate?.length}`)
       if (tokensInstancesToMigrate && tokensInstancesToMigrate.length) {
         transferTokens(tokensInstancesToMigrate, targetAddress)
       }
