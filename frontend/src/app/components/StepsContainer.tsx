@@ -1767,21 +1767,21 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
         <div className="w-full" >
                 
           <MainContentContainer>
-              <Step0
-                setNextDisabled={setNextDisabled}
-                selectableTokensLists={selectableTokensLists}
-                setselectableTokensLists={setselectableTokensLists}
-                accountAddress={connectedAddress}
-                targetAddress={targetAddress}
-                tokensInstances={tokensInstances}
-                chainId={chainId}
-                isLoadingTokensLists={isLoadingTokensLists}
-                isErrorTokensLists={isErrorTokensLists}
-                isLoadingTokensInstances={isLoadingTokensInstances}
-                isErrorTokensInstances={isErrorTokensInstances}
+            <Step0
+              setNextDisabled={setNextDisabled}
+              selectableTokensLists={selectableTokensLists}
+              setselectableTokensLists={setselectableTokensLists}
+              accountAddress={connectedAddress}
+              targetAddress={targetAddress}
+              tokensInstances={tokensInstances}
+              chainId={chainId}
+              isLoadingTokensLists={isLoadingTokensLists}
+              isErrorTokensLists={isErrorTokensLists}
+              isLoadingTokensInstances={isLoadingTokensInstances}
+              isErrorTokensInstances={isErrorTokensInstances}
 
-                tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
-              />
+              tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+            />
           </MainContentContainer>
 
         </div>
@@ -1790,16 +1790,16 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
       { step === 1 &&
         <div className="w-full" >
           <MainContentContainer>
-              <Step1
-                setNextDisabled={setNextDisabled}
-                accountAddress={connectedAddress}
-                tokensInstances={tokensInstances}
-                chainId={chainId}
-                targetAddress={targetAddress}
-                settargetAddress={settargetAddress}
-                isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
-                tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
-              />
+            <Step1
+              setNextDisabled={setNextDisabled}
+              accountAddress={connectedAddress}
+              tokensInstances={tokensInstances}
+              chainId={chainId}
+              targetAddress={targetAddress}
+              settargetAddress={settargetAddress}
+              isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
+              tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+            />
           </MainContentContainer>
         </div>
       }
@@ -1808,13 +1808,13 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
         <div className="w-full" >
           <MainContentContainer>
               <Step2
-                setNextDisabled={setNextDisabled}
-                tokensInstances={tokensInstances}
-                setShowProgressBar={setShowProgressBar}
-                accountAddress={connectedAddress}
-                targetAddress={targetAddress}
-                isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
-                tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+              setNextDisabled={setNextDisabled}
+              tokensInstances={tokensInstances}
+              setShowProgressBar={setShowProgressBar}
+              accountAddress={connectedAddress}
+              targetAddress={targetAddress}
+              isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
+              tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 />
           </MainContentContainer>
         </div>
@@ -1824,13 +1824,13 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
         <div className="w-full px-1" >
           <MainContentContainer>
             <Step3
-                setNextDisabled={setNextDisabled}
-                tokensInstances={tokensInstances}
-                setShowProgressBar={setShowProgressBar}
-                accountAddress={connectedAddress}
-                targetAddress={targetAddress}
-                tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
-                setmigrationState={setmigrationState}
+              setNextDisabled={setNextDisabled}
+              tokensInstances={tokensInstances}
+              setShowProgressBar={setShowProgressBar}
+              accountAddress={connectedAddress}
+              targetAddress={targetAddress}
+              tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+              setmigrationState={setmigrationState}
             />
           </MainContentContainer>
         </div>
