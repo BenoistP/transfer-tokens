@@ -5,7 +5,7 @@ export const NotificationContainer = () => {
     return (
         <div className="w-full" id="bottom">
 
-
+{/* 
             <div className="w-auto   toast toast-end z-20 opacity-80">
 
             <div className="alert alert-info  z-100">
@@ -83,7 +83,7 @@ export const NotificationContainer = () => {
 
             </div>
 
-
+ */}
         </div>
     );
 };

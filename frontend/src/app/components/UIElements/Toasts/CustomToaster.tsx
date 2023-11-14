@@ -1,17 +1,19 @@
 // React
-import React from 'react'
+// import React from 'react'
 import { useMemo } from 'react'
 
 import { toast, Toaster, ToastBar } from 'react-hot-toast'
 // Tailwind
-import resolveConfig from 'tailwindcss/resolveConfig'
-import tailwindConfig from '/tailwind.config.js'
+// import resolveConfig from 'tailwindcss/resolveConfig'
+// import tailwindConfig from '/tailwind.config.js'
 
 
 // Icons
 // FontAwesome
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faXmark as faSolid_Xmark } from '@fortawesome/free-solid-svg-icons'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faXmark as faSolid_Xmark } from '@fortawesome/free-solid-svg-icons'
+import {  XMarkIcon } from '@heroicons/react/24/solid'
+
 
 // React router
 // import {
@@ -25,27 +27,27 @@ import {
   // DURATION_SHORT,
   // DURATION_MEDIUM,
   DURATION_LONG,
-} from '@js/ui/uiConsts'
+} from '@uiconsts/uiConsts'
 
 
-const CustomToaster = ( {/**/} ) =>
+const CustomToaster = ( ) =>
 {
   // console.debug(`CustomToaster: `)
 
   // Tailwind
-  const twFullConfig = resolveConfig(tailwindConfig)
+  // const twFullConfig = resolveConfig(tailwindConfig)
 
   const toastsStyles = useMemo(
     () => (
       {
         style: {
-          background: twFullConfig.theme.colors['greyMVa'].light,
+          background: '#00F', // twFullConfig.theme.colors['greyMVa'].light,
           border: '1px solid black'
         },
         icon: '⌛',
         success: {
           style: {
-            background: twFullConfig.theme.colors['tealMVa'].dark,
+            background: '#0F0', // twFullConfig.theme.colors['tealMVa'].dark,
             border: '1px solid black',
           },
           duration: DURATION_LONG,
@@ -53,7 +55,7 @@ const CustomToaster = ( {/**/} ) =>
         },
         error: {
           style: {
-            background: twFullConfig.theme.colors['orangeMVa'].light,
+            background: '#F00', // twFullConfig.theme.colors['orangeMVa'].light,
             border: '1px solid',
           },
           duration: DURATION_LONG,
@@ -61,7 +63,7 @@ const CustomToaster = ( {/**/} ) =>
         },
       }
     ), 
-    [twFullConfig.theme.colors]
+    [/* twFullConfig.theme.colors */]
   );
 
   const toastsPosition = useMemo(
@@ -117,13 +119,13 @@ const CustomToaster = ( {/**/} ) =>
               {icon}
               {message}
               {t.type !== 'loading' && (
-                <button onClick={() => toast.dismiss(t.id)}><FontAwesomeIcon icon={faSolid_Xmark}/></button>
+                <button onClick={() => toast.dismiss(t.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button>
               )}
             </>
           )}
         </ToastBar>
       )}
-</Toaster>
+    </Toaster>
 
   ) // render
 }

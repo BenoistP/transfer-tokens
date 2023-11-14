@@ -6,6 +6,8 @@ import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
 import { Footer } from '@Components/Footer'
 import { NotificationContainer } from '@Components/NotificationContainer'
+// Toasts
+import CustomToaster from '@App/components/UIElements/Toasts/CustomToaster'
 // Utils
 import { isChainSupported } from "@jsutils/blockchainUtils";
 import { getTokenLists } from '@jsutils/tokensLists';
@@ -136,6 +138,7 @@ export const MainContent = ( ) => {
                         setmigrationState={setmigrationState}
                         setshowActivity={setshowActivity}
                       />
+                      <CustomToaster/>
                       <NotificationContainer/>
                       <Footer showActivity={showActivity}/>
 

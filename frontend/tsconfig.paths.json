@@ -13,6 +13,7 @@
       "@css/*": ["./src/app/styles/*"],
       "@ui/*": ["./src/app/ui/*"],
       "@Components/*": ["./src/app/components/*"],
+      "@Toasts/*": ["./src/app/components/UIElements/Toasts/*"],
       "@uiconsts/*": ["./src/app/js/constants/ui/*"],
       "@i18n/*": ["./src/app/js/ui/i18n/*"],
       "@abis/*": ["./src/app/abis/*"],

@@ -5,9 +5,13 @@ import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationL
 // Wagmi
 import { erc20ABI, prepareWriteContract, writeContract } from '@wagmi/core'
 // Consts & Enums
-import { USER_REJECT_TX_REGEXP } from "@App/js/constants/ui/uiConsts";
+import { DURATION_MEDIUM, DURATION_SHORT, USER_REJECT_TX_REGEXP } from "@App/js/constants/ui/uiConsts";
 // Icons
 // import { FaceSmileIcon } from '@heroicons/react/24/solid'
+
+ // Toasts
+ import toast from 'react-hot-toast'
+import { shortenAddress } from "@App/js/utils/blockchainUtils";
 
 // ------------------------------
 
@@ -68,7 +72,7 @@ const Step3 = ( {
 
   // ---
 
-  const callTransferToken = useCallback( async ( _tokenAddress:TAddressString, _destinationAddress: TAddressString, _amount: TTokenAmount ) : Promise<boolean|undefined> =>
+  const callTransferToken = useCallback( async ( _tokenAddress:TAddressString, _destinationAddress: TAddressString, _amount: TTokenAmount ) : Promise<string|undefined> =>
     {
       try {
         // console.debug(`moveRealTokens._index.tsx: callTransferToken : _tokenAddress:${_tokenAddress} _destinationAddress:${_destinationAddress} _amount:${_amount}`)
@@ -82,7 +86,11 @@ const Step3 = ( {
         console.dir(transferRequestResult);
         const { hash,  } = transferRequestResult
         console.debug(`moveRealTokens._index.tsx: callTransferToken : hash:${hash}`)
-        return true; // RETURN Success
+
+
+        // return true; // RETURN Success
+        return hash; // RETURN Success
+
       } catch (error) {
 
         try {
@@ -90,7 +98,8 @@ const Step3 = ( {
           if (error instanceof Error) {
             // console.debug(`moveRealTokens._index.tsx: callTransferToken error: ${error.name} ${error.message}`)
               if (error.message.match(USER_REJECT_TX_REGEXP)) {
-              return false; // RETURN User rejected
+              // return false; // RETURN User rejected
+              return "" ; // RETURN User rejected
             } else {
               // reThrow
               throw error;
@@ -121,11 +130,25 @@ const Step3 = ( {
           const transfer = await callTransferToken(_tokenInstanceToTransfer.address, _to, _tokenInstanceToTransfer.transferAmount)
           if (transfer) {
             // Success
+            // non-empty hash is returned
             // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER OK ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${"_from"} ${_to} process`)
             _tokenInstanceToTransfer.tr_processed = true;
             _tokenInstanceToTransfer.tr_skipped = false;
             _tokenInstanceToTransfer.tr_error = false;
             _tokenInstanceToTransfer.selected = false;
+            const toastStyle = {
+              style: {
+                color: 'white',
+                background: 'green',
+                border: `1px solid black`,
+              },
+              icon: '✓',
+              // position: 'bottom-right',
+            }
+    
+            const toastStyleDuration = { ...toastStyle, duration: DURATION_MEDIUM, }
+            toast.success( `Sent ${_tokenInstanceToTransfer.name} to ${shortenAddress(_to)}`, toastStyleDuration )
+    
             // _migrationState.successItemsCount++;
           } else {
             // Skipped
@@ -133,7 +156,23 @@ const Step3 = ( {
             _tokenInstanceToTransfer.tr_skipped = true;
             _tokenInstanceToTransfer.tr_processed = false;
             _tokenInstanceToTransfer.tr_error = false;
-            // _migrationState.skippedItemsCount++;
+
+            const toastStyle = {
+              style: {
+                color: 'white',
+                background: 'black',
+                border: `1px solid black`,
+              },
+              icon: '⬛️',
+              // position: 'bottom-right',
+            }
+    
+            const toastStyleDuration = { ...toastStyle, duration: DURATION_SHORT, }
+            for (let i = 0; i < 15; i++) {
+              toast( `Skipped ${_tokenInstanceToTransfer.name}`, toastStyleDuration )
+            }
+            // toast( `Skipped ${_tokenInstanceToTransfer.name}`, toastStyleDuration )
+    
           }
         } // if (_tokenInstanceToTransfer ...
 
@@ -142,21 +181,14 @@ const Step3 = ( {
         _tokenInstanceToTransfer.tr_error = true;
         _tokenInstanceToTransfer.tr_processed = false;
         _tokenInstanceToTransfer.tr_skipped = false;
-          // _migrationState.errorItemsCount++;
       }
       finally {
         try {
-          // setmigrationState( {..._migrationState, paused: paused.current, stopped: stopped.current} )
-          // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER FINALLY before update migrationState.current=`);
-          // console.dir(migrationState.current)
           if (_tokenInstanceToTransfer.tr_processed) {
-            // setmigrationState( {...migrationState.current, successItemsCount: migrationState.current.successItemsCount+1} )
             migrationState.current.successItemsCount++;
           } else if (_tokenInstanceToTransfer.tr_skipped) {
-            // setmigrationState( {...migrationState.current, skippedItemsCount: migrationState.current.skippedItemsCount+1} )
             migrationState.current.skippedItemsCount++;
           } else if (_tokenInstanceToTransfer.tr_error) {
-            // setmigrationState( {...migrationState.current, errorItemsCount: migrationState.current.errorItemsCount+1} )
             migrationState.current.errorItemsCount++;
           }
           // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER FINALLY after update  migrationState.current=`);
@@ -204,6 +236,12 @@ const Step3 = ( {
               console.error(`Steps3.tsx transferTokenS tokenInstanceToTransfer TRANSFER ERROR token symbol: '${tokenInstanceToTransfer.symbol}' token address: '${tokenInstanceToTransfer.address}' to: '${_to}' for '${tokenInstanceToTransfer.transferAmount}' amount process error: ${error}`);
             }
           } // for (let tokenInstanceIndex = 0 ...
+
+
+          setstopTransfers(true)
+          paused.current = false
+          stopped.current = true
+          setmigrationState( {...migrationState.current, paused: false, stopped: true} )
 
         } // if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length)
       } catch (error) {
