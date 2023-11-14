@@ -119,7 +119,13 @@
           "progress": "En curso",
           "completed": "Terminado"
         }
-      }
+      },
+        "transferResult": {
+          "skipped": "Saltado",
+          "error": "Fallido",
+          "success": "Enviado",
+          "successTo": "a"
+        }
     },
     "Footer": {
       "info": {

@@ -122,6 +122,12 @@
           "progress": "In progress",
           "completed": "Completed"
           }
+      },
+      "transferResult": {
+        "skipped": "Skipped",
+        "error": "Failed",
+        "success": "Sent",
+        "successTo": "to"
       }
     },
 

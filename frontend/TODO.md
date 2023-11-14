@@ -14,7 +14,8 @@
 ☑️ i18n
 ☑️ i18n switch
 
-🚧 Toasts
+☑️ Toasts
+🚧  Toasts with links
 
 ☑️ Theme 🌗
 ☑️ Theme switch
@@ -37,7 +38,7 @@ use tokens lists in context to display tokens list in client
 🚧 Modals
 
 ☑️ Error handling
-☑️ 🚧 Move tokens 🏠🏡
+☑️ Move tokens 🏠🏡
 ☑️ progressive list loading
 
 🚧 More languages
@@ -90,7 +91,8 @@ Step 3:
 - ☑️ Show amount, not balance
 - ☑️ Pause, stop transfers
 - ☑️ Transfer progress state is not up to date on resume from pause
-- 🚧 Show success toast on txhash
+- ☑️ Show success toaston txhash
+- 🚧 add txhash link to toast
 
 🚧 avatar list/select style
 

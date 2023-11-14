@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, /* useMemo, */ useState } from
 import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationListTable"
 // Wagmi
 import { erc20ABI, prepareWriteContract, writeContract } from '@wagmi/core'
+// Translation
+import { useTranslation } from "react-i18next";
 // Consts & Enums
 import { DURATION_LONG, DURATION_MEDIUM, DURATION_SHORT, USER_REJECT_TX_REGEXP } from "@App/js/constants/ui/uiConsts";
 // Icons
@@ -32,6 +34,8 @@ const Step3 = ( {
   // console.debug(`Steps3.tsx render`)
 
   // ---
+
+  const { t } = useTranslation()
   const [tokensInstancesToMigrate, settokensInstancesToMigrate] = useState<TTokensInstances>(null)
 
   // // Transfer controls
@@ -137,19 +141,23 @@ const Step3 = ( {
             _tokenInstanceToTransfer.tr_skipped = false;
             _tokenInstanceToTransfer.tr_error = false;
             _tokenInstanceToTransfer.selected = false;
-            const toastStyle = {
-              style: {
-                color: 'text-success-content',
-                background: 'bg-success',
-                border: `1px solid base-300`,
-              },
-              icon: '✓',
-              // position: 'bottom-right',
-            }
-    
-            const toastStyleDuration = { ...toastStyle, duration: DURATION_MEDIUM, }
-            toast.success( `Sent ${_tokenInstanceToTransfer.name} to ${shortenAddress(_to)}`, toastStyleDuration )
-    
+
+            toast.custom(
+              (_toast) => (
+                <div className={`flex alert alert-success w-auto`}
+                  style={{
+                    opacity: _toast.visible ? 0.85 : 0,
+                    transition: "opacity 100ms ease-in-out",
+                    border: '1px solid black',
+                  }}
+                >
+                  <div className="pt-1"><button onClick={() => toast.dismiss(_toast.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+                  <div className="">{`${t("moveTokens.stepThree.transferResult.success")}: ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transferResult.successTo")} ${shortenAddress(_to)}`}</div>
+                </div>
+              ),
+              { duration: DURATION_MEDIUM }
+            )
+
             // _migrationState.successItemsCount++;
           } else {
             // Skipped
@@ -157,47 +165,24 @@ const Step3 = ( {
             _tokenInstanceToTransfer.tr_skipped = true;
             _tokenInstanceToTransfer.tr_processed = false;
             _tokenInstanceToTransfer.tr_error = false;
-/* 
-            const toastStyle = {
-              style: {
-                color: 'text-info-content',
-                background: 'bg-success',
-                border: `1px solid base-300`,
-              },
-              icon: '⬛️',
-              // position: 'bottom-right',
-            }
-    
-            const toastStyleDuration = { ...toastStyle, duration: DURATION_SHORT, }
-            for (let i = 0; i < 15; i++) {
-              toast( `Skipped ${_tokenInstanceToTransfer.name}`, toastStyleDuration )
-            }
-            // toast( `Skipped ${_tokenInstanceToTransfer.name}`, toastStyleDuration )
- */
-/*             for (let i = 0; i < 15; i++) {
-              toast.custom(
-              <div className="alert alert-info w-40 shadow-xl opacity-90">
-                {`Skipped ${_tokenInstanceToTransfer.name}`}
-              </div>, {duration: DURATION_SHORT, icon: '⬛️'});
-            }
- */
-            toast.custom(
-            (t) => (
-              <div className={`flex alert alert-info w-auto`}
-                style={{
-                  opacity: t.visible ? 0.85 : 0,
-                  transition: "opacity 100ms ease-in-out",
-                  border: '1px solid black',
-                }}
-              >
-                <div className="pt-1"><button onClick={() => toast.dismiss(t.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                <div className="">{`Skipped: ${_tokenInstanceToTransfer.name}`}</div>
-              </div>
-            ),
-            { duration: DURATION_SHORT }
-          )
 
-          }
+            toast.custom(
+              (_toast) => (
+                <div className={`flex alert alert-info w-auto`}
+                  style={{
+                    opacity: _toast.visible ? 0.85 : 0,
+                    transition: "opacity 100ms ease-in-out",
+                    border: '1px solid black',
+                  }}
+                >
+                  <div className="pt-1"><button onClick={() => toast.dismiss(_toast.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+                  <div className="">{`${t("moveTokens.stepThree.transferResult.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
+                </div>
+              ),
+              { duration: DURATION_SHORT }
+            )
+            
+          } // if (transfer) ... ELSE ...
         } // if (_tokenInstanceToTransfer ...
 
       } catch (error) {
@@ -205,6 +190,22 @@ const Step3 = ( {
         _tokenInstanceToTransfer.tr_error = true;
         _tokenInstanceToTransfer.tr_processed = false;
         _tokenInstanceToTransfer.tr_skipped = false;
+
+        toast.custom(
+          (_toast) => (
+            <div className={`flex alert alert-error w-auto`}
+              style={{
+                opacity: _toast.visible ? 0.85 : 0,
+                transition: "opacity 100ms ease-in-out",
+                border: '1px solid black',
+              }}
+            >
+              <div className="pt-1"><button onClick={() => toast.dismiss(_toast.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+              <div className="">{`${t("moveTokens.stepThree.transferResult.error")}: ${_tokenInstanceToTransfer.name}`}</div>
+            </div>
+          ),
+          { duration: DURATION_LONG }
+        )
       }
       finally {
         try {
@@ -225,7 +226,7 @@ const Step3 = ( {
       }
     } // transferToken
     ,
-    [setmigrationState, callTransferToken]
+    [setmigrationState, callTransferToken, t]
   ) // transferToken
 
     // ---
@@ -260,7 +261,6 @@ const Step3 = ( {
               console.error(`Steps3.tsx transferTokenS tokenInstanceToTransfer TRANSFER ERROR token symbol: '${tokenInstanceToTransfer.symbol}' token address: '${tokenInstanceToTransfer.address}' to: '${_to}' for '${tokenInstanceToTransfer.transferAmount}' amount process error: ${error}`);
             }
           } // for (let tokenInstanceIndex = 0 ...
-
 
           setstopTransfers(true)
           paused.current = false
