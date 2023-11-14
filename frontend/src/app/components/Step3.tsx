@@ -190,11 +190,11 @@ const Step3 = ( {
                   border: '1px solid black',
                 }}
               >
-                <div className="flex m-0 p-0"><button onClick={() => toast.dismiss(t.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                <div className="m-0 p-0">{`Skipped: ${_tokenInstanceToTransfer.name}`}</div>
+                <div className="pt-1"><button onClick={() => toast.dismiss(t.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+                <div className="">{`Skipped: ${_tokenInstanceToTransfer.name}`}</div>
               </div>
             ),
-            { duration: 240_000 }
+            { duration: DURATION_SHORT }
           )
 
           }
