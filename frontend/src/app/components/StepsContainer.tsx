@@ -1824,6 +1824,7 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
         <div className="w-full px-1" >
           <MainContentContainer>
             <Step3
+              chainId={chainId}
               setNextDisabled={setNextDisabled}
               tokensInstances={tokensInstances}
               setShowProgressBar={setShowProgressBar}

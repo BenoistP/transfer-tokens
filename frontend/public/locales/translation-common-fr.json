@@ -127,7 +127,8 @@
         "skipped": "Omis",
         "error": "Echec",
         "success": "Envoi de",
-        "successTo": "à"
+        "successTo": "à",
+        "txHash": "Transaction"
       }
     },
 

@@ -124,7 +124,8 @@
           "skipped": "Saltado",
           "error": "Fallido",
           "success": "Enviado",
-          "successTo": "a"
+          "successTo": "a",
+          "txHash": "Transacción"
         }
     },
     "Footer": {

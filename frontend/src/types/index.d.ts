@@ -404,15 +404,13 @@ interface IStep2Props {
 type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void;
 
 interface IStep3Props {
+  chainId: ChainId;
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
   setShowProgressBar: TsetShowProgressBar
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
-  // transferTokens: TtransferTokens,
-  // stopTransfers: boolean, setstopTransfers: TreactSetState_boolean,
-  // pauseTransfers: boolean, setpauseTransfers: TreactSetState_boolean
   setmigrationState: TSetMigrationState
 }
 

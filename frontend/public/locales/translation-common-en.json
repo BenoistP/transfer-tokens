@@ -127,7 +127,8 @@
         "skipped": "Skipped",
         "error": "Failed",
         "success": "Sent",
-        "successTo": "to"
+        "successTo": "to",
+        "txHash": "Tx"
       }
     },
 

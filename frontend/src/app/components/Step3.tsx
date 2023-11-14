@@ -6,19 +6,26 @@ import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationL
 import { erc20ABI, prepareWriteContract, writeContract } from '@wagmi/core'
 // Translation
 import { useTranslation } from "react-i18next";
+ // Toasts
+ import toast from 'react-hot-toast'
+ // Router
+import { Link } from "react-router-dom";
 // Consts & Enums
-import { DURATION_LONG, DURATION_MEDIUM, DURATION_SHORT, USER_REJECT_TX_REGEXP } from "@App/js/constants/ui/uiConsts";
+import { DEFAULT_ETHEREUM_EXPLORER, DEFAULT_ETHEREUM_EXPLORER_TX,
+  DEFAULT_GNOSIS_EXPLORER, DEFAULT_GNOSIS_EXPLORER_TX,
+  DURATION_LONG, DURATION_MEDIUM, DURATION_SHORT,
+  USER_REJECT_TX_REGEXP
+} from "@App/js/constants/ui/uiConsts";
+import { ETHEREUM_CHAIN_ID, XDAI_CHAIN_ID } from "@App/js/constants/chainIds";
 // Utils
 import { shortenAddress } from "@App/js/utils/blockchainUtils";
 // Icons
-import {  XMarkIcon } from '@heroicons/react/24/solid'
-
- // Toasts
-import toast from 'react-hot-toast'
+import { LinkIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
 const Step3 = ( {
+  chainId,
   tokensInstances,
   setNextDisabled,
   setShowProgressBar,
@@ -43,6 +50,27 @@ const Step3 = ( {
     return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0, paused: false, stopped: false}
   }, [])
   const migrationState = useRef(initialMigrationState)
+
+  // ---
+
+  const getExplorerUri = useCallback( () => {
+    if (chainId == ETHEREUM_CHAIN_ID) {
+      return (import.meta.env.ETHEREUM_EXPLORER || DEFAULT_ETHEREUM_EXPLORER) + (import.meta.env.ETHEREUM_EXPLORER_TX || DEFAULT_ETHEREUM_EXPLORER_TX)
+    }
+    if (chainId == XDAI_CHAIN_ID) {
+      const res = (import.meta.env.GNOSIS_EXPLORER || DEFAULT_GNOSIS_EXPLORER) + (import.meta.env.GNOSIS_EXPLORER_TX || DEFAULT_GNOSIS_EXPLORER_TX)
+      console.debug(`explorer tx: ${res}`)
+      return res
+    }
+    return ""
+  }, [chainId])
+
+  console.debug(`explorer tx: ${getExplorerUri()}`)
+  // ---
+
+  const getTxUri = useCallback( (txHash:string) => {
+    return `${getExplorerUri()}${txHash}`
+  }, [getExplorerUri])
 
   // ---
 
@@ -126,6 +154,11 @@ const Step3 = ( {
                 >
                   <div className="pt-1"><button onClick={() => toast.dismiss(_toast.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
                   <div className="">{`${t("moveTokens.stepThree.transferResult.success")}: ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transferResult.successTo")} ${shortenAddress(_to)}`}</div>
+                  <div className="">
+                    <Link to={getTxUri(transfer)} target="_blank" rel="noopener noreferrer" >
+                    {t("moveTokens.stepThree.transferResult.txHash")}<LinkIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
+                    </Link>
+                  </div>
                 </div>
               ),
               { duration: DURATION_MEDIUM }
