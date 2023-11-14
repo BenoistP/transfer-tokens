@@ -11,8 +11,6 @@ const MigrationProgressBar = ({ migrationState }: ITF_TransferProgressBar ) => {
 
   const processed = migrationState.errorItemsCount+migrationState.skippedItemsCount+migrationState.successItemsCount;
 
-  // console.debug(`MigrationProgressBar: paused=${migrationState.paused} stopped=${migrationState.stopped}`);
-
   return (
       <div className="w-full h-full ">
         <div className="grid grid-cols-8 gap-2">

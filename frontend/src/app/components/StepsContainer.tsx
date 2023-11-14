@@ -1,12 +1,12 @@
 // React
 import { useCallback, useEffect, useMemo, useState } from "react";
 // Components
-import MainContentContainer from "@Components/MainContentContainer";
 import StepError from "@Components/StepError";
 import Step0 from "@Components/Step0";
 import Step1 from "@Components/Step1";
 import Step2 from "@Components/Step2";
 import Step3 from "@Components/Step3";
+import MainContentContainer from "@Components/MainContentContainer";
 // Context Hooks
 import { useMoveTokensAppContext } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
 // Utils
@@ -1825,16 +1825,12 @@ console.debug(`StepsContainer.tsx getUpdatedTokensInstancesArray selectable & No
           <MainContentContainer>
             <Step3
                 setNextDisabled={setNextDisabled}
-                // tokensInstances={tokensInstancesToMigrate}
                 tokensInstances={tokensInstances}
                 setShowProgressBar={setShowProgressBar}
                 accountAddress={connectedAddress}
                 targetAddress={targetAddress}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 setmigrationState={setmigrationState}
-                // transferTokens={transferTokens}
-                // stopTransfers={stopTransfers} setstopTransfers={setstopTransfers}
-                // pauseTransfers={pauseTransfers} setpauseTransfers={setpauseTransfers}
             />
           </MainContentContainer>
         </div>
