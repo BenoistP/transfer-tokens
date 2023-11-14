@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, /* useMemo, */ useState } from "react";
 // Components
 import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationListTable"
+// Wagmi
 import { erc20ABI, prepareWriteContract, writeContract } from '@wagmi/core'
 // Consts & Enums
 import { USER_REJECT_TX_REGEXP } from "@App/js/constants/ui/uiConsts";
@@ -109,9 +110,6 @@ const Step3 = ( {
 
   const transferToken = useCallback( async( _tokenInstanceToTransfer:TTokenInstance, /* _from:TAddressEmptyNullUndef, */ _to:TAddressEmptyNullUndef /* , _migrationState: TmigrationState */ ) =>
     {
-      // let transfer_success = false;
-      // let transfer_error = false;
-      // let transfer_skipped = false;
       try {
         // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER migrationState.current=`);
         // console.dir(migrationState.current)
@@ -175,50 +173,7 @@ const Step3 = ( {
   ) // transferToken
 
     // ---
-/*
-    const transferToken = useCallback( async( _tokenInstanceToTransfer:TTokenInstance, _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef, _migrationState: TmigrationState ) =>
-    {
 
-      try {
-        const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms))
-        const random0_99 = () => Math.floor(Math.random() * 100);
-
-        const random = random0_99();
-        setmigrationState( {..._migrationState} )
-        await sleep(2_000)
-        if (random < 50) {
-          // Success
-          console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER OK ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
-          _tokenInstanceToTransfer.tr_processed = true;
-          _tokenInstanceToTransfer.selected = false;
-          _migrationState.successItemsCount++;
-        } else if (random < 75) {
-          // Error
-          throw "Random transfer error"
-        } else {
-          // Skipped
-          console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER SKIPPED ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process`)
-          _tokenInstanceToTransfer.tr_skipped = true;
-          _migrationState.skippedItemsCount++;
-        }
-
-      } catch (error) {
-        console.error(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
-        _tokenInstanceToTransfer.tr_error = true;
-          _migrationState.errorItemsCount++;
-      }
-      finally {
-        try {
-          setmigrationState( {..._migrationState} )
-        } catch (error) {
-          console.error(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR STATE ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_from} ${_to} process error: ${error}`);
-        }
-      }
-    } // transferToken
-    ,
-    [setmigrationState]
-  ) // transferToken
-*/
   const transferTokens = useCallback( async( _tokensInstancesToTransfer:TTokensInstances, /* _from:TAddressEmptyNullUndef, */ _to:TAddressEmptyNullUndef ) =>
     {
       try {
@@ -235,38 +190,12 @@ const Step3 = ( {
 // await new Promise(r => setTimeout(r, 3_000));
 
           for (let tokenInstanceIndex = 0; ((tokenInstanceIndex < _tokensInstancesToTransfer.length)/* &&!stopTransfers */); tokenInstanceIndex++) {
-
-            // console.debug(`Steps3.tsx transferTokens pauseTransfers=${paused.current} stopTransfers=${"stopTransfers"}`)
-
             while (paused.current) {
               // console.debug(`Steps3.tsx transferTokens PAUSED for 250ms`)
               await new Promise(r => setTimeout(r, 250));
               if (!paused.current || stopped.current) break;
             }
             if (stopped.current) break;
-            // while (pauseTransfers) {
-            //   await new Promise(r => setTimeout(r, 1_000));
-            //   if (stopTransfers) break;
-            //   console.debug(`Steps3.tsx transferTokens PAUSED pauseTransfers=${pauseTransfers} stopTransfers=${stopTransfers}`)
-            // }
-            // if (stopTransfers) break;
-
-            // console.debug(`Steps3.tsx transferTokens tokenInstanceIndex=${tokenInstanceIndex} WAIT for 5s`)
-            // await new Promise(r => setTimeout(r, 5_000));
-            // console.debug(`Steps3.tsx transferTokens tokenInstanceIndex=${tokenInstanceIndex} AFTER WAIT`)
-
-            // if (pauseTransfers) {
-// debugger
-
-              // while (isPaused()) {
-              //   await new Promise(r => setTimeout(r, 1_000));
-              //   if (!pauseTransfers||stopTransfers) break;
-              // }
-              // if (stopTransfers) break;
-            //   console.debug(`Steps3.tsx transferTokens PAUSED pauseTransfers=${isPaused()} stopTransfers=${stopTransfers} tokenInstanceIndex=${tokenInstanceIndex}`)
-            // }
-            // if (stopTransfers) break;
-
             const tokenInstanceToTransfer = _tokensInstancesToTransfer[tokenInstanceIndex];
             try {
               await transferToken(tokenInstanceToTransfer, /* _from, */ _to /* , migrationState.current */ )
@@ -282,7 +211,7 @@ const Step3 = ( {
       }
     }
     ,
-    [/* pauseTransfers, stopTransfers, */ transferToken, /* transferControls ,*/ /* isPaused, isStopped */]
+    [setmigrationState, transferToken]
   ) // transferTokens
 
   // ---
