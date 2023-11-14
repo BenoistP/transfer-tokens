@@ -5,7 +5,7 @@ import ProgressContainer from "@Components/ProgressContainer";
 import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
 import { Footer } from '@Components/Footer'
-import { ContentBottomPadding } from '@Components/ContentBottomPadding'
+import { NotificationContainer } from '@Components/NotificationContainer'
 // Utils
 import { isChainSupported } from "@jsutils/blockchainUtils";
 import { getTokenLists } from '@jsutils/tokensLists';
@@ -96,9 +96,9 @@ export const MainContent = ( ) => {
 
   return (
     <>
-      <div className="w-full flex flex-row z-0 m-0 p-1 " >
+      <div className="w-full flex flex-row z-0 m-0 p-1" >
 
-        <div className="w-full base-100  " >
+        <div className="w-full base-100" >
 
           { ! chain?.id
             ?
@@ -136,7 +136,7 @@ export const MainContent = ( ) => {
                         setmigrationState={setmigrationState}
                         setshowActivity={setshowActivity}
                       />
-                      <ContentBottomPadding/>
+                      <NotificationContainer/>
                       <Footer showActivity={showActivity}/>
 
                     </div>
