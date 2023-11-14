@@ -5,7 +5,7 @@ import ProgressContainer from "@Components/ProgressContainer";
 import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
 import { Footer } from '@Components/Footer'
-import { NotificationContainer } from '@Components/NotificationContainer'
+import { ContentBottomPadding } from '@Components/ContentBottomPadding'
 // Toasts
 import CustomToaster from '@App/components/UIElements/Toasts/CustomToaster'
 // Utils
@@ -139,7 +139,7 @@ export const MainContent = ( ) => {
                         setshowActivity={setshowActivity}
                       />
                       <CustomToaster/>
-                      <NotificationContainer/>
+                      <ContentBottomPadding/>
                       <Footer showActivity={showActivity}/>
 
                     </div>

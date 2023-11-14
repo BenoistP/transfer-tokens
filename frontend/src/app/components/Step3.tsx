@@ -5,9 +5,10 @@ import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationL
 // Wagmi
 import { erc20ABI, prepareWriteContract, writeContract } from '@wagmi/core'
 // Consts & Enums
-import { DURATION_MEDIUM, DURATION_SHORT, USER_REJECT_TX_REGEXP } from "@App/js/constants/ui/uiConsts";
+import { DURATION_LONG, DURATION_MEDIUM, DURATION_SHORT, USER_REJECT_TX_REGEXP } from "@App/js/constants/ui/uiConsts";
 // Icons
 // import { FaceSmileIcon } from '@heroicons/react/24/solid'
+import {  XMarkIcon } from '@heroicons/react/24/solid'
 
  // Toasts
  import toast from 'react-hot-toast'
@@ -138,9 +139,9 @@ const Step3 = ( {
             _tokenInstanceToTransfer.selected = false;
             const toastStyle = {
               style: {
-                color: 'white',
-                background: 'green',
-                border: `1px solid black`,
+                color: 'text-success-content',
+                background: 'bg-success',
+                border: `1px solid base-300`,
               },
               icon: '✓',
               // position: 'bottom-right',
@@ -156,12 +157,12 @@ const Step3 = ( {
             _tokenInstanceToTransfer.tr_skipped = true;
             _tokenInstanceToTransfer.tr_processed = false;
             _tokenInstanceToTransfer.tr_error = false;
-
+/* 
             const toastStyle = {
               style: {
-                color: 'white',
-                background: 'black',
-                border: `1px solid black`,
+                color: 'text-info-content',
+                background: 'bg-success',
+                border: `1px solid base-300`,
               },
               icon: '⬛️',
               // position: 'bottom-right',
@@ -172,7 +173,30 @@ const Step3 = ( {
               toast( `Skipped ${_tokenInstanceToTransfer.name}`, toastStyleDuration )
             }
             // toast( `Skipped ${_tokenInstanceToTransfer.name}`, toastStyleDuration )
-    
+ */
+/*             for (let i = 0; i < 15; i++) {
+              toast.custom(
+              <div className="alert alert-info w-40 shadow-xl opacity-90">
+                {`Skipped ${_tokenInstanceToTransfer.name}`}
+              </div>, {duration: DURATION_SHORT, icon: '⬛️'});
+            }
+ */
+            toast.custom(
+            (t) => (
+              <div className={`flex alert alert-info w-auto`}
+                style={{
+                  opacity: t.visible ? 0.85 : 0,
+                  transition: "opacity 100ms ease-in-out",
+                  border: '1px solid black',
+                }}
+              >
+                <div className="flex m-0 p-0"><button onClick={() => toast.dismiss(t.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+                <div className="m-0 p-0">{`Skipped: ${_tokenInstanceToTransfer.name}`}</div>
+              </div>
+            ),
+            { duration: 240_000 }
+          )
+
           }
         } // if (_tokenInstanceToTransfer ...
 

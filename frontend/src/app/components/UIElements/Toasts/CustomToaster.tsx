@@ -2,7 +2,7 @@
 // import React from 'react'
 import { useMemo } from 'react'
 
-import { toast, Toaster, ToastBar } from 'react-hot-toast'
+import { Toaster, /* ToastBar */ } from 'react-hot-toast'
 // Tailwind
 // import resolveConfig from 'tailwindcss/resolveConfig'
 // import tailwindConfig from '/tailwind.config.js'
@@ -12,7 +12,7 @@ import { toast, Toaster, ToastBar } from 'react-hot-toast'
 // FontAwesome
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faXmark as faSolid_Xmark } from '@fortawesome/free-solid-svg-icons'
-import {  XMarkIcon } from '@heroicons/react/24/solid'
+// import {  XMarkIcon } from '@heroicons/react/24/solid'
 
 
 // React router
@@ -81,52 +81,11 @@ const CustomToaster = ( ) =>
   return (
     <Toaster
       position={TOAST_DEFAULT_POSITION}
-      gutter={44}
+      gutter={20}
       toastOptions={toastsStyles}
       containerStyle={toastsPosition}
-    >
-      {(t) => (
-        <ToastBar
-          toast={t}
-          // // style={{
-          // //   ...t.style,
-          // //   animation: t.visible ? 'custom-enter 1s ease' : 'custom-exit 1s ease',
-          // }}
-        >
-          {/* {({ icon, message }) => (
-            <>
-              {
-               (t.type == 'loading'  ?
-               <>
-                {icon}
-                {message}
-               </>
-              :
-                <>
-                  <button onClick={() => toast.dismiss(t.id)}>
-                  </button>
-                  <FontAwesomeIcon icon={faSolid_Xmark}/>
-                  {icon}
-                  {message}
-                </>
-              )
-              }
-
-            </>
-          )} */}
-          {({ icon, message }) => (
-            <>
-              {icon}
-              {message}
-              {t.type !== 'loading' && (
-                <button onClick={() => toast.dismiss(t.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button>
-              )}
-            </>
-          )}
-        </ToastBar>
-      )}
-    </Toaster>
-
+    />
+    
   ) // render
 }
 export default CustomToaster;
