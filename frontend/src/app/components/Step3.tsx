@@ -107,13 +107,17 @@ const Step3 = ( {
 
   // ---
 
-  const transferToken = useCallback( async( _tokenInstanceToTransfer:TTokenInstance, /* _from:TAddressEmptyNullUndef, */ _to:TAddressEmptyNullUndef, _migrationState: TmigrationState ) =>
+  const transferToken = useCallback( async( _tokenInstanceToTransfer:TTokenInstance, /* _from:TAddressEmptyNullUndef, */ _to:TAddressEmptyNullUndef /* , _migrationState: TmigrationState */ ) =>
     {
       // let transfer_success = false;
       // let transfer_error = false;
       // let transfer_skipped = false;
       try {
-        setmigrationState( {..._migrationState} )
+        // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER migrationState.current=`);
+        // console.dir(migrationState.current)
+        // setmigrationState( {..._migrationState} )
+        // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER _migrationState=`);
+        // console.dir(_migrationState)
 
         if (_tokenInstanceToTransfer?.address && _tokenInstanceToTransfer?.transferAmount /* && _from */ && _to) {
           const transfer = await callTransferToken(_tokenInstanceToTransfer.address, _to, _tokenInstanceToTransfer.transferAmount)
@@ -124,14 +128,14 @@ const Step3 = ( {
             _tokenInstanceToTransfer.tr_skipped = false;
             _tokenInstanceToTransfer.tr_error = false;
             _tokenInstanceToTransfer.selected = false;
-            _migrationState.successItemsCount++;
+            // _migrationState.successItemsCount++;
           } else {
             // Skipped
             // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER SKIPPED ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${"_from"} ${_to} process`)
             _tokenInstanceToTransfer.tr_skipped = true;
             _tokenInstanceToTransfer.tr_processed = false;
             _tokenInstanceToTransfer.tr_error = false;
-            _migrationState.skippedItemsCount++;
+            // _migrationState.skippedItemsCount++;
           }
         } // if (_tokenInstanceToTransfer ...
 
@@ -140,19 +144,26 @@ const Step3 = ( {
         _tokenInstanceToTransfer.tr_error = true;
         _tokenInstanceToTransfer.tr_processed = false;
         _tokenInstanceToTransfer.tr_skipped = false;
-          _migrationState.errorItemsCount++;
+          // _migrationState.errorItemsCount++;
       }
       finally {
         try {
           // setmigrationState( {..._migrationState, paused: paused.current, stopped: stopped.current} )
+          // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER FINALLY before update migrationState.current=`);
+          // console.dir(migrationState.current)
           if (_tokenInstanceToTransfer.tr_processed) {
-            setmigrationState( {...migrationState.current, successItemsCount: migrationState.current.successItemsCount+1} )
+            // setmigrationState( {...migrationState.current, successItemsCount: migrationState.current.successItemsCount+1} )
+            migrationState.current.successItemsCount++;
           } else if (_tokenInstanceToTransfer.tr_skipped) {
-            setmigrationState( {...migrationState.current, skippedItemsCount: migrationState.current.skippedItemsCount+1} )
+            // setmigrationState( {...migrationState.current, skippedItemsCount: migrationState.current.skippedItemsCount+1} )
+            migrationState.current.skippedItemsCount++;
           } else if (_tokenInstanceToTransfer.tr_error) {
-            setmigrationState( {...migrationState.current, errorItemsCount: migrationState.current.errorItemsCount+1} )
+            // setmigrationState( {...migrationState.current, errorItemsCount: migrationState.current.errorItemsCount+1} )
+            migrationState.current.errorItemsCount++;
           }
-          
+          // console.debug(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER FINALLY after update  migrationState.current=`);
+          // console.dir(migrationState.current)
+          setmigrationState( {...migrationState.current} )
 
         } catch (error) {
           // console.error(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR STATE ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${"_from"} ${_to} process error: ${error}`);
@@ -217,6 +228,7 @@ const Step3 = ( {
           //   errorItemsCount:0,skippedItemsCount:0,successItemsCount:0, paused: false, stopped: false}
             migrationState.current = {totalItemsCount:_tokensInstancesToTransfer.length,
               errorItemsCount:0,skippedItemsCount:0,successItemsCount:0, paused: false, stopped: false};
+            setmigrationState( migrationState.current )
 
 // DEBUG: initial PAUSE
 // console.debug(`Steps3.tsx transferTokens PAUSE for 3s`)
@@ -257,7 +269,7 @@ const Step3 = ( {
 
             const tokenInstanceToTransfer = _tokensInstancesToTransfer[tokenInstanceIndex];
             try {
-              await transferToken(tokenInstanceToTransfer, /* _from, */ _to, migrationState.current)
+              await transferToken(tokenInstanceToTransfer, /* _from, */ _to /* , migrationState.current */ )
               tokenIdx.current = tokenInstanceIndex;
             } catch (error) {
               console.error(`Steps3.tsx transferTokenS tokenInstanceToTransfer TRANSFER ERROR token symbol: '${tokenInstanceToTransfer.symbol}' token address: '${tokenInstanceToTransfer.address}' to: '${_to}' for '${tokenInstanceToTransfer.transferAmount}' amount process error: ${error}`);
