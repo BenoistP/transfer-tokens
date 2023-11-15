@@ -6,6 +6,8 @@ import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
 import { Footer } from '@Components/Footer'
 import { ContentBottomPadding } from '@Components/ContentBottomPadding'
+// Toasts
+import CustomToaster from '@App/components/UIElements/Toasts/CustomToaster'
 // Utils
 import { isChainSupported } from "@jsutils/blockchainUtils";
 import { getTokenLists } from '@jsutils/tokensLists';
@@ -32,7 +34,7 @@ export const MainContent = ( ) => {
   const [showActivity, setshowActivity] = useState<boolean>(false)
 
   const initialMigrationState = useMemo( () => {
-      return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0}
+      return {totalItemsCount:0,errorItemsCount:0,skippedItemsCount:0,successItemsCount:0, paused: false, stopped: false}
     }, [])
   const [migrationState, setmigrationState] = useState<TmigrationState>(initialMigrationState)
 
@@ -96,9 +98,9 @@ export const MainContent = ( ) => {
 
   return (
     <>
-      <div className="w-full flex flex-row z-0 m-0 p-1 " >
+      <div className="w-full flex flex-row z-0 m-0 p-1" >
 
-        <div className="w-full base-100  " >
+        <div className="w-full base-100" >
 
           { ! chain?.id
             ?
@@ -136,6 +138,7 @@ export const MainContent = ( ) => {
                         setmigrationState={setmigrationState}
                         setshowActivity={setshowActivity}
                       />
+                      <CustomToaster/>
                       <ContentBottomPadding/>
                       <Footer showActivity={showActivity}/>
 

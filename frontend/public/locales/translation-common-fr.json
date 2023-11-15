@@ -122,6 +122,13 @@
           "progress": "En cours",
           "completed": "Terminé"
           }
+      },
+      "transferResult": {
+        "skipped": "Omis",
+        "error": "Echec",
+        "success": "Envoi de",
+        "successTo": "à",
+        "txHash": "Transaction"
       }
     },
 

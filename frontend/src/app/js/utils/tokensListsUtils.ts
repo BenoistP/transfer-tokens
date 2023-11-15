@@ -755,7 +755,8 @@ const getTokensLists_TokenData = async(tokensLists: TTokensLists):Promise<TToken
   }
   finally {
     const elapsed = Date.now() - start
-    console.debug(`getTokensLists_TokenData: elapsed=${elapsed} DONE` );
+    // console.debug(`getTokensLists_TokenData: elapsed=${elapsed} DONE` );
+    console.log(`Loading token lists took:${elapsed}` );
   }
 }// getTokensLists_TokenData
 
@@ -861,10 +862,10 @@ const getTokensList_TokenData_fromApi = async(tokensList: TTokensList, index:num
       const fetchLen = text.length
 
       if (tokensList.fetchLen == fetchLen && tokensList.status == 'ok') {
-        console.debug(`getTokensList_TokenData_fromApi: tokensList.id=${tokensList.id} tokensList.URI=${tokensList.URI} fetchLen=${fetchLen} UP-TO-DATE` )
+        // console.debug(`getTokensList_TokenData_fromApi: tokensList.id=${tokensList.id} tokensList.URI=${tokensList.URI} fetchLen=${fetchLen} UP-TO-DATE` )
         return tokensList
       }
-      console.debug(`getTokensList_TokenData_fromApi: tokensList.id=${tokensList.id} tokensList.URI=${tokensList.URI} fetchLen=${fetchLen} LOADING` )
+      // console.debug(`getTokensList_TokenData_fromApi: tokensList.id=${tokensList.id} tokensList.URI=${tokensList.URI} fetchLen=${fetchLen} LOADING` )
 
       const fetchTokensListUri_json = JSON.parse(text)
       const tokensListUpdatedWithTokenData: TTokensList = await getTokensList_TokenData_fromJsonAPI(tokensList, fetchTokensListUri_json, index)

@@ -14,7 +14,8 @@
 ☑️ i18n
 ☑️ i18n switch
 
-🚧 Toasts
+☑️ Toasts
+🚧  Toasts with links
 
 ☑️ Theme 🌗
 ☑️ Theme switch
@@ -23,7 +24,6 @@
 🚧 heroicon-stroke
 
 ☑️ Synchronize avatar in Rainbow wallet
-
 
 Save tokens list in context
 save tokens lists by chain id in context
@@ -35,11 +35,10 @@ use tokens lists in context to display tokens list in client
 
 🚧 Transitions
 
-
 🚧 Modals
 
 ☑️ Error handling
-☑️ 🚧 Move tokens 🏠🏡
+☑️ Move tokens 🏠🏡
 ☑️ progressive list loading
 
 🚧 More languages
@@ -47,6 +46,8 @@ use tokens lists in context to display tokens list in client
 All Steps : 🚧
 
 - ☑️ Handle chain change (back to step 0, remove checked token lists)
+
+  - 🚧 reset target address or clear existing data on chain change
 - ☑️ Set default language cookie (invisible flag)
 - ☑️ Add fetch loading indicator in bottom bar
 - ☑️ use filtered tokens table in all screens
@@ -88,6 +89,10 @@ Step 3:
 
 - ☑️ display target address
 - ☑️ Show amount, not balance
+- ☑️ Pause, stop transfers
+- ☑️ Transfer progress state is not up to date on resume from pause
+- ☑️ Show success toast with txhash link
+- 🚧 add PENDING toast waiting for tx hash
 
 🚧 avatar list/select style
 

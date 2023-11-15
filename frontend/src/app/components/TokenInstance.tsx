@@ -3,7 +3,7 @@ import { useEffect, useCallback, useState } from "react";
 // Components
 import { TokenInstanceEditableAmount } from "@Components/TokenInstanceEditableAmount";
 // Consts
-import { ERC20_DECIMALS_DEFAULT } from "@uiconsts/misc";
+import { ERC20_DECIMALS_DEFAULT, SHORT_DISPLAY_DECIMAL_COUNT } from "@uiconsts/misc";
 // Translation
 import { useTranslation } from "react-i18next";
 // Icons
@@ -26,8 +26,6 @@ const TokenInstance = ( {
   // }
 
   const { t } = useTranslation()
-
-  const SHORT_DISPLAY_DECIMAL_COUNT = 3;
 
   const [decimals, setdecimals] = useState<bigint>(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT))) as [bigint, (balance:bigint) => void];
   const [name, setname] = useState<string>("")

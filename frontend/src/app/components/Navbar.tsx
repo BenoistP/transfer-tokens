@@ -12,7 +12,7 @@ import { NavbarStatus } from "@Components/NavbarStatus";
 export const Navbar = () => {
   return (
       <>
-        <div className="navbar bg-base-200 text-neutral rounded-box sticky top-0 opacity-90 shadow-xl z-50">
+        <div className="navbar bg-base-200 text-neutral rounded-box sticky top-0 opacity-90 shadow-xl z-10">
 
           <div className="navbar-start">
             <LanguageSelector />
