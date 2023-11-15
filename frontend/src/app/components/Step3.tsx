@@ -11,8 +11,8 @@ import { useTranslation } from "react-i18next";
  // Router
 import { Link } from "react-router-dom";
 // Consts & Enums
-import { DEFAULT_ETHEREUM_EXPLORER, DEFAULT_ETHEREUM_EXPLORER_TX,
-  DEFAULT_GNOSIS_EXPLORER, DEFAULT_GNOSIS_EXPLORER_TX,
+import { DEFAULT_ETHEREUM_EXPLORER_BASE_URI, DEFAULT_ETHEREUM_EXPLORER_TX_URI,
+  DEFAULT_GNOSIS_EXPLORER_BASE_URI, DEFAULT_GNOSIS_EXPLORER_TX_URI,
   DURATION_LONG, DURATION_MEDIUM, DURATION_SHORT,
   USER_REJECT_TX_REGEXP
 } from "@App/js/constants/ui/uiConsts";
@@ -20,7 +20,7 @@ import { ETHEREUM_CHAIN_ID, XDAI_CHAIN_ID } from "@App/js/constants/chainIds";
 // Utils
 import { shortenAddress } from "@App/js/utils/blockchainUtils";
 // Icons
-import { LinkIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { LinkIcon, XCircleIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
@@ -55,17 +55,15 @@ const Step3 = ( {
 
   const getExplorerUri = useCallback( () => {
     if (chainId == ETHEREUM_CHAIN_ID) {
-      return (import.meta.env.ETHEREUM_EXPLORER || DEFAULT_ETHEREUM_EXPLORER) + (import.meta.env.ETHEREUM_EXPLORER_TX || DEFAULT_ETHEREUM_EXPLORER_TX)
+      return (import.meta.env.PUBLIC_ETHEREUM_EXPLORER_BASE_URI || DEFAULT_ETHEREUM_EXPLORER_BASE_URI) + (import.meta.env.PUBLIC_ETHEREUM_EXPLORER_TX_URI || DEFAULT_ETHEREUM_EXPLORER_TX_URI)
     }
     if (chainId == XDAI_CHAIN_ID) {
-      const res = (import.meta.env.GNOSIS_EXPLORER || DEFAULT_GNOSIS_EXPLORER) + (import.meta.env.GNOSIS_EXPLORER_TX || DEFAULT_GNOSIS_EXPLORER_TX)
-      console.debug(`explorer tx: ${res}`)
+      const res = (import.meta.env.PUBLIC_GNOSIS_EXPLORER_BASE_URI || DEFAULT_GNOSIS_EXPLORER_BASE_URI) + (import.meta.env.PUBLIC_GNOSIS_EXPLORER_TX_URI || DEFAULT_GNOSIS_EXPLORER_TX_URI)
       return res
     }
     return ""
   }, [chainId])
 
-  console.debug(`explorer tx: ${getExplorerUri()}`)
   // ---
 
   const getTxUri = useCallback( (txHash:string) => {
@@ -145,20 +143,23 @@ const Step3 = ( {
             _tokenInstanceToTransfer.selected = false;
             toast.custom(
               (_toast) => (
-                <div className={`flex alert alert-success w-auto`}
+                <div className={`block alert alert-success w-auto p-2 m-0`}
                   style={{
                     opacity: _toast.visible ? 0.85 : 0,
                     transition: "opacity 100ms ease-in-out",
                     border: '1px solid black',
                   }}
                 >
-                  <div className="pt-1"><button onClick={() => toast.dismiss(_toast.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                  <div className="">{`${t("moveTokens.stepThree.transferResult.success")}: ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transferResult.successTo")} ${shortenAddress(_to)}`}</div>
-                  <div className="">
-                    <Link to={getTxUri(transfer)} target="_blank" rel="noopener noreferrer" >
-                    {t("moveTokens.stepThree.transferResult.txHash")}<LinkIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 fill-current" />
-                    </Link>
+                  <div className="grid grid-cols-8 gap-0 m-0 p-0">
+                    <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+                    <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.success")}: ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transferResult.successTo")} ${shortenAddress(_to)}`}</div>
+                    <div className="col-span-8">
+                      <Link className="flex justify-end underline" to={getTxUri("0xcf20ae6748859abe26f52909cfc52cbe167db16a64b49e29ca7a2d68ed767315")} target="_blank" rel="noopener noreferrer" >
+                      {t("moveTokens.stepThree.transferResult.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                      </Link>
+                    </div>
                   </div>
+          
                 </div>
               ),
               { duration: DURATION_MEDIUM }
@@ -170,15 +171,18 @@ const Step3 = ( {
             _tokenInstanceToTransfer.tr_error = false;
             toast.custom(
               (_toast) => (
-                <div className={`flex alert alert-info w-auto`}
+                <div className={`block alert alert-info w-auto p-2 m-0`}
                   style={{
                     opacity: _toast.visible ? 0.85 : 0,
                     transition: "opacity 100ms ease-in-out",
                     border: '1px solid black',
                   }}
                 >
-                  <div className="pt-1"><button onClick={() => toast.dismiss(_toast.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                  <div className="">{`${t("moveTokens.stepThree.transferResult.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
+                  <div className="grid grid-cols-8 gap-0 m-0 p-0">
+                    <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+                    <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
+                  </div>
+          
                 </div>
               ),
               { duration: DURATION_SHORT }
@@ -192,19 +196,23 @@ const Step3 = ( {
         _tokenInstanceToTransfer.tr_skipped = false;
         toast.custom(
           (_toast) => (
-            <div className={`flex alert alert-error w-auto`}
+            <div className={`block alert alert-error w-auto p-2 m-0`}
               style={{
                 opacity: _toast.visible ? 0.85 : 0,
                 transition: "opacity 100ms ease-in-out",
                 border: '1px solid black',
               }}
             >
-              <div className="pt-1"><button onClick={() => toast.dismiss(_toast.id)}><XMarkIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-              <div className="">{`${t("moveTokens.stepThree.transferResult.error")}: ${_tokenInstanceToTransfer.name}`}</div>
+              <div className="grid grid-cols-8 gap-0 m-0 p-0">
+                <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+                <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.error")}: ${_tokenInstanceToTransfer.name}`}</div>
+              </div>
+      
             </div>
           ),
           { duration: DURATION_LONG }
         ) // toast.custom
+
       }
       finally {
         try {
@@ -222,7 +230,7 @@ const Step3 = ( {
       }
     } // transferToken
     ,
-    [setmigrationState, callTransferToken, t]
+    [callTransferToken, t, getTxUri, setmigrationState]
   ) // transferToken
 
     // ---
@@ -341,7 +349,7 @@ const Step3 = ( {
         <div className="flex justify-center mt-2 p-1 bg-base-300 rounded-lg">
           <div className="join">
             <input type="checkbox" disabled={stopped.current} className="toggle toggle-info mt-1" checked={pauseTransfers} onChange={handlePauseTransfers}  /> 
-            <label className={(pauseTransfers?"animate-pulse text-info font-bold":"font-semibold")+" text-sm md:text-lg lg:text-lg ml-2 mr-2"}>
+            <label className={((pauseTransfers&&!stopped.current)?"animate-pulse text-info font-bold":"font-semibold")+" text-sm md:text-lg lg:text-lg ml-2 mr-2"}>
               {"Pause"}
             </label>
             <button className={"btn btn-xs sm:btn-sm pl-4 "+(stopTransfers?"btn-disabled":"btn-warning")} onClick={handleStopTransfers}>Stop</button>
