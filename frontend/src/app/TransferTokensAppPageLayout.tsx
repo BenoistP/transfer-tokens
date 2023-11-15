@@ -39,13 +39,15 @@ const TransferTokensAppPageLayout = ( { children, }: PageProps ) =>
 {
   // ---
   const mainnetChains = [
-  mainnet,
-  // polygon, optimism, arbitrum,
-  {...gnosis, iconUrl: import.meta.env.PUBLIC_GNOSIS_ICON_URL||DEFAULT_GNOSIS_ICON_URL} ];
+    mainnet,
+    // polygon, optimism, arbitrum,
+    {...gnosis, iconUrl: import.meta.env.PUBLIC_GNOSIS_ICON_URL||DEFAULT_GNOSIS_ICON_URL}
+  ];
 
-const testnetChains = [
-  goerli, sepolia,
-  {...gnosisChiado, iconUrl: import.meta.env.PUBLIC_GNOSIS_ICON_URL||DEFAULT_GNOSIS_ICON_URL}, ];
+  const testnetChains = [
+    goerli, sepolia,
+    {...gnosisChiado, iconUrl: import.meta.env.PUBLIC_GNOSIS_ICON_URL||DEFAULT_GNOSIS_ICON_URL},
+  ];
 
   // ---
 
