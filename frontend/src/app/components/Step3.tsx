@@ -378,7 +378,7 @@ const Step3 = ( {
   // ------------------------------
 
   return (
-    <div className="">
+    <div className="w-full p-0 m-0">
 
       <div className="min-w-full ">
         <div className="flex justify-center mt-2 p-1 bg-base-300 rounded-lg">
