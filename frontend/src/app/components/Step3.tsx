@@ -53,23 +53,27 @@ const Step3 = ( {
 
   // ---
 
-  const getExplorerUri = useCallback( () => {
-    if (chainId == ETHEREUM_CHAIN_ID) {
-      return (import.meta.env.PUBLIC_ETHEREUM_EXPLORER_BASE_URI || DEFAULT_ETHEREUM_EXPLORER_BASE_URI) + (import.meta.env.PUBLIC_ETHEREUM_EXPLORER_TX_URI || DEFAULT_ETHEREUM_EXPLORER_TX_URI)
-    }
-    if (chainId == XDAI_CHAIN_ID) {
-      const res = (import.meta.env.PUBLIC_GNOSIS_EXPLORER_BASE_URI || DEFAULT_GNOSIS_EXPLORER_BASE_URI) + (import.meta.env.PUBLIC_GNOSIS_EXPLORER_TX_URI || DEFAULT_GNOSIS_EXPLORER_TX_URI)
-      return res
-    }
-    return ""
-  }, [chainId])
+  const explorerUri = useMemo( ():string =>
+    {
+      if (chainId == ETHEREUM_CHAIN_ID) {
+        return (import.meta.env.PUBLIC_ETHEREUM_EXPLORER_BASE_URI || DEFAULT_ETHEREUM_EXPLORER_BASE_URI) + (import.meta.env.PUBLIC_ETHEREUM_EXPLORER_TX_URI || DEFAULT_ETHEREUM_EXPLORER_TX_URI)
+      }
+      if (chainId == XDAI_CHAIN_ID) {
+        const res = (import.meta.env.PUBLIC_GNOSIS_EXPLORER_BASE_URI || DEFAULT_GNOSIS_EXPLORER_BASE_URI) + (import.meta.env.PUBLIC_GNOSIS_EXPLORER_TX_URI || DEFAULT_GNOSIS_EXPLORER_TX_URI)
+        return res
+      }
+      return ""
+    },
+    [chainId]
+  )
 
   // ---
 
   const getTxUri = useCallback( (txHash:string) => {
-    return `${getExplorerUri()}${txHash}`
-  }, [getExplorerUri])
+    return `${explorerUri}${txHash}`
+  }, [explorerUri])
 
+  
   // ---
 
   const handlePauseTransfers = () => {
