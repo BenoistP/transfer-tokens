@@ -16,6 +16,7 @@ import { DEFAULT_ETHEREUM_EXPLORER_BASE_URI, DEFAULT_ETHEREUM_EXPLORER_TX_URI,
   DURATION_LONG, DURATION_MEDIUM, DURATION_SHORT,
   USER_REJECT_TX_REGEXP
 } from "@App/js/constants/ui/uiConsts";
+import { ERC20_DECIMALS_DEFAULT, SHORT_DISPLAY_DECIMAL_COUNT } from "@App/js/constants/ui/misc";
 import { ETHEREUM_CHAIN_ID, XDAI_CHAIN_ID } from "@App/js/constants/chainIds";
 // Utils
 import { shortenAddress } from "@App/js/utils/blockchainUtils";
@@ -73,7 +74,37 @@ const Step3 = ( {
     return `${explorerUri}${txHash}`
   }, [explorerUri])
 
-  
+  // ---
+
+  const getAmountShortString = useCallback( (_amount: TTokenAmount, _decimals: TTokenDecimals):string =>
+    {
+      try {
+        if (_amount) {
+          const decimals = BigInt((_decimals||ERC20_DECIMALS_DEFAULT))
+          const amountValue = _amount.valueOf();
+          const intValue = ( amountValue / (10n**decimals) );
+          const decimalValue = amountValue - intValue * (10n**decimals);
+          if (decimalValue > 0) {
+            // exact decimals display
+            const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
+            const zeroDecimalToFixed = Number("0."+longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+            const shortDecimalDisplay = zeroDecimalToFixed.substring(2);
+            const roundUpShortDisplay = (zeroDecimalToFixed.substring(0,2) =="1.")
+            const shortAmountString = `${(roundUpShortDisplay?intValue+1n:intValue)}.${shortDecimalDisplay}`
+            return shortAmountString
+          } else {
+            return `${intValue}.0`
+          }
+        }
+        return "0.0"
+      } catch (error) {
+        console.error(`Steps3.tsx getAmountShortString error: ${error}`);
+        return "?"
+      }
+    },
+    [] // No dependencies
+  )
+
   // ---
 
   const handlePauseTransfers = () => {
@@ -105,9 +136,9 @@ const Step3 = ( {
           args: [_destinationAddress, _amount],
         })
         const transferRequestResult = await writeContract(transferRequest)
-        console.dir(transferRequestResult);
         const { hash,  } = transferRequestResult
-        console.debug(`moveRealTokens._index.tsx: callTransferToken : hash:${hash}`)
+        // console.dir(transferRequestResult);
+        // console.debug(`moveRealTokens._index.tsx: callTransferToken : hash:${hash}`)
         return hash; // RETURN (Success)
 
       } catch (error) {
@@ -156,7 +187,7 @@ const Step3 = ( {
                 >
                   <div className="grid grid-cols-8 gap-0 m-0 p-0">
                     <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                    <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.success")}: ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transferResult.successTo")} ${shortenAddress(_to)}`}</div>
+                    <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.success")}: ${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transferResult.successTo")} ${shortenAddress(_to)}`}</div>
                     <div className="col-span-8">
                       <Link className="flex justify-end underline" to={getTxUri("0xcf20ae6748859abe26f52909cfc52cbe167db16a64b49e29ca7a2d68ed767315")} target="_blank" rel="noopener noreferrer" >
                       {t("moveTokens.stepThree.transferResult.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />

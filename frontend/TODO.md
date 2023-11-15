@@ -91,8 +91,8 @@ Step 3:
 - ☑️ Show amount, not balance
 - ☑️ Pause, stop transfers
 - ☑️ Transfer progress state is not up to date on resume from pause
-- ☑️ Show success toaston txhash
-- 🚧 add txhash link to toast
+- ☑️ Show success toast with txhash link
+- 🚧 add PENDING toast waiting for tx hash
 
 🚧 avatar list/select style
 
