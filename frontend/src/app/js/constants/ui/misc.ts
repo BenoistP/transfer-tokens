@@ -6,3 +6,5 @@ export const DEFAULT_APP_TITLE = "(RealT) Tokens Transfer Tool"
 
 export const COOKIE_DESTINATION_ADDRESS = "DESTINATION_ADDRESS"
 export const COOKIE_LANGUAGE = "LANGUAGE"
+
+export const SHORT_DISPLAY_DECIMAL_COUNT = 3;

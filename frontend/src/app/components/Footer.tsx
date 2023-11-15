@@ -20,7 +20,7 @@ export const Footer = ({showActivity}:iFooter) => {
 
     return (
         <>
-            <div className="w-full justify-center items-center sticky bottom-0 shadow-xs opacity-90 z-50 mt-2 mb-0 pb-0" id="currentbottom">
+            <div className="w-full justify-center items-center sticky bottom-0 shadow-xs opacity-90 z-10 mt-2 mb-0 pb-0" id="currentbottom">
 
                 <div className=" w-full bg-base-300 text-base-content" >
                     <div className="flex flex-row justify-between items-center text-xs sm:text-sm md:text-base transition-all">

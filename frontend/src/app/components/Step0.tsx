@@ -28,9 +28,9 @@ const Step0 = (  {
 
     useEffect( () =>
     {
-      setNextDisabled(!someTokensListsSelected || isLoadingTokensLists || isErrorTokensLists)
+      setNextDisabled(!someTokensListsSelected || isLoadingTokensLists || isErrorTokensLists || isLoadingTokensInstances)
     },
-    [setNextDisabled, someTokensListsSelected, isLoadingTokensLists, isErrorTokensLists]
+    [setNextDisabled, someTokensListsSelected, isLoadingTokensLists, isErrorTokensLists, isLoadingTokensInstances]
   )
 
 // ------------------------------
@@ -53,9 +53,7 @@ const Step0 = (  {
             <div className="min-w-fit m-0 p-1 rounded-box border border-base-300 ">
               <TokenInstanceListTableFiltered
                 tokensInstances={tokensInstances}
-                // settokensInstances={settokensInstances}
                 accountAddress={accountAddress}
-                // chainId={chainId}
                 enableCheckboxes={true}
                 targetAddress={targetAddress}
                 isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}

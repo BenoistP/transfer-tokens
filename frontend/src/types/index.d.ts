@@ -404,13 +404,14 @@ interface IStep2Props {
 type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void;
 
 interface IStep3Props {
+  chainId: ChainId;
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
   setShowProgressBar: TsetShowProgressBar
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
-  transferTokens: TtransferTokens
+  setmigrationState: TSetMigrationState
 }
 
 interface IChangeTokensListCheckboxStatus {
@@ -589,7 +590,8 @@ type TmigrationState = {
   successItemsCount: number;
   errorItemsCount: number;
   skippedItemsCount: number;
-
+  paused: boolean;
+  stopped: boolean;
 }
 
 interface ITF_TransferProgressBar {

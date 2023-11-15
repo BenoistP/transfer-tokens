@@ -3,6 +3,8 @@ import { useEffect, useState} from "react";
 // Wagmi
 import { watchBlockNumber } from '@wagmi/core'
 
+// ---
+
 export const FooterStatus = ( {showActivity=false}:iFooterStatus) =>
 {
   const blockNumberInitValue = "..."
@@ -27,7 +29,8 @@ export const FooterStatus = ( {showActivity=false}:iFooterStatus) =>
         unwatchBlockNumber()
       }
     },
-  [/* unwatchBlockNumber */])
+    []
+  )
 
   // ------------------------------
 
