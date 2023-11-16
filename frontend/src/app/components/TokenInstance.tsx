@@ -27,13 +27,13 @@ const TokenInstance = ( {
 
   const { t } = useTranslation()
 
-  // const accountADDRESS = accountAddress.toUpperCase()
+  const accountADDRESS = (accountAddress ? accountAddress.toUpperCase() : "")
   const targetADDRESS = targetAddress.toUpperCase()
 
   const [decimals, setdecimals] = useState<bigint>(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT))) as [bigint, (balance:bigint) => void];
   const [name, setname] = useState<string>("")
 
-  const [balance, setbalance] = useState<TTokenAmount | null>(tokenInstance.userData[accountAddress as any]?.balance);
+  const [balance, setbalance] = useState<TTokenAmount | null>(tokenInstance.userData[accountADDRESS as any]?.balance);
 
 
   const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(false)
@@ -50,7 +50,7 @@ const TokenInstance = ( {
   const [transferAmount, settransferAmount] = useState<TTokenAmount | null>(tokenInstance.transferAmount)
   const [transferAmountLock, settransferAmountLock] = useState<boolean>(tokenInstance.transferAmountLock)
 
-  const [canTransferFrom, setcanTransferFrom] = useState<boolean>( (accountAddress && (tokenInstance.userData[accountAddress as any] )) ? tokenInstance.userData[accountAddress as any]?.canTransfer : false )
+  const [canTransferFrom, setcanTransferFrom] = useState<boolean>( (accountADDRESS && (tokenInstance.userData[accountADDRESS as any] )) ? tokenInstance.userData[accountADDRESS as any]?.canTransfer : false )
   const [canTransferTo, setcanTransferTo] = useState<boolean>( (targetADDRESS && (tokenInstance.userData[targetADDRESS as any] )) ? tokenInstance.userData[targetADDRESS as any]?.canTransfer : false )
 
   // ---
@@ -84,8 +84,8 @@ const TokenInstance = ( {
    */
   useEffect(() =>
     {
-      if (accountAddress) {
-        const accountBalance = tokenInstance.userData[accountAddress as any]?.balance;
+      if (accountADDRESS) {
+        const accountBalance = tokenInstance.userData[accountADDRESS as any]?.balance;
         if (accountBalance) {
           setbalance(accountBalance);
         } else {
@@ -93,7 +93,7 @@ const TokenInstance = ( {
         }
       }
     }, // X eslint-disable-next-line react-hooks/exhaustive-deps
-    [tokenInstance.userData[accountAddress as any]?.balance, accountAddress]
+    [tokenInstance.userData[accountADDRESS as any]?.balance, accountADDRESS]
   );
 
   useEffect(() =>
@@ -165,11 +165,11 @@ const TokenInstance = ( {
   */
   useEffect( () =>
     {
-      setcanTransferFrom(accountAddress ? (tokenInstance.userData[accountAddress as any]?.canTransfer) : false )
+      setcanTransferFrom(accountADDRESS ? (tokenInstance.userData[accountADDRESS as any]?.canTransfer) : false )
       setcanTransferTo(targetADDRESS ? (tokenInstance.userData[targetADDRESS as any]?.canTransfer) : false )
     },
     // X eslint-disable-next-line react-hooks/exhaustive-deps
-    [accountAddress, targetADDRESS, tokenInstance.userData[accountAddress as any]?.canTransfer, tokenInstance.userData[targetADDRESS as any]?.canTransfer]
+    [accountADDRESS, targetADDRESS, tokenInstance.userData[accountADDRESS as any]?.canTransfer, tokenInstance.userData[targetADDRESS as any]?.canTransfer]
   );
 
   // ---
@@ -216,13 +216,13 @@ const TokenInstance = ( {
 
   useEffect(  () =>
     {
-      if (accountAddress && tokenInstance.selected) {
+      if (accountADDRESS && tokenInstance.selected) {
         setIsSelected(true);
       } else {
         setIsSelected(false);
       }
     },
-    [ tokenInstance.selected, accountAddress ]
+    [ tokenInstance.selected, accountADDRESS ]
   );
 
   // ---
@@ -230,10 +230,10 @@ const TokenInstance = ( {
   useEffect(() =>
     {
       if (
-        !accountAddress || !targetADDRESS ||
+        !accountADDRESS || !targetADDRESS ||
         !tokenInstance.selectable ||
         !tokenInstance.userData ||
-        !tokenInstance.userData[accountAddress as any]?.canTransfer ||
+        !tokenInstance.userData[accountADDRESS as any]?.canTransfer ||
         !tokenInstance.userData[targetADDRESS as any]?.canTransfer ||
         (balance?.valueOf() || 0n) == 0n ||
         (transferAmount||0n) == 0n
@@ -243,7 +243,7 @@ const TokenInstance = ( {
         setisCheckboxDisabled(false)
       }
     }, // X eslint-disable-next-line react-hooks/exhaustive-deps
-    [ accountAddress, targetADDRESS, tokenInstance.selectable,
+    [ accountADDRESS, targetADDRESS, tokenInstance.selectable,
       tokenInstance.userData,
       balance, transferAmount]
   );
@@ -265,7 +265,7 @@ const TokenInstance = ( {
   const handleCheckboxClick = useCallback( () =>
     {
       if (transferAmount && transferAmount.valueOf() > 0n) {
-        if (balance && targetADDRESS && tokenInstance.userData && tokenInstance.userData[/* accountAddress */targetADDRESS as any]?.canTransfer && updateCheckboxStatus) {
+        if (balance && targetADDRESS && tokenInstance.userData && tokenInstance.userData[targetADDRESS as any]?.canTransfer && updateCheckboxStatus) {
           updateCheckboxStatus(tokenInstance.selectID);
         }
       }

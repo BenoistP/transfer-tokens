@@ -229,7 +229,6 @@ const StepsContainer = ( {
           const unwatchFn = publicClient.watchContractEvent({
             address: _tokensAddresses,
             strict: true,
-            // args: { from: connectedAddress },
             onError: (error:Error) => {
               reportWatchError(error)
             },
@@ -354,9 +353,10 @@ const StepsContainer = ( {
           const nameFilter = filter.name && token.name ? token.name.toLowerCase().includes(filter.name.toLowerCase()) : true ;
           if (!nameFilter) return false ; // RETURN
 
-          const balanceGt0Filter = filter.balanceGt0 ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) > 0 : true ;
+          const connectedADDRESS = connectedAddress?.toUpperCase()
+          const balanceGt0Filter = filter.balanceGt0 ? (token.userData[connectedADDRESS as any]?.balance || 0) > 0 : true ;
           if (!balanceGt0Filter) return false ; // RETURN
-    
+
           if (filter.balance) {
             const balanceSplit = filter.balance.split('.')
             const intPart:string = balanceSplit[0]
@@ -367,7 +367,7 @@ const StepsContainer = ( {
             const filterValueInt =  BigInt(Math.pow(10, token.decimals)) * intValueBI
             const filterValueFloat = BigInt(Math.pow(10, token.decimals-(leadingZeros+floatValue.toString().length))) * floatValue
             const filterValue = filterValueInt + filterValueFloat
-            const balanceFilter = filter.balance && token.decimals ? (token.userData[/* accountAddress */ connectedAddress as any]?.balance || 0) >= filterValue : true ;
+            const balanceFilter = filter.balance && token.decimals ? (token.userData[connectedADDRESS as any]?.balance || 0) >= filterValue : true ;
             if (!balanceFilter) return false ; // RETURN
           }
           const addressFilter = filter.address && token.address ? token.address.toLowerCase().includes(filter.address.toLowerCase()) : true ;
@@ -440,8 +440,9 @@ const StepsContainer = ( {
           if (sortOrderParams.tokenBalance === 0) {
             return 0
           }
-          const aBalance = a.userData?.[connectedAddress as any].balance || 0n
-          const bBalance = b.userData?.[connectedAddress as any].balance || 0n
+          const connectedADDRESS = connectedAddress?.toUpperCase()
+          const aBalance = a.userData?.[connectedADDRESS as any].balance || 0n
+          const bBalance = b.userData?.[connectedADDRESS as any].balance || 0n
           if (sortOrderParams.tokenBalance === 1) {
             const compAMinusB = aBalance - bBalance
             return Number(compAMinusB)
@@ -630,9 +631,10 @@ const StepsContainer = ( {
     (id: string, value: TChecked | undefined) =>
       {
         try {
+          const connectedADDRESS = (connectedAddress?connectedAddress.toUpperCase():"");
           const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
             if (tokenInstance.selectID === id) {
-              if (connectedAddress && tokenInstance.userData && tokenInstance.userData[connectedAddress as any]) {
+              if (connectedADDRESS && tokenInstance.userData && tokenInstance.userData[connectedADDRESS as any]) {
                 if (value) {
                   tokenInstance.selected = value.checked;
                 } else {
@@ -688,9 +690,10 @@ const StepsContainer = ( {
     (id: string, value: boolean) =>
       {
         try {
+          const connectedADDRESS = (connectedAddress?connectedAddress.toUpperCase():"");
           const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
             if (tokenInstance.selectID === id) {
-              if (connectedAddress && tokenInstance.userData && tokenInstance.userData[connectedAddress as any]) {
+              if (connectedADDRESS && tokenInstance.userData && tokenInstance.userData[connectedADDRESS as any]) {
                 tokenInstance.transferAmountLock = value;
               } // if (connectedAddress && ...
             } // if (tokenInstance.selectID === id)
@@ -770,9 +773,10 @@ const StepsContainer = ( {
   const initTokenInstance = useCallback( (_token:TTokenChainData, _displayId:TDisplayId ): TTokenInstance|TNullUndef =>
     {
       if (_token?.address) {
+        const connectedADDRESS = (connectedAddress?connectedAddress.toUpperCase():"");
         const tokenInstanceUserDataArray:TTokenInstanceUserData[] = new Array<TTokenInstanceUserData>()
-        if (connectedAddress && typeof connectedAddress == 'string') {
-          tokenInstanceUserDataArray[connectedAddress as any] = {
+        if (connectedADDRESS) {
+          tokenInstanceUserDataArray[connectedADDRESS as any] = {
             balance: null,
             canTransfer: true, // warn: COULD BE FALSE for non transferable tokens, should be defaulted to false then checked with a multicall
           }
@@ -1388,6 +1392,7 @@ const StepsContainer = ( {
           // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances chainTokensList.chainId=${chainTokensList?.chainId} chainTokensList.tokensCount=${chainTokensList?.tokensCount} chainTokensList.tokensInstances?.length=${chainTokensList?.tokensInstances?.length}`)
           let _tokensInstances:TTokensInstances;
           if (chainTokensList && chainTokensList.tokensInstances && chainTokensList.tokensInstances.length) {
+            const connectedADDRESS = (connectedAddress?connectedAddress.toUpperCase():"");
             const targetADDRESS = _targetAddress.toUpperCase();
             // let tmp: TTokensInstances = []
             _tokensInstances = chainTokensList.tokensInstances;
@@ -1445,7 +1450,7 @@ const StepsContainer = ( {
                 if (tokensNames && tokensSourceBalances && tokensSourceCanTransfer && tokensDecimals && tokensSymbols ) {
                     _tokenInstance.name = tokensNames[index].name // tokens names
                     const {balance} = tokensSourceBalances[index] as unknown as TTokenInstanceUserData
-                    _tokenInstance.userData[connectedAddress as any] = {..._tokenInstance.userData[connectedAddress as any], /* ...tokensSourceBalances[index] */balance, ...tokensSourceCanTransfer[index]} // source balances, can transfer from source
+                    _tokenInstance.userData[connectedADDRESS as any] = {..._tokenInstance.userData[connectedADDRESS as any], /* ...tokensSourceBalances[index] */balance, ...tokensSourceCanTransfer[index]} // source balances, can transfer from source
                     _tokenInstance.decimals = tokensDecimals[index].decimals // tokens decimals
                     _tokenInstance.symbol = tokensSymbols[index].symbol // tokens symbols
 // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances fetch data : SET TRANSFER AMOUNT TO BALANCE ${balance||0n}`)
@@ -1619,6 +1624,7 @@ const StepsContainer = ( {
         try {
           // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] getUpdatedTokensInstancesArray`)
           if (_chainsTokensList && _chainsTokensList.length) {
+            const connectedADDRESS = (connectedAddress?connectedAddress.toUpperCase():"");
             const targetADDRESS = targetAddress.toUpperCase();
             const tokenInstances = _chainsTokensList.map( async(chainTokensList:TChainsTokensListNullUndef) => {
               // console.dir(chainTokensList)
@@ -1633,15 +1639,10 @@ const StepsContainer = ( {
                 // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] getUpdatedTokensInstancesArray: getUpdatedChainTokensListTokensInstances t.userData=`)
                 // console.dir(tokenInstance.userData)
                 const selectable = (tokenInstance.userData
-                  && (tokenInstance.userData[connectedAddress as any]?.balance || 0n > 0n)
-                  && tokenInstance.userData[connectedAddress as any]?.canTransfer && tokenInstance.userData[targetADDRESS as any]?.canTransfer) ? true : false ;
-                // tokenInstance.selectable = selectable;
-
-                // const transferAmount = (selectable && !tokenInstance.transferAmount ? tokenInstance.userData[connectedAddress as any]?.balance || 0n : 0n)
-                const transferAmount = (!selectable && tokenInstance.transferAmount>0n ? 0n : (tokenInstance.transferAmount?tokenInstance.transferAmount:tokenInstance.userData[connectedAddress as any]?.balance || 0n))
-
+                  && (tokenInstance.userData[connectedADDRESS as any]?.balance || 0n > 0n)
+                  && tokenInstance.userData[connectedADDRESS as any]?.canTransfer && tokenInstance.userData[targetADDRESS as any]?.canTransfer) ? true : false ;
+                const transferAmount = (!selectable && tokenInstance.transferAmount>0n ? 0n : (tokenInstance.transferAmount?tokenInstance.transferAmount:tokenInstance.userData[connectedADDRESS as any]?.balance || 0n))
                 const selected = (tokenInstance.selected && selectable) ? true : false ;
-
                 const transferAmountLock = (selectable && tokenInstance.transferAmountLock) ? true : false ;
 
                 return { ...tokenInstance,
