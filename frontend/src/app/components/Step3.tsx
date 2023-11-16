@@ -265,7 +265,7 @@ const Step3 = ( {
       }
     } // transferToken
     ,
-    [callTransferToken, t, getTxUri, setmigrationState]
+    [callTransferToken, t, getAmountShortString, getTxUri, setmigrationState]
   ) // transferToken
 
     // ---
