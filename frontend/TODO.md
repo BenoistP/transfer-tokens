@@ -92,7 +92,7 @@ Step 3:
 - ☑️ Pause, stop transfers
 - ☑️ Transfer progress state is not up to date on resume from pause
 - ☑️ Show success toast with txhash link
-- 🚧 Fix wrong tx link in toasts
+- ☑️ Fix wrong tx link in toasts
 - 🚧 add PENDING toast waiting for tx hash
 
 🚧 avatar list/select style

@@ -189,12 +189,11 @@ const Step3 = ( {
                     <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
                     <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.success")}: ${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transferResult.successTo")} ${shortenAddress(_to)}`}</div>
                     <div className="col-span-8">
-                      <Link className="flex justify-end underline" to={getTxUri("0xcf20ae6748859abe26f52909cfc52cbe167db16a64b49e29ca7a2d68ed767315")} target="_blank" rel="noopener noreferrer" >
+                      <Link className="flex justify-end underline" to={getTxUri(transfer)} target="_blank" rel="noopener noreferrer" >
                       {t("moveTokens.stepThree.transferResult.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
                       </Link>
                     </div>
                   </div>
-          
                 </div>
               ),
               { duration: DURATION_MEDIUM }

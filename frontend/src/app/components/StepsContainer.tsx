@@ -99,7 +99,7 @@ const StepsContainer = ( {
     {
       try {
         
-        console.debug(`StepsContainer.tsx loadTokenOnChainData_addressBalance: GET ${_address} balance for TOKEN:${_tokenInstance.name} (${_tokenInstance.address})`)
+        // console.debug(`StepsContainer.tsx loadTokenOnChainData_addressBalance: GET ${_address} balance for TOKEN:${_tokenInstance.name} (${_tokenInstance.address})`)
         if (_tokenInstance?.contract) {
           const balance = await (_tokenInstance.contract as GetContractResult).read.balanceOf([_address])
           // console.debug(`StepsContainer.tsx loadTokenOnChainData_addressBalance bal: ${balance} typeof balance: ${typeof balance}`)
@@ -159,13 +159,13 @@ const StepsContainer = ( {
               // if (log.)
               if (log.args) {
                 // console.dir(log.args)
-                console.debug(`StepsContainer.tsx processTransferEvent log.args["from"]: ${log.args["from"]} log.args["to"]: ${log.args["to"]} log.args["value"]: ${log.args["value"]}`);
+                // console.debug(`StepsContainer.tsx processTransferEvent log.args["from"]: ${log.args["from"]} log.args["to"]: ${log.args["to"]} log.args["value"]: ${log.args["value"]}`);
                 const from = log.args["from"]
                 const to = log.args["to"]
                 const value = log.args["value"]
 
-                const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, from)
-                console.debug(`StepsContainer.tsx processTransferEvent token: ${logADDRESS} balance'=${newBalance}' for address: ${from}`);
+                // const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, from)
+                // console.debug(`StepsContainer.tsx processTransferEvent token: ${logADDRESS} balance'=${newBalance}' for address: ${from}`);
 
                 if (from && to && value) {
 
@@ -175,7 +175,7 @@ const StepsContainer = ( {
                     if (tokenInstance.userData[fromADDRESS as any]) {
                       // Update on from
                       const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, from);
-                      console.debug(`StepsContainer.tsx processTransferEvent UPDATE USER DATA token: ${logADDRESS} balance'=${newBalance}' for address: ${from}`);
+                      // console.debug(`StepsContainer.tsx processTransferEvent UPDATE USER DATA token: ${logADDRESS} balance'=${newBalance}' for address: ${from}`);
                       if (newBalance != undefined) {
                         tokenInstance.userData[fromADDRESS as any].balance = newBalance;
                       }
@@ -183,7 +183,7 @@ const StepsContainer = ( {
                     if (tokenInstance.userData[toADDRESS as any]) {
                       // Update on to
                       const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, to);
-                      console.debug(`StepsContainer.tsx processTransferEvent UPDATE USER DATA token: ${logADDRESS}  balance='${newBalance}' for address: ${to}`);
+                      // console.debug(`StepsContainer.tsx processTransferEvent UPDATE USER DATA token: ${logADDRESS}  balance='${newBalance}' for address: ${to}`);
                       if (newBalance != undefined) {
                         tokenInstance.userData[toADDRESS as any].balance = newBalance;
                       }
@@ -218,10 +218,10 @@ const StepsContainer = ( {
 
     const watchTransferEvents = async ():Promise<any> =>
     {
-      console.debug(`StepsContainer.tsx watchTransferEvents`);
+      // console.debug(`StepsContainer.tsx watchTransferEvents`);
 
       if (unwatch.current) {
-        console.debug(`StepsContainer.tsx watchTransferEvents unwatch.current()`);
+        // console.debug(`StepsContainer.tsx watchTransferEvents unwatch.current()`);
         unwatch.current()
       }
 
@@ -234,7 +234,7 @@ const StepsContainer = ( {
         // console.dir(_tokensAddresses)
 
         if (_tokensAddresses && _tokensAddresses.length) {
-          console.debug(`StepsContainer.tsx watchTransferEvents Create Watch _tokensAddresses.length: ${_tokensAddresses.length}`);
+          // console.debug(`StepsContainer.tsx watchTransferEvents Create Watch _tokensAddresses.length: ${_tokensAddresses.length}`);
           const unwatchFn = publicClient.watchContractEvent({
             address: _tokensAddresses,
             strict: true,
