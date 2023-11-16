@@ -299,7 +299,7 @@ type TTokenInstance = {
   tr_error: boolean;
   tr_skipped: boolean;
 
-  userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x...)
+  userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x... converted to UPPERCASE)
 }
 
 

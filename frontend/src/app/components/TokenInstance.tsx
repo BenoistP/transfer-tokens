@@ -27,10 +27,14 @@ const TokenInstance = ( {
 
   const { t } = useTranslation()
 
+  // const accountADDRESS = accountAddress.toUpperCase()
+  const targetADDRESS = targetAddress.toUpperCase()
+
   const [decimals, setdecimals] = useState<bigint>(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT))) as [bigint, (balance:bigint) => void];
   const [name, setname] = useState<string>("")
 
   const [balance, setbalance] = useState<TTokenAmount | null>(tokenInstance.userData[accountAddress as any]?.balance);
+
 
   const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(false)
   const [shortBalanceString, setshortBalanceString] = useState("") as [string, (balance:string) => void];
@@ -47,7 +51,7 @@ const TokenInstance = ( {
   const [transferAmountLock, settransferAmountLock] = useState<boolean>(tokenInstance.transferAmountLock)
 
   const [canTransferFrom, setcanTransferFrom] = useState<boolean>( (accountAddress && (tokenInstance.userData[accountAddress as any] )) ? tokenInstance.userData[accountAddress as any]?.canTransfer : false )
-  const [canTransferTo, setcanTransferTo] = useState<boolean>( (targetAddress && (tokenInstance.userData[targetAddress as any] )) ? tokenInstance.userData[targetAddress as any]?.canTransfer : false )
+  const [canTransferTo, setcanTransferTo] = useState<boolean>( (targetADDRESS && (tokenInstance.userData[targetADDRESS as any] )) ? tokenInstance.userData[targetADDRESS as any]?.canTransfer : false )
 
   // ---
 
@@ -95,8 +99,8 @@ const TokenInstance = ( {
   useEffect(() =>
   {
     try {
-      if (targetAddress) {
-        const targetBalance = tokenInstance.userData[targetAddress as any]?.balance;
+      if (targetADDRESS) {
+        const targetBalance = tokenInstance.userData[targetADDRESS as any]?.balance;
         if (targetBalance) {
           const balanceValue = targetBalance.valueOf();
           const intValue = ( balanceValue / (10n**decimals) );
@@ -124,13 +128,13 @@ const TokenInstance = ( {
           setshortTargetBalanceString("0")
         }
       }
-      // console.debug(`TokenInstance.tsx useEffect [compute target balance] ${tokenInstance.userData[targetAddress as any]?.balance}`)
+      // console.debug(`TokenInstance.tsx useEffect [compute target balance] ${tokenInstance.userData[targetADDRESS as any]?.balance}`)
       // setisRoundedTargetDisplayAmount(false)
     } catch (error) {
       console.error(`TokenInstance.tsx useEffect [decimals, balance] error=${error}`)
     }
   }, // X eslint-disable-next-line react-hooks/exhaustive-deps
-  [tokenInstance.userData[targetAddress as any]?.balance, targetAddress]
+  [tokenInstance.userData[targetADDRESS as any]?.balance, targetADDRESS]
 );
   // ---
 
@@ -162,10 +166,10 @@ const TokenInstance = ( {
   useEffect( () =>
     {
       setcanTransferFrom(accountAddress ? (tokenInstance.userData[accountAddress as any]?.canTransfer) : false )
-      setcanTransferTo(targetAddress ? (tokenInstance.userData[targetAddress as any]?.canTransfer) : false )
+      setcanTransferTo(targetADDRESS ? (tokenInstance.userData[targetADDRESS as any]?.canTransfer) : false )
     },
     // X eslint-disable-next-line react-hooks/exhaustive-deps
-    [accountAddress, targetAddress, tokenInstance.userData[accountAddress as any]?.canTransfer, tokenInstance.userData[targetAddress as any]?.canTransfer]
+    [accountAddress, targetADDRESS, tokenInstance.userData[accountAddress as any]?.canTransfer, tokenInstance.userData[targetADDRESS as any]?.canTransfer]
   );
 
   // ---
@@ -226,11 +230,11 @@ const TokenInstance = ( {
   useEffect(() =>
     {
       if (
-        !accountAddress || !targetAddress ||
+        !accountAddress || !targetADDRESS ||
         !tokenInstance.selectable ||
         !tokenInstance.userData ||
         !tokenInstance.userData[accountAddress as any]?.canTransfer ||
-        !tokenInstance.userData[targetAddress as any]?.canTransfer ||
+        !tokenInstance.userData[targetADDRESS as any]?.canTransfer ||
         (balance?.valueOf() || 0n) == 0n ||
         (transferAmount||0n) == 0n
       ) {
@@ -239,7 +243,7 @@ const TokenInstance = ( {
         setisCheckboxDisabled(false)
       }
     }, // X eslint-disable-next-line react-hooks/exhaustive-deps
-    [ accountAddress, targetAddress, tokenInstance.selectable,
+    [ accountAddress, targetADDRESS, tokenInstance.selectable,
       tokenInstance.userData,
       balance, transferAmount]
   );
@@ -249,11 +253,11 @@ const TokenInstance = ( {
 
   const unSelect = useCallback( () =>
     {
-      if (balance && targetAddress && tokenInstance.selected && tokenInstance.userData[targetAddress as any]?.canTransfer && updateCheckboxStatus) {
+      if (balance && targetADDRESS && tokenInstance.selected && tokenInstance.userData[targetADDRESS as any]?.canTransfer && updateCheckboxStatus) {
         updateCheckboxStatus(tokenInstance.selectID, {checked: false});
       }
     },
-    [targetAddress, balance, updateCheckboxStatus, tokenInstance.userData, tokenInstance.selectID, tokenInstance.selected]
+    [targetADDRESS, balance, updateCheckboxStatus, tokenInstance.userData, tokenInstance.selectID, tokenInstance.selected]
   );
 
   // ---
@@ -261,12 +265,12 @@ const TokenInstance = ( {
   const handleCheckboxClick = useCallback( () =>
     {
       if (transferAmount && transferAmount.valueOf() > 0n) {
-        if (balance && targetAddress && tokenInstance.userData && tokenInstance.userData[/* accountAddress */targetAddress as any]?.canTransfer && updateCheckboxStatus) {
+        if (balance && targetADDRESS && tokenInstance.userData && tokenInstance.userData[/* accountAddress */targetADDRESS as any]?.canTransfer && updateCheckboxStatus) {
           updateCheckboxStatus(tokenInstance.selectID);
         }
       }
     },
-    [targetAddress, tokenInstance.selectID, tokenInstance.userData, transferAmount, balance, updateCheckboxStatus]
+    [targetADDRESS, tokenInstance.selectID, tokenInstance.userData, transferAmount, balance, updateCheckboxStatus]
   );
 
   // ------------------------------
@@ -375,7 +379,7 @@ const TokenInstance = ( {
             <NoSymbolIcon className={clsIconSize+" fill-current"} />
           </div>
         }
-        { targetAddress == "" ?
+        { targetADDRESS == "" ?
             null
           :
             (canTransferTo ?
@@ -405,7 +409,7 @@ const TokenInstance = ( {
         }
         </div>
       </td>
-      { targetAddress &&
+      { targetADDRESS &&
       <td className="text-right pr-2 text-base-content">
         <div className="tooltip tooltip-left tooltip-info opacity-80" data-tip={longTargetBalanceString}>
           <p className={isRoundedTargetDisplayAmount?"italic font-medium":""}>{shortTargetBalanceString}</p>
