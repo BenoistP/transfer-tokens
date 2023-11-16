@@ -48,6 +48,8 @@ const StepsContainer = ( {
 
   const [selectedChainsTokensList, setselectedChainsTokensList] = useState<TChainsTokensListArrayNullUndef>(null)
   const [tokensInstances, settokensInstances] = useState<TTokensInstances>(null)
+  // Array of tokensInstances indexed by address in UPPER CASE (used for events)
+  const [tokensInstanceIndex, settokensInstanceIndex] = useState<TTokenInstanceIndex>({})
 
   const [targetAddress, settargetAddress] = useState<TAddressEmpty>("")
 
@@ -147,12 +149,12 @@ const StepsContainer = ( {
         if (logs && logs.length) {
           logs.forEach( (log:any/* Log&GetInferredLogValues */) => {
             const logADDRESS = log.address.toUpperCase()
-            const tokenInstance = tokensInstances?.find( (tokenInstance:TTokenInstance) => {
-              // console.debug(`tokenInstance.address: ${tokenInstance.address} log.address: ${log.address}`);
-              return tokenInstance.address.toUpperCase() === logADDRESS
-            })
-            // debugger;
-
+            // Find token instance
+            // const tokenInstance = tokensInstances?.find( (tokenInstance:TTokenInstance) => {
+            //   // console.debug(`tokenInstance.address: ${tokenInstance.address} log.address: ${log.address}`);
+            //   return tokenInstance.address.toUpperCase() === logADDRESS
+            // })
+            const tokenInstance = tokensInstanceIndex[logADDRESS]
             if (tokenInstance) {
               console.debug(`StepsContainer.tsx processTransferEvent tokenInstance: ${tokenInstance.address}`);
               // if (log.)
@@ -194,7 +196,10 @@ const StepsContainer = ( {
         console.error(`StepsContainer.tsx processTransferEvent logs: ${logs} error: ${error}`);
       }
     },
-    [loadTokenOnChainData_addressBalance, tokensInstances]
+    [loadTokenOnChainData_addressBalance,
+      // tokensInstances,
+      tokensInstanceIndex
+    ]
   ); // processTransferEvent
 
   // ---
@@ -1284,6 +1289,29 @@ const StepsContainer = ( {
     [resetToInitialStep]
   ) // resetToInitialStep
 
+  // ---
+
+
+
+    const getTokensInstanceIndex = useCallback( (tokensInstances:TTokensInstances):TTokenInstanceIndex =>
+      {
+        const tokenInstanceIndex: TTokenInstanceIndex = {};
+        try {
+          if (tokensInstances) {
+            tokensInstances.forEach( (tokenInstance:TTokenInstance) => {
+              tokenInstanceIndex[tokenInstance.address.toUpperCase()] = tokenInstance;
+            })
+          }
+        } catch (error) {
+          console.error(`StepsContainer.tsx getTokensInstanceIndex error: ${error}`);
+        }
+        // console.debug(`StepsContainer.tsx getTokensInstanceIndex tokenInstanceIndex =`)
+        // console.dir(tokenInstanceIndex)
+        return tokenInstanceIndex;
+      },
+      []
+    )
+
   // ----------------------------------------------
 
 
@@ -1298,6 +1326,7 @@ const StepsContainer = ( {
         // console.log(`Switching to chainId=${chainId} connectedAddress=${connectedAddress}`)
         resetToInitialStepCB()
         settokensInstances(null)
+        settokensInstanceIndex({})
       } catch (error) {
         console.error(`StepsContainer.tsx useEffect [chainId, connectedAddress, resetToInitialStepCB] error: ${error}`);  
       }
@@ -1310,23 +1339,23 @@ const StepsContainer = ( {
   useEffect( () =>
     {
 
-      const loadTargetData = async( _tokensInstances:TTokensInstances, targetAddress:TAddressEmpty) : Promise<TTokenInstance[]> =>
+      const loadTargetData = async( _tokensInstances:TTokensInstances, _targetAddress:TAddressEmpty) : Promise<TTokenInstance[]> =>
       {
         let tokensInstancesData:TTokenInstance[] = []
         try {
-          if (_tokensInstances && targetAddress) {
+          if (_tokensInstances && _targetAddress) {
             // Load target balances
             // tokens target user balances
-            const targetBalances = loadTokensOnChainData(_tokensInstances, EStepsLoadTokensData.targetBalances, null, targetAddress, true);
+            const targetBalances = loadTokensOnChainData(_tokensInstances, EStepsLoadTokensData.targetBalances, null, _targetAddress, true);
             // tokens transfer ability
-            const canTransfer = loadTokensOnChainData(_tokensInstances, EStepsLoadTokensData.targetTransferAbility, null,targetAddress, true);
+            const canTransfer = loadTokensOnChainData(_tokensInstances, EStepsLoadTokensData.targetTransferAbility, null,_targetAddress, true);
             // Wait for all promises to resolve
             const loadTokensOnChainDataPromises = await Promise.all([targetBalances, canTransfer]);
             // Merge loadTokensOnChainDataPromises results
             tokensInstancesData = _tokensInstances?.map( (_tokenInstance:TTokenInstance, index:number) => {
               if (loadTokensOnChainDataPromises && loadTokensOnChainDataPromises[0] && loadTokensOnChainDataPromises[1] ) {
-                _tokenInstance.userData[targetAddress as any] = {
-                  ..._tokenInstance.userData[targetAddress as any],
+                _tokenInstance.userData[_targetAddress as any] = {
+                  ..._tokenInstance.userData[_targetAddress as any],
                   ...loadTokensOnChainDataPromises[0][index], // target balances
                   ...loadTokensOnChainDataPromises[1][index], // can transfer
                 }
@@ -1334,7 +1363,7 @@ const StepsContainer = ( {
               return _tokenInstance;
             })
 
-          } // if (_tokensInstances && targetAddress)
+          } // if (_tokensInstances && _targetAddress)
         } catch (error) {
           console.error(`StepsContainer.tsx loadTargetData error: ${error}`);
         }
@@ -1828,9 +1857,10 @@ const StepsContainer = ( {
             }
           })
         settokensInstances(tokensInstancesFromSelectedTokensLists)
+        settokensInstanceIndex(getTokensInstanceIndex(tokensInstancesFromSelectedTokensLists))
       }
     },
-    [selectedChainsTokensList]
+    [getTokensInstanceIndex, selectedChainsTokensList]
   ) // useEffect [selectedChainsTokensList]
 
 

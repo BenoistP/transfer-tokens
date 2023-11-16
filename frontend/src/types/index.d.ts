@@ -308,6 +308,9 @@ type TTokenInstanceUserData = {
   canTransfer: boolean;
 }
 
+type TTokenInstanceIndex = {
+  [key: string]: TTokenInstance;
+}
 type TokenID = string;
 
 type TChecked = {
