@@ -95,25 +95,24 @@ const StepsContainer = ( {
 
   // ---
 
-  const loadTokenOnChainData_addressBalance = useCallback( async(_tokenInstance:TTokenInstance, _address:TAddressEmptyNullUndef):Promise<void>/* Promise<TTokensInstances> */ =>
+  const loadTokenOnChainData_addressBalance = useCallback( async(_tokenInstance:TTokenInstance, _address:TAddressEmptyNullUndef):Promise<bigint|undefined>/* Promise<TTokensInstances> */ =>
     {
       try {
-        console.debug(`StepsContainer.tsx loadTokenOnChainData_addressBalance: GET ADDRESS TOKEN BALANCE for _address: ${_address}`)
+        
+        console.debug(`StepsContainer.tsx loadTokenOnChainData_addressBalance: GET ${_address} balance for TOKEN:${_tokenInstance.name} (${_tokenInstance.address})`)
         if (_tokenInstance?.contract) {
-
-  
-          // const bal = await (_tokenInstance.contract as GetContractResult).read.balanceOf([{account:_address}])
-          const bal = await (_tokenInstance.contract as GetContractResult).read.balanceOf([_address])
-          console.debug(`StepsContainer.tsx loadTokenOnChainData_addressBalance bal: ${bal}`)
-
-          //   ...tokenInstance.contract,
-          //   functionName: 'balanceOf',
-          //   args: [_address],
+          const balance = await (_tokenInstance.contract as GetContractResult).read.balanceOf([_address])
+          // console.debug(`StepsContainer.tsx loadTokenOnChainData_addressBalance bal: ${balance} typeof balance: ${typeof balance}`)
+          // console.dir(balance)
+          if (typeof balance == "bigint") {
+            return balance as bigint
+          }
         } // if (tokenInstance?.contract)
 
       } catch (error) {
         console.error(`StepsContainer.tsx loadTokenOnChainData_addressBalance error: ${error}`);
       }
+      return undefined
     },
     [
       // publicClient
@@ -139,7 +138,7 @@ const StepsContainer = ( {
 */
   // ---
 
-  const processTransferEvent = useCallback( (logs:Log[]) =>
+  const processTransferEvent = useCallback( async(logs:Log[]) =>
     {
       try {
         // console.debug(`StepsContainer.tsx processTransferEvent typeof logs: ${typeof logs}`);
@@ -147,7 +146,7 @@ const StepsContainer = ( {
         // logs[0].
 
         if (logs && logs.length) {
-          logs.forEach( (log:any/* Log&GetInferredLogValues */) => {
+          logs.forEach( async(log:any/* Log&GetInferredLogValues */) => {
             const logADDRESS = log.address.toUpperCase()
             // Find token instance
             // const tokenInstance = tokensInstances?.find( (tokenInstance:TTokenInstance) => {
@@ -156,28 +155,38 @@ const StepsContainer = ( {
             // })
             const tokenInstance = tokensInstanceIndex[logADDRESS]
             if (tokenInstance) {
-              console.debug(`StepsContainer.tsx processTransferEvent tokenInstance: ${tokenInstance.address}`);
+              // console.debug(`StepsContainer.tsx processTransferEvent tokenInstance: ${tokenInstance.address}`);
               // if (log.)
               if (log.args) {
-
-                console.dir(log.args)
+                // console.dir(log.args)
                 console.debug(`StepsContainer.tsx processTransferEvent log.args["from"]: ${log.args["from"]} log.args["to"]: ${log.args["to"]} log.args["value"]: ${log.args["value"]}`);
                 const from = log.args["from"]
                 const to = log.args["to"]
                 const value = log.args["value"]
-  
-                loadTokenOnChainData_addressBalance(tokenInstance, from)
-                
-  
+
+                const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, from)
+                console.debug(`StepsContainer.tsx processTransferEvent token: ${logADDRESS} balance'=${newBalance}' for address: ${from}`);
+
                 if (from && to && value) {
+
                   if (tokenInstance.userData) {
-                    if (tokenInstance.userData[from as any]) {
+                    const fromADDRESS = from.toUpperCase()
+                    const toADDRESS = to.toUpperCase()
+                    if (tokenInstance.userData[fromADDRESS as any]) {
                       // Update on from
-                      loadTokenOnChainData_addressBalance(tokenInstance, from)
-                     
+                      const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, from);
+                      console.debug(`StepsContainer.tsx processTransferEvent UPDATE USER DATA token: ${logADDRESS} balance'=${newBalance}' for address: ${from}`);
+                      if (newBalance != undefined) {
+                        tokenInstance.userData[fromADDRESS as any].balance = newBalance;
+                      }
                     }
-                    if (tokenInstance.userData[to as any]) {
+                    if (tokenInstance.userData[toADDRESS as any]) {
                       // Update on to
+                      const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, to);
+                      console.debug(`StepsContainer.tsx processTransferEvent UPDATE USER DATA token: ${logADDRESS}  balance='${newBalance}' for address: ${to}`);
+                      if (newBalance != undefined) {
+                        tokenInstance.userData[toADDRESS as any].balance = newBalance;
+                      }
                     }
                   }
   
