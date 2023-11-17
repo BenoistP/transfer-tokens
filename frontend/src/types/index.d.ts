@@ -295,6 +295,7 @@ type TTokenInstance = {
   transferAmount: TTokenAmount;
   transferAmountLock: boolean;
 
+  // Todo : merge theses 3 fields into one state
   tr_processed: boolean;
   tr_error: boolean;
   tr_skipped: boolean;
