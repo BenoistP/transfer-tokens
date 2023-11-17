@@ -62,13 +62,13 @@ filtered tokens table: 🚧
 - ☑️ BUG: Error when input balance such as 0.1
 - ☑️ BUG: On filter update: update selectAll/All visible checks
 
-Step 0: 🚧
+Step 0:
 
 - ☑️ check transferability for connected account
 - ☑️ Ethereum data is not loaded
 - ☑️ Add loading indicator when loading tokens lists
 - ☑️ Error handling
-- 🚧 Watch for balances changes 👀 ... in progress
+- ☑️ Watch for balances changes 👀
 
 Step 1:
 
