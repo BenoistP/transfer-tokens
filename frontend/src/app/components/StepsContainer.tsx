@@ -99,16 +99,12 @@ const StepsContainer = ( {
     {
       try {
         
-        // console.debug(`StepsContainer.tsx loadTokenOnChainData_addressBalance: GET ${_address} balance for TOKEN:${_tokenInstance.name} (${_tokenInstance.address})`)
         if (_tokenInstance?.contract) {
           const balance = await (_tokenInstance.contract as GetContractResult).read.balanceOf([_address])
-          // console.debug(`StepsContainer.tsx loadTokenOnChainData_addressBalance bal: ${balance} typeof balance: ${typeof balance}`)
-          // console.dir(balance)
           if (typeof balance == "bigint") {
             return balance as bigint
           }
         } // if (tokenInstance?.contract)
-
       } catch (error) {
         console.error(`StepsContainer.tsx loadTokenOnChainData_addressBalance error: ${error}`);
       }
@@ -120,151 +116,85 @@ const StepsContainer = ( {
   )
 
   // ---
-/*
-  const updateTokensInstancesBalances = useCallback( (tokensInstances:TTokensInstances, ) =>
+
+  const updateTokenInstanceWithBalance = useCallback( (_updatedTokenInstance: TTokenInstance) =>
     {
-
-      // const tokensInstancesUpdated = tokensInstances?.map( (tokenInstance:TTokenInstance) => {
-      //   if (tokenInstance?.userData && tokenInstance?.userData[connectedAddress as any]?.balance) {
-      //     tokenInstance.userData[connectedAddress as any].balance = tokenInstance?.userData[connectedAddress as any]?.balance
-      //   }
-      //   return tokenInstance
-      // })
-      // settokensInstances(tokensInstancesUpdated)
-
+      try {
+        if (tokensInstances && tokensInstances.length && _updatedTokenInstance) {
+          // Just mutate the array, replacing _updatedTokenInstance and update some values depending on connectedAddress balance
+          const newTokensInstances = tokensInstances.map( (tokenInstance:TTokenInstance) => {
+            if (tokenInstance.address == _updatedTokenInstance.address) {
+              const connectedADDRESS = connectedAddress?.toUpperCase()
+              if (!tokenInstance.userData[connectedADDRESS as any].balance) {
+                tokenInstance.selectable = false;
+                tokenInstance.selected = false;
+                tokenInstance.transferAmount = 0n;
+                tokenInstance.transferAmountLock = false;
+              }
+              return _updatedTokenInstance
+            }
+            return tokenInstance
+          })
+          settokensInstances(newTokensInstances)
+        } // if (tokensInstances && tokensInstances.length && _updatedTokenInstance)
+      } catch (error) {
+        console.error(`StepsContainer.tsx updateTokenInstanceWithBalance error: ${error}`);
+      }
     },
-    []
+    [tokensInstances, connectedAddress]
   )
-*/
+
   // ---
 
   const processTransferEvent = useCallback( async(logs:Log[]) =>
     {
       try {
-        // console.debug(`StepsContainer.tsx processTransferEvent typeof logs: ${typeof logs}`);
-        console.dir(logs)
-        // logs[0].
-
         if (logs && logs.length) {
           logs.forEach( async(log:any/* Log&GetInferredLogValues */) => {
             const logADDRESS = log.address.toUpperCase()
-            // Find token instance
-            // const tokenInstance = tokensInstances?.find( (tokenInstance:TTokenInstance) => {
-            //   // console.debug(`tokenInstance.address: ${tokenInstance.address} log.address: ${log.address}`);
-            //   return tokenInstance.address.toUpperCase() === logADDRESS
-            // })
+            // Find token instance in indexed "array"
             const tokenInstance = tokensInstanceIndex[logADDRESS]
             if (tokenInstance) {
-              // console.debug(`StepsContainer.tsx processTransferEvent tokenInstance: ${tokenInstance.address}`);
-              // if (log.)
               if (log.args) {
-                // console.dir(log.args)
-                // console.debug(`StepsContainer.tsx processTransferEvent log.args["from"]: ${log.args["from"]} log.args["to"]: ${log.args["to"]} log.args["value"]: ${log.args["value"]}`);
-                const from = log.args["from"]
-                const to = log.args["to"]
-                const value = log.args["value"]
-
-                // const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, from)
-                // console.debug(`StepsContainer.tsx processTransferEvent token: ${logADDRESS} balance'=${newBalance}' for address: ${from}`);
-
+                const from = log.args["from"], to = log.args["to"], value = log.args["value"];
                 if (from && to && value) {
-
                   if (tokenInstance.userData) {
-                    const fromADDRESS = from.toUpperCase()
-                    const toADDRESS = to.toUpperCase()
+                    // Check if any of our userdata balances has been updated
+                    const fromADDRESS = from.toUpperCase(), toADDRESS = to.toUpperCase();
+                    let balancesUpdated = false;
                     if (tokenInstance.userData[fromADDRESS as any]) {
                       // Update on from
                       const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, from);
-                      // console.debug(`StepsContainer.tsx processTransferEvent UPDATE USER DATA token: ${logADDRESS} balance'=${newBalance}' for address: ${from}`);
                       if (newBalance != undefined) {
                         tokenInstance.userData[fromADDRESS as any].balance = newBalance;
+                        balancesUpdated = true
                       }
                     }
                     if (tokenInstance.userData[toADDRESS as any]) {
                       // Update on to
                       const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, to);
-                      // console.debug(`StepsContainer.tsx processTransferEvent UPDATE USER DATA token: ${logADDRESS}  balance='${newBalance}' for address: ${to}`);
                       if (newBalance != undefined) {
                         tokenInstance.userData[toADDRESS as any].balance = newBalance;
+                        balancesUpdated = true
                       }
                     }
-                  }
-  
-                }
-
+                    if (balancesUpdated) {
+                      updateTokenInstanceWithBalance(tokenInstance)
+                    }
+                  } // if (tokenInstance.userData)
+                } // if (from && to && value)
               } // if (log.args)
-
-              // log.args["from"]
-              // log.args["to"]
-              // log.args["value"]
-              // tokenInstance.userData
-            }
-          })
-        }
+            } // if (tokenInstance)
+          }) // logs.forEach
+        } // if (logs && logs.length)
       } catch (error) {
         console.error(`StepsContainer.tsx processTransferEvent logs: ${logs} error: ${error}`);
       }
     },
-    [loadTokenOnChainData_addressBalance,
-      // tokensInstances,
-      tokensInstanceIndex
-    ]
+    [loadTokenOnChainData_addressBalance, tokensInstanceIndex]
   ); // processTransferEvent
 
   // ---
-
-  useEffect(() => {
-  // ---
-
-    const watchTransferEvents = async ():Promise<any> =>
-    {
-      // console.debug(`StepsContainer.tsx watchTransferEvents`);
-
-      if (unwatch.current) {
-        // console.debug(`StepsContainer.tsx watchTransferEvents unwatch.current()`);
-        unwatch.current()
-      }
-
-      if (tokensInstances && tokensInstances.length) {
-
-        const _tokensAddresses = tokensInstances.map( (tokenInstance:TTokenInstance) => {
-          return tokenInstance.address
-        })
-        // console.debug(`StepsContainer.tsx watchTransferEvents _tokensAddresses:`);
-        // console.dir(_tokensAddresses)
-
-        if (_tokensAddresses && _tokensAddresses.length) {
-          // console.debug(`StepsContainer.tsx watchTransferEvents Create Watch _tokensAddresses.length: ${_tokensAddresses.length}`);
-          const unwatchFn = publicClient.watchContractEvent({
-            address: _tokensAddresses,
-            strict: true,
-            onError: (error:Error) => {
-              reportWatchError(error)
-            },
-            abi: erc20ABI,
-            eventName: 'Transfer',
-            onLogs: (logs:Log[]) => {
-              // console.log(logs)
-              processTransferEvent(logs)
-              // console.dir(logs)
-            }
-          })
-          // return unwatch
-          // unwatchFn()
-          unwatch.current = unwatchFn;
-        } // if (tokensAddresses && ...
-
-      } // if (tokensInstances && ...
-
-    } // watchTransferEvents
-
-      watchTransferEvents()
-
-    }, [processTransferEvent, publicClient, /* tokensAddresses, */ tokensInstances, reportWatchError]
-  )
-  
-
-
 
   // Filter
 
@@ -362,7 +292,7 @@ const StepsContainer = ( {
           const nameFilter = filter.name && token.name ? token.name.toLowerCase().includes(filter.name.toLowerCase()) : true ;
           if (!nameFilter) return false ; // RETURN
 
-          const connectedADDRESS = connectedAddress?.toUpperCase()
+          const connectedADDRESS = connectedAddress?.toUpperCase();
           const balanceGt0Filter = filter.balanceGt0 ? (token.userData[connectedADDRESS as any]?.balance || 0) > 0 : true ;
           if (!balanceGt0Filter) return false ; // RETURN
 
@@ -449,9 +379,9 @@ const StepsContainer = ( {
           if (sortOrderParams.tokenBalance === 0) {
             return 0
           }
-          const connectedADDRESS = connectedAddress?.toUpperCase()
-          const aBalance = a.userData?.[connectedADDRESS as any].balance || 0n
-          const bBalance = b.userData?.[connectedADDRESS as any].balance || 0n
+          const connectedADDRESS = connectedAddress?.toUpperCase();
+          const aBalance = a.userData?.[connectedADDRESS as any].balance || 0n;
+          const bBalance = b.userData?.[connectedADDRESS as any].balance || 0n;
           if (sortOrderParams.tokenBalance === 1) {
             const compAMinusB = aBalance - bBalance
             return Number(compAMinusB)
@@ -1308,26 +1238,53 @@ const StepsContainer = ( {
 
   // ---
 
-
-
-    const getTokensInstanceIndex = useCallback( (tokensInstances:TTokensInstances):TTokenInstanceIndex =>
-      {
-        const tokenInstanceIndex: TTokenInstanceIndex = {};
-        try {
-          if (tokensInstances) {
-            tokensInstances.forEach( (tokenInstance:TTokenInstance) => {
-              tokenInstanceIndex[tokenInstance.address.toUpperCase()] = tokenInstance;
-            })
-          }
-        } catch (error) {
-          console.error(`StepsContainer.tsx getTokensInstanceIndex error: ${error}`);
+  const getTokensInstanceIndex = useCallback( (tokensInstances:TTokensInstances):TTokenInstanceIndex =>
+    {
+      const tokenInstanceIndex: TTokenInstanceIndex = {};
+      try {
+        if (tokensInstances) {
+          tokensInstances.forEach( (tokenInstance:TTokenInstance) => {
+            tokenInstanceIndex[tokenInstance.address.toUpperCase()] = tokenInstance;
+          })
         }
-        // console.debug(`StepsContainer.tsx getTokensInstanceIndex tokenInstanceIndex =`)
-        // console.dir(tokenInstanceIndex)
-        return tokenInstanceIndex;
-      },
-      []
-    )
+      } catch (error) {
+        console.error(`StepsContainer.tsx getTokensInstanceIndex error: ${error}`);
+      }
+      // console.debug(`StepsContainer.tsx getTokensInstanceIndex tokenInstanceIndex =`)
+      // console.dir(tokenInstanceIndex)
+      return tokenInstanceIndex;
+    },
+    []
+  )
+
+  // ---
+
+  const initSelectableTokensLists = useCallback( async() =>
+    {
+
+      try {
+        const filteredSelectableTokensLists: TSelectableTokensLists = []
+        tokensLists?.forEach( (tokensList: TTokensList) => {
+          const chainTokensList = getChainTokensList(tokensList, chainId)
+          const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
+          const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
+          const selectableTokensList = {
+            tokensList,
+            chainId,
+            selected: false,
+            selectable,
+            currentChainTokensCount
+          }
+          filteredSelectableTokensLists.push(selectableTokensList)
+        })
+        setselectableTokensLists(filteredSelectableTokensLists)
+      } catch (error) {
+        console.error(`TokensListsSelect.tsx: initSelectableTokensLists: error=${error}`);
+      }
+
+    },
+    [chainId, setselectableTokensLists, tokensLists]
+  );
 
   // ----------------------------------------------
 
@@ -1351,8 +1308,24 @@ const StepsContainer = ( {
     [chainId, connectedAddress, resetToInitialStepCB]
   ) // useEffect
 
-  // ---
+    // ---
 
+  useEffect( () =>
+    {
+      try {
+      initSelectableTokensLists()
+      } catch (error) {
+        console.error(`StepsContainer.tsx useEffect [INIT SELECTABLE TOKENSLISTS] error: ${error}`);
+      }
+    },
+    [initSelectableTokensLists]
+  )
+
+  // ---
+  /**
+   * Handle tokensInstances loading
+   * TODO: refactor to break into smaller functions
+   */
   useEffect( () =>
     {
 
@@ -1880,48 +1853,43 @@ const StepsContainer = ( {
     [getTokensInstanceIndex, selectedChainsTokensList]
   ) // useEffect [selectedChainsTokensList]
 
-
   // ---
 
-  const initSelectableTokensLists = useCallback( async() =>
+  /**
+   * Sets up the watch for Transfer events
+   */
+  useEffect(() =>
     {
-
-      try {
-        const filteredSelectableTokensLists: TSelectableTokensLists = []
-        tokensLists?.forEach( (tokensList: TTokensList) => {
-          const chainTokensList = getChainTokensList(tokensList, chainId)
-          const currentChainTokensCount = (chainTokensList?chainTokensList.tokensCount:0)
-          const selectable = (currentChainTokensCount > 0) && (tokensList.status == "ok")
-          const selectableTokensList = {
-            tokensList,
-            chainId,
-            selected: false,
-            selectable,
-            currentChainTokensCount
-          }
-          filteredSelectableTokensLists.push(selectableTokensList)
-        })
-        setselectableTokensLists(filteredSelectableTokensLists)
-      } catch (error) {
-        console.error(`TokensListsSelect.tsx: initSelectableTokensLists: error=${error}`);
-      }
-
-    },
-    [chainId, setselectableTokensLists, tokensLists]
-  );
-
-  // ---
-
-  useEffect( () =>
-    {
-      try {
-      initSelectableTokensLists()
-      } catch (error) {
-        console.error(`StepsContainer.tsx useEffect [INIT SELECTABLE TOKENSLISTS] error: ${error}`);
-      }
-    },
-    [initSelectableTokensLists]
-  )
+      const watchTransferEvents = async ():Promise<any> =>
+      {
+        if (unwatch.current) {
+          // remove previous watch
+          unwatch.current()
+        }
+        if (tokensInstances && tokensInstances.length) {
+          const _tokensAddresses = tokensInstances.map( (tokenInstance:TTokenInstance) => {
+            return tokenInstance.address
+          })
+          if (_tokensAddresses && _tokensAddresses.length) {
+            const unwatchFn = publicClient.watchContractEvent({
+              address: _tokensAddresses,
+              strict: true,
+              onError: (error:Error) => {
+                reportWatchError(error)
+              },
+              abi: erc20ABI,
+              eventName: 'Transfer',
+              onLogs: (logs:Log[]) => {
+                processTransferEvent(logs)
+              }
+            })
+            unwatch.current = unwatchFn;
+          } // if (tokensAddresses && ...
+        } // if (tokensInstances && ...
+      } // watchTransferEvents
+      watchTransferEvents()
+    }, [processTransferEvent, publicClient, tokensInstances, reportWatchError]
+  ) // useEffect
 
   // ---------------------------------------------------
 
