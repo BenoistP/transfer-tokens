@@ -11,8 +11,9 @@ import MainContentContainer from "@Components/MainContentContainer";
 import { useMoveTokensAppContext } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
 // Utils
 import { getChainTokensList } from "@jsutils/tokensListsUtils";
-// Wagmi
+// Contracts calls
 import { GetContractResult, getContract, multicall } from '@wagmi/core'
+// Connected account
 import { useAccount } from 'wagmi'
 // ABIs
 import { erc20ABI } from '@wagmi/core'
@@ -20,11 +21,9 @@ import CoinBridgeToken from "@abis/CoinBridgeToken.json";
 // Consts & Enums
 import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT } from "@uiconsts/misc";
 import { EStepsLoadTokensData, EChainTokensListLoadState } from "@jsconsts/enums"; 
-
 // Events
-// import { /* GetFilterLogsParameters, */ parseAbiItem } from 'viem'
 import { usePublicClient } from 'wagmi'
-import { Log, /* GetInferredLogValues */ } from "viem";
+import { Log } from "viem";
 
 // ------------------------------
 
