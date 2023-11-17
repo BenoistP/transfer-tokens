@@ -17,14 +17,6 @@ const TokenInstance = ( {
   updateCheckboxStatus, updateTransferAmount, updateTransferAmountLock,
   enableEditable, showTransferAmountReadOnly }: ITokenProps ) => {
 
-  // console.debug(`TokenInstance.tsx render`)
-
-  // if (tokenInstance.address == "0xB3D3C1bBcEf737204AADb4fA6D90e974bc262197")
-  // {
-  //   console.debug(`TokenInstance.tsx render tokenInstance=`)
-  //   console.dir(tokenInstance)
-  // }
-
   const { t } = useTranslation()
 
   const accountADDRESS = (accountAddress ? accountAddress.toUpperCase() : "")
