@@ -8,11 +8,16 @@
 
 // RealT API
 // BASE URL
-const API__REALT_PUBLIC__BASE_URL='https://api.realt.community/'
+const DEFAULT_API__REALT_PUBLIC__BASE_URL='https://api.realt.community/'
 // Tokens
-const API__REALT_PUBLIC__LIST_ALL_TOKENS='v1/token'
-const TOKENS_LIST_REALT_API_LOGO = 'https://yt3.googleusercontent.com/ytc/AOPolaQLI9Vbm8mEvFilGnLm0wcbiKNF6RQxkKXJt9n5=s176-c-k-c0x00ffffff-no-rj'
+const DEFAULT_API__REALT_PUBLIC__LIST_ALL_TOKENS='v1/token'
+// Logo
+const DEFAULT_TOKENS_LIST_REALT_API_LOGO = 'https://yt3.googleusercontent.com/ytc/AOPolaQLI9Vbm8mEvFilGnLm0wcbiKNF6RQxkKXJt9n5=s176-c-k-c0x00ffffff-no-rj'
 
+const API__REALT_PUBLIC__BASE_URL = import.meta.env.PUBLIC_REALT_API_BASE_URL || DEFAULT_API__REALT_PUBLIC__BASE_URL
+const API__REALT_PUBLIC__LIST_ALL_TOKENS = import.meta.env.PUBLIC_REALT_API_LIST_ALL_TOKENS || DEFAULT_API__REALT_PUBLIC__LIST_ALL_TOKENS
+
+const TOKENS_LIST_REALT_API_LOGO = import.meta.env.PUBLIC_REALT_API_LOGO || DEFAULT_TOKENS_LIST_REALT_API_LOGO
 // Tokenlistooor Token List
 // const TOKENS_LIST__TOKENLISTOOOR = 'https://raw.githubusercontent.com/Migratooor/tokenLists/main/lists/tokenlistooor.json'
 
