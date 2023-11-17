@@ -28,3 +28,7 @@ If you are developing a production application, we recommend updating the config
 
 
 > **Note:** Vite exposes env variables on the special **import.meta.env.*MYVAR*** object (in place of *classic* import.meta.env.*MYVAR*)
+
+
+CoinBridgeToken on Gnosis can be found at:
+[CoinBridgeToken Contract 0x7a2AbA1FB4647850778658B4C69d4170104a3DCf](https://gnosisscan.io/address/0x7a2aba1fb4647850778658b4c69d4170104a3dcf#code)
