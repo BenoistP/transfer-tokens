@@ -1,0 +1,145 @@
+{
+  "moveTokens": {
+    "warnings": {
+      "connectawallet": "Please connect or unlock your wallet",
+      "wrongchain": "Please switch to a supported chain: Ethereum or Gnosis"
+    },
+    "common": {
+      "notAvailable": "Unavailable"
+    },
+    "progress": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "stepAny": {
+      "tokensTable" : {
+        "loadingTokens": "Loading tokens",
+        "errorLoadingTokens": "Error loading tokens",
+        "noTokens": "No token found",
+        "search" : {
+          "name": "Name",
+          "balance": "Balance",
+          "balanceGt0": {
+            "label": "> 0",
+            "hint": "filter out tokens without balance for source"
+          },
+          "clearAll": {
+            "label": "Clear",
+            "hint": "Clear all filters"
+          },
+          "additional": {
+            "title": "Additional filters",
+            "address": "Address"
+          }
+        },
+        "select": {
+          "any" : {
+            "hint": "Select ALL tokens",
+            "selectAll": "All",
+            "invertSelection": "Invert"
+            },
+          "visible" : {
+            "hint": "Select VISIBLE only",
+            "selectAll": "All visible",
+            "invertSelection": "Invert"
+            }
+          },
+        "results": {
+          "found": {
+            "selected": "Selected",
+            "visible": "Visible",
+            "hidden": "Hidden",
+            "total": "Total"
+          },
+          "titles" : {
+            "tokenId": "Id.",
+            "tokenName": "Name",
+            "sourceTokenBalance": "Balance",
+            "selected": "",
+            "tokenAmount": "Amount",
+            "tokenInfo": "Info.",
+            "targetTokenBalance": "Balance"
+          }
+        }
+      },
+      "token": {
+        "canTransferFrom": "Can transfer (send) this token FROM this address",
+        "canTransferTo": "Target address can receive this token",
+        "noTransferFrom": "Can't transfer (send) FROM this address",
+        "noTransferTo": "Can't transfer TO this address",
+        "details": "Details",
+        "transfer": {
+          "success": "Success",
+          "error": "Error",
+          "skipped": "Skipped"
+        }
+      },
+      "address": {
+        "placeholder": "0x..."
+      }
+    },
+    "stepZero": {
+      "title": "Select token lists",
+      "titleStep": "Token lists",
+      "tokensListsTable": {
+        "listName": "Name",
+        "listDescription": "Description",
+        "loadingTokensLists": "Loading tokens lists",
+        "noTokensLists": "No token list found",
+        "errorLoadingTokensLists": "Error loading tokens list",
+        "details": "Details"
+      }
+    },
+
+    "stepOne": {
+      "title": "Select destination",
+      "titleStep": "Destination",
+      "destination": "Destination",
+      "destinationPlaceholder": "0x...",
+      "detinationEmpty":"Please input destination address",
+      "destinationError": "Invalid address",
+      "destinationErrorSame": "Destination address cannot be the same as the source address",
+      "destinationOk": "Address is valid"
+    },
+    
+    "stepTwo": {
+      "title": "Select tokens",
+      "titleStep": "Tokens"
+    },
+
+    "stepThree": {
+      "title": "Migration",
+      "titleStep": "Migration",
+      "tokensMigrationListTable": {
+        "noTokens": "No token found"
+      },
+      "migrationProgressBar": {
+        "success": "Success",
+        "skipped": "Skipped",
+        "failed": "Failed",
+        "status": {
+          "label": "Status",
+          "progress": "In progress",
+          "completed": "Completed"
+          }
+      },
+      "transferResult": {
+        "skipped": "Skipped",
+        "error": "Failed",
+        "success": "Sent",
+        "successTo": "to",
+        "txHash": "Tx"
+      }
+    },
+
+    "Footer": {
+      "info": {
+        "title": "©",
+        "text": "Soon Soon Research Laboratories"
+      },
+      "center": ""
+    }
+
+  }
+
+}
