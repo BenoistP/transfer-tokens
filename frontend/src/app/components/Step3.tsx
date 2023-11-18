@@ -28,6 +28,7 @@ import { LinkIcon, XCircleIcon } from '@heroicons/react/24/solid'
 const Step3 = ( {
   chainId,
   tokensInstances,
+  settokensInstances,
   setNextDisabled,
   setShowProgressBar,
   accountAddress,
@@ -160,7 +161,35 @@ const Step3 = ( {
     },
     [] // No dependencies
   )
+  // ---
 
+  const updateProcessedTokenInstance = useCallback( (_updatedTokenInstance: TTokenInstance) =>
+    {
+      console.debug(`Steps3.tsx updateProcessedTokenInstance _updatedTokenInstance=`);
+      console.dir(_updatedTokenInstance);
+      try {
+        if (tokensInstances && tokensInstances.length && _updatedTokenInstance) {
+          // Just mutate the array, replacing _updatedTokenInstance and update some values depending on connectedAddress balance
+          const newTokensInstances = tokensInstances.map( (tokenInstance:TTokenInstance) => {
+            if (tokenInstance.address == _updatedTokenInstance.address) {
+              // UNselect
+              if (_updatedTokenInstance.tr_processed || _updatedTokenInstance.tr_skipped) {
+                _updatedTokenInstance.selected = false;
+              }
+              console.debug(`Steps3.tsx updateProcessedTokenInstance (map) _updatedTokenInstance=`);
+              console.dir(_updatedTokenInstance);
+              return _updatedTokenInstance
+            }
+            return tokenInstance
+          })
+          settokensInstances(newTokensInstances)
+        } // if (tokensInstances && tokensInstances.length && _updatedTokenInstance)
+      } catch (error) {
+        console.error(`Step3.tsx updateProcessedTokenInstance error: ${error}`);
+      }
+    },
+    [tokensInstances, settokensInstances]
+  )
   // ---
 
   const transferToken = useCallback( async( _tokenInstanceToTransfer:TTokenInstance, _to:TAddressEmptyNullUndef ) =>
@@ -175,7 +204,7 @@ const Step3 = ( {
             _tokenInstanceToTransfer.tr_processed = true;
             _tokenInstanceToTransfer.tr_skipped = false;
             _tokenInstanceToTransfer.tr_error = false;
-            _tokenInstanceToTransfer.selected = false;
+            // _tokenInstanceToTransfer.selected = false;
             toast.custom(
               (_toast) => (
                 <div className={`block alert alert-success w-auto p-2 m-0`}
@@ -257,6 +286,7 @@ const Step3 = ( {
           } else if (_tokenInstanceToTransfer.tr_error) {
             migrationState.current.errorItemsCount++;
           }
+          updateProcessedTokenInstance(_tokenInstanceToTransfer)
           setmigrationState( {...migrationState.current} )
         } catch (error) {
           console.error(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR STATE ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_to} process error: ${error}`);
@@ -264,7 +294,7 @@ const Step3 = ( {
       }
     } // transferToken
     ,
-    [callTransferToken, t, getAmountShortString, getTxUri, setmigrationState]
+    [callTransferToken, t, getAmountShortString, getTxUri, updateProcessedTokenInstance, setmigrationState]
   ) // transferToken
 
     // ---
@@ -273,9 +303,9 @@ const Step3 = ( {
     {
       try {
         if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length) {
-            migrationState.current = {totalItemsCount:_tokensInstancesToTransfer.length,
-              errorItemsCount:0,skippedItemsCount:0,successItemsCount:0, paused: false, stopped: false};
-            setmigrationState( migrationState.current )
+          migrationState.current = {totalItemsCount:_tokensInstancesToTransfer.length,
+            errorItemsCount:0,skippedItemsCount:0,successItemsCount:0, paused: false, stopped: false};
+          setmigrationState( migrationState.current )
           for (let tokenInstanceIndex = 0; ((tokenInstanceIndex < _tokensInstancesToTransfer.length)/* &&!stopTransfers */); tokenInstanceIndex++) {
             while (paused.current) {
               await new Promise(r => setTimeout(r, 250));
@@ -283,6 +313,39 @@ const Step3 = ( {
             }
             if (stopped.current) break;
             const tokenInstanceToTransfer = _tokensInstancesToTransfer[tokenInstanceIndex];
+
+
+// TODO: remove this debug code ->
+// console.debug(`Steps3.tsx transferTokenS tokenInstanceToTransfer:`);
+// console.dir(tokenInstanceToTransfer);
+// if (!tokenInstanceToTransfer.transferAmount) {
+//   console.debug(`Steps3.tsx transferTokenS tokenInstanceToTransfer NO AMOUNT `);
+//   console.dir(tokenInstanceToTransfer);
+// }
+// if (tokenInstanceToTransfer.tr_processed) {
+//   console.debug(`Steps3.tsx transferTokenS tokenInstanceToTransfer ALREADY PROCESSED `);
+//   console.dir(tokenInstanceToTransfer);
+// }
+// TODO: remove this debug code <-
+
+            // Check if tokenInstanceToTransfer has already been processed
+            // It could have been updated by a transfer event
+            // if ( !(tokenInstanceToTransfer.tr_processed || tokenInstanceToTransfer.tr_error || tokenInstanceToTransfer.tr_skipped)
+            //   && tokenInstanceToTransfer.transferAmount) continue;
+
+              if (tokenInstanceToTransfer.processing
+                  && tokenInstanceToTransfer.selected && tokenInstanceToTransfer.transferAmount
+                  && !(tokenInstanceToTransfer.tr_processed || tokenInstanceToTransfer.tr_error || tokenInstanceToTransfer.tr_skipped)
+                ) {
+                console.debug(`Steps3.tsx transferTokenS TRANSFER tokenInstanceToTransfer:`);
+                console.dir(tokenInstanceToTransfer);
+              } else {
+                console.debug(`Steps3.tsx transferTokenS SKIP TRANSFER tokenInstanceToTransfer:`);
+                console.dir(tokenInstanceToTransfer);
+                continue;
+              }
+
+
             try {
               await transferToken(tokenInstanceToTransfer, _to )
               tokenIdx.current = tokenInstanceIndex;
@@ -307,15 +370,20 @@ const Step3 = ( {
   const getTokensToMigrate = useCallback( ():TTokensInstances =>
   {
     try {
-      const selectedTokensInstances = tokensInstances?.filter( (tokenInstance:TTokenInstance) => {
-        return tokenInstance.selected && tokenInstance.transferAmount > 0n
+      const processingTokensInstances = tokensInstances?.filter( (tokenInstance:TTokenInstance) => {
+        return (
+          /* tokenInstance.selected ||  */ tokenInstance.processing // && tokenInstance.transferAmount > 0n
+          //|| (tokenInstance.tr_processed || tokenInstance.tr_skipped || tokenInstance.tr_error)
+          )
       })
-      selectedTokensInstances?.forEach( (tokenInstance:TTokenInstance) => {
-        tokenInstance.tr_processed = false;
-        tokenInstance.tr_skipped = false;
-        tokenInstance.tr_error = false;
-      })
-      return selectedTokensInstances;
+      // selectedTokensInstances?.forEach( (tokenInstance:TTokenInstance) => {
+      //   tokenInstance.tr_processed = false;
+      //   tokenInstance.tr_skipped = false;
+      //   tokenInstance.tr_error = false;
+      // })
+      console.debug(`Steps3.tsx getTokensToMigrate processingTokensInstances:`);
+      console.dir(processingTokensInstances);
+      return processingTokensInstances;
       } catch (error) {
         console.error(`Steps3.tsx getTokensToMigrate error: ${error}`);
       }
@@ -412,17 +480,3 @@ const Step3 = ( {
 // ------------------------------
 
 export default Step3;
-
-{/* 
-        <div className="bg-neutral w-full rounded-box border border-base-300-content p-2">
-          <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-accent p-2 pb-0  animate-pulse">
-            {"COMING"}
-          </p>&nbsp;
-          <div className="flex text-neutral-content justify-center p-0">
-            <FaceSmileIcon className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12  animate-pulse " />
-          </div>
-          <p className="text-sm sm:text-base md:text-lg overflow-hidden text-center text-warning font-extrabold p-2  animate-pulse">
-            {"SOON"}
-          </p>
-        </div>
-*/}

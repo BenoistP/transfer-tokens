@@ -299,6 +299,7 @@ type TTokenInstance = {
   tr_processed: boolean;
   tr_error: boolean;
   tr_skipped: boolean;
+  processing: boolean;
 
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x... converted to UPPERCASE)
 }
@@ -411,6 +412,7 @@ interface IStep3Props {
   chainId: ChainId;
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
+  settokensInstances: TsetTokensInstances,
   setShowProgressBar: TsetShowProgressBar
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,

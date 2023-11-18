@@ -74,6 +74,7 @@ const StepsContainer = ( {
 
   // Events
   const unwatch = useRef(function () { })
+  const previousStep = useRef(step)
 
   // ------------------------------
 
@@ -116,7 +117,7 @@ const StepsContainer = ( {
 
   // ---
 
-  const updateTokenInstanceWithBalance = useCallback( (_updatedTokenInstance: TTokenInstance) =>
+  const updateTokenInstanceOnTransferEvent = useCallback( (_updatedTokenInstance: TTokenInstance) =>
     {
       try {
         if (tokensInstances && tokensInstances.length && _updatedTokenInstance) {
@@ -124,20 +125,34 @@ const StepsContainer = ( {
           const newTokensInstances = tokensInstances.map( (tokenInstance:TTokenInstance) => {
             if (tokenInstance.address == _updatedTokenInstance.address) {
               const connectedADDRESS = connectedAddress?.toUpperCase()
-              if (!tokenInstance.userData[connectedADDRESS as any].balance) {
-                tokenInstance.selectable = false;
-                tokenInstance.selected = false;
-                tokenInstance.transferAmount = 0n;
-                tokenInstance.transferAmountLock = false;
+              // let transferAmount = tokenInstance.transferAmount, transferAmountLock = tokenInstance.transferAmountLock;
+              let transferAmountLock = tokenInstance.transferAmountLock;
+              let selected = tokenInstance.selected, selectable = tokenInstance.selectable;
+              if (!_updatedTokenInstance.userData[connectedADDRESS as any].balance) {
+                selectable = false;
+                selected = false;
+                // transferAmount = 0n;
+                transferAmountLock = false;
               }
-              return _updatedTokenInstance
+              const tokenInstanceUpdated = {
+                ...tokenInstance,
+                userData: {...tokenInstance.userData, ..._updatedTokenInstance.userData},
+                // transferAmount,
+                transferAmountLock,
+                selected, selectable
+              }
+// TODO: debug to remove -> ------------------------
+              console.debug(`StepsContainer.tsx updateTokenInstanceOnTransferEvent: tokenInstanceUpdated=`)
+              console.dir(tokenInstanceUpdated)
+// TODO: debug to remove <- ------------------------
+              return tokenInstanceUpdated
             }
             return tokenInstance
           })
           settokensInstances(newTokensInstances)
         } // if (tokensInstances && tokensInstances.length && _updatedTokenInstance)
       } catch (error) {
-        console.error(`StepsContainer.tsx updateTokenInstanceWithBalance error: ${error}`);
+        console.error(`StepsContainer.tsx updateTokenInstanceOnTransferEvent error: ${error}`);
       }
     },
     [tokensInstances, connectedAddress]
@@ -178,7 +193,7 @@ const StepsContainer = ( {
                       }
                     }
                     if (balancesUpdated) {
-                      updateTokenInstanceWithBalance(tokenInstance)
+                      updateTokenInstanceOnTransferEvent(tokenInstance)
                     }
                   } // if (tokenInstance.userData)
                 } // if (from && to && value)
@@ -190,7 +205,7 @@ const StepsContainer = ( {
         console.error(`StepsContainer.tsx processTransferEvent logs: ${logs} error: ${error}`);
       }
     },
-    [loadTokenOnChainData_addressBalance, tokensInstanceIndex]
+    [loadTokenOnChainData_addressBalance, tokensInstanceIndex, updateTokenInstanceOnTransferEvent]
   ); // processTransferEvent
 
   // ---
@@ -736,7 +751,7 @@ const StepsContainer = ( {
           selected: false,
           transferAmount: 0n,
           transferAmountLock: false,
-          tr_processed: false, tr_error: false, tr_skipped: false,
+          tr_processed: false, tr_error: false, tr_skipped: false, processing: false,
           userData: tokenInstanceUserDataArray,
         }
         return _tokenInstance
@@ -815,7 +830,6 @@ const StepsContainer = ( {
             tokenInstance.contract = contract;
           }
         })
-
         return tokensInstances
       } // try
       catch (error) {
@@ -827,13 +841,13 @@ const StepsContainer = ( {
 
   // ---
 
-  const fetchOnChainData = useCallback( async(multicallInput : any[] ) :  Promise<any[]>  =>
-   {
+  const getOnChainData = useCallback( async(multicallInput : any[], _maxbatchSize:number=MAXBATCHSIZE ) :  Promise<any[]>  =>
+  {
     let multicallAllBatchesResult : any[] = [];
     try {
-      //  throw new Error("fetchOnChainData error test")
-       for (let i = 0; i < Math.ceil(multicallInput.length / MAXBATCHSIZE); i++) {
-         const batch = multicallInput.slice(i * MAXBATCHSIZE, (i + 1) * MAXBATCHSIZE);
+      //  throw new Error("getOnChainData error test")
+       for (let i = 0; i < Math.ceil(multicallInput.length / _maxbatchSize); i++) {
+         const batch = multicallInput.slice(i * _maxbatchSize, (i + 1) * _maxbatchSize);
          const multicallBatchResult = await multicall({
            contracts: batch,
            // allowFailure: false, // disable error throwing
@@ -842,16 +856,64 @@ const StepsContainer = ( {
          multicallAllBatchesResult = multicallAllBatchesResult.concat(multicallBatchResult);
        } // for (let i = 0; ...
 
+      console.debug(`StepsContainer.tsx getOnChainData: multicallAllBatchesResult=`)
+      console.dir(multicallAllBatchesResult)
+
+     } // try
+     catch (error) {
+       console.error(`StepsContainer.tsx getOnChainData error: ${error}`);
+     } // catch (error)
+     return multicallAllBatchesResult;
+    }
+    ,
+    [MAXBATCHSIZE]
+  ); // getOnChainData
+
+  // ---
+
+  const fetchmDataDataMulticallMaxRetry = 5;
+  const fetchDataSuccessStatus = "success";
+  
+
+  // ---
+
+  const fetchOnChainData = useCallback( async(multicallInput : any[] ) :  Promise<any[]>  =>
+   {
+    let multicallResults : any[] = [];
+    try {
+
+      let retryFetchCount = 0, multicallError = false, maxBatchSize = MAXBATCHSIZE;
+      do {
+console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount}`)
+        if (retryFetchCount > 1) {
+          // Wait <retryFetchCount> seconds before retry
+          await new Promise(resolve => setTimeout(resolve, retryFetchCount * 1_000));
+          // try smaller batch size
+          maxBatchSize = Math.floor(maxBatchSize/2);
+        }
+        multicallResults = await getOnChainData(multicallInput, maxBatchSize)
+        multicallError = multicallResults.some( (multicallResult) => {
+          return (multicallResult && multicallResult.status != fetchDataSuccessStatus)
+        })
+console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount} multicallError=${multicallError}`)
+        retryFetchCount++;
+      } while ((retryFetchCount < fetchmDataDataMulticallMaxRetry) && multicallError)
+
+      if (multicallError) {
+        throw `Multicall error happened ${fetchmDataDataMulticallMaxRetry} times`
+      }
+
+      return multicallResults;
+
      } // try
      catch (error) {
        console.error(`StepsContainer.tsx fetchOnChainData error: ${error}`);
       setStateLoadingTokensInstances(false)
       setStateErrorLoadingTokensInstances(true)
      } // catch (error)
-     return multicallAllBatchesResult;
-    }
-    ,
-    [ MAXBATCHSIZE, setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances /* , setErrorLoadingDataState */ ]
+     return multicallResults;
+    },
+    [getOnChainData, setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances, MAXBATCHSIZE]
   ); // fetchOnChainData
 
   // ---
@@ -930,6 +992,10 @@ const StepsContainer = ( {
           });
           const multicallData = await Promise.all(multicallArray);
           const onchainData = await fetchOnChainDataWrapper(multicallData); // Multicall
+
+          // console.debug(`StepsContainer.tsx loadTokensOnChainData_addressBalances: onchainData=`)
+          // console.dir(onchainData)
+
           if (onchainData?.length > 0) {
             const tokensInstancesWithOnchainData = _tokensInstances.map( async (tokenInstance, index) => {
               const userBalance = onchainData[index]?.result; // Token User balance
@@ -998,6 +1064,10 @@ const StepsContainer = ( {
           });
           const multicallData = await Promise.all(multicallArray);
           const onchainData = await fetchOnChainDataWrapper(multicallData); // Multicall
+
+          // console.debug(`StepsContainer.tsx loadTokensOnChainData_TransferAbility: onchainData=`)
+          // console.dir(onchainData)
+
           if (onchainData?.length > 0) {
             const tokensInstancesWithOnchainData = _tokensInstances.map( async (tokenInstance, index) => {
               const canTransfer = (onchainData[index] && onchainData[index]?.result && onchainData[index]?.result[0] ? true : false) ; // can transfer from to // result: bool, uint256, uint256
@@ -1049,6 +1119,10 @@ const StepsContainer = ( {
           });
           const multicallData = await Promise.all(multicallArray);
           const onchainData = await fetchOnChainDataWrapper(multicallData); // Multicall
+
+          // console.debug(`StepsContainer.tsx loadTokensOnChainData_decimals: onchainData=`)
+          // console.dir(onchainData)
+
           if (onchainData?.length > 0) {
             const tokensInstancesWithOnchainData = _tokensInstances.map( async (tokenInstance, index) => {
               if (_resultOnly) {
@@ -1099,6 +1173,10 @@ const StepsContainer = ( {
           });
           const multicallData = await Promise.all(multicallArray);
           const onchainData = await fetchOnChainDataWrapper(multicallData); // Multicall
+
+          // console.debug(`StepsContainer.tsx loadTokensOnChainData_names: onchainData=`)
+          // console.dir(onchainData)
+
           if (onchainData?.length > 0) {
             const tokensInstancesWithOnchainData = _tokensInstances.map( async (tokenInstance, index) => {
               if (_resultOnly) {
@@ -1148,6 +1226,10 @@ const StepsContainer = ( {
           });
           const multicallData = await Promise.all(multicallArray);
           const onchainData = await fetchOnChainDataWrapper(multicallData); // Multicall
+
+          // console.debug(`StepsContainer.tsx loadTokensOnChainData_symbols: onchainData=`)
+          // console.dir(onchainData)
+
           if (onchainData?.length > 0) {
             const tokensInstancesWithOnchainData = _tokensInstances.map( async (tokenInstance, index) => {
               if (_resultOnly) {
@@ -1290,13 +1372,22 @@ const StepsContainer = ( {
 
   // USE EFFECTS
 
+// TODO: remove debug --------------------->
+  useEffect( () =>
+    {
+      console.debug(`StepsContainer.tsx useEffect [tokensInstances]=`)
+      console.dir(tokensInstances)
+    },
+    [tokensInstances]
+  ) // useEffect
+// TODO: remove debug <---------------------
+
   /**
    * Reset to initial step when chainId or connectedAddress changes
    */
   useEffect( () =>
     {
       try {
-        // console.log(`Switching to chainId=${chainId} connectedAddress=${connectedAddress}`)
         resetToInitialStepCB()
         settokensInstances(null)
         settokensInstanceIndex({})
@@ -1307,7 +1398,7 @@ const StepsContainer = ( {
     [chainId, connectedAddress, resetToInitialStepCB]
   ) // useEffect
 
-    // ---
+  // ---
 
   useEffect( () =>
     {
@@ -1319,6 +1410,64 @@ const StepsContainer = ( {
     },
     [initSelectableTokensLists]
   )
+
+  // ---
+
+  useEffect( () =>
+  {
+    try {
+      console.debug(`StepsContainer.tsx useEffect [STEP]: Change STEP from ${previousStep.current} to ${step}`)
+
+      if (step == 2 && previousStep.current == 3) {
+        console.debug(`StepsContainer.tsx useEffect [STEP BACK 3->2]`)
+        const updatedTokensInstances = tokensInstances?.map( (tokenInstance:TTokenInstance) => {
+          if (tokenInstance.processing) {
+            if (tokenInstance.tr_error || tokenInstance.tr_skipped) {
+              return {
+                ...tokenInstance,
+                processing: false,
+              }
+            }
+            // else tokenInstance.tr_processed
+            return {
+              ...tokenInstance,
+              transferAmount: 0n,
+              transferAmountLock: false,
+              processing: false,
+              // selected: false,
+            }
+          } // processing
+          else {
+            // not processing
+            return tokenInstance
+          }
+        })
+        settokensInstances(updatedTokensInstances)
+
+
+      } else if (step == 3 && previousStep.current == 2) {
+        console.debug(`StepsContainer.tsx useEffect [STEP FORWARD 2->3]`)
+        // Update all selected tokens instances
+        const updatedTokensInstances = tokensInstances?.map( (tokenInstance:TTokenInstance) => {
+          if (tokenInstance.selected) {
+            return {
+              ...tokenInstance,
+              processing: true,
+            }
+          } else {
+            return tokenInstance
+          }
+        })
+        settokensInstances(updatedTokensInstances)
+      } // if (step == 3 && previousStep.current == 2)
+
+      previousStep.current = step;
+    } catch (error) {
+      console.error(`StepsContainer.tsx useEffect [chainId, connectedAddress, resetToInitialStepCB] error: ${error}`);  
+    }
+  },
+  [step, tokensInstances]
+) // useEffect
 
   // ---
   /**
@@ -1968,6 +2117,7 @@ const StepsContainer = ( {
               chainId={chainId}
               setNextDisabled={setNextDisabled}
               tokensInstances={tokensInstances}
+              settokensInstances={settokensInstances}
               setShowProgressBar={setShowProgressBar}
               accountAddress={connectedAddress}
               targetAddress={targetAddress}

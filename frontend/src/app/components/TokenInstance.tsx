@@ -24,6 +24,7 @@ const TokenInstance = ( {
 
   const [decimals, setdecimals] = useState<bigint>(BigInt((tokenInstance.decimals||ERC20_DECIMALS_DEFAULT))) as [bigint, (balance:bigint) => void];
   const [name, setname] = useState<string>("")
+  const [symbol, setsymbol] = useState<string>("")
 
   const [balance, setbalance] = useState<TTokenAmount | null>(tokenInstance.userData[accountADDRESS as any]?.balance);
 
@@ -56,6 +57,14 @@ const TokenInstance = ( {
     },
     [tokenInstance.name]
   );
+
+  useEffect( () =>
+  {
+    if (tokenInstance.symbol) setsymbol(tokenInstance.symbol)
+  },
+  [tokenInstance.symbol]
+);
+  
 
   // ---
 
@@ -281,7 +290,7 @@ const TokenInstance = ( {
     <>
       <td className={clsTextPaddingLeft+"w-8 text-center font-thin"}>{tokenInstance.displayId}</td>
       <td className={clsText + " text-ellipsis min-w-full "}>
-        { name ? name : <Loading/> }
+        { name ? name : (symbol ? symbol : <Loading/>) }
       </td>
       <td className={clsText + " text-right pr-2"}>
         { longBalanceString ?
