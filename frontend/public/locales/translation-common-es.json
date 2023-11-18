@@ -52,7 +52,7 @@
             "total": "Total"
           },
           "titles": {
-            "tokenId": "Identificación.",
+            "tokenId": "Identificador",
             "tokenName": "Nombre",
             "sourceTokenBalance": "Balance",
             "selected": "",
