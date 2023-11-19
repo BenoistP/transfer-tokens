@@ -2,7 +2,8 @@
   "moveTokens": {
     "warnings": {
       "connectawallet": "Please connect or unlock your wallet",
-      "wrongchain": "Please switch to a supported chain: Ethereum or Gnosis"
+      "wrongchain": "Please switch to a supported chain: Ethereum or Gnosis",
+      "watchTransfers": "Transfers watch: lost connection, balances updates may not work properly"
     },
     "common": {
       "notAvailable": "Unavailable"

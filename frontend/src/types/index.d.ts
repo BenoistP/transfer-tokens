@@ -1,4 +1,5 @@
 // Enums defined in frontend/src/app/js/constants/enums.ts
+// ->
 enum EChainTokensListLoadState {
   notLoaded = 0,
   contracts = 1,
@@ -9,8 +10,26 @@ enum EChainTokensListLoadState {
   symbols = 6,
   targetBalances = 7,
   targetTransferAbility = 8,
-  // watchTransfers = , // TODO
 }
+
+enum ETokenTransferState {
+  // none = -1, // not processed yet
+  // processing = 0, // pending processing
+  // processed = 1, // success
+  // skipped = 2, // skipped by user
+  // error = 3, // error during processing
+
+  none = -1, // not processed yet
+  processing = 0, // pending processing
+  processed = 1, // success
+  skipped = 2, // skipped by user
+  error = 3, // error during processing
+}
+
+// <-
+// Enums defined in frontend/src/app/js/constants/enums.ts
+
+// --------------------------------------------------------------
 
 // Types & Interfaces
 
@@ -276,6 +295,20 @@ type TTokensInstances = TTokenInstance[]|TNullUndef;
 type TDisplayId = number
 type TSelectId = string
 
+// type TTokentransferState = {
+//   // processing: boolean, -> ETransferState.processing
+
+//   // processed: boolean,
+//   // error: boolean,
+//   // skipped: boolean,
+//   // transfer: ETransferState
+// }
+
+type TTokentransferState = {
+  processing: boolean,
+  transfer: ETokenTransferState
+}
+
 type TTokenInstance = {
   chainId: ChainId;
   address: TokenContractNullableAddress;// TokenContractAddress;
@@ -296,14 +329,22 @@ type TTokenInstance = {
   transferAmountLock: boolean;
 
   // Todo : merge theses 3 fields into one state
-  tr_processed: boolean;
-  tr_error: boolean;
-  tr_skipped: boolean;
-  processing: boolean;
+  // tr_processed: boolean;
+  // tr_error: boolean;
+  // tr_skipped: boolean;
+
+  // processing: boolean;
+  // transferState: TTokentransferState;
+  // processing: boolean;
+
+  // transferState: ETokenTransferState;
+
+  transferState: TTokentransferState;
 
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x... converted to UPPERCASE)
 }
 
+type TTxHash = string|TNullUndef;
 
 type TTokenInstanceUserData = {
   balance: TTokenAmount | null// | undefined;

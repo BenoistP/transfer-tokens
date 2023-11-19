@@ -62,7 +62,7 @@ export const isChainSupported = (chainId:TChainIdNullUndef) : boolean => {
   return false;
 }
 
-export const shortenAddress = (address:TAddressString) : TAddressString => {
+export const shortenAddress = (address:TAddressEmptyNullUndef) : TAddressString => {
   if (address) {
     if (address.length > 10) {
       return address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length) as TAddressString;

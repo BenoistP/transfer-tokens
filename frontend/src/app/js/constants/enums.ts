@@ -9,7 +9,6 @@ export enum EChainTokensListLoadState {
   symbols = 6,
   targetBalances = 7,
   targetTransferAbility = 8,
-  // watchTransfers = , // TODO
 }
 
 export enum EStepsLoadTokensData {
@@ -21,12 +20,30 @@ export enum EStepsLoadTokensData {
   symbols = 5,
   targetBalances = 6,
   targetTransferAbility = 7,
-  // watchTransfers, // TODO
 }
 
-export enum Steps {
+export enum ESteps {
   tokenLists = 0,
-  targetAddress,
-  tokensToMigrate,
-  migration,
+  targetAddress = 1,
+  tokensToMigrate = 2,
+  migration = 3,
+}
+
+export enum ETokenTransferState {
+  // none = -1, // not processed yet
+  // processing = 0, // pending processing
+  // processed = 1, // success
+  // skipped = 2, // skipped by user
+  // error = 3, // error during processing
+
+  // none = -0, // not processed yet
+  // processed = 1, // success
+  // skipped = 2, // skipped by user
+  // error = 3, // error during processing
+
+  none = -1, // not processed yet
+  processing = 0, // pending processing
+  processed = 1, // success
+  skipped = 2, // skipped by user
+  error = 3, // error during processing
 }

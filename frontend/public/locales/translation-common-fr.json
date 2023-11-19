@@ -2,7 +2,8 @@
   "moveTokens" : {
     "warnings": {
       "connectawallet": "Connecter ou déverrouiller un portefeuille",
-      "wrongchain": "Les chaînes supportées sont: Ethereum ou Gnosis"
+      "wrongchain": "Les chaînes supportées sont: Ethereum ou Gnosis",
+      "watchTransfers": "Surveillance des transferts: connexion perdue, les mises à jour des transferts peuvent êtres affectées"
     },
     "common": {
       "notAvailable": "Non disponible"

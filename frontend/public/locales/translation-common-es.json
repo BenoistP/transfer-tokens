@@ -2,7 +2,8 @@
   "moveTokens": {
     "warnings": {
       "connectawallet": "Por favor conecta o desbloquea tu cartera",
-      "wrongchain": "Cambie a una red compatible: Ethereum o Gnosis"
+      "wrongchain": "Cambie a una red compatible: Ethereum o Gnosis",
+      "watchTransfers": "Observación: Perdida de conexión, los saldos pueden no ser exactos"
     },
     "common": {
       "notAvailable": "Indisponible"
@@ -34,7 +35,7 @@
         },
         "select": {
           "any": {
-            "hint": "Seleccione TODOS lOs tókenes",
+            "hint": "Seleccione TODOS los tókenes",
             "selectAll": "Todo",
             "invertSelection": "Invertir"
           },
