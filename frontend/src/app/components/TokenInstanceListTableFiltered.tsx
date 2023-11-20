@@ -335,7 +335,7 @@ const TokenInstanceListTableFiltered = (
 
         <div className="min-w-full rounded-lg  mt-2 transition-all">
 
-          { (!isErrorTokensInstances && tokensInstances?.length) ?
+          { (!isErrorTokensInstances &&!isLoadingTokensInstances && tokensInstances?.length) ?
 
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
 
@@ -392,10 +392,10 @@ const TokenInstanceListTableFiltered = (
             :
               isErrorTokensInstances ?
                   <div className={clsStatus+" text-error"}>
-                    <div className="pt-0">
+                    <div className="pr-1">
                       <ExclamationCircleIcon className={clsIconStatusSize} />
                     </div>
-                    <div className="pt-0 pr-3 ">
+                    <div className="">
                       {t("moveTokens.stepAny.tokensTable.errorLoadingTokens")}
                     </div>
                   </div>
@@ -404,20 +404,20 @@ const TokenInstanceListTableFiltered = (
                   {
                     isLoadingTokensInstances ?
                       <div className={clsStatus+" text-info"}>
-                        <div className="pt-0">
+                        <div className="pr-1">
                           <InformationCircleIcon className={clsIconStatusSize} />
                         </div>
-                        <div className="pt-0 pr-3 ">
+                        <div className="pr-1">
                           {t("moveTokens.stepAny.tokensTable.loadingTokens")}
                         </div>
                         <div className={clsLoadingTokenLists}/>
                       </div>
                       :
                       <div className={clsStatus+" text-info"}>
-                        <div className="pt-0">
+                        <div className="pr-1">
                           <InformationCircleIcon className={clsIconStatusSize} />
                         </div>
-                        <div className="pt-0 pr-3 ">
+                        <div className="">
                           {t("moveTokens.stepAny.tokensTable.noTokens")}
                         </div>
                       </div>

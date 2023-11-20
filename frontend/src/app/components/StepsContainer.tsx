@@ -20,8 +20,10 @@ import { erc20ABI } from '@wagmi/core'
 import CoinBridgeToken from "@abis/CoinBridgeToken.json";
 // Consts & Enums
 import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT } from "@uiconsts/misc";
-import { EStepsLoadTokensData, EChainTokensListLoadState, ESteps, ETokenTransferState } from "@jsconsts/enums"; 
-import { DURATION_LONG } from "@App/js/constants/ui/uiConsts";
+import { EStepsLoadTokensData, EChainTokensListLoadState,
+  ESteps, ETokenTransferState } from "@jsconsts/enums"; 
+import { DURATION_LONG,
+  FETCHDATA_MULTICALL_MAX_RETRY, FETCHDATA_MULTICALL_SUCCESSSTATUS } from "@App/js/constants/ui/uiConsts";
 // Events
 import { usePublicClient } from 'wagmi'
 import { Log } from "viem";
@@ -916,12 +918,6 @@ const StepsContainer = ( {
 
   // ---
 
-  const fetchmDataDataMulticallMaxRetry = 5;
-  const fetchDataSuccessStatus = "success";
-  
-
-  // ---
-
 //   const fetchOnChainData = useCallback( async(multicallInput : any[] ) :  Promise<any[]>  =>
 //    {
 //     let multicallResults : any[] = [];
@@ -938,14 +934,14 @@ const StepsContainer = ( {
 //         }
 //         multicallResults = await getOnChainData(multicallInput, maxBatchSize)
 //         multicallError = multicallResults.some( (multicallResult) => {
-//           return (multicallResult && multicallResult.status != fetchDataSuccessStatus)
+//           return (multicallResult && multicallResult.status != FETCHDATA_MULTICALL_SUCCESSSTATUS)
 //         })
 // console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount} multicallError=${multicallError}`)
 //         retryFetchCount++;
-//       } while ((retryFetchCount < fetchmDataDataMulticallMaxRetry) && multicallError)
+//       } while ((retryFetchCount < FETCHDATA_MULTICALL_MAX_RETRY) && multicallError)
 
 //       if (multicallError) {
-//         throw `Multicall error happened ${fetchmDataDataMulticallMaxRetry} times`
+//         throw `Multicall error happened ${FETCHDATA_MULTICALL_MAX_RETRY} times`
 //       }
 
 //       return multicallResults;
@@ -968,9 +964,11 @@ const StepsContainer = ( {
       try {
         let retryFetchCount = 0, multicallHasErrors = false, maxBatchSize = MAXBATCHSIZE;
         do {
+
 // TODO: DEBUG to remove <---------------------------------------
 console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount}`)
 // TODO: DEBUG to remove <---------------------------------------
+
           if (retryFetchCount > 1) {
             // Wait <retryFetchCount> seconds before retry
             await new Promise(resolve => setTimeout(resolve, retryFetchCount * 1_000));
@@ -980,11 +978,13 @@ console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetch
           multicallFetchResults[retryFetchCount] = await getOnChainData(multicallInput, maxBatchSize)
           // Search for error(s)
           multicallHasErrors = multicallFetchResults[retryFetchCount].some( (multicallResult) => {
-            return (multicallResult && multicallResult.status != fetchDataSuccessStatus)
+            return (multicallResult && multicallResult.status != FETCHDATA_MULTICALL_SUCCESSSTATUS)
           })
+
 // TODO: DEBUG to remove <---------------------------------------
 console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount} multicallHasErrors=${multicallHasErrors}`)
 // TODO: DEBUG to remove <---------------------------------------
+
           // No error
           if (!multicallHasErrors) {
             // Set result as current multicall fetch results
@@ -998,7 +998,12 @@ console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetch
             } else {
               // Merge with previous results
               for (let iMulticallResults = 0; iMulticallResults < multicallResults.length; iMulticallResults++) {
-                if (multicallResults[iMulticallResults].status != fetchDataSuccessStatus) {
+
+// TODO: DEBUG to remove <---------------------------------------
+console.debug(`StepsContainer.tsx fetchOnChainData: multicallResults old "${multicallResults[iMulticallResults].status}" new '${multicallFetchResults[retryFetchCount][iMulticallResults].status}'`)
+// TODO: DEBUG to remove <---------------------------------------
+
+                if (multicallResults[iMulticallResults].status != FETCHDATA_MULTICALL_SUCCESSSTATUS) {
                   // error in previous result : get current fetch result
                   multicallResults[iMulticallResults] = multicallFetchResults[retryFetchCount][iMulticallResults]
                 }
@@ -1011,18 +1016,28 @@ console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetch
             retryFetchCount++;
             // Search again for error(s) after merge
             multicallHasErrors = multicallResults.some( (multicallResult) => {
-              return (multicallResult && multicallResult.status != fetchDataSuccessStatus)
+              return (multicallResult && multicallResult.status != FETCHDATA_MULTICALL_SUCCESSSTATUS)
             })
-          }
 
 // TODO: DEBUG to remove <---------------------------------------
 console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount} multicallHasErrors=${multicallHasErrors} multicallResults=`)
-          console.dir(multicallResults)
+console.dir(multicallResults)
+if (multicallHasErrors) {
+  const errorsCount = multicallResults.reduce( (accumulator, multicallResult) => 
+    // return accumulator + (!multicallResult?0:(multicallResult.status != FETCHDATA_MULTICALL_SUCCESSSTATUS?1:0)),
+    accumulator + (!multicallResult?0:(multicallResult.status != FETCHDATA_MULTICALL_SUCCESSSTATUS?1:0)),
+    0, // initial value
+  )
+console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount} multicallHasErrors=${multicallHasErrors} errorsCount=${errorsCount}`)
+}
 // TODO: DEBUG to remove <---------------------------------------
-        } while ((retryFetchCount < fetchmDataDataMulticallMaxRetry) && multicallHasErrors)
+
+          } // if multicallHasErrors... ELSE (multicallHasErrors)
+
+        } while ((retryFetchCount < FETCHDATA_MULTICALL_MAX_RETRY) && multicallHasErrors)
 
         if (multicallHasErrors) {
-          throw `Multicall error happened ${fetchmDataDataMulticallMaxRetry} times, skipping`
+          throw `Multicall error happened ${FETCHDATA_MULTICALL_MAX_RETRY} times, skipping`
         }
         return multicallResults;
       } // try
@@ -1041,7 +1056,6 @@ console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetch
   const fetchOnChainDataWrapper = useCallback( async(multicallInput : any[] ) : Promise<any[]> =>
     {
       let multicallRes : any[] = [];
-
       try {
         const multicallInputCall = [] as any[] // contains real multicall inputs
         const inputRes = [] as any[] // contains inputs

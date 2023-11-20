@@ -230,8 +230,8 @@ const TokensListsSelect = ( {
                 {
                 isError ?
                   <div className="flex justify-center pb-3 text-error font-semibold pt-2 text-md sm:text-base md:text-xl">
-                      <div className="pt-0 pr-3 ">
-                      {t('moveTokens.stepZero.tokensListsTable.errorLoadingTokensLists')}
+                      <div className="pt-0 pr-3">
+                        {t('moveTokens.stepZero.tokensListsTable.errorLoadingTokensLists')}
                       </div>
                       <div className="pt-0">
                         <ExclamationCircleIcon className={clsIconStatusSize} />
@@ -243,14 +243,14 @@ const TokensListsSelect = ( {
                       <div className="pt-0">
                         <InformationCircleIcon className={clsIconStatusSize} />
                       </div>
-                      <div className="pt-0 pr-3 ">
+                      <div className="pt-0 pr-1">
                           {t('moveTokens.stepZero.tokensListsTable.loadingTokensLists')}
                         </div>
                         <div className={clsLoadingTokenLists}/>
                     </div>
                   :
                     <div className="flex justify-center pb-3 text-info font-semibold pt-2 text-md sm:text-base md:text-xl">
-                      <div className="pt-0 pr-3 ">
+                      <div className="pt-0 pr-3">
                         {t('moveTokens.stepZero.tokensListsTable.noTokensLists')}
                       </div>
                       <div className="pt-0">

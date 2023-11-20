@@ -146,7 +146,7 @@ export default {
 
           /* 'info' : '#2094f3', */              /* Info */
           // 'info' : '#678be0',   
-          'info' : '#284158',              /* Info */
+          'info' : '#486178',              /* Info */
 
           /* 'info-content' : '#2094f3', */              /* Will be a readable tone of info if not specified */
           'info-content' : '#FFF',

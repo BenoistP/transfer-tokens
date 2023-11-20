@@ -341,7 +341,7 @@ type TTokenInstance = {
 
   transferState: TTokentransferState;
 
-  userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x... converted to UPPERCASE)
+  userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x... IN UPPERCASE)
 }
 
 type TTxHash = string|TNullUndef;

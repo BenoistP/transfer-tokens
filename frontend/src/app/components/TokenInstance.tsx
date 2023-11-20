@@ -384,7 +384,7 @@ const TokenInstance = ( {
             <NoSymbolIcon className={clsIconSize+" fill-current"} />
           </div>
         }
-        { targetADDRESS == "" ?
+        { !targetADDRESS ?
             null
           :
             (canTransferTo ?

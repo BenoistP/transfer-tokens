@@ -97,7 +97,7 @@ const TokenInstanceMigrationListTable = (
               <div className="pt-0">
                 <ExclamationCircleIcon className={clsIconStatusSize} />
               </div>
-              <div className="pt-0 pr-3 ">
+              <div className="pt-0 pr-3">
                 {t("moveTokens.stepThree.tokensMigrationListTable.noTokens")}
               </div>
             </div>
