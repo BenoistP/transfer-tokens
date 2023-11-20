@@ -15,7 +15,7 @@ const Step0 = (  {
     setselectableTokensLists,
     tokensInstances,
     isLoadingTokensLists, isErrorTokensLists,
-    isLoadingTokensInstances, isErrorTokensInstances,
+    isLoadingTokensInstances, isErrorTokensInstances, isUpdatingTokensInstances,
     tokensInstancesListTablePropsHandlers
     } :IStep0Props ) =>
 {
@@ -56,7 +56,7 @@ const Step0 = (  {
                 accountAddress={accountAddress}
                 enableCheckboxes={true}
                 targetAddress={targetAddress}
-                isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
+                isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances} isUpdatingTokensInstances={isUpdatingTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 enableEditable={false}
               />

@@ -18,7 +18,7 @@ const TokenInstanceListTableFiltered = (
       accountAddress,
       enableCheckboxes,
       targetAddress,
-      isLoadingTokensInstances, isErrorTokensInstances,
+      isLoadingTokensInstances, isErrorTokensInstances, isUpdatingTokensInstances,
       enableEditable,
       tokensInstancesListTablePropsHandlers }: ITokensListTableFilteredProps )  =>
   {
@@ -335,7 +335,7 @@ const TokenInstanceListTableFiltered = (
 
         <div className="min-w-full rounded-lg  mt-2 transition-all">
 
-          { (!isErrorTokensInstances &&!isLoadingTokensInstances && tokensInstances?.length) ?
+          { ( (!isErrorTokensInstances || isUpdatingTokensInstances) && tokensInstances?.length) ?
 
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
 

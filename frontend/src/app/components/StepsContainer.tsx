@@ -64,6 +64,7 @@ const StepsContainer = ( {
 
   const [isLoadingTokensInstances, setisLoadingTokensInstances] = useState<boolean>(false)
   const [isErrorTokensInstances, setisErrorTokensInstances] = useState(false)
+  const [isUpdatingTokensInstances, setisUpdatingTokensInstances] = useState(false)
 
   // Sorting
   const [sortOrderTokenDisplayId, setsortOrderTokenDisplayId] = useState<TsortOrder>(0) // 0: unsorted, 1: lowest first , 2 highest first
@@ -174,6 +175,12 @@ const StepsContainer = ( {
               let selected = tokenInstance.selected, selectable = tokenInstance.selectable;
               if (!_updatedTokenInstance.userData[connectedADDRESS as any].balance) {
                 // NO BALANCE : set as unselectable/unselected
+// TODO: debug to remove -> ------------------------
+console.debug(`StepsContainer.tsx updateTokenInstanceOnTransferEvent: NO BALANCE _updatedTokenInstance.userData[connectedADDRESS as any].balance=${_updatedTokenInstance.userData[connectedADDRESS as any].balance}`)
+console.dir(_updatedTokenInstance)
+console.dir(tokenInstance.userData)
+console.dir(_updatedTokenInstance.userData)
+// TODO: debug to remove <- ------------------------
                 selectable = false;
                 selected = false;
                 // transferAmount = 0n; // transfer amount : should aready be setted to 0 during transfer processing loop
@@ -220,10 +227,23 @@ const StepsContainer = ( {
                   if (tokenInstance.userData) {
                     // Check if any of our userdata balances has been updated
                     const fromADDRESS = from.toUpperCase(), toADDRESS = to.toUpperCase();
+// TODO: debug to remove -> ------------------------
+console.debug(`StepsContainer.tsx processTransferEvent fromADDRESS:${fromADDRESS} toADDRESS:${toADDRESS}`)
+console.dir(tokenInstance)
+// TODO: debug to remove <- ------------------------
+
                     let balancesUpdated = false;
+// TODO: debug to remove -> ------------------------
+console.debug(`StepsContainer.tsx processTransferEvent tokenInstance.userData[${fromADDRESS} as any]:${tokenInstance.userData[fromADDRESS as any]} `)
+console.debug(`StepsContainer.tsx processTransferEvent tokenInstance.userData[${toADDRESS} as any]:${tokenInstance.userData[toADDRESS as any]} `)
+// TODO: debug to remove <- ------------------------
                     if (tokenInstance.userData[fromADDRESS as any]) {
                       // Update on from
                       const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, from);
+// TODO: debug to remove -> ------------------------
+console.debug(`StepsContainer.tsx processTransferEvent from:${from} newBalance:${newBalance}`)
+// TODO: debug to remove <- ------------------------
+
                       if (newBalance != undefined) {
                         tokenInstance.userData[fromADDRESS as any].balance = newBalance;
                         balancesUpdated = true
@@ -232,6 +252,9 @@ const StepsContainer = ( {
                     if (tokenInstance.userData[toADDRESS as any]) {
                       // Update on to
                       const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, to);
+// TODO: debug to remove -> ------------------------
+console.debug(`StepsContainer.tsx processTransferEvent to:${to} newBalance:${newBalance}`)
+// TODO: debug to remove <- ------------------------
                       if (newBalance != undefined) {
                         tokenInstance.userData[toADDRESS as any].balance = newBalance;
                         balancesUpdated = true
@@ -817,6 +840,14 @@ const StepsContainer = ( {
 
   // ---
 
+  const setStateUpdatingTokensInstances = useCallback( (isUpdating:boolean) =>
+    {
+      setisUpdatingTokensInstances(isUpdating)
+    }, []
+  )
+
+  // ---
+
   const setStateErrorLoadingTokensInstances = useCallback( (isError:boolean) =>
     {
       setisErrorTokensInstances(isError)
@@ -1025,7 +1056,7 @@ console.dir(multicallResults)
 if (multicallHasErrors) {
   const errorsCount = multicallResults.reduce( (accumulator, multicallResult) => 
     // return accumulator + (!multicallResult?0:(multicallResult.status != FETCHDATA_MULTICALL_SUCCESSSTATUS?1:0)),
-    accumulator + (!multicallResult?0:(multicallResult.status != FETCHDATA_MULTICALL_SUCCESSSTATUS?1:0)),
+    accumulator + (!multicallResult?1:(multicallResult.status != FETCHDATA_MULTICALL_SUCCESSSTATUS?1:0)),
     0, // initial value
   )
 console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount} multicallHasErrors=${multicallHasErrors} errorsCount=${errorsCount}`)
@@ -1553,56 +1584,10 @@ console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetch
       console.debug(`StepsContainer.tsx useEffect [STEP]: Change STEP from ${previousStep.current} to ${step}`)
 
       if (step == ESteps.tokensToMigrate && previousStep.current == ESteps.migration) {
+// TODO: remove DEBUG >----------------------------------------
         console.debug(`StepsContainer.tsx useEffect [STEP BACK 3->2]`)
-        // // const updatedTokensInstances = tokensInstances?.map( (tokenInstance:TTokenInstance) => {
-        // //   if (tokenInstance.processing) {
-        // //     if (tokenInstance.tr_error || tokenInstance.tr_skipped) {
-        // //       return {
-        // //         ...tokenInstance,
-        // //         processing: false,
-        // //       }
-        // //     }
-        // //     // else tokenInstance.tr_processed
-        // //     return {
-        // //       ...tokenInstance,
-        // //       transferAmount: 0n,
-        // //       transferAmountLock: false,
-        // //       processing: false,
-        // //       // selected: false,
-        // //     }
-        // //   } // processing
-        // //   else {
-        // //     // not processing
-        // //     return tokenInstance
-        // //   }
-        // // })
-        // const updatedTokensInstances = tokensInstances?.map( (tokenInstance:TTokenInstance) => {
-        //   if (tokenInstance.transferState == ETokenTransferState.processing) {
-        //       return {
-        //         ...tokenInstance,
-        //         transferState: ETokenTransferState.none, // reset state
-        //       }
-        //   } else if (tokenInstance.transferState == ETokenTransferState.error) {
-        //     return tokenInstance;
-        //   } else if (tokenInstance.transferState == ETokenTransferState.skipped) {
-        //     return tokenInstance;
-        //     // return {
-        //     //   ...tokenInstance,
-        //     //   // selected: false, // should aready be setted to false during transfer processing loop
-        //     // }
-        //   } else if (tokenInstance.transferState == ETokenTransferState.processed) {
-        //     // return {
-        //     //   ...tokenInstance,
-        //     //   // transferAmount: 0n, // should aready be setted to 0 during transfer processing loop
-        //     //   // transferAmountLock: false, // should aready be setted to false during transfer processing loop
-        //     //   // selected: false, // should aready be setted to false during transfer processing loop
-        //     // }
-        //     return tokenInstance
-        //   } else {
-        //     // state == none
-        //     return tokenInstance
-        //   }
-        // })
+// TODO: remove DEBUG <----------------------------------------
+
         const updatedTokensInstances = tokensInstances?.map( (tokenInstance:TTokenInstance) => {
           if (tokenInstance.transferState.processing) {
             // processing ?
@@ -1619,14 +1604,17 @@ console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetch
         settokensInstances(updatedTokensInstances)
 
       } else if (step == ESteps.migration && previousStep.current == ESteps.tokensToMigrate) {
-        console.debug(`StepsContainer.tsx useEffect [STEP FORWARD 2->3]`)
+// TODO: remove DEBUG >----------------------------------------
+console.debug(`StepsContainer.tsx useEffect [STEP FORWARD 2->3]`)
+// TODO: remove DEBUG <----------------------------------------
         // Update all selected tokens instances
         const updatedTokensInstances = tokensInstances?.map( (tokenInstance:TTokenInstance) => {
           if (tokenInstance.selected) {
             // If selected, Mark as processing ("to process")
             return {
               ...tokenInstance,
-              transferState: { ...tokenInstance.transferState, processing: true},
+              transferState: { processing: true, transfer: ETokenTransferState.none } // reinit transfer state
+              // TODO : keep previous transfer state
             }
           } else {
             // If not selected, leave as is
@@ -1676,7 +1664,9 @@ console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetch
               console.dir(targetTokensBalancesErrors)
               console.dir(targetCanTransferTokensToErrors)
               if (targetTokensBalancesErrors || targetCanTransferTokensToErrors) {
-                console.debug(`StepsContainer.tsx loadTargetData MISSING targetBalances ${targetTokensBalancesErrors} or targetCanTransferTo ${targetCanTransferTokensToErrors}`)
+// TODO: remove DEBUG >----------------------------------------
+console.debug(`StepsContainer.tsx loadTargetData MISSING targetBalances ${targetTokensBalancesErrors} or targetCanTransferTo ${targetCanTransferTokensToErrors}`)
+// TODO: remove DEBUG <----------------------------------------
                 setStateErrorLoadingTokensInstances(true)
                 return _tokensInstances;
               }
@@ -1693,9 +1683,11 @@ console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetch
               })
             } // IF (targetTokensBalances && ...
             else {
-              console.debug(`StepsContainer.tsx loadTargetData MISSING targetTokensBalances or targetCanTransferTokens`)
-              console.dir(targetTokensBalances)
-              console.dir(targetCanTransferTokens)
+// TODO: remove DEBUG >----------------------------------------
+console.debug(`StepsContainer.tsx loadTargetData MISSING targetTokensBalances or targetCanTransferTokens`)
+console.dir(targetTokensBalances)
+console.dir(targetCanTransferTokens)
+// TODO: remove DEBUG <----------------------------------------
               setStateErrorLoadingTokensInstances(true)
               return _tokensInstances;
             } // if (targetTokensBalances && ... ELSE
@@ -1892,6 +1884,9 @@ console.dir(namesErrors2)
                   // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState == SYMBOLS _targetAddress is set`)
                   // Load target data
 
+                  // Dirty hack to avoid hidding already loaded data 
+                  setStateUpdatingTokensInstances(true)
+
                   const _tokensInstancesTargetData = await loadTargetData(_tokensInstances, _targetAddress)
                   if (_tokensInstancesTargetData && _tokensInstancesTargetData.length ) {
                     _tokensInstances = _tokensInstancesTargetData
@@ -1937,6 +1932,10 @@ console.dir(namesErrors2)
                   })
 
                   if (!allInstancesWithTargetData) {
+
+                    // Dirty hack to avoid hidding already loaded data 
+                    setStateUpdatingTokensInstances(true)
+
                     // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances EChainTokensListLoadState <> SYMBOLS ; _targetAddress is set ; NOT ALLINSTANCESWITHTARGET LOADING TARGET DATA`)
                     const _tokensInstancesTargetData = await loadTargetData(_tokensInstances, _targetAddress)
                     // console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances AFTER loadTargetData _tokensInstancesTargetData =`)
@@ -2135,6 +2134,8 @@ console.dir(namesErrors2)
 
           // setLoadingDataState(true)
           // setisLoading(true)
+
+          // chainTokensList.loadState == EChainTokensListLoadState.symbols)
           setStateLoadingTokensInstances(true)
           setStateIsFetchingData(true)
           // debugger;
@@ -2190,18 +2191,20 @@ console.dir(namesErrors2)
           // TODO: Although newSelectedChainsTokensList is not fully loaded, call setselectedChainsTokensList for displaying loading effect ...
           // setselectedChainsTokensList(newSelectedChainsTokensList);
 
-          updateChainTokensListTokensInstances(newSelectedChainsTokensList, targetAddress).then( (updatedChainsTokensList:TChainsTokensListArrayNullUndef) => {
+            updateChainTokensListTokensInstances(newSelectedChainsTokensList, targetAddress).then( (updatedChainsTokensList:TChainsTokensListArrayNullUndef) => {
             // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] AFTER updateChainTokensListTokensInstances.then`)
             // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS]: SET SelectedChainsTokensList`)
             setselectedChainsTokensList(updatedChainsTokensList)
             // console.dir(updatedChainsTokensList)
             setStateLoadingTokensInstances(false)
+            setStateUpdatingTokensInstances(false)
             setStateIsFetchingData(false)
             // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances elapsed=${Date.now() - start}ms`)
             // console.debug(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances elapsed=${Date.now() - start}ms`)
           }).catch( (error) => {
             console.error(`StepsContainer.tsx useEffect [SELECTABLE TOKENSLISTS] updateChainTokensListTokensInstances error: ${error}`);
             setStateLoadingTokensInstances(false)
+            setStateUpdatingTokensInstances(false)
             setStateErrorLoadingTokensInstances(true)
             setStateIsFetchingData(false)
           })
@@ -2225,7 +2228,7 @@ console.dir(namesErrors2)
     [tokensLists, selectableTokensLists,
       chainId, targetAddress, connectedAddress,
       getSelectedTokenLists, initTokenInstance, loadTokensOnChainData,
-      setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances,
+      setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances, setStateUpdatingTokensInstances,
       setStateIsFetchingData]
   ) // useEffect
 
@@ -2318,9 +2321,7 @@ console.dir(namesErrors2)
               chainId={chainId}
               isLoadingTokensLists={isLoadingTokensLists}
               isErrorTokensLists={isErrorTokensLists}
-              isLoadingTokensInstances={isLoadingTokensInstances}
-              isErrorTokensInstances={isErrorTokensInstances}
-
+              isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}  isUpdatingTokensInstances={isUpdatingTokensInstances}
               tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
             />
           </MainContentContainer>
@@ -2338,7 +2339,7 @@ console.dir(namesErrors2)
               chainId={chainId}
               targetAddress={targetAddress}
               settargetAddress={settargetAddress}
-              isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
+              isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}  isUpdatingTokensInstances={isUpdatingTokensInstances}
               tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
             />
           </MainContentContainer>
@@ -2354,7 +2355,7 @@ console.dir(namesErrors2)
               setShowProgressBar={setShowProgressBar}
               accountAddress={connectedAddress}
               targetAddress={targetAddress}
-              isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
+              isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}  isUpdatingTokensInstances={isUpdatingTokensInstances}
               tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 />
           </MainContentContainer>

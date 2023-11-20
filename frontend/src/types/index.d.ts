@@ -421,6 +421,7 @@ interface IStep0Props {
   isErrorTokensLists: boolean,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
+  isUpdatingTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -433,6 +434,7 @@ interface IStep1Props {
   chainId: ChainId;
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
+  isUpdatingTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -444,6 +446,7 @@ interface IStep2Props {
   targetAddress: TAddressEmpty,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
+  isUpdatingTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
@@ -618,6 +621,7 @@ interface ITokensListTableFilteredProps {
   targetAddress: TAddressEmpty,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
+  isUpdatingTokensInstances: boolean,
   enableEditable: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }

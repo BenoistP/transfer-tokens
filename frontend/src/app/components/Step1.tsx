@@ -14,7 +14,7 @@ const Step1 = ( {
   tokensInstances,
   targetAddress,
   settargetAddress,
-  isLoadingTokensInstances, isErrorTokensInstances,
+  isLoadingTokensInstances, isErrorTokensInstances, isUpdatingTokensInstances,
   tokensInstancesListTablePropsHandlers }: IStep1Props ) =>
 {
 
@@ -47,7 +47,7 @@ const Step1 = ( {
                 accountAddress={accountAddress}
                 enableCheckboxes={true}
                 targetAddress={targetAddress}
-                isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances}
+                isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances} isUpdatingTokensInstances={isUpdatingTokensInstances}
                 tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
                 enableEditable={false}
               />

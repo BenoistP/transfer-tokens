@@ -397,6 +397,7 @@ const TokenInstance = ( {
               </div>
             )
         }
+        /* // TODO : Show previous transfer state */
         {tokenInstance.transferState.transfer == ETokenTransferState.processed &&
           <div className={clsTooltipLeft + "pl-1 text-info tooltip-success"} data-tip={t("moveTokens.stepAny.token.transfer.success")} >
             <CheckCircleIcon className={clsIconSize+" fill-success"} />
