@@ -508,9 +508,13 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
     try {
       if (tokensInstancesToMigrate && tokensInstancesToMigrate.length) {
 
-        let tokenInstanceIndex = 0;
-        let errorItemsCount = 0, skippedItemsCount = 0, successItemsCount = 0; // , paused = false, stopped = false;
+        let tokenInstanceIndex = 0 ;
+        let errorItemsCount = 0, skippedItemsCount = 0, successItemsCount = 0 ; // , paused = false, stopped = false;
+        let currentlyProcessing = false ;
         let tokenInstanceToTransfer:TTokenInstance|undefined; //  = undefined
+
+        // Search for current migration state figures
+        // Update migration/transfer state
         for (; ((tokenInstanceIndex < tokensInstancesToMigrate.length)/* &&!stopTransfers */); tokenInstanceIndex++) {
           tokenInstanceToTransfer = tokensInstancesToMigrate[tokenInstanceIndex];
           if (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.error) {
@@ -519,9 +523,10 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
             successItemsCount++;
           } else if (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.skipped) {
             skippedItemsCount++;
+          } else if (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.processing) {
+            currentlyProcessing = true;
           }
         } // for
-
         migrationState.current = {
           totalItemsCount: tokensInstancesToMigrate.length,
           errorItemsCount,
@@ -530,62 +535,71 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
           paused: paused.current, stopped: stopped.current
         };
         setmigrationState( migrationState.current )
-        tokenInstanceIndex = 0;
-        tokenInstanceToTransfer = undefined; //  = undefined
-        for (; ((tokenInstanceIndex < tokensInstancesToMigrate.length)/* &&!stopTransfers */); tokenInstanceIndex++) {
-          while (paused.current) {
-            await new Promise(r => setTimeout(r, 250));
-            if (!paused.current || stopped.current) break;
+
+        // if any token is processing, skip search and do nothing (exit)
+        if (!currentlyProcessing) {
+
+
+
+          // Search for next token to transfer
+          tokenInstanceIndex = 0;
+          tokenInstanceToTransfer = undefined; //  = undefined
+          for (; ((tokenInstanceIndex < tokensInstancesToMigrate.length)/* &&!stopTransfers */); tokenInstanceIndex++) {
+            while (paused.current) {
+              await new Promise(r => setTimeout(r, 250));
+              if (!paused.current || stopped.current) break;
+            }
+            if (stopped.current) break;
+            // const tokenInstanceToTransfer = tokensInstancesToMigrate[tokenInstanceIndex];
+            tokenInstanceToTransfer = tokensInstancesToMigrate[tokenInstanceIndex];
+
+            // if (tokenInstanceToTransfer.transferState.processing // processing
+            //     && tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.processing
+            //   ) break;
+
+            if (tokenInstanceToTransfer.transferState.processing // processing
+                && tokenInstanceToTransfer.selected && tokenInstanceToTransfer.transferAmount // selected and with transfer amount (> 0)
+                && (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none) // not yet processed
+              ) {
+              console.debug(`Steps3.tsx transferTokenS TRANSFER tokenInstanceToTransfer:`);
+              console.dir(tokenInstanceToTransfer);
+              break;
+            } else {
+              console.debug(`Steps3.tsx transferTokenS SKIP TRANSFER tokenInstanceToTransfer:`);
+              console.dir(tokenInstanceToTransfer);
+              continue;
+            }
+
+            // try {
+            //   tokenIdx.current = tokenInstanceIndex;
+            //   await transferToken(tokenInstanceToTransfer, targetAddress )
+            // } catch (error) {
+            //   console.error(`Steps3.tsx transferTokenS tokenInstanceToTransfer TRANSFER ERROR token symbol: '${tokenInstanceToTransfer.symbol}' token address: '${tokenInstanceToTransfer.address}' targetAddress: '${targetAddress}' for '${tokenInstanceToTransfer.transferAmount}' amount process error: ${error}`);
+            // }
+
+          } // for (let tokenInstanceIndex = 0 ...
+          try {
+            // tokenIdx.current = tokenInstanceIndex;
+            if (tokenInstanceToTransfer && tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none)  {
+              // update token state
+              tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.processing
+              updateProcessedTokenInstance(tokenInstanceToTransfer)
+              await transferToken(tokenInstanceToTransfer, targetAddress )
+            }
+          } catch (error) {
+            console.error(`Steps3.tsx transferTokenS tokenInstanceToTransfer TRANSFER ERROR token symbol: '${tokenInstanceToTransfer?.symbol}' token address: '${tokenInstanceToTransfer?.address}' targetAddress: '${targetAddress}' for '${tokenInstanceToTransfer?.transferAmount}' amount process error: ${error}`);
           }
-          if (stopped.current) break;
-          // const tokenInstanceToTransfer = tokensInstancesToMigrate[tokenInstanceIndex];
-          tokenInstanceToTransfer = tokensInstancesToMigrate[tokenInstanceIndex];
 
-          if (tokenInstanceToTransfer.transferState.processing // processing
-              && tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.processing
-            ) break;
-
-          if (tokenInstanceToTransfer.transferState.processing // processing
-              && tokenInstanceToTransfer.selected && tokenInstanceToTransfer.transferAmount // selected and with transfer amount (> 0)
-              && (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none) // not yet processed
-            ) {
-            console.debug(`Steps3.tsx transferTokenS TRANSFER tokenInstanceToTransfer:`);
-            console.dir(tokenInstanceToTransfer);
-            break;
-          } else {
-            console.debug(`Steps3.tsx transferTokenS SKIP TRANSFER tokenInstanceToTransfer:`);
-            console.dir(tokenInstanceToTransfer);
-            continue;
+          if (tokenInstanceIndex >= tokensInstancesToMigrate.length-1) {
+            setstopTransfers(true)
+            paused.current = false
+            stopped.current = true
+            setmigrationState( {...migrationState.current, paused: false, stopped: true} )
           }
 
-          // try {
-          //   tokenIdx.current = tokenInstanceIndex;
-          //   await transferToken(tokenInstanceToTransfer, targetAddress )
-          // } catch (error) {
-          //   console.error(`Steps3.tsx transferTokenS tokenInstanceToTransfer TRANSFER ERROR token symbol: '${tokenInstanceToTransfer.symbol}' token address: '${tokenInstanceToTransfer.address}' targetAddress: '${targetAddress}' for '${tokenInstanceToTransfer.transferAmount}' amount process error: ${error}`);
-          // }
+        } // IF (!currentlyProcessing))
 
-        } // for (let tokenInstanceIndex = 0 ...
-        try {
-          // tokenIdx.current = tokenInstanceIndex;
-          if (tokenInstanceToTransfer && tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none)  {
-            // update token state
-            tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.processing
-            updateProcessedTokenInstance(tokenInstanceToTransfer)
-            await transferToken(tokenInstanceToTransfer, targetAddress )
-          }
-        } catch (error) {
-          console.error(`Steps3.tsx transferTokenS tokenInstanceToTransfer TRANSFER ERROR token symbol: '${tokenInstanceToTransfer?.symbol}' token address: '${tokenInstanceToTransfer?.address}' targetAddress: '${targetAddress}' for '${tokenInstanceToTransfer?.transferAmount}' amount process error: ${error}`);
-        }
-
-        if (tokenInstanceIndex >= tokensInstancesToMigrate.length-1) {
-          setstopTransfers(true)
-          paused.current = false
-          stopped.current = true
-          setmigrationState( {...migrationState.current, paused: false, stopped: true} )
-        }
-
-      } // if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length)
+      } // IF (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length)
     } catch (error) {
       console.error(`Steps3.tsx transferTokenS error: ${error}`);
     }

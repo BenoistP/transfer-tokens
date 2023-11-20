@@ -84,6 +84,9 @@ const StepsContainer = ( {
   const unwatch = useRef(function () { })
   const previousStep = useRef(step)
 
+  // Multicall / Fetch issues
+  const fetchDataIssuesWarnShown = useRef(false)
+
   // ------------------------------
 
   const publicClient = usePublicClient(
@@ -120,7 +123,7 @@ const StepsContainer = ( {
           console.error(`StepsContainer.tsx: showWarning error: ${error}`)
       }
     },
-    [] 
+    [t] 
   )
   // ---
 
@@ -960,12 +963,14 @@ const StepsContainer = ( {
 
   const fetchOnChainData = useCallback( async(multicallInput : any[] ) :  Promise<any[]>  =>
     {
-      let multicallResults : any[] = [];
-      const multicallFetchResults : any[][] = [];
+      let multicallResults : any[] = []; // Final result sent back
+      const multicallFetchResults : any[][] = []; // Temporary 
       try {
-        let retryFetchCount = 0, multicallError = false, maxBatchSize = MAXBATCHSIZE;
+        let retryFetchCount = 0, multicallHasErrors = false, maxBatchSize = MAXBATCHSIZE;
         do {
-          console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount}`)
+// TODO: DEBUG to remove <---------------------------------------
+console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount}`)
+// TODO: DEBUG to remove <---------------------------------------
           if (retryFetchCount > 1) {
             // Wait <retryFetchCount> seconds before retry
             await new Promise(resolve => setTimeout(resolve, retryFetchCount * 1_000));
@@ -974,17 +979,19 @@ const StepsContainer = ( {
           }
           multicallFetchResults[retryFetchCount] = await getOnChainData(multicallInput, maxBatchSize)
           // Search for error(s)
-          multicallError = multicallFetchResults[retryFetchCount].some( (multicallResult) => {
+          multicallHasErrors = multicallFetchResults[retryFetchCount].some( (multicallResult) => {
             return (multicallResult && multicallResult.status != fetchDataSuccessStatus)
           })
-          console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount} multicallError=${multicallError}`)
-
+// TODO: DEBUG to remove <---------------------------------------
+console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount} multicallHasErrors=${multicallHasErrors}`)
+// TODO: DEBUG to remove <---------------------------------------
           // No error
-          if (!multicallError) {
+          if (!multicallHasErrors) {
             // Set result as current multicall fetch results
             multicallResults = multicallFetchResults[retryFetchCount]
           }
           else {
+            // Error(s) found
             // Build multicallResults
             if (!multicallResults.length) {
               multicallResults = multicallFetchResults[retryFetchCount]
@@ -997,23 +1004,27 @@ const StepsContainer = ( {
                 }
               } // for (let iMulticallResults = 0; ...
             }
+            if (retryFetchCount>=2 && !fetchDataIssuesWarnShown.current) {
+              fetchDataIssuesWarnShown.current = true;
+              showWarning("moveTokens.warnings.fetchData")
+            }
             retryFetchCount++;
             // Search again for error(s) after merge
-            multicallError = multicallResults.some( (multicallResult) => {
+            multicallHasErrors = multicallResults.some( (multicallResult) => {
               return (multicallResult && multicallResult.status != fetchDataSuccessStatus)
             })
           }
 
-          console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount} multicallError=${multicallError} multicallResults=`)
+// TODO: DEBUG to remove <---------------------------------------
+console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetchCount} multicallHasErrors=${multicallHasErrors} multicallResults=`)
           console.dir(multicallResults)
-        } while ((retryFetchCount < fetchmDataDataMulticallMaxRetry) && multicallError)
+// TODO: DEBUG to remove <---------------------------------------
+        } while ((retryFetchCount < fetchmDataDataMulticallMaxRetry) && multicallHasErrors)
 
-        if (multicallError) {
+        if (multicallHasErrors) {
           throw `Multicall error happened ${fetchmDataDataMulticallMaxRetry} times, skipping`
         }
-
         return multicallResults;
-
       } // try
       catch (error) {
         console.error(`StepsContainer.tsx fetchOnChainData error: ${error}`);
@@ -1022,7 +1033,7 @@ const StepsContainer = ( {
       } // catch (error)
       return multicallResults;
     },
-    [getOnChainData, /* setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances, */ MAXBATCHSIZE]
+    [getOnChainData, /* setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances, */ MAXBATCHSIZE, showWarning]
   ); // fetchOnChainData
 
   // ---
@@ -1751,15 +1762,24 @@ const StepsContainer = ( {
                   tokensSourceBalances && tokensSourceCanTransfer && tokensDecimals &&
                   (!_targetAddress ? true : tokensTargetBalances && tokensTargetBalances.length && tokensTargetCanTransferTo && tokensTargetCanTransferTo.length) ) {
 
-                const namesErrors = tokensNames?.some( (tokenName:any) => { tokenName.name == undefined })
-                const symbolsErrors = tokensSymbols?.some( (tokensSymbol:any) => { tokensSymbol.symbol == undefined})
+                const namesErrors = tokensNames?.some( (tokenName) => tokenName.name == undefined)
+// TODO: REMOVE DEBUG ->---------------------------
+                const namesErrors2 = tokensNames?.some( (tokenName) => {
+//                   debugger;
+                   return tokenName.name == undefined
+                   })
+console.dir(namesErrors2)
+// TODO: REMOVE DEBUG <----------------------------
+
+
+                const symbolsErrors = tokensSymbols?.some( (tokensSymbol) => tokensSymbol.symbol == undefined)
                 console.debug(`StepsContainer.tsx getUpdatedChainTokensListTokensInstances MISSING names ${namesErrors} or symbols ${symbolsErrors}`)
                 console.dir(tokensNames)
                 console.dir(tokensSymbols)
 
-                const sourceBalancesErrors = tokensSourceBalances?.some( (tokenSourceBalance:any) => { tokenSourceBalance.balance == undefined})
-                const sourceCanTransferErrors = tokensSourceCanTransfer?.some( (tokenSourceCanTransfer:any) => { tokenSourceCanTransfer == undefined})
-                const decimalsErrors = tokensDecimals?.some( (tokenDecimals:any) => { tokenDecimals.decimals == undefined})
+                const sourceBalancesErrors = tokensSourceBalances?.some( (tokenSourceBalance:any) => tokenSourceBalance.balance == undefined)
+                const sourceCanTransferErrors = tokensSourceCanTransfer?.some( (tokenSourceCanTransfer) => tokenSourceCanTransfer == undefined)
+                const decimalsErrors = tokensDecimals?.some( (tokenDecimals) => tokenDecimals.decimals == undefined)
                 console.dir(tokensSourceBalances)
                 console.dir(tokensSourceCanTransfer)
                 console.dir(tokensDecimals)
@@ -2105,6 +2125,7 @@ const StepsContainer = ( {
           setStateIsFetchingData(true)
           // debugger;
           setStateErrorLoadingTokensInstances(false)
+          fetchDataIssuesWarnShown.current = false;
 
           // let tokensCount = 0
           newSelectedChainsTokensList.forEach( (selected_chainTokensList:TChainsTokensListNullUndef) => {

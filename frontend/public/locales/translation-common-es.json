@@ -3,7 +3,8 @@
     "warnings": {
       "connectawallet": "Por favor conecta o desbloquea tu cartera",
       "wrongchain": "Cambie a una red compatible: Ethereum o Gnosis",
-      "watchTransfers": "Observación: Perdida de conexión, los saldos pueden no ser exactos"
+      "watchTransfers": "Observación: Perdida de conexión, los saldos pueden no ser exactos",
+      "fetchData": "Data loading: errors while fetching data, more time may be required due to retries"
     },
     "common": {
       "notAvailable": "Indisponible"
@@ -72,7 +73,8 @@
         "transfer": {
           "success": "Éxito",
           "error": "Error",
-          "skipped": "Saltado"
+          "skipped": "Saltado",
+          "processing": "En marcha"
         }
       },
       "address": {

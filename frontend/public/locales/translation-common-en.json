@@ -3,7 +3,8 @@
     "warnings": {
       "connectawallet": "Please connect or unlock your wallet",
       "wrongchain": "Please switch to a supported chain: Ethereum or Gnosis",
-      "watchTransfers": "Transfers watch: lost connection, balances updates may not work properly"
+      "watchTransfers": "Transfers watch: lost connection, balances updates may not work properly",
+      "fetchData": "Data loading: errors while fetching data, more time may be required due to retries"
     },
     "common": {
       "notAvailable": "Unavailable"
@@ -72,7 +73,8 @@
         "transfer": {
           "success": "Success",
           "error": "Error",
-          "skipped": "Skipped"
+          "skipped": "Skipped",
+          "processing": "Processing"
         }
       },
       "address": {

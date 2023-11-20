@@ -2,13 +2,17 @@
 import { useEffect, useCallback, useState } from "react";
 // Components
 import { TokenInstanceEditableAmount } from "@Components/TokenInstanceEditableAmount";
-// Consts
+// Consts & Enums
 import { ERC20_DECIMALS_DEFAULT, SHORT_DISPLAY_DECIMAL_COUNT } from "@uiconsts/misc";
+import { ETokenTransferState } from "@jsconsts/enums"; 
 // Translation
 import { useTranslation } from "react-i18next";
 // Icons
 import { NoSymbolIcon, MinusSmallIcon, CheckCircleIcon, ExclamationCircleIcon, StopCircleIcon,
-  ArrowLeftOnRectangleIcon as ArrowReceive, ArrowRightOnRectangleIcon as ArrowSend, } from '@heroicons/react/24/solid'
+  ArrowLeftOnRectangleIcon as ArrowReceive, ArrowRightOnRectangleIcon as ArrowSend,
+  Cog8ToothIcon as CogToothProcessing} from '@heroicons/react/24/solid'
+
+
 
 // ------------------------------
 
@@ -393,19 +397,24 @@ const TokenInstance = ( {
               </div>
             )
         }
-        {tokenInstance.tr_processed &&
+        {tokenInstance.transferState.transfer == ETokenTransferState.processed &&
           <div className={clsTooltipLeft + "pl-1 text-info tooltip-success"} data-tip={t("moveTokens.stepAny.token.transfer.success")} >
             <CheckCircleIcon className={clsIconSize+" fill-success"} />
           </div>
         }
-        {tokenInstance.tr_skipped &&
+        {tokenInstance.transferState.transfer == ETokenTransferState.skipped &&
           <div className={clsTooltipLeft + "pl-1  "} data-tip={t("moveTokens.stepAny.token.transfer.skipped")} >
             <StopCircleIcon className={clsIconSize+" "} />
           </div>
         }
-        {tokenInstance.tr_error &&
+        {tokenInstance.transferState.transfer == ETokenTransferState.error &&
           <div className={clsTooltipLeft + "pl-1 text-info tooltip-error"} data-tip={t("moveTokens.stepAny.token.transfer.error")} >
             <ExclamationCircleIcon className={clsIconSize+" fill-error"} />
+          </div>
+        }
+        {tokenInstance.transferState.transfer == ETokenTransferState.processing &&
+          <div className={clsTooltipLeft + "pl-1 text-info tooltip-info"} data-tip={t("moveTokens.stepAny.token.transfer.processing")} >
+            <CogToothProcessing className={clsIconSize+" fill-info"} />
           </div>
         }
         </div>
