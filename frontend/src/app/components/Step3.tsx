@@ -17,7 +17,7 @@ import { DEFAULT_ETHEREUM_EXPLORER_BASE_URI, DEFAULT_ETHEREUM_EXPLORER_TX_URI,
   USER_REJECT_TX_REGEXP
 } from "@App/js/constants/ui/uiConsts";
 import { ERC20_DECIMALS_DEFAULT, SHORT_DISPLAY_DECIMAL_COUNT } from "@App/js/constants/ui/misc";
-import { ETHEREUM_CHAIN_ID, XDAI_CHAIN_ID } from "@App/js/constants/chainIds";
+import { ETHEREUM_CHAIN_ID, GNOSIS_XDAI_CHAIN_ID } from "@App/js/constants/chainIds";
 import { ETokenTransferState } from "@jsconsts/enums"; 
 // Utils
 import { shortenAddress } from "@App/js/utils/blockchainUtils";
@@ -48,6 +48,7 @@ const Step3 = ( {
   const paused = useRef(false)
   const stopped = useRef(false)
   // const tokenIdx = useRef(0)
+  const currentlyProcessing = useRef(false)
 
 
   const initialMigrationState = useMemo( () => {
@@ -62,7 +63,7 @@ const Step3 = ( {
       if (chainId == ETHEREUM_CHAIN_ID) {
         return (import.meta.env.PUBLIC_ETHEREUM_EXPLORER_BASE_URI || DEFAULT_ETHEREUM_EXPLORER_BASE_URI) + (import.meta.env.PUBLIC_ETHEREUM_EXPLORER_TX_URI || DEFAULT_ETHEREUM_EXPLORER_TX_URI)
       }
-      if (chainId == XDAI_CHAIN_ID) {
+      if (chainId == GNOSIS_XDAI_CHAIN_ID) {
         const res = (import.meta.env.PUBLIC_GNOSIS_EXPLORER_BASE_URI || DEFAULT_GNOSIS_EXPLORER_BASE_URI) + (import.meta.env.PUBLIC_GNOSIS_EXPLORER_TX_URI || DEFAULT_GNOSIS_EXPLORER_TX_URI)
         return res
       }
@@ -113,7 +114,6 @@ const Step3 = ( {
   const handlePauseTransfers = () => {
     setpauseTransfers(!pauseTransfers)
     paused.current = !paused.current
-
     migrationState.current = {...migrationState.current, paused: true}
     setmigrationState( migrationState.current )
   }
@@ -123,13 +123,13 @@ const Step3 = ( {
   const handleStopTransfers = () => {
     setstopTransfers(!stopTransfers)
     stopped.current = !stopped.current
-      migrationState.current = {...migrationState.current, stopped: true}
-      setmigrationState( migrationState.current )
+    migrationState.current = {...migrationState.current, stopped: true}
+    setmigrationState( migrationState.current )
   }
 
   // ---
 
-  const showToast = useCallback( async ( _tokenInstanceToTransfer:TTokenInstance, _transferTxHash:TTxHash, _to:TAddressEmptyNullUndef ) : Promise<void> =>
+  const showTransferToast = useCallback( async ( _tokenInstanceToTransfer:TTokenInstance, _transferTxHash:TTxHash, _to:TAddressEmptyNullUndef ) : Promise<void> =>
     {
       try {
         if (_tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.error) {
@@ -200,13 +200,13 @@ const Step3 = ( {
             { duration: DURATION_MEDIUM }
           ) // toast.custom
         } else {
-          console.debug(`Step3.tsx: showToast wrong state ${_tokenInstanceToTransfer.transferState.transfer} for token ${_tokenInstanceToTransfer.address}`)
+          console.debug(`Step3.tsx: showTransferToast wrong state ${_tokenInstanceToTransfer.transferState.transfer} for token ${_tokenInstanceToTransfer.address}`)
         }
       } catch (error) {
-          console.error(`Step3.tsx: showToast error: ${error}`)
+          console.error(`Step3.tsx: showTransferToast error: ${error}`)
       }
     },
-    [getTxUri, t, getAmountShortString] 
+    [getTxUri, t, getAmountShortString]
   )
 
   // ---
@@ -220,10 +220,16 @@ const Step3 = ( {
           functionName: 'transfer',
           args: [_destinationAddress, _amount],
         })
+// TODO: debug to remove -> ------------------------
+console.debug(`Steps3.tsx callTransferToken await writeContract(transferRequest)`);
+console.dir(transferRequest);
+// TODO: debug to remove <- ------------------------
         const transferRequestResult = await writeContract(transferRequest)
         const { hash,  } = transferRequestResult
-        // console.dir(transferRequestResult);
-        // console.debug(`Step3.tsx: callTransferToken : hash:${hash}`)
+// TODO: debug to remove -> ------------------------
+console.debug(`Step3.tsx: callTransferToken : hash:${hash}`)
+console.dir(transferRequestResult);
+// TODO: debug to remove <- ------------------------
         return hash; // RETURN (Success)
 
       } catch (error) {
@@ -268,11 +274,13 @@ const Step3 = ( {
               let {selected, transferAmount , transferAmountLock} = tokenInstance
               const {transferState} = tokenInstance
               if (_updatedTokenInstance.transferState.transfer == ETokenTransferState.processed) {
+                console.debug(`Steps3.tsx updateProcessedTokenInstance _updatedTokenInstance.transferState.transfer == ETokenTransferState.PROCESSED`);
                 selected = false; // UNselect
                 transferAmount = 0n; // Reset transfer amount
                 transferAmountLock = false; // Reset transfer amount lock
               }
               if (_updatedTokenInstance.transferState.transfer == ETokenTransferState.skipped) {
+                console.debug(`Steps3.tsx updateProcessedTokenInstance _updatedTokenInstance.transferState.transfer == ETokenTransferState.SKIPPED`);
                 selected = false; // UNselect
               }
               const newtokenInstance = {
@@ -286,9 +294,10 @@ const Step3 = ( {
               console.dir(_updatedTokenInstance);
               console.debug(`Steps3.tsx updateProcessedTokenInstance (map) tokenInstance=`);
               console.dir(tokenInstance);
+              console.debug(`Steps3.tsx updateProcessedTokenInstance (map) newtokenInstance=`);
+              console.dir(newtokenInstance);
 // TODO: debug to remove <- ------------------------
               return newtokenInstance
-              
             }
             return tokenInstance
           })
@@ -414,7 +423,9 @@ const Step3 = ( {
 
           setmigrationState( {...migrationState.current} )
 
-          showToast(_tokenInstanceToTransfer, transferTxHash, _to)
+          showTransferToast(_tokenInstanceToTransfer, transferTxHash, _to)
+
+          currentlyProcessing.current = false
 
         } catch (error) {
           console.error(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR STATE ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_to} process error: ${error}`);
@@ -422,7 +433,7 @@ const Step3 = ( {
       }
     } // transferToken
     ,
-    [callTransferToken, /* t, getAmountShortString, getTxUri, */ updateProcessedTokenInstance, setmigrationState, showToast]
+    [callTransferToken, /* t, getAmountShortString, getTxUri, */ updateProcessedTokenInstance, setmigrationState, showTransferToast]
   ) // transferToken
 
     // ---
@@ -510,7 +521,7 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
 
         let tokenInstanceIndex = 0 ;
         let errorItemsCount = 0, skippedItemsCount = 0, successItemsCount = 0 ; // , paused = false, stopped = false;
-        let currentlyProcessing = false ;
+        // let currentlyProcessing = false ;
         let tokenInstanceToTransfer:TTokenInstance|undefined; //  = undefined
 
         // Search for current migration state figures
@@ -523,9 +534,10 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
             successItemsCount++;
           } else if (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.skipped) {
             skippedItemsCount++;
-          } else if (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.processing) {
-            currentlyProcessing = true;
           }
+          // else if (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.processing) {
+          //   currentlyProcessing = true;
+          // }
         } // for
         migrationState.current = {
           totalItemsCount: tokensInstancesToMigrate.length,
@@ -537,7 +549,7 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
         setmigrationState( migrationState.current )
 
         // if any token is processing, skip search and do nothing (exit)
-        if (!currentlyProcessing) {
+        if (!currentlyProcessing.current) {
 
 
 
@@ -549,7 +561,7 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
               await new Promise(r => setTimeout(r, 250));
               if (!paused.current || stopped.current) break;
             }
-            if (stopped.current) break;
+            if (stopped.current || currentlyProcessing.current) break;
             // const tokenInstanceToTransfer = tokensInstancesToMigrate[tokenInstanceIndex];
             tokenInstanceToTransfer = tokensInstancesToMigrate[tokenInstanceIndex];
 
@@ -581,6 +593,7 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
           try {
             // tokenIdx.current = tokenInstanceIndex;
             if (tokenInstanceToTransfer && tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none)  {
+              currentlyProcessing.current = true
               // update token state
               tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.processing
               updateProcessedTokenInstance(tokenInstanceToTransfer)

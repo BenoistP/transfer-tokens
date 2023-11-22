@@ -1,4 +1,4 @@
-import { ETHEREUM_CHAIN_ID, XDAI_CHAIN_ID } from '@jsconsts/chainIds';
+import { ETHEREUM_CHAIN_ID, GNOSIS_XDAI_CHAIN_ID } from '@jsconsts/chainIds';
 import { isAddress, getAddress } from 'viem'
 
 export const checkAndFixAddress0xFormat = (address:string|undefined) : TAddressString  => {
@@ -55,7 +55,7 @@ try {
 
 export const isChainSupported = (chainId:TChainIdNullUndef) : boolean => {
   if (chainId) {
-    if (chainId === ETHEREUM_CHAIN_ID || chainId === XDAI_CHAIN_ID) {
+    if (chainId === ETHEREUM_CHAIN_ID || chainId === GNOSIS_XDAI_CHAIN_ID) {
       return true;
     }
   }

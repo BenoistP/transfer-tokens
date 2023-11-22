@@ -171,6 +171,7 @@ const StepsContainer = ( {
             if (tokenInstance.address == _updatedTokenInstance.address) {
               const connectedADDRESS = connectedAddress?.toUpperCase()
               // let transferAmount = tokenInstance.transferAmount, transferAmountLock = tokenInstance.transferAmountLock;
+              let {transferAmount, transferAmountLock} = tokenInstance ;
               // let transferAmountLock = tokenInstance.transferAmountLock;
               let selected = tokenInstance.selected, selectable = tokenInstance.selectable;
               if (!_updatedTokenInstance.userData[connectedADDRESS as any].balance) {
@@ -183,14 +184,14 @@ console.dir(_updatedTokenInstance.userData)
 // TODO: debug to remove <- ------------------------
                 selectable = false;
                 selected = false;
-                // transferAmount = 0n; // transfer amount : should aready be setted to 0 during transfer processing loop
-                // transferAmountLock = false; // transfer amount lock : should aready be setted to false during transfer processing loop
+                transferAmount = 0n;
+                transferAmountLock = false;
               }
               const tokenInstanceUpdated = {
                 ...tokenInstance,
                 userData: {...tokenInstance.userData, ..._updatedTokenInstance.userData},
-                // transferAmount,
-                // transferAmountLock,
+                transferAmount,
+                transferAmountLock,
                 selected, selectable
               }
 // TODO: debug to remove -> ------------------------
@@ -1535,7 +1536,9 @@ console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetch
   // ----------------------------------------------
 
 
+  // ========================================================
   // USE EFFECTS
+  // ========================================================
 
 // TODO: remove debug --------------------->
   useEffect( () =>
@@ -1609,16 +1612,36 @@ console.debug(`StepsContainer.tsx useEffect [STEP FORWARD 2->3]`)
 // TODO: remove DEBUG <----------------------------------------
         // Update all selected tokens instances
         const updatedTokensInstances = tokensInstances?.map( (tokenInstance:TTokenInstance) => {
+
+          /**
+           * 
+           * @param transferState 
+           * @returns transferState
+           */
+          const updatePreviousTransferState = (transferState:ETokenTransferState) => {
+            switch (transferState) {
+              case ETokenTransferState.processed:
+                return ETokenTransferState.previous_processed;
+              case ETokenTransferState.error:
+                return ETokenTransferState.previous_error;
+              case ETokenTransferState.skipped:
+                return ETokenTransferState.previous_skipped;
+              default:
+                return transferState;
+            }
+          }
           if (tokenInstance.selected) {
-            // If selected, Mark as processing ("to process")
+            // If selected, Mark as processing (= "to process")
             return {
               ...tokenInstance,
               transferState: { processing: true, transfer: ETokenTransferState.none } // reinit transfer state
-              // TODO : keep previous transfer state
             }
           } else {
-            // If not selected, leave as is
-            return tokenInstance
+            // If not selected
+            return {
+              ...tokenInstance,
+              transferState: { processing: tokenInstance.transferState.processing, transfer: updatePreviousTransferState(tokenInstance.transferState.transfer)} // reinit transfer state
+            }
           }
         })
 
@@ -1634,6 +1657,7 @@ console.debug(`StepsContainer.tsx useEffect [STEP FORWARD 2->3]`)
 ) // useEffect
 
   // ---
+
   /**
    * Handle tokensInstances loading
    * TODO: refactor to break into smaller functions
@@ -2237,6 +2261,8 @@ console.dir(namesErrors2)
   /**
    * useEffect: update tokens instances
    * triggered by selectedChainsTokensList update
+   * For each token list, get its tokens instances and push it into tokensInstances
+   * then update tokensInstances index (for transfers watch)
    */
 
   useEffect( () =>
@@ -2258,7 +2284,7 @@ console.dir(namesErrors2)
   // ---
 
   /**
-   * Sets up the watch for Transfer events
+   * Sets up the watch for Transfer Events
    */
   useEffect(() =>
     {
@@ -2269,12 +2295,13 @@ console.dir(namesErrors2)
           unwatch.current()
         }
         if (tokensInstances && tokensInstances.length) {
-          const _tokensAddresses = tokensInstances.map( (tokenInstance:TTokenInstance) => {
+          // build an array of tokens addresses
+          const tokensAddresses = tokensInstances.map( (tokenInstance:TTokenInstance) => {
             return tokenInstance.address
           })
-          if (_tokensAddresses && _tokensAddresses.length) {
+          if (tokensAddresses && tokensAddresses.length) {
             const unwatchFn = publicClient.watchContractEvent({
-              address: _tokensAddresses,
+              address: tokensAddresses,
               strict: true,
               onError: (error:Error) => {
                 reportWatchError(error)
@@ -2309,7 +2336,6 @@ console.dir(namesErrors2)
       { 
         step === 0 &&
         <div className="w-full" >
-                
           <MainContentContainer>
             <Step0
               setNextDisabled={setNextDisabled}

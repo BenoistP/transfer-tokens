@@ -397,25 +397,25 @@ const TokenInstance = ( {
               </div>
             )
         }
-        /* // TODO : Show previous transfer state */
-        {tokenInstance.transferState.transfer == ETokenTransferState.processed &&
+        {/* // TODO : Show previous transfer state */}
+        {(tokenInstance.transferState.transfer == ETokenTransferState.processed || tokenInstance.transferState.transfer == ETokenTransferState.previous_processed) &&
           <div className={clsTooltipLeft + "pl-1 text-info tooltip-success"} data-tip={t("moveTokens.stepAny.token.transfer.success")} >
-            <CheckCircleIcon className={clsIconSize+" fill-success"} />
+            <CheckCircleIcon className={clsIconSize+" fill-success" + (tokenInstance.transferState.transfer>10?" opacity-50":"") } />
           </div>
         }
         {tokenInstance.transferState.transfer == ETokenTransferState.skipped &&
           <div className={clsTooltipLeft + "pl-1  "} data-tip={t("moveTokens.stepAny.token.transfer.skipped")} >
-            <StopCircleIcon className={clsIconSize+" "} />
+            <StopCircleIcon className={clsIconSize+(tokenInstance.transferState.transfer>10?" opacity-50":"")} />
           </div>
         }
         {tokenInstance.transferState.transfer == ETokenTransferState.error &&
           <div className={clsTooltipLeft + "pl-1 text-info tooltip-error"} data-tip={t("moveTokens.stepAny.token.transfer.error")} >
-            <ExclamationCircleIcon className={clsIconSize+" fill-error"} />
+            <ExclamationCircleIcon className={clsIconSize + " fill-error" + (tokenInstance.transferState.transfer>10?" opacity-50":"") } />
           </div>
         }
         {tokenInstance.transferState.transfer == ETokenTransferState.processing &&
           <div className={clsTooltipLeft + "pl-1 text-info tooltip-info"} data-tip={t("moveTokens.stepAny.token.transfer.processing")} >
-            <CogToothProcessing className={clsIconSize+" fill-info"} />
+            <CogToothProcessing className={clsIconSize +" fill-info" + (tokenInstance.transferState.transfer>10?" opacity-50":"") } />
           </div>
         }
         </div>

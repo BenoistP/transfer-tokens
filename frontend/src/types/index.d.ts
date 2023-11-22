@@ -1,5 +1,6 @@
+// --------------------------------------------------------------
 // Enums defined in frontend/src/app/js/constants/enums.ts
-// ->
+// >---------------------------------------------------------------
 enum EChainTokensListLoadState {
   notLoaded = 0,
   contracts = 1,
@@ -13,22 +14,20 @@ enum EChainTokensListLoadState {
 }
 
 enum ETokenTransferState {
-  // none = -1, // not processed yet
-  // processing = 0, // pending processing
-  // processed = 1, // success
-  // skipped = 2, // skipped by user
-  // error = 3, // error during processing
-
   none = -1, // not processed yet
+  
   processing = 0, // pending processing
   processed = 1, // success
   skipped = 2, // skipped by user
   error = 3, // error during processing
+
+  previous_processed = processed + 10, // previous success
+  previous_skipped = skipped + 10, // previous skipped by user
+  previous_error = error + 10, // previous error during processing
 }
 
-// <-
+// <--------------------------------------------------------------
 // Enums defined in frontend/src/app/js/constants/enums.ts
-
 // --------------------------------------------------------------
 
 // Types & Interfaces
@@ -295,7 +294,7 @@ type TTokensInstances = TTokenInstance[]|TNullUndef;
 type TDisplayId = number
 type TSelectId = string
 
-// type TTokentransferState = {
+// type TTokenTransferState = {
 //   // processing: boolean, -> ETransferState.processing
 
 //   // processed: boolean,
@@ -304,7 +303,7 @@ type TSelectId = string
 //   // transfer: ETransferState
 // }
 
-type TTokentransferState = {
+type TTokenTransferState = {
   processing: boolean,
   transfer: ETokenTransferState
 }
@@ -334,12 +333,12 @@ type TTokenInstance = {
   // tr_skipped: boolean;
 
   // processing: boolean;
-  // transferState: TTokentransferState;
+  // transferState: TTokenTransferState;
   // processing: boolean;
 
   // transferState: ETokenTransferState;
 
-  transferState: TTokentransferState;
+  transferState: TTokenTransferState;
 
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x... IN UPPERCASE)
 }
