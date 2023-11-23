@@ -19,6 +19,7 @@
   "dependencies": {
     "@dicebear/collection": "^7.0.1",
     "@dicebear/core": "^7.0.1",
+    "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@rainbow-me/rainbowkit": "^1.2.0",
     "@wagmi/core": "^1.4.6",
