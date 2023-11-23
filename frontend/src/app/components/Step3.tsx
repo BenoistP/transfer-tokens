@@ -198,7 +198,12 @@ toast.promise(
             new Promise(async function(resolve, reject) {
               try {
                 await new Promise(r => setTimeout(r, _timeout));
-                resolve("")
+                const rnd = Math.floor(Math.random() * 2)
+                if (rnd == 0) {
+                  resolve("Success")
+                } else {
+                  reject()
+                }
 
               } catch (error) {
                 console.error(error)
@@ -208,32 +213,52 @@ toast.promise(
             // -----------------
             , {
               loading: 
-/* 
-                <div className={`block alert alert-success w-auto p-2 m-0`}
-                  style={{
-                    opacity: 0.85,
-                    transition: "opacity 100ms ease-in-out",
-                    border: '1px solid black',
-                  }}
-                >
-                  <div className="grid grid-cols-8 gap-0 m-0 p-0">
-                    <div className="-p-0 m-0"><span className="loading loading-dots loading-xs"></span></div>
-                    <div className="p-0 pl-1 pt-1 m-0 col-span-7">
-                      {`${t("moveTokens.stepThree.transfer.awaitConfirm")}: ${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                    </div>
-                    <div className="col-span-8">
-                      <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
+                <div>
+                  <div className="font-medium">
+                    {`${t("moveTokens.stepThree.transfer.awaitConfirm")} :`}
+                  </div>
+                  <div>
+                    {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
+                  </div>
+                  <div className="italic text-info-content">
+                    <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
                       {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                      </Link>
-                    </div>
+                    </Link>
+
                   </div>
                 </div>
-*/
-              t("moveTokens.stepThree.transfer.awaitConfirm")
               ,
+              success:
+                <div>
+                  <div className="font-medium">
+                    {`${t("moveTokens.stepThree.transfer.confirmed")} :`}
+                  </div>
+                  <div>
+                    {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
+                  </div>
+                  <div className="text-success-content">
+                    <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
+                      {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                    </Link>
 
-              success: t("moveTokens.stepThree.transfer.confirmed"),
-              error: t("moveTokens.stepThree.transfer.rejected"),
+                  </div>
+                </div>
+              ,
+              error:
+                <div>
+                  <div className="font-medium">
+                    {`${t("moveTokens.stepThree.transfer.rejected")} :`}
+                  </div>
+                  <div>
+                    {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
+                  </div>
+                  <div className="text-error-content">
+                    <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
+                      {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                    </Link>
+
+                  </div>
+                </div>
             },
 
         ) // toast.promise
@@ -819,19 +844,13 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
     {
       if (tokensInstancesToMigrate && tokensInstancesToMigrate.length) {
 
-
-
-testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 99_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 180_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 120_000)
 testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 99_000)
 testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 66_000)
-testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 66_000)
-testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 33_000)
 testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 33_000)
 testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 22_000)
-testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 22_000)
 testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 11_000)
-testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 11_000)
-testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 6_000)
 testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 6_000)
 testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 3_000)
 testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 2_000)
