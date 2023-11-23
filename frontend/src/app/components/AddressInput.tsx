@@ -27,14 +27,29 @@ const AddressInput = ({
 
   const handleAddress = /* useCallback( */ (e: React.FormEvent<HTMLInputElement>): void /* ) */ => {
     const addressInput = e.currentTarget.value
-    let addressSliced;
+    // let addressSliced;
+
+    debugger
     // Restrict input size
-    if (addressInput.slice(0,4).toLowerCase() == NULLNULL_ADDRESS) {
+    // if (addressInput.slice(0,4).toLowerCase() == NULLNULL_ADDRESS) {
+    //   // remove 0x0x
+    //   addressSliced = addressInput.slice(2, ADDRESS_MAX_SIZE+2)
+    // } else {
+    //   addressSliced = addressInput.slice(0, ADDRESS_MAX_SIZE)
+    // }
+
+    // Shorten input leading 0x
+    let addressSliced = addressInput
+    while (addressSliced.slice(0,4).toLowerCase() == NULLNULL_ADDRESS) {
       // remove 0x0x
-      addressSliced = addressInput.slice(2, ADDRESS_MAX_SIZE+2)
-    } else {
-      addressSliced = addressInput.slice(0, ADDRESS_MAX_SIZE)
+      addressSliced = addressInput.slice(2, )
     }
+    console.debug(`AddressInput.tsx handleAddress: addressSliced=${addressSliced}`)
+
+    addressSliced = addressInput.slice(2, ADDRESS_MAX_SIZE+2)
+
+    console.debug(`AddressInput.tsx handleAddress: addressSliced=${addressSliced}`)
+
     const addressFixed:TAddressString = checkAndFixAddress0xFormat(addressSliced)
     if (addressFixed.length == ADDRESS_MAX_SIZE) {
       const addressFixedChecksummed = checksumAddress(addressFixed)

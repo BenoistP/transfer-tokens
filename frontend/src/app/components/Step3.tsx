@@ -211,56 +211,57 @@ toast.promise(
               }
               }) // Promise
             // -----------------
-            , {
-              loading: 
-                <div>
-                  <div className="font-medium">
-                    {`${t("moveTokens.stepThree.transfer.awaitConfirm")} :`}
-                  </div>
+            , { loading: 
                   <div>
-                    {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                  </div>
-                  <div className="italic text-info-content">
-                    <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                      {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                    </Link>
+                    <div className="font-medium">
+                      {`${t("moveTokens.stepThree.transfer.awaitConfirm")} :`}
+                    </div>
+                    <div>
+                      {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
+                    </div>
+                    <div className="italic text-info-content">
+                      <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
+                        {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                      </Link>
 
-                  </div>
-                </div>
-              ,
-              success:
-                <div>
-                  <div className="font-medium">
-                    {`${t("moveTokens.stepThree.transfer.confirmed")} :`}
-                  </div>
+                    </div>
+                  </div>,
+                success:
                   <div>
-                    {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                  </div>
-                  <div className="text-success-content">
-                    <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                      {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                    </Link>
+                    <div className="font-medium">
+                      {`${t("moveTokens.stepThree.transfer.confirmed")} :`}
+                    </div>
+                    <div>
+                      {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
+                    </div>
+                    <div className="text-success-content">
+                      <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
+                        {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                      </Link>
 
+                    </div>
+                  </div>,
+                error:
+                  <div>
+                    <div className="font-medium">
+                      {`${t("moveTokens.stepThree.transfer.rejected")} :`}
+                    </div>
+                    <div>
+                      {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
+                    </div>
+                    <div className="text-error-content">
+                      <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
+                        {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                      </Link>
+
+                    </div>
                   </div>
-                </div>
-              ,
+              },
+            { success:
+                {duration: DURATION_LONG},
               error:
-                <div>
-                  <div className="font-medium">
-                    {`${t("moveTokens.stepThree.transfer.rejected")} :`}
-                  </div>
-                  <div>
-                    {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                  </div>
-                  <div className="text-error-content">
-                    <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                      {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                    </Link>
-
-                  </div>
-                </div>
-            },
-
+                {duration: DURATION_LONG},
+            }
         ) // toast.promise
 
       } catch (error) {
