@@ -19,7 +19,7 @@ import { useAccount } from 'wagmi'
 import { erc20ABI } from '@wagmi/core'
 import CoinBridgeToken from "@abis/CoinBridgeToken.json";
 // Consts & Enums
-import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT } from "@uiconsts/misc";
+import { PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT, WATCH_MAX_WARNING_COUNT } from "@uiconsts/misc";
 import { EStepsLoadTokensData, EChainTokensListLoadState,
   ESteps, ETokenTransferState } from "@jsconsts/enums"; 
 import { DURATION_LONG,
@@ -89,6 +89,8 @@ const StepsContainer = ( {
 
   // Multicall / Fetch issues
   const fetchDataIssuesWarnShown = useRef(false)
+  // Only report watch errors a few times
+  const watchWarningReportCount = useRef(0)
 
   // ------------------------------
 
@@ -132,8 +134,11 @@ const StepsContainer = ( {
 
   const reportWatchError = useCallback( (error:Error) =>
     {
-      console.log(`StepsContainer.tsx reportWatchError error: ${error}`)
-      showWarning("moveTokens.warnings.watchTransfers")
+      watchWarningReportCount.current++
+      console.warn(`StepsContainer.tsx reportWatchError error: ${error}`)
+      if (watchWarningReportCount.current < WATCH_MAX_WARNING_COUNT) {
+        showWarning("moveTokens.warnings.watchTransfers")
+      }
     },
     [showWarning]
   )

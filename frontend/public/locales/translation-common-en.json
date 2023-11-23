@@ -126,12 +126,15 @@
           "completed": "Completed"
           }
       },
-      "transferResult": {
+      "transfer": {
         "skipped": "Skipped",
         "error": "Failed",
         "success": "Sent",
         "successTo": "to",
-        "txHash": "Tx"
+        "txHash": "Tx",
+        "awaitConfirm": "Awaiting confirmation",
+        "confirmed": "Confirmed",
+        "rejected": "Error"
       }
     },
 

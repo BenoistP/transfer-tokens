@@ -128,6 +128,123 @@ const Step3 = ( {
   }
 
   // ---
+/*
+toast.promise(
+            // ------------
+            // const mintPromise =
+            new Promise(async function(resolve, reject) {
+              try {
+                const mintResult = await mintTrophy( mcf_mintTrophyCloudFetch )
+                if (mintResult) {
+                  if (mintResult.code <= 0) {
+                      // mintResult.code: error
+                    setmintDisabled(false)
+                    reject()
+                  } // mintResult.code: error
+                  else
+                  { // mintResult.code: success
+                    resolve()
+                    // Show Claim Success Popup
+                    setshowClaimNftConfirmModal(true)
+                  } // mintResult.code: success
+                } // mintResult
+                else
+                { // NO mintResult
+                  reject()
+                } // NO mintResult
+
+              } catch (error) {
+                console.error(error)
+                reject()
+              }
+              }) // mintPromise
+            // -----------------
+            , {
+              loading: t("Misc.MintStatus.InProgress"),
+              success: t("Misc.MintStatus.Success"),
+              error: t("Misc.MintStatus.Error"),
+            },
+            {
+              style: {
+                background: twFullConfig.theme.colors['whiteMVa050'],
+                border: `1px solid ${twFullConfig.theme.colors['greyMVa'].dark}`
+              },
+    
+              success: {
+                style: {
+                  background: twFullConfig.theme.colors['tealMVa'].onDarkNg,
+                  border: `1px solid ${twFullConfig.theme.colors['tealMV'].dark}`
+                },
+                duration: DURATION_LONG,
+                icon: '🔥',
+              },
+              error: {
+                style: {
+                  background: twFullConfig.theme.colors['orangeMVa'].light,
+                  border: `1px solid ${twFullConfig.theme.colors['orangeMV'].light}`,
+                },
+                duration: DURATION_LONG,
+                icon: '💣',
+              },
+            }
+          ) // toast.promise
+*/
+  const testshowTransferToast = useCallback( async ( _tokenInstanceToTransfer:TTokenInstance, _transferTxHash:TTxHash, _to:TAddressEmptyNullUndef, _timeout: number ) : Promise<void> =>
+    {
+      try {
+
+        toast.promise(
+            // ------------
+            new Promise(async function(resolve, reject) {
+              try {
+                await new Promise(r => setTimeout(r, _timeout));
+                resolve("")
+
+              } catch (error) {
+                console.error(error)
+                reject()
+              }
+              }) // Promise
+            // -----------------
+            , {
+              loading: 
+/* 
+                <div className={`block alert alert-success w-auto p-2 m-0`}
+                  style={{
+                    opacity: 0.85,
+                    transition: "opacity 100ms ease-in-out",
+                    border: '1px solid black',
+                  }}
+                >
+                  <div className="grid grid-cols-8 gap-0 m-0 p-0">
+                    <div className="-p-0 m-0"><span className="loading loading-dots loading-xs"></span></div>
+                    <div className="p-0 pl-1 pt-1 m-0 col-span-7">
+                      {`${t("moveTokens.stepThree.transfer.awaitConfirm")}: ${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
+                    </div>
+                    <div className="col-span-8">
+                      <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
+                      {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+*/
+              t("moveTokens.stepThree.transfer.awaitConfirm")
+              ,
+
+              success: t("moveTokens.stepThree.transfer.confirmed"),
+              error: t("moveTokens.stepThree.transfer.rejected"),
+            },
+
+        ) // toast.promise
+
+      } catch (error) {
+          console.error(`Step3.tsx: showTransferToast error: ${error}`)
+      }
+    },
+    [ t , getTxUri, getAmountShortString]
+    ) // testshowTransferToast
+  // ---
 
   const showTransferToast = useCallback( async ( _tokenInstanceToTransfer:TTokenInstance, _transferTxHash:TTxHash, _to:TAddressEmptyNullUndef ) : Promise<void> =>
     {
@@ -145,7 +262,7 @@ const Step3 = ( {
               >
                 <div className="grid grid-cols-8 gap-0 m-0 p-0">
                   <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                  <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.error")}: ${_tokenInstanceToTransfer.name}`}</div>
+                  <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.error")}: ${_tokenInstanceToTransfer.name}`}</div>
                 </div>
         
               </div>
@@ -167,11 +284,11 @@ const Step3 = ( {
                 <div className="grid grid-cols-8 gap-0 m-0 p-0">
                   <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
                   <div className="p-0 pl-1 pt-1 m-0 col-span-7">
-                    {`${t("moveTokens.stepThree.transferResult.success")}: ${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transferResult.successTo")} ${shortenAddress(_to)}`}
+                    {`${t("moveTokens.stepThree.transfer.success")}: ${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
                   </div>
                   <div className="col-span-8">
                     <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                    {t("moveTokens.stepThree.transferResult.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                    {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
                     </Link>
                   </div>
                 </div>
@@ -192,7 +309,7 @@ const Step3 = ( {
               >
                 <div className="grid grid-cols-8 gap-0 m-0 p-0">
                   <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                  <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
+                  <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
                 </div>
         
               </div>
@@ -337,10 +454,10 @@ console.dir(transferRequestResult);
             //     >
             //       <div className="grid grid-cols-8 gap-0 m-0 p-0">
             //         <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-            //         <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.success")}: ${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transferResult.successTo")} ${shortenAddress(_to)}`}</div>
+            //         <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.success")}: ${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}</div>
             //         <div className="col-span-8">
             //           <Link className="flex justify-end underline" to={getTxUri(transfer)} target="_blank" rel="noopener noreferrer" >
-            //           {t("moveTokens.stepThree.transferResult.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+            //           {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
             //           </Link>
             //         </div>
             //       </div>
@@ -365,7 +482,7 @@ console.dir(transferRequestResult);
             //     >
             //       <div className="grid grid-cols-8 gap-0 m-0 p-0">
             //         <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-            //         <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
+            //         <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
             //       </div>
           
             //     </div>
@@ -391,7 +508,7 @@ console.dir(transferRequestResult);
         //     >
         //       <div className="grid grid-cols-8 gap-0 m-0 p-0">
         //         <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-        //         <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transferResult.error")}: ${_tokenInstanceToTransfer.name}`}</div>
+        //         <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.error")}: ${_tokenInstanceToTransfer.name}`}</div>
         //       </div>
       
         //     </div>
@@ -701,7 +818,53 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
   useEffect( () =>
     {
       if (tokensInstancesToMigrate && tokensInstancesToMigrate.length) {
-        transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+
+
+
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 99_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 99_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 66_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 66_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 33_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 33_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 22_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 22_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 11_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 11_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 6_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 6_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 3_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 2_000)
+testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 1_000)
+
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
+        // transferTokens(/* tokensInstancesToMigrate, targetAddress */)
       }
     },
     [tokensInstancesToMigrate, targetAddress, transferTokens]

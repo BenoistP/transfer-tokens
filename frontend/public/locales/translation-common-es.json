@@ -123,12 +123,15 @@
           "completed": "Terminado"
         }
       },
-        "transferResult": {
+        "transfer": {
           "skipped": "Saltado",
           "error": "Fallido",
           "success": "Enviado",
           "successTo": "a",
-          "txHash": "Transacción"
+          "txHash": "Transacción",
+          "awaitConfirm": "Awaiting confirmation",
+          "confirmed": "Confirmed",
+          "rejected": "Fallido"
         }
     },
     "Footer": {
