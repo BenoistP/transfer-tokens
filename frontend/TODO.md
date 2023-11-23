@@ -73,7 +73,7 @@ Step 0:
 Step 1:
 
 - ☑️ Error handling
-- 🚧 ethereum Target address must be checksumed address
+- ☑️ ethereum Target address must be checksumed
 
 Step 2:
 

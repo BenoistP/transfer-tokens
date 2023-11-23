@@ -3,34 +3,28 @@ import { isAddress, getAddress } from 'viem'
 import { ADDRESS_MAX_SIZE, NULL_ADDRESS } from "@jsconsts/addresses";
 
 const NULLNULL_ADDRESS = NULL_ADDRESS+NULL_ADDRESS
+const regexp0x = new RegExp('^(0[xX])(.*)$');
 
 export const checkAndFixAddress0xFormat = (_address:string|undefined) : TAddressString  => {
-
   if (_address) {
-    // if (address.startsWith('0x')) {
-    //   return address as TAddressString;
-    // }
-    // Shorten input leading 0x
-    let addressSliced = _address
-    while (addressSliced.slice(0,4).toLowerCase() == NULLNULL_ADDRESS) {
-      // remove 0x0x
+    let addressSliced = _address.toLowerCase()
+    while (addressSliced.slice(0,4) == NULLNULL_ADDRESS) {
+      // remove leading 0x duplicates
       addressSliced = addressSliced.slice(2, )
     }
-    console.debug(`checkAndFixAddress0xFormat: addressSliced=${addressSliced}`)
-
-    addressSliced = addressSliced.slice(2, ADDRESS_MAX_SIZE+2)
-
-    console.debug(`checkAndFixAddress0xFormat: addressSliced=${addressSliced}`)
-
-
-    const regexp0x = new RegExp('^(0[xX])(.*)$');
+    // shorthen to max address size
+    addressSliced = addressSliced.slice(0, ADDRESS_MAX_SIZE)
     if (regexp0x.test(addressSliced)) {
-      return _address as TAddressString;
+      return addressSliced as TAddressString;
     }
+    // add 0x prefix
     return '0x' + _address as TAddressString;
   }
+  // return empty address with leading 0x if undefined
   return '0x';
 }
+
+// ---
 
 export const isValidAddress = (address:string) : boolean  => {
   // const regexp0x = new RegExp('^0x[a-fA-F0-9]{40}$');
@@ -52,6 +46,8 @@ export const isValidAddress = (address:string) : boolean  => {
   }
   return false;
 }
+
+// ---
 
 export const checksumAddress = (address:TAddressString) : TAddressString  => {
 let addressChecksummed = address;

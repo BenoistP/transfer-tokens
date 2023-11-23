@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState} from "react";
 // Utils
 import { checkAndFixAddress0xFormat, isValidAddress, checksumAddress } from "@jsutils/blockchainUtils";
-import { ADDRESS_MAX_SIZE, NULL_ADDRESS } from "@jsconsts/addresses";
+import { ADDRESS_MAX_SIZE } from "@jsconsts/addresses";
 // Translation
 import { useTranslation } from 'react-i18next';
 // Icons
@@ -18,48 +18,21 @@ const AddressInput = ({
 
   const { t } = useTranslation();
   const [addressInput, setaddressInput] = useState<string>(targetAddress);
-  const NULLNULL_ADDRESS = NULL_ADDRESS+NULL_ADDRESS
-  // const { data: address } = useEnsAddress({ name: 'xxx.eth' }) // not supported on gnosis ?
 
   // ------------------------------
 
-  // console.debug(`AddressInput.tsx render`)
-
   const handleAddress = /* useCallback( */ (e: React.FormEvent<HTMLInputElement>): void /* ) */ => {
     const addressInput = e.currentTarget.value
-    // let addressSliced;
-
-    debugger
-    // Restrict input size
-    // if (addressInput.slice(0,4).toLowerCase() == NULLNULL_ADDRESS) {
-    //   // remove 0x0x
-    //   addressSliced = addressInput.slice(2, ADDRESS_MAX_SIZE+2)
-    // } else {
-    //   addressSliced = addressInput.slice(0, ADDRESS_MAX_SIZE)
-    // }
-
-    // Shorten input leading 0x
-    let addressSliced = addressInput
-    while (addressSliced.slice(0,4).toLowerCase() == NULLNULL_ADDRESS) {
-      // remove 0x0x
-      addressSliced = addressInput.slice(2, )
-    }
-    console.debug(`AddressInput.tsx handleAddress: addressSliced=${addressSliced}`)
-
-    addressSliced = addressInput.slice(2, ADDRESS_MAX_SIZE+2)
-
-    console.debug(`AddressInput.tsx handleAddress: addressSliced=${addressSliced}`)
-
-    const addressFixed:TAddressString = checkAndFixAddress0xFormat(addressSliced)
+    const addressFixed:TAddressString = checkAndFixAddress0xFormat(addressInput)
     if (addressFixed.length == ADDRESS_MAX_SIZE) {
       const addressFixedChecksummed = checksumAddress(addressFixed)
       if (isValidAddress(addressFixedChecksummed)) {
         setaddressInput(addressFixedChecksummed)
       } else {
-        setaddressInput(addressSliced)
+        setaddressInput(addressFixed)
       }
     } else {
-      setaddressInput(addressSliced)
+      setaddressInput(addressFixed)
     }
   } // handleAddress
 
@@ -113,7 +86,7 @@ const AddressInput = ({
                 <input
                   type="text" placeholder={ t("moveTokens.stepOne.destinationPlaceholder")}
                   className={clsInput}
-                  size={ADDRESS_MAX_SIZE} minLength={ADDRESS_MAX_SIZE} maxLength={ADDRESS_MAX_SIZE}
+                  size={ADDRESS_MAX_SIZE} minLength={ADDRESS_MAX_SIZE} maxLength={ADDRESS_MAX_SIZE+4}
                   value={addressInput}
                   onChange={ (e) => {handleAddress(e)} }
                   spellCheck="false"

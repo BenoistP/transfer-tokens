@@ -195,15 +195,18 @@ toast.promise(
 
         toast.promise(
             // ------------
-            new Promise(async function(resolve, reject) {
+            new Promise( function(resolve, reject) {
               try {
-                await new Promise(r => setTimeout(r, _timeout));
-                const rnd = Math.floor(Math.random() * 2)
-                if (rnd == 0) {
-                  resolve("Success")
-                } else {
-                  reject()
+                const resultFn = () => {
+                  const rnd = Math.floor(Math.random() * 2)
+                  if (rnd == 0) {
+                    resolve("Success")
+                  } else {
+                    reject()
+                  }
                 }
+                setTimeout( resultFn , _timeout)
+
 
               } catch (error) {
                 console.error(error)
