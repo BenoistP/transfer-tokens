@@ -22,7 +22,7 @@ const ProgressContainer = ( {
 
   const clsBtnBase = "btn shadow-xl text py-2 px-1 sm:px-1 md:px-2 m-1 md:m-2" +
   " ease-in-out duration-300 sm:h-10 md:h-12" +
-  " disabled:btn disabled:btn-disabled disabled:cursor-no-drop"
+  " disabled:btn disabled:btn-disabled disabled:cursor-no-drop text-info disabled:text-neutral"
 
    const clsBtnSize = " w-20 sm:w-32 md:w-36"
    const clsBtnPrevious = clsBtnBase + clsBtnSize
