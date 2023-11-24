@@ -233,21 +233,38 @@ console.dir(_updatedTokenInstance.userData)
                   if (tokenInstance.userData) {
                     // Check if any of our userdata balances has been updated
                     const fromADDRESS = from.toUpperCase(), toADDRESS = to.toUpperCase();
+                    
 // TODO: debug to remove -> ------------------------
-console.debug(`StepsContainer.tsx processTransferEvent fromADDRESS:${fromADDRESS} toADDRESS:${toADDRESS}`)
-console.dir(tokenInstance)
+const decimals = BigInt(tokenInstance.decimals)
+const intValue = ( value / (10n**decimals) );
+const decimalValue = value - intValue * (10n**decimals);
+let longBalanceString = "0";
+          if (decimalValue > 0) {
+            // exact decimals display
+            const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
+            // const zeroDecimalToFixed = Number("0."+longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+            // const shortDecimalDisplay = zeroDecimalToFixed.substring(2);
+            // const roundUpShortDisplay = (zeroDecimalToFixed.substring(0,2) =="1.")
+            longBalanceString = intValue+"."+longDecimalDisplayPadded;
+          } else {
+            longBalanceString = intValue.toString()+"."+"0".repeat(Number(decimals))
+          }
+
+console.debug(`transfer of "${tokenInstance.name}" (${tokenInstance.address}) from:${from} to:${to} for: ${longBalanceString}`)
+// console.debug(`StepsContainer.tsx processTransferEvent fromADDRESS:${fromADDRESS} toADDRESS:${toADDRESS}`)
+// console.dir(tokenInstance)
 // TODO: debug to remove <- ------------------------
 
                     let balancesUpdated = false;
 // TODO: debug to remove -> ------------------------
-console.debug(`StepsContainer.tsx processTransferEvent tokenInstance.userData[${fromADDRESS} as any]:${tokenInstance.userData[fromADDRESS as any]} `)
-console.debug(`StepsContainer.tsx processTransferEvent tokenInstance.userData[${toADDRESS} as any]:${tokenInstance.userData[toADDRESS as any]} `)
+// console.debug(`StepsContainer.tsx processTransferEvent tokenInstance.userData[${fromADDRESS} as any]:${tokenInstance.userData[fromADDRESS as any]} `)
+// console.debug(`StepsContainer.tsx processTransferEvent tokenInstance.userData[${toADDRESS} as any]:${tokenInstance.userData[toADDRESS as any]} `)
 // TODO: debug to remove <- ------------------------
                     if (tokenInstance.userData[fromADDRESS as any]) {
                       // Update on from
                       const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, from);
 // TODO: debug to remove -> ------------------------
-console.debug(`StepsContainer.tsx processTransferEvent from:${from} newBalance:${newBalance}`)
+// console.debug(`StepsContainer.tsx processTransferEvent from:${from} newBalance:${newBalance}`)
 // TODO: debug to remove <- ------------------------
 
                       if (newBalance != undefined) {
@@ -259,7 +276,7 @@ console.debug(`StepsContainer.tsx processTransferEvent from:${from} newBalance:$
                       // Update on to
                       const newBalance = await loadTokenOnChainData_addressBalance(tokenInstance, to);
 // TODO: debug to remove -> ------------------------
-console.debug(`StepsContainer.tsx processTransferEvent to:${to} newBalance:${newBalance}`)
+// console.debug(`StepsContainer.tsx processTransferEvent to:${to} newBalance:${newBalance}`)
 // TODO: debug to remove <- ------------------------
                       if (newBalance != undefined) {
                         tokenInstance.userData[toADDRESS as any].balance = newBalance;

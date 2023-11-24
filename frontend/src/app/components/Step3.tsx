@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationListTable"
 // Transactions & ABIs
 import { erc20ABI, prepareWriteContract, writeContract, waitForTransaction } from '@wagmi/core'
-import { WaitForTransactionReceiptTimeoutError } from "node_modules/viem/_types/errors/transaction";
+import { WaitForTransactionReceiptTimeoutError, TransactionNotFoundError } from 'viem';
 // Translation
 import { useTranslation } from "react-i18next";
  // Toasts
@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 // Consts & Enums
 import { DEFAULT_ETHEREUM_EXPLORER_BASE_URI, DEFAULT_ETHEREUM_EXPLORER_TX_URI,
   DEFAULT_GNOSIS_EXPLORER_BASE_URI, DEFAULT_GNOSIS_EXPLORER_TX_URI,
-  DURATION_LONG, DURATION_TX_TIMEOUT, // DURATION_MEDIUM,
+  DURATION_LONG, DURATION_TX_TIMEOUT, DURATION_MEDIUM,
   USER_REJECT_TX_REGEXP
 } from "@App/js/constants/ui/uiConsts";
 import { NULL_ADDRESS } from "@App/js/constants/addresses";
@@ -24,7 +24,7 @@ import { ETokenTransferState } from "@jsconsts/enums";
 // Utils
 import { shortenAddress } from "@App/js/utils/blockchainUtils";
 // Icons
-import { LinkIcon } from '@heroicons/react/24/solid'
+import { LinkIcon, XCircleIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
@@ -82,6 +82,11 @@ const Step3 = ( {
 
   // ---
 
+  type TTokensAmountStrings = {
+    long: string,
+    short: string,
+  }
+/*
   const getAmountShortString = useCallback( (_amount: TTokenAmount, _decimals: TTokenDecimals):string =>
     {
       try {
@@ -96,6 +101,7 @@ const Step3 = ( {
             const zeroDecimalToFixed = Number("0."+longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
             const shortDecimalDisplay = zeroDecimalToFixed.substring(2);
             const roundUpShortDisplay = (zeroDecimalToFixed.substring(0,2) =="1.")
+            // const longBalanceString = intValue+"."+longDecimalDisplayPadded;
             const shortAmountString = `${(roundUpShortDisplay?intValue+1n:intValue)}.${shortDecimalDisplay}`
             return shortAmountString
           } else {
@@ -107,6 +113,40 @@ const Step3 = ( {
         console.error(`Steps3.tsx getAmountShortString error: ${error}`);
         return "?"
       }
+    },
+    [] // No dependencies
+  )
+*/
+  const getAmountStrings = useCallback( (_amount: TTokenAmount, _decimals: TTokenDecimals):TTokensAmountStrings =>
+    {
+      let tokensAmountStrings = {long: "0.0", short: "0"}
+      try {
+        if (_amount) {
+          const decimals = BigInt((_decimals||ERC20_DECIMALS_DEFAULT))
+          const amountValue = _amount.valueOf();
+          const intValue = ( amountValue / (10n**decimals) );
+          const decimalValue = amountValue - intValue * (10n**decimals);
+          if (decimalValue > 0) {
+            // exact decimals display
+            const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
+            const zeroDecimalToFixed = Number("0."+longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+            const shortDecimalDisplay = zeroDecimalToFixed.substring(2);
+            const roundUpShortDisplay = (zeroDecimalToFixed.substring(0,2) =="1.")
+            const longBalanceString = intValue+"."+longDecimalDisplayPadded;
+            const shortAmountString = `${(roundUpShortDisplay?intValue+1n:intValue)}.${shortDecimalDisplay}`
+            tokensAmountStrings = {long: longBalanceString, short: shortAmountString }
+            // return shortAmountString
+          } else {
+            tokensAmountStrings = {long: `${intValue}.0`, short: `${intValue}` }
+          }
+        }
+        // return "0.0"
+      } catch (error) {
+        console.error(`Steps3.tsx getAmountShortString error: ${error}`);
+        // return "?"
+        tokensAmountStrings = {long: "?", short: "?"}
+      }
+      return tokensAmountStrings; // RETURN
     },
     [] // No dependencies
   )
@@ -130,446 +170,30 @@ const Step3 = ( {
   }
 
   // ---
-/*
-  const testshowTransferToast = useCallback( async ( _tokenInstanceToTransfer:TTokenInstance, _transferTxHash:TTxHash, _to:TAddressEmptyNullUndef, _timeout: number ) : Promise<void> =>
+
+  const showToastTransferSkipped = useCallback( (_tokenInstanceToTransfer:TTokenInstance) =>
     {
-      try {
-
-        toast.promise(
-            // ------------
-            new Promise( function(resolve, reject) {
-              try {
-                const resultFn = () => {
-                  const rnd = Math.floor(Math.random() * 2)
-                  if (rnd == 0) {
-                    resolve("Success")
-                  } else {
-                    reject()
-                  }
-                }
-                setTimeout( resultFn , _timeout)
-
-
-              } catch (error) {
-                console.error(error)
-                reject()
-              }
-              }) // Promise
-            // -----------------
-            , { loading: 
-                  <div>
-                    <div className="font-medium">
-                      {`${t("moveTokens.stepThree.transfer.awaitConfirm")} :`}
-                    </div>
-                    <div>
-                      {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                    </div>
-                    <div className="italic text-info-content">
-                      <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                        {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                      </Link>
-
-                    </div>
-                  </div>,
-                success:
-                  <div>
-                    <div className="font-medium">
-                      {`${t("moveTokens.stepThree.transfer.confirmed")} :`}
-                    </div>
-                    <div>
-                      {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                    </div>
-                    <div className="text-success-content">
-                      <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                        {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                      </Link>
-
-                    </div>
-                  </div>,
-                error:
-                  <div>
-                    <div className="font-medium">
-                      {`${t("moveTokens.stepThree.transfer.rejected")} :`}
-                    </div>
-                    <div>
-                      {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                    </div>
-                    <div className="text-error-content">
-                      <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                        {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                      </Link>
-
-                    </div>
-                  </div>
-              },
-            { success:
-                {duration: DURATION_LONG},
-              error:
-                {duration: DURATION_LONG},
-            }
-        ) // toast.promise
-
-      } catch (error) {
-          console.error(`Step3.tsx: showTransferToast error: ${error}`)
-      }
-    },
-    [ t , getTxUri, getAmountShortString]
-    ) // testshowTransferToast
-*/
-    // ---
-
-    type TTxResult = {
-      hash: TTxHash,
-      success: boolean,
-      timeout: boolean,
-      userSkipped: boolean,
-    }
-
-    const waitForTransferToast = useCallback( async ( _tokenInstanceToTransfer:TTokenInstance, _transferTxHash:TTxHash, _to:TAddressEmptyNullUndef, _timeout: number ) : Promise<TTxResult> =>
-    {
-      const txResult:TTxResult = {hash: _transferTxHash, success: false, timeout: false, userSkipped: false}
-      try {
-        // let txHash = _transferTxHash
-        if (_tokenInstanceToTransfer && _transferTxHash && _to) {
-
-          // TODO: debug to remove -> ------------------------
-          console.debug(`Step3.tsx: waitForTransferToast : hash:${_transferTxHash}`)
-          // TODO: debug to remove <- ------------------------
-
-          try {
-
-            const waitForTransactionData = await waitForTransaction({
-              confirmations: 1,
-              hash: _transferTxHash,
-              timeout: _timeout, // 2 minutes
-
-              onReplaced: (transaction) => {
-                // TODO: debug to remove -> ------------------------
-                console.debug(`Step3.tsx: waitForTransferToast : waitForTransactionData hash:${_transferTxHash} transaction=`)
-                console.dir(transaction)
-                // txHash = transaction.
-                // TODO: debug to remove <- ------------------------
-                txResult.hash = transaction.replacedTransaction.hash
-              },
-            })
-
-            // TODO: debug to remove -> ------------------------
-            console.debug(`Step3.tsx: waitForTransferToast : hash:${waitForTransactionData} waitForTransactionData=`)
-            console.dir(waitForTransactionData);
-            // TODO: debug to remove <- ------------------------
-
-            txResult.success = true
-
-          } catch (error) {
-            if (error instanceof WaitForTransactionReceiptTimeoutError) {
-              console.debug(`Step3.tsx: waitForTransferToast : WaitForTransactionReceiptTimeoutError`)
-              txResult.timeout = true
-            } else {
-              console.debug(`Step3.tsx: waitForTransferToast : error:`)
-              console.dir(error)
-              /* re */ throw error
-            }
-          }
-
-
-
-          toast.promise(
-              // ------------
-              new Promise( async(resolve, reject) =>
-              {
-                // resolve(txResult.success)
-                // reject(txResult.timeout)
-/*
-                try {
-
-                  const resultFn = () => {
-                    const rnd = Math.floor(Math.random() * 2)
-                    if (rnd == 0) {
-                      resolve("Success")
-                    } else {
-                      reject()
-                    }
-                  }
-                  setTimeout( resultFn , _timeout)
-                } catch (error) {
-                  console.error(error)
-                  reject()
-                }
-*/
-
-                  try {
-
-                    const waitForTransactionData = await waitForTransaction({
-                      confirmations: 1,
-                      hash: _transferTxHash,
-                      timeout: _timeout, // 2 minutes
-
-                      onReplaced: (transaction) => {
-                        // TODO: debug to remove -> ------------------------
-                        console.debug(`Step3.tsx: waitForTransferToast : waitForTransactionData hash:${_transferTxHash} transaction=`)
-                        console.dir(transaction)
-                        // TODO: debug to remove <- ------------------------
-                        // txResult.hash = transaction.replacedTransaction.hash
-                        resolve(txResult.hash)
-                      },
-                    }).then( (transactionData) => {
-
-                      txResult.hash = transactionData.transactionHash
-
-                      resolve(transactionData.transactionHash)
-
-                    }).catch( (error) => {
-
-                      if (error instanceof WaitForTransactionReceiptTimeoutError) {
-                        console.debug(`Step3.tsx: waitForTransferToast : WaitForTransactionReceiptTimeoutError`)
-                        txResult.timeout = true
-                      } else {
-                        console.debug(`Step3.tsx: waitForTransferToast : error:`)
-                        console.dir(error)
-                        // /* re */ throw error
-                        reject(error)
-                      }
-                      
-                    })
-
-                    // TODO: debug to remove -> ------------------------
-                    console.debug(`Step3.tsx: waitForTransferToast : hash:${waitForTransactionData} waitForTransactionData=`)
-                    console.dir(waitForTransactionData);
-                    console.debug(`Step3.tsx: waitForTransferToast : hash:${_transferTxHash} txResult.hash: ${txResult.hash}`)
-                    
-                    // TODO: debug to remove <- ------------------------
-                    txResult.success = true
-
-                  } catch (error) {
-                    if (error instanceof WaitForTransactionReceiptTimeoutError) {
-                      console.debug(`Step3.tsx: waitForTransferToast : WaitForTransactionReceiptTimeoutError`)
-                      txResult.timeout = true
-                    } else {
-                      console.debug(`Step3.tsx: waitForTransferToast : error:`)
-                      console.dir(error)
-                      /* re */ throw error
-                    }
-                  }
-
-              }) // Promise
-              // -----------------
-              , { loading: 
-                    <div>
-                      <div className="font-medium">
-                        {`${t("moveTokens.stepThree.transfer.awaitConfirm")} :`}
-                      </div>
-                      <div>
-                        {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                      </div>
-                      <div className="italic text-info-content">
-                        <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                          {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                        </Link>
-
-                      </div>
-                    </div>,
-                  success:
-                    <div>
-                      <div className="font-medium">
-                        {`${t("moveTokens.stepThree.transfer.confirmed")} :`}
-                      </div>
-                      <div>
-                        {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                      </div>
-                      <div className="text-success-content">
-                        <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                          {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                        </Link>
-
-                      </div>
-                    </div>,
-                  error:
-                    <div>
-                      <div className="font-medium">
-                        {`${t("moveTokens.stepThree.transfer.rejected")} :`}
-                      </div>
-                      <div>
-                        {`${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                      </div>
-                      <div className="text-error-content">
-                        <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                          {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                        </Link>
-
-                      </div>
-                    </div>
-                },
-              { success:
-                  {duration: DURATION_LONG},
-                error:
-                  {duration: DURATION_LONG},
-              }
-          ) // toast.promise
-        } // if (_tokenInstanceToTransfer && _transferTxHash && _to) {
-
-      } catch (error) {
-          console.error(`Step3.tsx: showTransferToast error: ${error}`)
-          txResult.success = false
-      }
-
-      return txResult
-    },
-    [ t , getTxUri, getAmountShortString]
-    ) // testshowTransferToast
-
-    // ---
-/*
-  const showTransferToast = useCallback( async ( _tokenInstanceToTransfer:TTokenInstance, _transferTxHash:TTxHash, _to:TAddressEmptyNullUndef ) : Promise<void> =>
-    {
-      try {
-        if (_tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.error) {
-          //
-          toast.custom(
-            (_toast) => (
-              <div className={`block alert alert-error w-auto p-2 m-0`}
-                style={{
-                  opacity: _toast.visible ? 0.85 : 0,
-                  transition: "opacity 100ms ease-in-out",
-                  border: '1px solid black',
-                }}
-              >
-                <div className="grid grid-cols-8 gap-0 m-0 p-0">
-                  <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                  <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.error")}: ${_tokenInstanceToTransfer.name}`}</div>
-                </div>
-        
+      if (_tokenInstanceToTransfer) {
+        toast.custom(
+          (_toast) => (
+            <div className={`block alert alert-info w-auto p-2 m-0 border border-black border-dotted`}
+              style={{
+                opacity: _toast.visible ? 0.85 : 0,
+                transition: "opacity 100ms ease-in-out",
+              }}
+            >
+              <div className="grid grid-cols-8 gap-0 m-0 p-0">
+                <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+                <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
               </div>
-            ),
-            { duration: DURATION_LONG }
-          ) // toast.custom
-
-        } else if (_tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.processed) {
-          // 
-          toast.custom(
-            (_toast) => (
-              <div className={`block alert alert-success w-auto p-2 m-0`}
-                style={{
-                  opacity: _toast.visible ? 0.85 : 0,
-                  transition: "opacity 100ms ease-in-out",
-                  border: '1px solid black',
-                }}
-              >
-                <div className="grid grid-cols-8 gap-0 m-0 p-0">
-                  <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                  <div className="p-0 pl-1 pt-1 m-0 col-span-7">
-                    {`${t("moveTokens.stepThree.transfer.success")}: ${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}
-                  </div>
-                  <div className="col-span-8">
-                    <Link className="flex justify-end underline" to={getTxUri(_transferTxHash)} target="_blank" rel="noopener noreferrer" >
-                    {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ),
-            { duration: DURATION_LONG }
-          ) // toast.custom
-        } else if (_tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.skipped) {
-          // 
-          toast.custom(
-            (_toast) => (
-              <div className={`block alert alert-info w-auto p-2 m-0`}
-                style={{
-                  opacity: _toast.visible ? 0.85 : 0,
-                  transition: "opacity 100ms ease-in-out",
-                  border: '1px solid black',
-                }}
-              >
-                <div className="grid grid-cols-8 gap-0 m-0 p-0">
-                  <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                  <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
-                </div>
-        
-              </div>
-            ),
-            { duration: DURATION_MEDIUM }
-          ) // toast.custom
-        } else {
-          console.debug(`Step3.tsx: showTransferToast wrong state ${_tokenInstanceToTransfer.transferState.transfer} for token ${_tokenInstanceToTransfer.address}`)
-        }
-      } catch (error) {
-          console.error(`Step3.tsx: showTransferToast error: ${error}`)
+            </div>
+          ),
+          { duration: DURATION_MEDIUM }
+        ) // toast.custom
       }
     },
-    [getTxUri, t, getAmountShortString]
-  )
-*/
-  // ---
-
-  const callTransferToken = useCallback( async ( /* _tokenAddress:TAddressString, */_tokenInstanceToTransfer:TTokenInstance, _destinationAddress: TAddressString, _amount: TTokenAmount ) : Promise<TTxResult> =>
-    {
-      const txResult:TTxResult = {hash: NULL_ADDRESS, success: false, timeout: false, userSkipped: false} 
-      try {
-        const { request:transferRequest } = await prepareWriteContract({
-          // address: _tokenAddress,
-          address: _tokenInstanceToTransfer.address,
-          abi: erc20ABI,
-          functionName: 'transfer',
-          args: [_destinationAddress, _amount],
-        })
-
-        // TODO: debug to remove -> ------------------------
-        console.debug(`Steps3.tsx callTransferToken await writeContract(transferRequest)`);
-        console.dir(transferRequest);
-        // TODO: debug to remove <- ------------------------
-
-        const transferRequestResult = await writeContract(transferRequest)
-        const { hash } = transferRequestResult
-
-        // // TODO: debug to remove -> ------------------------
-        console.debug(`Step3.tsx: callTransferToken : hash:${hash} transferRequestResult=`)
-        console.dir(transferRequestResult);
-        // // TODO: debug to remove <- ------------------------
-
-        if (hash) {
-          txResult = await waitForTransferToast(_tokenInstanceToTransfer, hash, _destinationAddress, DURATION_TX_TIMEOUT )
-        }
-
-        // const waitForTransactionData = await waitForTransaction({
-        //   confirmations: 1,
-        //   hash: hash,
-        //   timeout: 120_000, // 2 minutes
-        //   onReplaced: (transaction) => {
-        //     // TODO: debug to remove -> ------------------------
-        //     console.debug(`Step3.tsx: callTransferToken : waitForTransactionData hash:${hash} transaction=`)
-        //     console.dir(transaction)
-        //     // TODO: debug to remove <- ------------------------
-        //   },
-        // })
-
-        // // TODO: debug to remove -> ------------------------
-        // console.debug(`Step3.tsx: callTransferToken : hash:${waitForTransactionData} waitForTransactionData=`)
-        // console.dir(waitForTransactionData);
-        // // TODO: debug to remove <- ------------------------
-
-        // return txResult; // RETURN (Success)
-
-      } catch (error) {
-        try {
-          if (error instanceof Error) {
-              if (error.message.match(USER_REJECT_TX_REGEXP)) {
-              return NULL_ADDRESS ; // RETURN (User rejected)
-            } else {
-              // reThrow
-              throw error;
-            }
-          }
-        } catch (anotherError) {
-          console.error(`Step3.tsx: callTransferToken error: ${anotherError}`)
-          // reThrow initial error
-          throw error;
-        }
-      }
-      return txResult; // RETURN
-    },
-    [] // No dependencies
-  ) // callTransferToken
-
+    [t]
+  ) // showToastTransferSkipped
   // ---
 
   const updateProcessedTokenInstance = useCallback( (_updatedTokenInstance: TTokenInstance) =>
@@ -627,6 +251,211 @@ const Step3 = ( {
     },
     [tokensInstances, settokensInstances]
   )
+
+  // ---
+
+  type TTxResult = {
+    hash: TTxHash,
+    success: boolean,
+    timeout: boolean,
+    notFound: boolean,
+    userSkipped: boolean,
+  }
+
+  // type TToastTransferSuccess = {
+  //   tokenInstanceToTransfer:TTokenInstance,
+  //   transferTxHash: TTxHash,
+  //   destinationAddress: TAddressString,
+  // }
+
+  // ---
+
+  // const ToastSuccess = ( {tokenInstanceToTransfer, transferTxHash, destinationAddress}:TToastTransferSuccess) => {
+  //   return (
+  //   <div>
+  //     <div className="font-medium">
+  //       {`${t("moveTokens.stepThree.transfer.confirmed")} :`}
+  //     </div>
+  //     <div>
+  //       {`${getAmountShortString(tokenInstanceToTransfer.transferAmount, tokenInstanceToTransfer.decimals)} ${tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(destinationAddress)}`}
+  //     </div>
+  //     <div className="text-success-content">
+  //       <Link className="flex justify-end underline" to={getTxUri(transferTxHash)} target="_blank" rel="noopener noreferrer" >
+  //         {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+  //       </Link>
+
+  //     </div>
+  //   </div>
+  //   )
+  // }
+
+  // ---
+
+  const callTransferToken = useCallback( async ( /* _tokenAddress:TAddressString, */_tokenInstanceToTransfer:TTokenInstance, _destinationAddress: TAddressString, _amount: TTokenAmount ) : Promise<TTxResult> =>
+    {
+      const txResult:TTxResult = {hash: NULL_ADDRESS, success: false, timeout: false, notFound: false, userSkipped: false} 
+      try {
+        if (_tokenInstanceToTransfer && _destinationAddress) {
+
+          const { request:transferRequest } = await prepareWriteContract({
+            address: _tokenInstanceToTransfer.address,
+            abi: erc20ABI,
+            functionName: 'transfer',
+            args: [_destinationAddress, _amount],
+          })
+          // TODO: debug to remove -> ------------------------
+          console.debug(`Steps3.tsx callTransferToken await writeContract(transferRequest)`);
+          console.dir(transferRequest);
+          // TODO: debug to remove <- ------------------------
+          const transferRequestResult = await writeContract(transferRequest)
+          const { hash:transferTxHash } = transferRequestResult
+          const amountStrings = getAmountStrings(_amount, _tokenInstanceToTransfer.decimals)
+          // // TODO: debug to remove -> ------------------------
+          // console.debug(`Step3.tsx: callTransferToken : transferTxHash:${transferTxHash} transferRequestResult=`)
+          // console.dir(transferRequestResult);
+          console.debug(`Step3.tsx: callTransferToken : transferTxHash:${transferTxHash}`)
+          // // TODO: debug to remove <- ------------------------
+          if (transferTxHash) {
+            txResult.hash = transferTxHash
+            // txResult = await waitForTransferToast(_tokenInstanceToTransfer, hash, _destinationAddress, DURATION_TX_TIMEOUT )
+            await toast.promise(
+              // ------------
+              new Promise( /* async */ (resolve, reject) =>
+              {
+                try {
+                  /* const waitForTransactionData = */ /* await */
+                  waitForTransaction({
+                    confirmations: 1,
+                    hash: transferTxHash,
+                    timeout: 0, // forever  // DURATION_TX_TIMEOUT, // 2 minutes
+                    onReplaced: (transactionData) => {
+                      // TODO: debug to remove -> ------------------------
+                      console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.onReplaced (hash:${transferTxHash}) transactionData=`)
+                      console.dir(transactionData)
+                      // TODO: debug to remove <- ------------------------
+                      // txResult.hash = transactionData.replacedTransaction.hash
+                      resolve(txResult.hash)
+                    },
+                  }).then( (transactionData) => {
+                    // TODO: debug to remove -> ------------------------
+                    console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.THEN (hash:${transferTxHash}) transaction=`)
+                    console.dir(transactionData)
+                    // TODO: debug to remove <- ------------------------
+                    txResult.hash = transactionData.transactionHash;
+                    txResult.success = true;
+                    resolve(transactionData.transactionHash)
+                  }).catch( (error) => {
+                    if (error instanceof WaitForTransactionReceiptTimeoutError) {
+                      console.debug(`Step3.tsx: callTransferToken : WaitForTransactionReceiptTimeoutError TIMEOUT`)
+                      txResult.timeout = true
+                    }
+                    if (error instanceof TransactionNotFoundError) {
+                      // TODO: debug to remove -> ------------------------
+                      console.debug(`Step3.tsx: callTransferToken : TransactionNotFoundError NOT FOUND`)
+                      // TODO: debug to remove <- ------------------------
+                      // TODO : add error message
+                      txResult.notFound = true
+                      reject(error)
+                    }
+                    else  {
+                      console.debug(`Step3.tsx: callTransferToken : error:${error}`)
+                      console.dir(error)
+                      reject(error)
+                    }
+                  })
+                  // TODO: debug to remove -> ------------------------
+                  // console.debug(`Step3.tsx: callTransferToken : hash:${waitForTransactionData} waitForTransactionData=`)
+                  // console.dir(waitForTransactionData);
+                  // console.debug(`Step3.tsx: callTransferToken : hash:${transferTxHash} txResult.hash: ${txResult.hash}`)
+                  // TODO: debug to remove <- ------------------------
+
+                } catch (error) {
+                  // if (error instanceof WaitForTransactionReceiptTimeoutError) {
+                  //   console.debug(`Step3.tsx: callTransferToken : WaitForTransactionReceiptTimeoutError`)
+                  //   txResult.timeout = true
+                  // } else {
+                    console.debug(`Step3.tsx: callTransferToken : error:`)
+                    console.dir(error)
+                    /* re */ throw error
+                  // }
+                }
+              }), // Promise
+              // -----------------
+              { // toasts
+                loading:
+                  <div>
+                    <div className="font-medium">
+                      {`${t("moveTokens.stepThree.transfer.awaitConfirm")} :`}
+                    </div>
+                    <div>
+                      {`${amountStrings.long} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
+                    </div>
+                    <div className="italic text-info-content">
+                      <Link className="flex justify-end underline" to={getTxUri(txResult.hash)} target="_blank" rel="noopener noreferrer" >
+                        {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                      </Link>
+                    </div>
+                  </div>,
+                success:
+                  <div>
+                    <div className="font-medium">
+                      {`${t("moveTokens.stepThree.transfer.confirmed")} :`}
+                    </div>
+                    <div>
+                      {`${amountStrings.long} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
+                    </div>
+                    <div className="text-success-content">
+                      <Link className="flex justify-end underline" to={getTxUri(txResult.hash)} target="_blank" rel="noopener noreferrer" >
+                        {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                      </Link>
+
+                    </div>
+                  </div>,
+                error:
+                  <div>
+                    <div className="font-medium">
+                      {`${t("moveTokens.stepThree.transfer.rejected")} :`}
+                    </div>
+                    <div>
+                      {`${amountStrings.long} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
+                    </div>
+                    <div className="text-error-content">
+                      <Link className="flex justify-end underline" to={getTxUri(txResult.hash)} target="_blank" rel="noopener noreferrer" >
+                        {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
+                      </Link>
+
+                    </div>
+                  </div>
+              },
+              { success:
+                  {duration: DURATION_LONG},
+                error:
+                  {duration: DURATION_LONG},
+              }
+          ) // toast.promise
+          } // if (transferTxHash)
+        } // if (_tokenInstanceToTransfer && _destinationAddress)
+
+      } catch (error) {
+        console.error(`Step3.tsx: callTransferToken error: ${error}`)
+        console.dir(error)
+        if (error instanceof Error) {
+          if (error.message.match(USER_REJECT_TX_REGEXP)) {
+            txResult.userSkipped = true
+            showToastTransferSkipped(_tokenInstanceToTransfer)
+          } else {
+            console.debug(`Step3.tsx: callTransferToken : error:`)
+            console.dir(error)
+            // reThrow
+          }
+        }
+
+      }
+      return txResult; // RETURN
+    },
+    [/* getAmountShortString */ getAmountStrings, getTxUri, t, showToastTransferSkipped] // No dependencies
+  ) // callTransferToken
+
   // ---
 
   const transferToken = useCallback( async( _tokenInstanceToTransfer:TTokenInstance, _to:TAddressEmptyNullUndef ) =>
@@ -637,210 +466,37 @@ const Step3 = ( {
         if (_tokenInstanceToTransfer?.address && _tokenInstanceToTransfer?.transferAmount && _to) {
           const txResult  = await callTransferToken( _tokenInstanceToTransfer/* .address */, _to, _tokenInstanceToTransfer.transferAmount)
           if (txResult.success) {
+            // processed = Success
             _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.processed;
-          } else if (txResult.timeout) {
-            _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.error;
-          } else if (txResult.userSkipped) {
-            _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.skipped;
-          }
-
-        }
-        //   transferTxHash = await callTransferToken( _tokenInstanceToTransfer/* .address */, _to, _tokenInstanceToTransfer.transferAmount)
-        //   if (transferTxHash != NULL_ADDRESS) {
-        //     // Success
-        //     // non-empty hash is returned
-        //     // _tokenInstanceToTransfer.tr_processed = true;
-        //     // _tokenInstanceToTransfer.tr_skipped = false;
-        //     // _tokenInstanceToTransfer.tr_error = false;
-        //     // // _tokenInstanceToTransfer.selected = false;
-        //     _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.processed;
-        //     // toast.custom(
-        //     //   (_toast) => (
-        //     //     <div className={`block alert alert-success w-auto p-2 m-0`}
-        //     //       style={{
-        //     //         opacity: _toast.visible ? 0.85 : 0,
-        //     //         transition: "opacity 100ms ease-in-out",
-        //     //         border: '1px solid black',
-        //     //       }}
-        //     //     >
-        //     //       <div className="grid grid-cols-8 gap-0 m-0 p-0">
-        //     //         <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-        //     //         <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.success")}: ${getAmountShortString(_tokenInstanceToTransfer.transferAmount, _tokenInstanceToTransfer.decimals)} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_to)}`}</div>
-        //     //         <div className="col-span-8">
-        //     //           <Link className="flex justify-end underline" to={getTxUri(transfer)} target="_blank" rel="noopener noreferrer" >
-        //     //           {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
-        //     //           </Link>
-        //     //         </div>
-        //     //       </div>
-        //     //     </div>
-        //     //   ),
-        //     //   { duration: DURATION_LONG }
-        //     // ) // toast.custom
-        //   } else {
-        //     // Skipped
-        //     // _tokenInstanceToTransfer.tr_skipped = true;
-        //     // _tokenInstanceToTransfer.tr_processed = false;
-        //     // _tokenInstanceToTransfer.tr_error = false;
-        //     _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.skipped;
-        //     // toast.custom(
-        //     //   (_toast) => (
-        //     //     <div className={`block alert alert-info w-auto p-2 m-0`}
-        //     //       style={{
-        //     //         opacity: _toast.visible ? 0.85 : 0,
-        //     //         transition: "opacity 100ms ease-in-out",
-        //     //         border: '1px solid black',
-        //     //       }}
-        //     //     >
-        //     //       <div className="grid grid-cols-8 gap-0 m-0 p-0">
-        //     //         <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-        //     //         <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
-        //     //       </div>
-          
-        //     //     </div>
-        //     //   ),
-        //     //   { duration: DURATION_MEDIUM }
-        //     // ) // toast.custom
-        //   } // if (transfer) ... ELSE ...
-        // } // if (_tokenInstanceToTransfer ...
-
-      } catch (error) {
-        // _tokenInstanceToTransfer.tr_error = true;
-        // _tokenInstanceToTransfer.tr_processed = false;
-        // _tokenInstanceToTransfer.tr_skipped = false;
-        _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.error;
-        // toast.custom(
-        //   (_toast) => (
-        //     <div className={`block alert alert-error w-auto p-2 m-0`}
-        //       style={{
-        //         opacity: _toast.visible ? 0.85 : 0,
-        //         transition: "opacity 100ms ease-in-out",
-        //         border: '1px solid black',
-        //       }}
-        //     >
-        //       <div className="grid grid-cols-8 gap-0 m-0 p-0">
-        //         <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-        //         <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.error")}: ${_tokenInstanceToTransfer.name}`}</div>
-        //       </div>
-      
-        //     </div>
-        //   ),
-        //   { duration: DURATION_LONG }
-        // ) // toast.custom
-
-      }
-      finally {
-        try {
-          // if (_tokenInstanceToTransfer.tr_processed) {
-          //   migrationState.current.successItemsCount++;
-          // } else if (_tokenInstanceToTransfer.tr_skipped) {
-          //   migrationState.current.skippedItemsCount++;
-          // } else if (_tokenInstanceToTransfer.tr_error) {
-          //   migrationState.current.errorItemsCount++;
-          // }
-
-          updateProcessedTokenInstance(_tokenInstanceToTransfer)
-
-          if (_tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.processed) {
             migrationState.current.successItemsCount++;
-          } else if (_tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.skipped) {
+          } else if (txResult.userSkipped) {
+            // skipped = User skipped
+            _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.skipped;
             migrationState.current.skippedItemsCount++;
-          } else if (_tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.error) {
+          } else {
+            // timeout our notFound or error
+            _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.error;
             migrationState.current.errorItemsCount++;
           }
-          // updateProcessedTokenInstance(_tokenInstanceToTransfer)
-
-          setmigrationState( {...migrationState.current} )
-
-          // showTransferToast(_tokenInstanceToTransfer, transferTxHash, _to)
-
-          currentlyProcessing.current = false
-
-        } catch (error) {
-          console.error(`Steps3.tsx transferToken tokenInstanceToTransfer TRANSFER ERROR STATE ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_to} process error: ${error}`);
         }
+        updateProcessedTokenInstance(_tokenInstanceToTransfer)
+        setmigrationState( {...migrationState.current} )
+        // if (txResult.userSkipped) {
+        //   // User skipped
+        //   showToastTransferSkipped(_tokenInstanceToTransfer)
+        // }
+        currentlyProcessing.current = false
+
+      } catch (error) {
+        _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.error;
+        console.error(`Steps3.tsx transferToken ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_to} process error: ${error}`);
       }
     } // transferToken
     ,
     [callTransferToken, /* t, getAmountShortString, getTxUri, */ updateProcessedTokenInstance, setmigrationState/* , showTransferToast */]
   ) // transferToken
 
-    // ---
-
-//   const transferTokens = useCallback( async( _tokensInstancesToTransfer:TTokensInstances, /* _from:TAddressEmptyNullUndef, */ _to:TAddressEmptyNullUndef ) =>
-//     {
-//       try {
-//         if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length) {
-//           migrationState.current = {totalItemsCount:_tokensInstancesToTransfer.length,
-//             errorItemsCount:0,skippedItemsCount:0,successItemsCount:0, paused: false, stopped: false};
-//           setmigrationState( migrationState.current )
-//           for (let tokenInstanceIndex = 0; ((tokenInstanceIndex < _tokensInstancesToTransfer.length)/* &&!stopTransfers */); tokenInstanceIndex++) {
-//             while (paused.current) {
-//               await new Promise(r => setTimeout(r, 250));
-//               if (!paused.current || stopped.current) break;
-//             }
-//             if (stopped.current) break;
-//             const tokenInstanceToTransfer = _tokensInstancesToTransfer[tokenInstanceIndex];
-
-
-// // TODO: remove this debug code ->
-// // console.debug(`Steps3.tsx transferTokenS tokenInstanceToTransfer:`);
-// // console.dir(tokenInstanceToTransfer);
-// // if (!tokenInstanceToTransfer.transferAmount) {
-// //   console.debug(`Steps3.tsx transferTokenS tokenInstanceToTransfer NO AMOUNT `);
-// //   console.dir(tokenInstanceToTransfer);
-// // }
-// // if (tokenInstanceToTransfer.tr_processed) {
-// //   console.debug(`Steps3.tsx transferTokenS tokenInstanceToTransfer ALREADY PROCESSED `);
-// //   console.dir(tokenInstanceToTransfer);
-// // }
-// // TODO: remove this debug code <-
-
-//             // Check if tokenInstanceToTransfer has already been processed
-//             // It could have been updated by a transfer event
-//             // if ( !(tokenInstanceToTransfer.tr_processed || tokenInstanceToTransfer.tr_error || tokenInstanceToTransfer.tr_skipped)
-//             //   && tokenInstanceToTransfer.transferAmount) continue;
-
-//               // if (tokenInstanceToTransfer.processing
-//               //     && tokenInstanceToTransfer.selected && tokenInstanceToTransfer.transferAmount
-//               //     && !(tokenInstanceToTransfer.tr_processed || tokenInstanceToTransfer.tr_error || tokenInstanceToTransfer.tr_skipped)
-//               //   ) {
-//               //   console.debug(`Steps3.tsx transferTokenS TRANSFER tokenInstanceToTransfer:`);
-//               //   console.dir(tokenInstanceToTransfer);
-//               // } else {
-//               //   console.debug(`Steps3.tsx transferTokenS SKIP TRANSFER tokenInstanceToTransfer:`);
-//               //   console.dir(tokenInstanceToTransfer);
-//               //   continue;
-//               // }
-//             if (tokenInstanceToTransfer.transferState.processing // processing
-//                 && tokenInstanceToTransfer.selected && tokenInstanceToTransfer.transferAmount // selected and with transfer amount (> 0)
-//                 && (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none) // not yet processed
-//               ) {
-//               console.debug(`Steps3.tsx transferTokenS TRANSFER tokenInstanceToTransfer:`);
-//               console.dir(tokenInstanceToTransfer);
-//             } else {
-//               console.debug(`Steps3.tsx transferTokenS SKIP TRANSFER tokenInstanceToTransfer:`);
-//               console.dir(tokenInstanceToTransfer);
-//               continue;
-//             }
-
-//             try {
-//               await transferToken(tokenInstanceToTransfer, _to )
-//               tokenIdx.current = tokenInstanceIndex;
-//             } catch (error) {
-//               console.error(`Steps3.tsx transferTokenS tokenInstanceToTransfer TRANSFER ERROR token symbol: '${tokenInstanceToTransfer.symbol}' token address: '${tokenInstanceToTransfer.address}' to: '${_to}' for '${tokenInstanceToTransfer.transferAmount}' amount process error: ${error}`);
-//             }
-//           } // for (let tokenInstanceIndex = 0 ...
-//           setstopTransfers(true)
-//           paused.current = false
-//           stopped.current = true
-//           setmigrationState( {...migrationState.current, paused: false, stopped: true} )
-//         } // if (_tokensInstancesToTransfer && _tokensInstancesToTransfer.length)
-//       } catch (error) {
-//         console.error(`Steps3.tsx transferTokenS error: ${error}`);
-//       }
-//     },
-//     [setmigrationState, transferToken]
-//   ) // transferTokens
+  // ---
 
 const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokensInstances, _to:TAddressEmptyNullUndef */ ) =>
   {
@@ -963,19 +619,10 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
           tokenInstance.transferState.processing // == true
           )
       })
-      // const processingTokensInstances = tokensInstances?.filter( (tokenInstance:TTokenInstance) => {
-      //   return (
-      //     /* tokenInstance.selected ||  */ tokenInstance.processing // && tokenInstance.transferAmount > 0n
-      //     //|| (tokenInstance.tr_processed || tokenInstance.tr_skipped || tokenInstance.tr_error)
-      //     )
-      // })
-      // selectedTokensInstances?.forEach( (tokenInstance:TTokenInstance) => {
-      //   tokenInstance.tr_processed = false;
-      //   tokenInstance.tr_skipped = false;
-      //   tokenInstance.tr_error = false;
-      // })
+      // TODO: debug to remove -> ------------------------
       console.debug(`Steps3.tsx getTokensToMigrate processingTokensInstances:`);
       console.dir(processingTokensInstances);
+      // TODO: debug to remove  ------------------------ <-
       return processingTokensInstances;
       } catch (error) {
         console.error(`Steps3.tsx getTokensToMigrate error: ${error}`);
@@ -1029,18 +676,6 @@ const transferTokens = useCallback( async( /* _tokensInstancesToTransfer:TTokens
   useEffect( () =>
     {
       if (tokensInstancesToMigrate && tokensInstancesToMigrate.length) {
-
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 180_000)
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 120_000)
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 99_000)
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 66_000)
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 33_000)
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 22_000)
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 11_000)
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 6_000)
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 3_000)
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 2_000)
-// testshowTransferToast( tokensInstancesToMigrate[0], "0xec230d1a0295b8e52876b4a5d90953845d0fc530958cd4960c1d4cd749979624", "0x0000123456", 1_000)
 
         transferTokens(/* tokensInstancesToMigrate, targetAddress */)
         // transferTokens(/* tokensInstancesToMigrate, targetAddress */)

@@ -49,7 +49,7 @@ const CustomToaster = ( ) =>
             <Transition
               appear
               show={_toast.visible}
-              className={`transform p-2 m-0 block alert w-auto shadow-lg `+ (_toast.type == "loading" ? "alert-info" : `alert-${_toast.type}` ) }
+              className={`transform p-2 m-0 block alert w-auto shadow-lg border border-black border-dotted `+ (_toast.type == "loading" ? "alert-info" : `alert-${_toast.type}` ) }
               enter="transition-all duration-150"
               enterFrom="opacity-0 scale-50"
               enterTo="opacity-80 scale-100"
