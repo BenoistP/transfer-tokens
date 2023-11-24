@@ -54,6 +54,8 @@ type TAddressEmptyNullUndef = TAddressNullUndef | "" ;
 // type TAddressNull = TAddressString | null ;
 type TAddressUndef = TAddressString | undefined ;
 
+type TTxHash = TAddressNullUndef;
+
 type TTokenContractAddress = TAddressString;
 type TTokenContractAddressNullUndef = TTokenContractAddress | TNullUndef ;
 
@@ -342,8 +344,6 @@ type TTokenInstance = {
 
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x... IN UPPERCASE)
 }
-
-type TTxHash = string|TNullUndef;
 
 type TTokenInstanceUserData = {
   balance: TTokenAmount | null// | undefined;
