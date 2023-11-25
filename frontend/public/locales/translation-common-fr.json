@@ -132,7 +132,7 @@
         "success": "Envoi de",
         "successTo": "à",
         "txHash": "Transaction",
-        "awaitConfirm": "Confirmation en cours",
+        "awaitConfirm": "En attente de confirmation",
         "confirmed": "Confirmée",
         "rejected": "Erreur"
       }
