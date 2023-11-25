@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 // Consts & Enums
 import { DEFAULT_ETHEREUM_EXPLORER_BASE_URI, DEFAULT_ETHEREUM_EXPLORER_TX_URI,
   DEFAULT_GNOSIS_EXPLORER_BASE_URI, DEFAULT_GNOSIS_EXPLORER_TX_URI,
-  DURATION_LONG, DURATION_TX_TIMEOUT, DURATION_MEDIUM,
+  DURATION_LONG, DURATION_MEDIUM, // DURATION_TX_TIMEOUT,
   USER_REJECT_TX_REGEXP
 } from "@App/js/constants/ui/uiConsts";
 import { NULL_ADDRESS } from "@App/js/constants/addresses";
@@ -85,6 +85,7 @@ const Step3 = ( {
   type TTokensAmountStrings = {
     long: string,
     short: string,
+    shortDisplayIsZero: boolean // true if short does not contain sufficient decimals to display any value
   }
 /*
   const getAmountShortString = useCallback( (_amount: TTokenAmount, _decimals: TTokenDecimals):string =>
@@ -119,7 +120,7 @@ const Step3 = ( {
 */
   const getAmountStrings = useCallback( (_amount: TTokenAmount, _decimals: TTokenDecimals):TTokensAmountStrings =>
     {
-      let tokensAmountStrings = {long: "0.0", short: "0"}
+      let tokensAmountStrings = {long: "0.0", short: "0", shortDisplayIsZero: false}
       try {
         if (_amount) {
           const decimals = BigInt((_decimals||ERC20_DECIMALS_DEFAULT))
@@ -128,23 +129,28 @@ const Step3 = ( {
           const decimalValue = amountValue - intValue * (10n**decimals);
           if (decimalValue > 0) {
             // exact decimals display
-            const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
-            const zeroDecimalToFixed = Number("0."+longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+            // eg. decimalValue = "1000000000000000n" (= 1e15n = 1e-3 = 0.001)
+            const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0"); // longDecimalDisplayPadded = "001000000000000000"
+            const longDecimalDisplay = longDecimalDisplayPadded.replace(/0+$/,"") // remove ending zeros: longDecimalDisplay = "001"
+            // const zeroDecimalToFixed = Number("0."+longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+            const zeroDecimalToFixed = Number("0."+longDecimalDisplay).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
             const shortDecimalDisplay = zeroDecimalToFixed.substring(2);
             const roundUpShortDisplay = (zeroDecimalToFixed.substring(0,2) =="1.")
-            const longBalanceString = intValue+"."+longDecimalDisplayPadded;
+            // const longBalanceString = intValue+"."+longDecimalDisplayPadded;
+            const longBalanceString = intValue+"."+longDecimalDisplay;
             const shortAmountString = `${(roundUpShortDisplay?intValue+1n:intValue)}.${shortDecimalDisplay}`
-            tokensAmountStrings = {long: longBalanceString, short: shortAmountString }
+            const shortAmountIsZero = (shortAmountString.match(/^0\.0*$/) != null)
+            tokensAmountStrings = {long: longBalanceString, short: shortAmountString, shortDisplayIsZero: shortAmountIsZero }
             // return shortAmountString
           } else {
-            tokensAmountStrings = {long: `${intValue}.0`, short: `${intValue}` }
+            tokensAmountStrings = {long: `${intValue}.0`, short: `${intValue}`, shortDisplayIsZero: false }
           }
         }
         // return "0.0"
       } catch (error) {
         console.error(`Steps3.tsx getAmountShortString error: ${error}`);
         // return "?"
-        tokensAmountStrings = {long: "?", short: "?"}
+        tokensAmountStrings = {long: "?", short: "?", shortDisplayIsZero: false }
       }
       return tokensAmountStrings; // RETURN
     },
@@ -296,7 +302,7 @@ const Step3 = ( {
       const txResult:TTxResult = {hash: NULL_ADDRESS, success: false, timeout: false, notFound: false, userSkipped: false} 
       try {
         if (_tokenInstanceToTransfer && _destinationAddress) {
-
+          // Transfer
           const { request:transferRequest } = await prepareWriteContract({
             address: _tokenInstanceToTransfer.address,
             abi: erc20ABI,
@@ -310,6 +316,7 @@ const Step3 = ( {
           const transferRequestResult = await writeContract(transferRequest)
           const { hash:transferTxHash } = transferRequestResult
           const amountStrings = getAmountStrings(_amount, _tokenInstanceToTransfer.decimals)
+          const displayedAmount = (amountStrings.shortDisplayIsZero ? amountStrings.long : amountStrings.short)
           // // TODO: debug to remove -> ------------------------
           // console.debug(`Step3.tsx: callTransferToken : transferTxHash:${transferTxHash} transferRequestResult=`)
           // console.dir(transferRequestResult);
@@ -327,18 +334,20 @@ const Step3 = ( {
                   waitForTransaction({
                     confirmations: 1,
                     hash: transferTxHash,
-                    timeout: 0, // forever  // DURATION_TX_TIMEOUT, // 2 minutes
+                    timeout: 0, // 0 = forever  // DURATION_TX_TIMEOUT, // 2 minutes
                     onReplaced: (transactionData) => {
                       // TODO: debug to remove -> ------------------------
                       console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.onReplaced (hash:${transferTxHash}) transactionData=`)
                       console.dir(transactionData)
                       // TODO: debug to remove <- ------------------------
                       // txResult.hash = transactionData.replacedTransaction.hash
-                      resolve(txResult.hash)
+                      txResult.hash = transactionData.replacedTransaction.hash
+                      txResult.success = true;
+                      resolve(transactionData.replacedTransaction.hash)
                     },
                   }).then( (transactionData) => {
                     // TODO: debug to remove -> ------------------------
-                    console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.THEN (hash:${transferTxHash}) transaction=`)
+                    console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.THEN (SUCCESS) (hash:${transferTxHash}) transaction=`)
                     console.dir(transactionData)
                     // TODO: debug to remove <- ------------------------
                     txResult.hash = transactionData.transactionHash;
@@ -350,6 +359,7 @@ const Step3 = ( {
                       txResult.timeout = true
                     }
                     if (error instanceof TransactionNotFoundError) {
+                      // Not enough gas ?
                       // TODO: debug to remove -> ------------------------
                       console.debug(`Step3.tsx: callTransferToken : TransactionNotFoundError NOT FOUND`)
                       // TODO: debug to remove <- ------------------------
@@ -388,7 +398,7 @@ const Step3 = ( {
                       {`${t("moveTokens.stepThree.transfer.awaitConfirm")} :`}
                     </div>
                     <div>
-                      {`${amountStrings.long} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
+                      {`${displayedAmount} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
                     </div>
                     <div className="italic text-info-content">
                       <Link className="flex justify-end underline" to={getTxUri(txResult.hash)} target="_blank" rel="noopener noreferrer" >
@@ -402,7 +412,7 @@ const Step3 = ( {
                       {`${t("moveTokens.stepThree.transfer.confirmed")} :`}
                     </div>
                     <div>
-                      {`${amountStrings.long} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
+                      {`${displayedAmount} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
                     </div>
                     <div className="text-success-content">
                       <Link className="flex justify-end underline" to={getTxUri(txResult.hash)} target="_blank" rel="noopener noreferrer" >
@@ -417,7 +427,7 @@ const Step3 = ( {
                       {`${t("moveTokens.stepThree.transfer.rejected")} :`}
                     </div>
                     <div>
-                      {`${amountStrings.long} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
+                      {`${displayedAmount} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
                     </div>
                     <div className="text-error-content">
                       <Link className="flex justify-end underline" to={getTxUri(txResult.hash)} target="_blank" rel="noopener noreferrer" >
