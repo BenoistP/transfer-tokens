@@ -375,6 +375,14 @@ interface ITransferAmountLock {
   ) : void;
 }
 
+type TTxResult = {
+  hash: TTxHash,
+  success: boolean,
+  timeout: boolean,
+  notFound: boolean,
+  userSkipped: boolean,
+}
+
 interface ITF_ProgressContainer {
   previousDisabled: boolean;
   nextDisabled: boolean;
@@ -455,13 +463,13 @@ interface IStep3Props {
   chainId: ChainId;
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
-  settokensInstances: TsetTokensInstances,
+  // settokensInstances: TsetTokensInstances,
   setShowProgressBar: TsetShowProgressBar
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
   setmigrationState: TSetMigrationState,
-  updateTokenBalanceOnTransfer: IupdateTokenBalanceOnTransfer,
+  updateTokenOnTransferProcessed: IupdateTokenOnTransferProcessed,
 }
 
 interface IChangeTokensListCheckboxStatus {
@@ -656,7 +664,7 @@ interface iFooterStatus {
   showActivity: boolean;
 }
 
-interface IupdateTokenBalanceOnTransfer {
-  (tokenInstance: TTokenInstance, fromADDRESS: TAddressString, toADDRESS: TAddressString) : void;
+interface IupdateTokenOnTransferProcessed {
+  (tokenInstance: TTokenInstance, fromADDRESS: TAddressNullUndef, toADDRESS: TAddressUndef, updateStateOnly?: boolean, processedState?: ETokenTransferState) : void;
 }
 
