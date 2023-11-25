@@ -145,10 +145,14 @@ const StepsContainer = ( {
 
   // ---
 
+  /**
+   * load address balance for tokenInstance
+   * @param _tokenInstance
+   * @param _address must be checksummed
+   */
   const loadTokenOnChainData_addressBalance = useCallback( async(_tokenInstance:TTokenInstance, _address:TAddressEmptyNullUndef):Promise<bigint|undefined>/* Promise<TTokensInstances> */ =>
     {
       try {
-        
         if (_tokenInstance?.contract) {
           const balance = await (_tokenInstance.contract as GetContractResult).read.balanceOf([_address])
           if (typeof balance == "bigint") {
@@ -166,7 +170,7 @@ const StepsContainer = ( {
   )
 
   // ---
-
+/*
   const updateTokenInstanceOnTransferEvent = useCallback( (_updatedTokenInstance: TTokenInstance) =>
     {
       try {
@@ -215,14 +219,89 @@ console.dir(_updatedTokenInstance.userData)
     },
     [tokensInstances, connectedAddress]
   )
+*/
 
   // ---
 
+  /**
+   * Update tokenInstance with balances
+   * @param _tokenInstanceAddress
+   * @param _updateFromAddress
+   * @param _fromADDRESS
+   * @param _fromAddressBalanceUpdate
+   * @param _updateToAddress
+   * @param _toADDRESS
+   * @param _targetAddressBalanceUpdate
+   * 
+   */
+  const updateTokenInstanceWithBalances = useCallback( (_tokenInstanceAddress: TAddressString, _updateFromAddress: boolean, _fromAddress: TAddressString, _fromAddressBalanceUpdate: TTokenAmount, _updateToAddress: boolean, _toAddress: TAddressString, _targetAddressBalanceUpdate: TTokenAmount) =>
+    {
+      try {
+        if (tokensInstances && tokensInstances.length && _tokenInstanceAddress && (_updateFromAddress||_updateToAddress)) {
+          // Just mutate the array, replacing _updatedTokenInstance and update some values depending on connectedAddress balance
+          const newTokensInstances = tokensInstances.map( (tokenInstance:TTokenInstance) => {
+            if (tokenInstance.address == _tokenInstanceAddress) {
+              const fromADDRESS = _fromAddress?.toUpperCase()
+              const toADDRESS = _toAddress?.toUpperCase()
+                            const connectedADDRESS = connectedAddress?.toUpperCase()
+              // let transferAmount = tokenInstance.transferAmount, transferAmountLock = tokenInstance.transferAmountLock;
+              let {transferAmount, transferAmountLock, selected, selectable, userData} = tokenInstance ;
+              // const connectedAddressUserData = {...tokenInstance.userData[connectedADDRESS as any], balance: _fromAddressBalanceUpdate };
+              // const targetAddressUserData = {...tokenInstance.userData[_targetAddress as any], balance: _targetAddressBalanceUpdate };
+              if (_updateFromAddress) {
+                if (_updateToAddress) {
+                  // Update BOTH
+                  userData = {...userData, [fromADDRESS as any]: {...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate }, [toADDRESS as any]: {...userData[toADDRESS as any], balance: _targetAddressBalanceUpdate } };
+                } else {
+                  // Update only FROM
+                  userData = {...userData, [fromADDRESS as any]: {...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate } };
+                }
+              } else /* if (_updateToAddress) */ {
+                // Update only TO
+                userData = {...userData, [toADDRESS as any]: {...userData[toADDRESS as any], balance: _targetAddressBalanceUpdate } };
+              }
+              if (connectedADDRESS == fromADDRESS && _updateFromAddress && !_fromAddressBalanceUpdate || connectedADDRESS == toADDRESS && _updateToAddress && !_targetAddressBalanceUpdate) {
+                // Connected has NO BALANCE : set as unselectable/unselected, remove transfer amount and lock
+    // TODO: debug to remove -> ------------------------
+    console.debug(`StepsContainer.tsx updateTokenInstanceWithBalances: NO BALANCE for connectedADDRESS=${connectedADDRESS} fromADDRESS=${fromADDRESS} toADDRESS=${toADDRESS} _fromAddressBalanceUpdate=${_fromAddressBalanceUpdate} _targetAddressBalanceUpdate=${_targetAddressBalanceUpdate}`)
+    console.dir(tokenInstance.userData)
+    // TODO: debug to remove <- ------------------------
+                selectable = false;
+                selected = false;
+                transferAmount = 0n;
+                transferAmountLock = false;
+              } // if (connectedADDRESS == fromADDRESS ...
+              const tokenInstanceUpdated = {
+                ...tokenInstance,
+                userData,
+                transferAmount,
+                transferAmountLock,
+                selected, selectable
+              }
+    // TODO: debug to remove -> ------------------------
+              console.debug(`StepsContainer.tsx updateTokenInstanceWithBalances: tokenInstanceUpdated=`)
+              console.dir(tokenInstanceUpdated)
+    // TODO: debug to remove <- ------------------------
+              return tokenInstanceUpdated
+            }
+            return tokenInstance
+          })
+          settokensInstances(newTokensInstances)
+        } // if (tokensInstances && tokensInstances.length && _updatedTokenInstance)
+      } catch (error) {
+        console.error(`StepsContainer.tsx updateTokenInstanceWithBalances error: ${error}`);
+      }
+    },
+    [tokensInstances, connectedAddress]
+  )
+
+  // ---
+/*
   const processTransferEvent = useCallback( async(logs:Log[]) =>
     {
       try {
         if (logs && logs.length) {
-          logs.forEach( async(log:any/* Log&GetInferredLogValues */) => {
+          logs.forEach( async(log:any) => {
             const logADDRESS = log.address.toUpperCase()
             // Find token instance in indexed "array"
             const tokenInstance = tokensInstanceIndex[logADDRESS]
@@ -297,6 +376,112 @@ console.debug(`transfer of "${tokenInstance.name}" (${tokenInstance.address}) fr
       }
     },
     [loadTokenOnChainData_addressBalance, tokensInstanceIndex, updateTokenInstanceOnTransferEvent]
+  ); // processTransferEvent
+*/
+
+  // ---
+
+  /**
+  * Update tokenInstance on transfer
+  * check if from or to address has data and updated balances
+  * @param _tokenInstance
+  * @param _fromAddress
+  * @param _toAddress
+  * 
+  */
+  const updateTokenBalanceOnTransfer = useCallback( async(_tokenInstance: TTokenInstance, _fromAddress: TAddressString, _toAddress: TAddressString) =>
+    {
+      try {
+        const fromADDRESS =  _fromAddress.toUpperCase() as TAddressString;
+        const toADDRESS = _toAddress.toUpperCase() as TAddressString;
+        console.debug(`StepsContainer.tsx updateTokenBalanceOnTransfer _tokenInstance:${_tokenInstance.name} _fromAddress:${_fromAddress} _toAddress:${_toAddress}`)
+        let updateFromAddress = false, updateToAddress = false;
+        let fromAddressBalanceUpdate = 0n, toAddressBalanceUpdate = 0n;
+        // Check if any of our userdata balances has been updated
+        if (_tokenInstance.userData[fromADDRESS as any]) {
+          // Update on FROM
+          const fromAddressBalance = await loadTokenOnChainData_addressBalance(_tokenInstance, _fromAddress);
+          if (fromAddressBalance != undefined) {
+            fromAddressBalanceUpdate = fromAddressBalance
+            updateFromAddress = true;
+          }
+        }
+        if (_tokenInstance.userData[toADDRESS as any]) {
+          // Update on TO
+          const targetAddressBalance = await loadTokenOnChainData_addressBalance(_tokenInstance, _toAddress);
+          if (targetAddressBalance != undefined) {
+            toAddressBalanceUpdate = targetAddressBalance
+            updateToAddress = true;
+          }
+        }
+        console.debug(`StepsContainer.tsx updateTokenBalanceOnTransfer _fromAddress=${_fromAddress} updateFromAddress:${updateFromAddress} fromAddressBalanceUpdate=${fromAddressBalanceUpdate}  _toAddress=${_toAddress} updateToAddress:${updateToAddress} toAddressBalanceUpdate=${toAddressBalanceUpdate}`)
+        if (updateFromAddress||updateToAddress) {
+          updateTokenInstanceWithBalances(_tokenInstance.address, updateFromAddress, _fromAddress, fromAddressBalanceUpdate, updateToAddress, _toAddress, toAddressBalanceUpdate)
+        }
+      } catch (error) {
+        console.error(`StepsContainer.tsx updateTokenBalance error: ${error}`);
+      }
+    },
+    [loadTokenOnChainData_addressBalance, updateTokenInstanceWithBalances]
+  ) // updateTokenBalanceOnTransfer
+
+  // ---
+
+  const showTransfer = useCallback( (_tokenInstance: TTokenInstance, _from: TAddressString, _to: TAddressString, _value: any) =>
+    {
+      try {
+
+        if (_tokenInstance && _from && _to && _value) {
+          const decimals = BigInt(_tokenInstance.decimals)
+          const intValue = ( _value / (10n**decimals) );
+          const decimalValue = _value - intValue * (10n**decimals);
+          let longBalanceString = "0";
+          if (decimalValue > 0) {
+            // exact decimals display
+            const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
+            // const zeroDecimalToFixed = Number("0."+longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+            // const shortDecimalDisplay = zeroDecimalToFixed.substring(2);
+            // const roundUpShortDisplay = (zeroDecimalToFixed.substring(0,2) =="1.")
+            longBalanceString = intValue+"."+longDecimalDisplayPadded;
+          } else {
+            longBalanceString = intValue.toString()+"."+"0".repeat(Number(decimals))
+          }
+          console.debug(`transfer of "${_tokenInstance.name}" (${_tokenInstance.address}) from:${_from} to:${_to} for: ${longBalanceString}`)
+        }
+      } catch (error) {
+        console.error(`StepsContainer.tsx showTransfer error: ${error}`);
+      }
+    },
+    [] // no dependencies
+  ) // showTransfer
+
+  // ---
+
+  const processTransferEvent = useCallback( async(logs:Log[]) =>
+    {
+      try {
+        if (logs && logs.length) {
+          logs.forEach( async(log:any/* Log&GetInferredLogValues */) => {
+            const logADDRESS = log.address.toUpperCase()
+            // Find token instance in indexed "array"
+            const tokenInstance = tokensInstanceIndex[logADDRESS]
+            if (tokenInstance) {
+              if (log.args) {
+                const from = log.args["from"], to = log.args["to"], value = log.args["value"];
+                showTransfer(tokenInstance, from, to, value)
+                if (tokenInstance.userData && from && to && value) {
+                    const fromADDRESS = from.toUpperCase(), toADDRESS = to.toUpperCase();
+                    updateTokenBalanceOnTransfer(tokenInstance, fromADDRESS, toADDRESS)
+                } // if (from && to && value)
+              } // if (log.args)
+            } // if (tokenInstance)
+          }) // logs.forEach
+        } // if (logs && logs.length)
+      } catch (error) {
+        console.error(`StepsContainer.tsx processTransferEvent logs: ${logs} error: ${error}`);
+      }
+    },
+    [tokensInstanceIndex, updateTokenBalanceOnTransfer, showTransfer]
   ); // processTransferEvent
 
   // ---
@@ -2423,6 +2608,7 @@ console.dir(namesErrors2)
               targetAddress={targetAddress}
               tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
               setmigrationState={setmigrationState}
+              updateTokenBalanceOnTransfer={updateTokenBalanceOnTransfer}
             />
           </MainContentContainer>
         </div>

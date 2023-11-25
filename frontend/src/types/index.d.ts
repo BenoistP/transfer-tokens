@@ -460,7 +460,8 @@ interface IStep3Props {
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
-  setmigrationState: TSetMigrationState
+  setmigrationState: TSetMigrationState,
+  updateTokenBalanceOnTransfer: IupdateTokenBalanceOnTransfer,
 }
 
 interface IChangeTokensListCheckboxStatus {
@@ -654,3 +655,8 @@ interface iFooter {
 interface iFooterStatus {
   showActivity: boolean;
 }
+
+interface IupdateTokenBalanceOnTransfer {
+  (tokenInstance: TTokenInstance, fromADDRESS: TAddressString, toADDRESS: TAddressString) : void;
+}
+

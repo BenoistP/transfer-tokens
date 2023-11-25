@@ -37,7 +37,8 @@ const Step3 = ( {
   accountAddress,
   targetAddress,
   tokensInstancesListTablePropsHandlers,
-  setmigrationState
+  setmigrationState,
+  updateTokenBalanceOnTransfer
   }: IStep3Props ) => {
 
   // ---
@@ -472,13 +473,14 @@ const Step3 = ( {
     {
       // let transferTxHash:TTxHash;
       try {
-
-        if (_tokenInstanceToTransfer?.address && _tokenInstanceToTransfer?.transferAmount && _to) {
+        if (_tokenInstanceToTransfer?.address && _tokenInstanceToTransfer?.transferAmount && _to && accountAddress) {
           const txResult  = await callTransferToken( _tokenInstanceToTransfer/* .address */, _to, _tokenInstanceToTransfer.transferAmount)
           if (txResult.success) {
             // processed = Success
             _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.processed;
             migrationState.current.successItemsCount++;
+            // Instant update after transfer, do not wait for event which may not be received
+            updateTokenBalanceOnTransfer(_tokenInstanceToTransfer, accountAddress, _to)
           } else if (txResult.userSkipped) {
             // skipped = User skipped
             _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.skipped;
@@ -503,7 +505,7 @@ const Step3 = ( {
       }
     } // transferToken
     ,
-    [callTransferToken, /* t, getAmountShortString, getTxUri, */ updateProcessedTokenInstance, setmigrationState/* , showTransferToast */]
+    [callTransferToken, /* t, getAmountShortString, getTxUri, */ updateProcessedTokenInstance, setmigrationState/* , showTransferToast */, accountAddress, updateTokenBalanceOnTransfer]
   ) // transferToken
 
   // ---
