@@ -24,6 +24,7 @@ import { EStepsLoadTokensData, EChainTokensListLoadState,
   ESteps, ETokenTransferState } from "@jsconsts/enums"; 
 import { DURATION_LONG,
   FETCHDATA_MULTICALL_MAX_RETRY, FETCHDATA_MULTICALL_SUCCESSSTATUS } from "@App/js/constants/ui/uiConsts";
+import { TOAST_OPACITY_ALPHA } from "@App/js/constants/ui/twDaisyUiStyles";
 // Events
 import { usePublicClient } from 'wagmi'
 import { Log } from "viem";
@@ -109,7 +110,7 @@ const StepsContainer = ( {
             (_toast) => (
               <div className={`block alert alert-warning w-auto p-2 m-0`}
                 style={{
-                  opacity: _toast.visible ? 0.85 : 0,
+                  opacity: _toast.visible ? TOAST_OPACITY_ALPHA : 0,
                   transition: "opacity 100ms ease-in-out",
                   border: '1px solid black',
                 }}

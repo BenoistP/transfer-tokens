@@ -7,7 +7,7 @@ import {
   TOAST_DEFAULT_POSITION,
 } from '@uiconsts/uiConsts'
 // Styles
-import { clsToastIconSize, clsToastPending } from "@uiconsts/twDaisyUiStyles";
+import { TOAST_OPACITY_TW, clsToastIconSize, clsToastPending } from "@uiconsts/twDaisyUiStyles";
 // Icons
 import { /* LinkIcon, */ XCircleIcon } from '@heroicons/react/24/solid'
 
@@ -52,9 +52,9 @@ const CustomToaster = ( ) =>
               className={`transform p-2 m-0 block alert w-auto shadow-lg border border-black border-dotted `+ (_toast.type == "loading" ? "alert-info" : `alert-${_toast.type}` ) }
               enter="transition-all duration-150"
               enterFrom="opacity-0 scale-50"
-              enterTo="opacity-80 scale-100"
+              enterTo={`opacity-${TOAST_OPACITY_TW} scale-100`}
               leave="transition-all duration-150"
-              leaveFrom="opacity-80 scale-100"
+              leaveFrom={`opacity-${TOAST_OPACITY_TW} scale-100`}
               leaveTo="opacity-0 scale-75"
             >
               <div className="grid grid-cols-12 gap-0 m-0 p-0">

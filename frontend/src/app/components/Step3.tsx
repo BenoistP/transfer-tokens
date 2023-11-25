@@ -20,6 +20,7 @@ import { DEFAULT_ETHEREUM_EXPLORER_BASE_URI, DEFAULT_ETHEREUM_EXPLORER_TX_URI,
 import { NULL_ADDRESS } from "@App/js/constants/addresses";
 import { ERC20_DECIMALS_DEFAULT, SHORT_DISPLAY_DECIMAL_COUNT } from "@App/js/constants/ui/misc";
 import { ETHEREUM_CHAIN_ID, GNOSIS_XDAI_CHAIN_ID } from "@App/js/constants/chainIds";
+import { TOAST_OPACITY_ALPHA } from "@App/js/constants/ui/twDaisyUiStyles";
 import { ETokenTransferState } from "@jsconsts/enums"; 
 // Utils
 import { shortenAddress } from "@App/js/utils/blockchainUtils";
@@ -185,7 +186,7 @@ const Step3 = ( {
           (_toast) => (
             <div className={`block alert alert-info w-auto p-2 m-0 border border-black border-dotted`}
               style={{
-                opacity: _toast.visible ? 0.85 : 0,
+                opacity: _toast.visible ? TOAST_OPACITY_ALPHA : 0,
                 transition: "opacity 100ms ease-in-out",
               }}
             >
@@ -333,9 +334,10 @@ const Step3 = ( {
                 try {
                   /* const waitForTransactionData = */ /* await */
                   waitForTransaction({
+
                     confirmations: 1,
                     hash: transferTxHash,
-                    timeout: 0, // 0 = forever  // DURATION_TX_TIMEOUT, // 2 minutes
+                    timeout: 120_000, // 0 = forever  // DURATION_TX_TIMEOUT, // 2 minutes
                     onReplaced: (transactionData) => {
                       // TODO: debug to remove -> ------------------------
                       console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.onReplaced (hash:${transferTxHash}) transactionData=`)

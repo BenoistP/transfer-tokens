@@ -14,6 +14,9 @@ const clsToastIconSize = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'
 
 const clsFlagIcon = "ml-2 flagCircle inline-block mr-2 hover:scale-110"
 
+const TOAST_OPACITY_TW = 90
+const TOAST_OPACITY_ALPHA = TOAST_OPACITY_TW/100
+
 export {
   clsLoadingTokenLists,
   clsLoadingTokensInstancesList,
@@ -21,5 +24,7 @@ export {
   clsToastIconSize,
   clsIconStatusSize,
   clsIconMedium,
-  clsFlagIcon
+  clsFlagIcon,
+  TOAST_OPACITY_TW,
+  TOAST_OPACITY_ALPHA
 }
