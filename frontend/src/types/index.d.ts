@@ -470,6 +470,7 @@ interface IStep3Props {
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
   setmigrationState: TSetMigrationState,
   updateTokenOnTransferProcessed: IupdateTokenOnTransferProcessed,
+  updateTokenInstanceTransferState: IupdateTokenInstanceTransferState,
 }
 
 interface IChangeTokensListCheckboxStatus {
@@ -665,6 +666,12 @@ interface iFooterStatus {
 }
 
 interface IupdateTokenOnTransferProcessed {
-  (tokenInstance: TTokenInstance, fromADDRESS: TAddressNullUndef, toADDRESS: TAddressUndef, updateStateOnly?: boolean, processedState?: ETokenTransferState) : void;
+  ( tokenInstance: TTokenInstance,
+    fromADDRESS: TAddressNullUndef, toADDRESS: TAddressUndef,
+    processedState?: ETokenTransferState
+  ) : void;
 }
 
+interface IupdateTokenInstanceTransferState {
+  (tokenInstanceAddress: TAddressString, processedState: ETokenTransferState) : void;
+}

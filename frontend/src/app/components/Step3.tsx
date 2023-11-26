@@ -39,7 +39,8 @@ const Step3 = ( {
   targetAddress,
   tokensInstancesListTablePropsHandlers,
   setmigrationState,
-  updateTokenOnTransferProcessed
+  updateTokenOnTransferProcessed,
+  updateTokenInstanceTransferState
   }: IStep3Props ) => {
 
   // ---
@@ -457,7 +458,7 @@ const Step3 = ( {
           }
 
           // updateProcessedTokenInstance(_tokenInstanceToTransfer)
-          updateTokenOnTransferProcessed(_tokenInstanceToTransfer, accountAddress, _to, false, state)
+          updateTokenOnTransferProcessed(_tokenInstanceToTransfer, accountAddress, _to, state)
           setmigrationState( {...migrationState.current} )
           // if (txResult.userSkipped) {
           //   // User skipped
@@ -545,7 +546,8 @@ const transferTokens = useCallback( async() =>
               // update token state
               tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.processing
               // updateProcessedTokenInstance(tokenInstanceToTransfer)
-              updateTokenOnTransferProcessed(tokenInstanceToTransfer, "0x", "0x", true, ETokenTransferState.processing)
+              // updateTokenOnTransferProcessed(tokenInstanceToTransfer, "0x", "0x", true, ETokenTransferState.processing)
+              updateTokenInstanceTransferState(tokenInstanceToTransfer.address, ETokenTransferState.processing)
               await transferToken( tokenInstanceToTransfer, targetAddress )
               currentlyProcessing.current = false // unlock
             }
@@ -567,7 +569,7 @@ const transferTokens = useCallback( async() =>
       console.error(`Steps3.tsx transferTokenS error: ${error}`);
     }
   },
-  [tokensInstancesToMigrate, setmigrationState, transferToken, targetAddress, /* updateProcessedTokenInstance */ updateTokenOnTransferProcessed]
+  [tokensInstancesToMigrate, setmigrationState, transferToken, targetAddress, /* updateProcessedTokenInstance */ /* updateTokenOnTransferProcessed */updateTokenInstanceTransferState]
   ) // transferTokens
 
 
