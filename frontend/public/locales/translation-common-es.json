@@ -126,8 +126,11 @@
         "transfer": {
           "skipped": "Saltado",
           "error": "Fallido",
+          "errorReason": "Causa",
+          "errorReasonUnknown": "desconocida",
+          "gasTooLowSuggest": "¿Costes de transacción demasiado bajos?",
           "success": "Enviado",
-          "successTo": "a",
+          "to": "a",
           "txHash": "Transacción",
           "awaitConfirm": "Awaiting confirmation",
           "confirmed": "Confirmed",

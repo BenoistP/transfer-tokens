@@ -246,7 +246,7 @@ const Step3 = ( {
   //       {`${t("moveTokens.stepThree.transfer.confirmed")} :`}
   //     </div>
   //     <div>
-  //       {`${getAmountShortString(tokenInstanceToTransfer.transferAmount, tokenInstanceToTransfer.decimals)} ${tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(destinationAddress)}`}
+  //       {`${getAmountShortString(tokenInstanceToTransfer.transferAmount, tokenInstanceToTransfer.decimals)} ${tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.to")} ${shortenAddress(destinationAddress)}`}
   //     </div>
   //     <div className="text-success-content">
   //       <Link className="flex justify-end underline" to={getTxUri(transferTxHash)} target="_blank" rel="noopener noreferrer" >
@@ -260,80 +260,56 @@ const Step3 = ( {
 
   // ---
 
-  const getWaitForTransactionPromise = (_transferTxHash: TTxHash, _txResult: TTxResult) => {
+  const getWaitForTransactionPromise = (_transferTxHash: TTxHash, _txResult: TTxResult):Promise<TTxResult> => {
     return new Promise( (resolve, reject) =>
     {
-      try {
-        waitForTransaction({
-          confirmations: 1,
-          hash: _transferTxHash,
-          timeout: DURATION_TX_TIMEOUT, // 0 = forever  // DURATION_TX_TIMEOUT, // 2 minutes
-          onReplaced: (transactionData) => {
-            // TODO: debug to remove -> ------------------------
-            console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.onReplaced (hash:${_transferTxHash}) transactionData=`)
-            console.dir(transactionData)
-            // TODO: debug to remove <- ------------------------
-            // _txResult.hash = transactionData.replacedTransaction.hash
-            _txResult.hash = transactionData.replacedTransaction.hash
-            _txResult.success = true;
-            resolve(_transferTxHash)
-          },
-        }).then( (transactionData) => {
-          // TODO: debug to remove -> ------------------------
-          console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.THEN (SUCCESS) (hash:${_transferTxHash}) transaction=`)
-          console.dir(transactionData)
-          // TODO: debug to remove <- ------------------------
-          _txResult.hash = transactionData.transactionHash;
-          _txResult.success = true;
-          resolve(_transferTxHash)
-        }).catch( (error) => {
-          if (error instanceof WaitForTransactionReceiptTimeoutError) {
-            console.debug(`Step3.tsx: callTransferToken : WaitForTransactionReceiptTimeoutError TIMEOUT`)
-            _txResult.timeout = true
-          }
-          if (error instanceof TransactionNotFoundError) {
-            // Not enough gas ?
-            // TODO: debug to remove -> ------------------------
-            console.debug(`Step3.tsx: callTransferToken : TransactionNotFoundError NOT FOUND`)
-            // TODO: debug to remove <- ------------------------
-            // TODO : add error message
-            _txResult.notFound = true
-            _txResult.errorMessage = error.message
-            reject(_txResult)
-          }
-          if (error instanceof TransactionExecutionError) {
-            // Reverted ?
-            // TODO: debug to remove -> ------------------------
-            console.debug(`Step3.tsx: callTransferToken : TransactionExecutionError NOT FOUND`)
-            // TODO: debug to remove <- ------------------------
-            // TODO : add error message
-            _txResult.error = true
-            _txResult.errorMessage = error.message
-            reject(_txResult)
-          }
-          else  {
-            console.debug(`Step3.tsx: callTransferToken : error:${error}`)
-            console.dir(error)
-            _txResult.errorMessage = error.message
-            reject(_txResult)
-          }
-        })
-        // TODO: debug to remove -> ------------------------
-        // console.debug(`Step3.tsx: callTransferToken : hash:${waitForTransactionData} waitForTransactionData=`)
-        // console.dir(waitForTransactionData);
-        // console.debug(`Step3.tsx: callTransferToken : hash:${_transferTxHash} _txResult.hash: ${_txResult.hash}`)
-        // TODO: debug to remove <- ------------------------
-
-      } catch (error) {
-        // if (error instanceof WaitForTransactionReceiptTimeoutError) {
-        //   console.debug(`Step3.tsx: callTransferToken : WaitForTransactionReceiptTimeoutError`)
-        //   _txResult.timeout = true
-        // } else {
-          console.debug(`Step3.tsx: callTransferToken : error:`)
-          console.dir(error)
-          /* re */ throw error
-        // }
+      waitForTransaction({
+        confirmations: 1,
+        hash: _transferTxHash,
+        timeout: DURATION_TX_TIMEOUT, // 0 = forever
       }
+      ).then( (transactionData) => {
+        // TODO: debug to remove -> ------------------------
+        // console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.THEN (SUCCESS) (hash:${_transferTxHash}) transaction=`)
+        console.dir(transactionData)
+        // TODO: debug to remove <- ------------------------
+        _txResult.hash = transactionData.transactionHash;
+        _txResult.success = true;
+        resolve(_txResult)
+      }).catch( (error) => {
+        if (error instanceof WaitForTransactionReceiptTimeoutError) {
+          // console.debug(`Step3.tsx: callTransferToken : WaitForTransactionReceiptTimeoutError TIMEOUT`)
+          _txResult.timeout = true
+        }
+        if (error instanceof TransactionNotFoundError) {
+          // Not enough gas ?
+          // TODO: debug to remove -> ------------------------
+          // console.debug(`Step3.tsx: callTransferToken : TransactionNotFoundError NOT FOUND`)
+          // TODO: debug to remove <- ------------------------
+          // TODO : add error message
+          _txResult.notFound = true
+          _txResult.errorMessage = error.message
+          reject(_txResult)
+        }
+        if (error instanceof TransactionExecutionError) {
+          // Reverted ?
+          // TODO: debug to remove -> ------------------------
+          // console.debug(`Step3.tsx: callTransferToken : TransactionExecutionError NOT FOUND`)
+          // TODO: debug to remove <- ------------------------
+          // TODO : add error message
+          _txResult.error = true
+          _txResult.errorMessage = error.message
+          reject(_txResult)
+        }
+        else  {
+          // TODO: debug to remove -> ------------------------
+          // console.debug(`Step3.tsx: callTransferToken : error:${error}`)
+          // console.dir(error)
+          // TODO: debug to remove <- ------------------------
+          _txResult.errorMessage = error.message
+          reject(_txResult)
+        }
+      })
     }) // Promise
   } // getWaitForTransactionPromise
   // ---
@@ -372,21 +348,21 @@ const Step3 = ( {
                       {`${t("moveTokens.stepThree.transfer.awaitConfirm")} :`}
                     </div>
                     <div>
-                      {`${displayedAmount} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
+                      {`${displayedAmount} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.to")} ${shortenAddress(_destinationAddress)}`}
                     </div>
                     <div className="italic text-info-content">
-                      <Link className="flex justify-end underline" to={getTxUri(txResult.hash)} target="_blank" rel="noopener noreferrer" >
+                      <Link className="flex justify-end underline" to={getTxUri(transferTxHash)} target="_blank" rel="noopener noreferrer" >
                         {t("moveTokens.stepThree.transfer.txHash")}<LinkIcon className="pl-1 w-2 h-2 sm:w-3 sm:h-3 md:w-4 md:h-4 fill-current" />
                       </Link>
                     </div>
                   </div>,
-                success:
+                success: (txResult:TTxResult) =>
                   <div>
                     <div className="font-medium">
                       {`${t("moveTokens.stepThree.transfer.confirmed")} :`}
                     </div>
                     <div>
-                      {`${displayedAmount} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
+                      {`${displayedAmount} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.to")} ${shortenAddress(_destinationAddress)}`}
                     </div>
                     <div className="text-success-content">
                       <Link className="flex justify-end underline" to={getTxUri(txResult.hash)} target="_blank" rel="noopener noreferrer" >
@@ -395,13 +371,18 @@ const Step3 = ( {
 
                     </div>
                   </div>,
-                error:
+                error:  (txResult:TTxResult) =>
                   <div>
                     <div className="font-medium">
                       {`${t("moveTokens.stepThree.transfer.rejected")} :`}
                     </div>
                     <div>
-                      {`${displayedAmount} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.successTo")} ${shortenAddress(_destinationAddress)}`}
+                      {`${displayedAmount} ${_tokenInstanceToTransfer.name} ${t("moveTokens.stepThree.transfer.to")} ${shortenAddress(_destinationAddress)}`}
+                    </div>
+                    <div>
+                      {`${t("moveTokens.stepThree.transfer.errorReason")}: ${(txResult.errorMessage?txResult.errorMessage:"moveTokens.stepThree.transfer.errorReasonUnknown")}`}
+                      {txResult.notFound && <div>{t("moveTokens.stepThree.transfer.gasTooLowSuggest")}</div>}
+
                     </div>
                     <div className="text-error-content">
                       <Link className="flex justify-end underline" to={getTxUri(txResult.hash)} target="_blank" rel="noopener noreferrer" >

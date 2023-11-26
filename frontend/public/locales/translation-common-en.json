@@ -129,8 +129,11 @@
       "transfer": {
         "skipped": "Skipped",
         "error": "Failed",
+        "errorReason": "Origin",
+        "errorReasonUnknown": "unavailable",
+        "gasTooLowSuggest": "Gas too low ?",
         "success": "Sent",
-        "successTo": "to",
+        "to": "to",
         "txHash": "Tx",
         "awaitConfirm": "Awaiting confirmation",
         "confirmed": "Confirmed",

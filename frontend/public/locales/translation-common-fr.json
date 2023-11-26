@@ -129,8 +129,11 @@
       "transfer": {
         "skipped": "Omis",
         "error": "Echec",
+        "errorReason": "Cause",
+        "errorReasonUnknown": "inconnue",
+        "gasTooLowSuggest": "Frais de transaction trop bas ?",
         "success": "Envoi de",
-        "successTo": "à",
+        "to": "à",
         "txHash": "Transaction",
         "awaitConfirm": "En attente de confirmation",
         "confirmed": "Confirmée",
