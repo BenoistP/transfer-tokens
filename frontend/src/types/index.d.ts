@@ -54,7 +54,8 @@ type TAddressEmptyNullUndef = TAddressNullUndef | "" ;
 // type TAddressNull = TAddressString | null ;
 type TAddressUndef = TAddressString | undefined ;
 
-type TTxHash = TAddressNullUndef;
+// type TTxHash = TAddressNullUndef;
+type TTxHash = TAddressString;
 
 type TTokenContractAddress = TAddressString;
 type TTokenContractAddressNullUndef = TTokenContractAddress | TNullUndef ;
@@ -379,7 +380,9 @@ type TTxResult = {
   hash: TTxHash,
   success: boolean,
   timeout: boolean,
+  error: boolean,
   notFound: boolean,
+  errorMessage: string,
   userSkipped: boolean,
 }
 

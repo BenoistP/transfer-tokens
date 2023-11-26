@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationListTable"
 // Transactions & ABIs
 import { erc20ABI, prepareWriteContract, writeContract, waitForTransaction } from '@wagmi/core'
-import { WaitForTransactionReceiptTimeoutError, TransactionNotFoundError } from 'viem';
+import {  WaitForTransactionReceiptTimeoutError, TransactionNotFoundError,
+          TransactionExecutionError } from 'viem';
 // Translation
 import { useTranslation } from "react-i18next";
  // Toasts
@@ -14,7 +15,7 @@ import { Link } from "react-router-dom";
 // Consts & Enums
 import { DEFAULT_ETHEREUM_EXPLORER_BASE_URI, DEFAULT_ETHEREUM_EXPLORER_TX_URI,
   DEFAULT_GNOSIS_EXPLORER_BASE_URI, DEFAULT_GNOSIS_EXPLORER_TX_URI,
-  DURATION_LONG, DURATION_MEDIUM, // DURATION_TX_TIMEOUT,
+  DURATION_LONG, DURATION_MEDIUM, DURATION_TX_TIMEOUT,
   USER_REJECT_TX_REGEXP
 } from "@App/js/constants/ui/uiConsts";
 import { NULL_ADDRESS } from "@App/js/constants/addresses";
@@ -259,9 +260,87 @@ const Step3 = ( {
 
   // ---
 
+  const getWaitForTransactionPromise = (_transferTxHash: TTxHash, _txResult: TTxResult) => {
+    return new Promise( (resolve, reject) =>
+    {
+      try {
+        waitForTransaction({
+          confirmations: 1,
+          hash: _transferTxHash,
+          timeout: DURATION_TX_TIMEOUT, // 0 = forever  // DURATION_TX_TIMEOUT, // 2 minutes
+          onReplaced: (transactionData) => {
+            // TODO: debug to remove -> ------------------------
+            console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.onReplaced (hash:${_transferTxHash}) transactionData=`)
+            console.dir(transactionData)
+            // TODO: debug to remove <- ------------------------
+            // _txResult.hash = transactionData.replacedTransaction.hash
+            _txResult.hash = transactionData.replacedTransaction.hash
+            _txResult.success = true;
+            resolve(_transferTxHash)
+          },
+        }).then( (transactionData) => {
+          // TODO: debug to remove -> ------------------------
+          console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.THEN (SUCCESS) (hash:${_transferTxHash}) transaction=`)
+          console.dir(transactionData)
+          // TODO: debug to remove <- ------------------------
+          _txResult.hash = transactionData.transactionHash;
+          _txResult.success = true;
+          resolve(_transferTxHash)
+        }).catch( (error) => {
+          if (error instanceof WaitForTransactionReceiptTimeoutError) {
+            console.debug(`Step3.tsx: callTransferToken : WaitForTransactionReceiptTimeoutError TIMEOUT`)
+            _txResult.timeout = true
+          }
+          if (error instanceof TransactionNotFoundError) {
+            // Not enough gas ?
+            // TODO: debug to remove -> ------------------------
+            console.debug(`Step3.tsx: callTransferToken : TransactionNotFoundError NOT FOUND`)
+            // TODO: debug to remove <- ------------------------
+            // TODO : add error message
+            _txResult.notFound = true
+            _txResult.errorMessage = error.message
+            reject(_txResult)
+          }
+          if (error instanceof TransactionExecutionError) {
+            // Reverted ?
+            // TODO: debug to remove -> ------------------------
+            console.debug(`Step3.tsx: callTransferToken : TransactionExecutionError NOT FOUND`)
+            // TODO: debug to remove <- ------------------------
+            // TODO : add error message
+            _txResult.error = true
+            _txResult.errorMessage = error.message
+            reject(_txResult)
+          }
+          else  {
+            console.debug(`Step3.tsx: callTransferToken : error:${error}`)
+            console.dir(error)
+            _txResult.errorMessage = error.message
+            reject(_txResult)
+          }
+        })
+        // TODO: debug to remove -> ------------------------
+        // console.debug(`Step3.tsx: callTransferToken : hash:${waitForTransactionData} waitForTransactionData=`)
+        // console.dir(waitForTransactionData);
+        // console.debug(`Step3.tsx: callTransferToken : hash:${_transferTxHash} _txResult.hash: ${_txResult.hash}`)
+        // TODO: debug to remove <- ------------------------
+
+      } catch (error) {
+        // if (error instanceof WaitForTransactionReceiptTimeoutError) {
+        //   console.debug(`Step3.tsx: callTransferToken : WaitForTransactionReceiptTimeoutError`)
+        //   _txResult.timeout = true
+        // } else {
+          console.debug(`Step3.tsx: callTransferToken : error:`)
+          console.dir(error)
+          /* re */ throw error
+        // }
+      }
+    }) // Promise
+  } // getWaitForTransactionPromise
+  // ---
+
   const callTransferToken = useCallback( async ( /* _tokenAddress:TAddressString, */_tokenInstanceToTransfer:TTokenInstance, _destinationAddress: TAddressString, _amount: TTokenAmount ) : Promise<TTxResult> =>
     {
-      const txResult:TTxResult = {hash: NULL_ADDRESS, success: false, timeout: false, notFound: false, userSkipped: false} 
+      const txResult:TTxResult = {hash: NULL_ADDRESS, success: false, timeout: false, error: false, notFound: false, errorMessage: "", userSkipped: false} 
       try {
         if (_tokenInstanceToTransfer && _destinationAddress) {
           // Transfer
@@ -280,80 +359,12 @@ const Step3 = ( {
           const amountStrings = getAmountStrings(_amount, _tokenInstanceToTransfer.decimals)
           const displayedAmount = (amountStrings.shortDisplayIsZero ? amountStrings.long : amountStrings.short)
           // // TODO: debug to remove -> ------------------------
-          // console.debug(`Step3.tsx: callTransferToken : transferTxHash:${transferTxHash} transferRequestResult=`)
-          // console.dir(transferRequestResult);
           console.debug(`Step3.tsx: callTransferToken : transferTxHash:${transferTxHash}`)
           // // TODO: debug to remove <- ------------------------
           if (transferTxHash) {
             txResult.hash = transferTxHash
-            // txResult = await waitForTransferToast(_tokenInstanceToTransfer, hash, _destinationAddress, DURATION_TX_TIMEOUT )
             await toast.promise(
-              // ------------
-              new Promise( /* async */ (resolve, reject) =>
-              {
-                try {
-                  /* const waitForTransactionData = */ /* await */
-                  waitForTransaction({
-
-                    confirmations: 1,
-                    hash: transferTxHash,
-                    timeout: 120_000, // 0 = forever  // DURATION_TX_TIMEOUT, // 2 minutes
-                    onReplaced: (transactionData) => {
-                      // TODO: debug to remove -> ------------------------
-                      console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.onReplaced (hash:${transferTxHash}) transactionData=`)
-                      console.dir(transactionData)
-                      // TODO: debug to remove <- ------------------------
-                      // txResult.hash = transactionData.replacedTransaction.hash
-                      txResult.hash = transactionData.replacedTransaction.hash
-                      txResult.success = true;
-                      resolve(transactionData.replacedTransaction.hash)
-                    },
-                  }).then( (transactionData) => {
-                    // TODO: debug to remove -> ------------------------
-                    console.debug(`Step3.tsx: callTransferToken : waitForTransactionData.THEN (SUCCESS) (hash:${transferTxHash}) transaction=`)
-                    console.dir(transactionData)
-                    // TODO: debug to remove <- ------------------------
-                    txResult.hash = transactionData.transactionHash;
-                    txResult.success = true;
-                    resolve(transactionData.transactionHash)
-                  }).catch( (error) => {
-                    if (error instanceof WaitForTransactionReceiptTimeoutError) {
-                      console.debug(`Step3.tsx: callTransferToken : WaitForTransactionReceiptTimeoutError TIMEOUT`)
-                      txResult.timeout = true
-                    }
-                    if (error instanceof TransactionNotFoundError) {
-                      // Not enough gas ?
-                      // TODO: debug to remove -> ------------------------
-                      console.debug(`Step3.tsx: callTransferToken : TransactionNotFoundError NOT FOUND`)
-                      // TODO: debug to remove <- ------------------------
-                      // TODO : add error message
-                      txResult.notFound = true
-                      reject(error)
-                    }
-                    else  {
-                      console.debug(`Step3.tsx: callTransferToken : error:${error}`)
-                      console.dir(error)
-                      reject(error)
-                    }
-                  })
-                  // TODO: debug to remove -> ------------------------
-                  // console.debug(`Step3.tsx: callTransferToken : hash:${waitForTransactionData} waitForTransactionData=`)
-                  // console.dir(waitForTransactionData);
-                  // console.debug(`Step3.tsx: callTransferToken : hash:${transferTxHash} txResult.hash: ${txResult.hash}`)
-                  // TODO: debug to remove <- ------------------------
-
-                } catch (error) {
-                  // if (error instanceof WaitForTransactionReceiptTimeoutError) {
-                  //   console.debug(`Step3.tsx: callTransferToken : WaitForTransactionReceiptTimeoutError`)
-                  //   txResult.timeout = true
-                  // } else {
-                    console.debug(`Step3.tsx: callTransferToken : error:`)
-                    console.dir(error)
-                    /* re */ throw error
-                  // }
-                }
-              }), // Promise
-              // -----------------
+              getWaitForTransactionPromise(transferTxHash, txResult),
               { // toasts
                 loading:
                   <div>
@@ -451,7 +462,7 @@ const Step3 = ( {
             state = ETokenTransferState.skipped;
             migrationState.current.skippedItemsCount++;
           } else {
-            // timeout our notFound or error
+            // timeout or notFound or error
             // _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.error;
             state = ETokenTransferState.error;
             migrationState.current.errorItemsCount++;
