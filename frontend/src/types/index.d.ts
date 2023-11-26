@@ -51,10 +51,7 @@ type TAddressString = `0x${string}` ;
 type TAddressNullUndef = TAddressString | TNullUndef ;
 type TAddressEmpty = TAddressString | "" ;
 type TAddressEmptyNullUndef = TAddressNullUndef | "" ;
-// type TAddressNull = TAddressString | null ;
 type TAddressUndef = TAddressString | undefined ;
-
-// type TTxHash = TAddressNullUndef;
 type TTxHash = TAddressString;
 
 type TTokenContractAddress = TAddressString;
@@ -182,9 +179,7 @@ type TTokensList = {
   source?: TStringNullUndef, // Coingecko, RealT
   keywords?: TTokensListKeywords, // [ "default", "list", "cowswap" ]
   type: TTokensListType,
-  // tokenCount?: TtokenCount,
   tokensCount?: TtokenCount,
-  // chains: TTokensListChainIds,
   chains: TChainIdArray,
   URI: TTokenListUri,
   summaryURI?: TTokenListUri,
@@ -297,15 +292,6 @@ type TTokensInstances = TTokenInstance[]|TNullUndef;
 type TDisplayId = number
 type TSelectId = string
 
-// type TTokenTransferState = {
-//   // processing: boolean, -> ETransferState.processing
-
-//   // processed: boolean,
-//   // error: boolean,
-//   // skipped: boolean,
-//   // transfer: ETransferState
-// }
-
 type TTokenTransferState = {
   processing: boolean,
   transfer: ETokenTransferState
@@ -330,24 +316,13 @@ type TTokenInstance = {
   transferAmount: TTokenAmount;
   transferAmountLock: boolean;
 
-  // Todo : merge theses 3 fields into one state
-  // tr_processed: boolean;
-  // tr_error: boolean;
-  // tr_skipped: boolean;
-
-  // processing: boolean;
-  // transferState: TTokenTransferState;
-  // processing: boolean;
-
-  // transferState: ETokenTransferState;
-
   transferState: TTokenTransferState;
 
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x... IN UPPERCASE)
 }
 
 type TTokenInstanceUserData = {
-  balance: TTokenAmount | null// | undefined;
+  balance: TTokenAmount | null
   canTransfer: boolean;
 }
 
@@ -379,11 +354,11 @@ interface ITransferAmountLock {
 type TTxResult = {
   hash: TTxHash,
   success: boolean,
+  notFound: boolean,
   timeout: boolean,
   error: boolean,
-  notFound: boolean,
-  errorMessage: string,
   userSkipped: boolean,
+  errorMessage: string,
 }
 
 interface ITF_ProgressContainer {
@@ -466,7 +441,6 @@ interface IStep3Props {
   chainId: ChainId;
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
-  // settokensInstances: TsetTokensInstances,
   setShowProgressBar: TsetShowProgressBar
   accountAddress: TAddressNullUndef,
   targetAddress: TAddressEmpty,
@@ -670,11 +644,19 @@ interface iFooterStatus {
 
 interface IupdateTokenOnTransferProcessed {
   ( tokenInstance: TTokenInstance,
-    fromADDRESS: TAddressNullUndef, toADDRESS: TAddressUndef,
-    processedState?: ETokenTransferState
+    fromADDRESS: TAddressNullUndef,
+    toADDRESS: TAddressUndef,
+    delay?:number,
+    processedState?: ETokenTransferState,
   ) : void;
 }
 
 interface IupdateTokenInstanceTransferState {
   (tokenInstanceAddress: TAddressString, processedState: ETokenTransferState) : void;
+}
+
+type TTokensAmountStrings = {
+  long: string,
+  short: string,
+  shortDisplayIsZero: boolean // true if short does not contain sufficient decimals to display any value
 }

@@ -50,8 +50,8 @@ const StepsContainer = ( {
 
 // ------------------------------
 
-  const { t } = useTranslation()
-  const { address: connectedAddress, /* status, isConnected ,  isConnecting,  isDisconnected*/ } = useAccount()
+  const {t} = useTranslation()
+  const {address: connectedAddress} = useAccount()
   const { moveTokensAppData: { step = -1 }, moveTokensAppDataHandlers: { resetToInitialStep } } = useMoveTokensAppContext()
 
   const [selectableTokensLists, setselectableTokensLists] = useState<TSelectableTokensLists>(null)
@@ -103,7 +103,8 @@ const StepsContainer = ( {
 
   // ---
 
-  const showWarning = useCallback( async ( _message:string ) : Promise<void> =>
+  const showWarningToast = useCallback(
+    async ( _message:string ) : Promise<void> =>
     {
       try {
           toast.custom(
@@ -119,14 +120,12 @@ const StepsContainer = ( {
                   <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
                   <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t(_message)}`}</div>
                 </div>
-        
               </div>
             ),
             { duration: DURATION_LONG }
-          ) // toast.custom
-
+          )
       } catch (error) {
-          console.error(`StepsContainer.tsx: showWarning error: ${error}`)
+          console.error(`StepsContainer.tsx: showWarningToast error: ${error}`)
       }
     },
     [t] 
@@ -138,20 +137,19 @@ const StepsContainer = ( {
       watchWarningReportCount.current++
       console.warn(`StepsContainer.tsx reportWatchError error: ${error}`)
       if (watchWarningReportCount.current < WATCH_MAX_WARNING_COUNT) {
-        showWarning("moveTokens.warnings.watchTransfers")
+        showWarningToast("moveTokens.warnings.watchTransfers")
       }
     },
-    [showWarning]
+    [showWarningToast]
   )
-
-  // ---
 
   /**
    * load address balance for tokenInstance
    * @param _tokenInstance
    * @param _address must be checksummed
    */
-  const getTokenOnChainData_addressBalance = useCallback( async(_tokenInstance:TTokenInstance, _address:TAddressEmptyNullUndef):Promise<bigint|undefined>/* Promise<TTokensInstances> */ =>
+  const getTokenOnChainData_addressBalance = useCallback(
+    async(_tokenInstance:TTokenInstance, _address:TAddressEmptyNullUndef):Promise<bigint|undefined> =>
     {
       try {
         if (_tokenInstance?.contract) {
@@ -159,18 +157,14 @@ const StepsContainer = ( {
           if (typeof balance == "bigint") {
             return balance as bigint
           }
-        } // if (tokenInstance?.contract)
+        }
       } catch (error) {
         console.error(`StepsContainer.tsx getTokenOnChainData_addressBalance error: ${error}`);
       }
       return undefined
     },
-    [
-      // publicClient
-    ]
+    []
   ) // getTokenOnChainData_addressBalance
-
-  // ---
 
   /**
    * Update tokenInstance with balances
@@ -263,8 +257,6 @@ const StepsContainer = ( {
     [tokensInstances, connectedAddress]
   ) // updateTokenInstanceBalancesAndTransferState
 
-  // ---
-
   /**
    * Update tokenInstance with balances
    * @param _tokenInstanceAddress
@@ -276,13 +268,12 @@ const StepsContainer = ( {
    * @param _targetAddressBalanceUpdate
    * @param _processedState optionnal ETokenTransferState when called from transfer
    */
-
   const updateTokenInstanceTransferState = useCallback(
     ( _tokenInstanceAddress: TAddressString, _processedState: ETokenTransferState) =>
     {
       try {
         if (tokensInstances && tokensInstances.length && _processedState) {
-          // Just mutate the array, replacing _tokenInstanceAddress and update some values depending on connectedAddress balance
+          // Just mutate the array, replacing _tokenInstanceAddress and update some values depending on _processedState
           const newTokensInstances = tokensInstances.map( (tokenInstance:TTokenInstance) => {
             if (tokenInstance.address == _tokenInstanceAddress) {
               const {transferState} = tokenInstance;
@@ -304,16 +295,12 @@ const StepsContainer = ( {
                 selected,
                 transferState
               }
-    // TODO: debug to remove -> ------------------------
-              console.debug(`StepsContainer.tsx updateTokenInstanceTransferState: tokenInstanceUpdated=`)
-              console.dir(tokenInstanceUpdated)
-    // TODO: debug to remove <- ------------------------
               return tokenInstanceUpdated
             }
             return tokenInstance
           })
           settokensInstances(newTokensInstances)
-        } // if (tokensInstances && tokensInstances.length && _processedState)
+        }
       } catch (error) {
         console.error(`StepsContainer.tsx updateTokenInstanceTransferState error: ${error}`);
       }
@@ -321,23 +308,26 @@ const StepsContainer = ( {
     [tokensInstances]
   )
 
-  // ---
-
   /**
   * Update tokenInstance on transfer
   * check if from or to address has data and updated balances
   * @param _tokenInstance
   * @param _fromAddress
   * @param _toAddress
+  * @param _processedState optionnal ETokenTransferState when called from transfer
+  * 
   * 
   */
   const updateTokenOnTransferProcessed = useCallback( 
     async(  _tokenInstance: TTokenInstance,
             _fromAddress: TAddressNullUndef, _toAddress: TAddressNullUndef,
-            _processedState?: ETokenTransferState ) =>
+            _delay?:number, _processedState?: ETokenTransferState ) =>
     {
       try {
         if (_fromAddress && _toAddress) {
+          if (_delay) {
+            await new Promise(r => setTimeout(r, _delay));
+          }
           console.debug(`StepsContainer.tsx updateTokenOnTransferProcessed _tokenInstance:${_tokenInstance.name} _fromAddress:${_fromAddress} _toAddress:${_toAddress}`)
           const fromADDRESS =  _fromAddress.toUpperCase() as TAddressString;
           const toADDRESS = _toAddress.toUpperCase() as TAddressString;
@@ -388,9 +378,6 @@ const StepsContainer = ( {
           if (decimalValue > 0) {
             // exact decimals display
             const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
-            // const zeroDecimalToFixed = Number("0."+longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
-            // const shortDecimalDisplay = zeroDecimalToFixed.substring(2);
-            // const roundUpShortDisplay = (zeroDecimalToFixed.substring(0,2) =="1.")
             longBalanceString = intValue+"."+longDecimalDisplayPadded;
           } else {
             longBalanceString = intValue.toString()+"."+"0".repeat(Number(decimals))
@@ -410,7 +397,7 @@ const StepsContainer = ( {
     {
       try {
         if (logs && logs.length) {
-          logs.forEach( async(log:any/* Log&GetInferredLogValues */) => {
+          logs.forEach( async(log:any) => {
             const logADDRESS = log.address.toUpperCase()
             // Find token instance in indexed "array"
             const tokenInstance = tokensInstanceIndex[logADDRESS]
@@ -419,8 +406,6 @@ const StepsContainer = ( {
                 const from = log.args["from"], to = log.args["to"], value = log.args["value"];
                 showTransfer(tokenInstance, from, to, value)
                 if (tokenInstance.userData && from && to && value) {
-                    // const fromADDRESS = from.toUpperCase(), toADDRESS = to.toUpperCase();
-                    // updateTokenOnTransferProcessed(tokenInstance, fromADDRESS, toADDRESS)
                     updateTokenOnTransferProcessed(tokenInstance, from, to)
                 } // if (from && to && value)
               } // if (log.args)
@@ -1200,7 +1185,7 @@ console.debug(`StepsContainer.tsx fetchOnChainData: multicallResults old "${mult
             }
             if (retryFetchCount>=2 && !fetchDataIssuesWarnShown.current) {
               fetchDataIssuesWarnShown.current = true;
-              showWarning("moveTokens.warnings.fetchData")
+              showWarningToast("moveTokens.warnings.fetchData")
             }
             retryFetchCount++;
             // Search again for error(s) after merge
@@ -1237,7 +1222,7 @@ console.debug(`StepsContainer.tsx fetchOnChainData: retryFetchCount=${retryFetch
       } // catch (error)
       return multicallResults;
     },
-    [getOnChainData, /* setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances, */ MAXBATCHSIZE, showWarning]
+    [getOnChainData, /* setStateLoadingTokensInstances, setStateErrorLoadingTokensInstances, */ MAXBATCHSIZE, showWarningToast]
   ); // fetchOnChainData
 
   // ---
@@ -2552,7 +2537,6 @@ console.dir(namesErrors2)
               chainId={chainId}
               setNextDisabled={setNextDisabled}
               tokensInstances={tokensInstances}
-              // settokensInstances={settokensInstances}
               setShowProgressBar={setShowProgressBar}
               accountAddress={connectedAddress}
               targetAddress={targetAddress}
