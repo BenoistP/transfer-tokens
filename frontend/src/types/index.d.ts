@@ -285,7 +285,7 @@ type TsetTokensInstances = React.Dispatch<React.SetStateAction<TTokensInstances>
 type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressEmpty>>
 
 
-type TTokenLoadStatus = number;
+// type TTokenLoadStatus = number;
 
 type TTokensInstances = TTokenInstance[]|TNullUndef;
 
@@ -306,7 +306,7 @@ type TTokenInstance = {
   name: TTokenName;
   symbol: TTokenSymbol;
 
-  status: TTokenLoadStatus;
+  // status: TTokenLoadStatus;
   displayed: boolean;
   displayId: TDisplayId;
   selectID: TSelectId;
