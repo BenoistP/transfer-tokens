@@ -320,7 +320,7 @@ export default function StepsContainer (
           } else {
             longBalanceString = intValue.toString()+"."+"0".repeat(Number(decimals))
           }
-          console.info(`transfer of "${_tokenInstance.name}" (${_tokenInstance.address}) from:${_from} to:${_to} for: ${longBalanceString}`)
+          console.info(`> transfer of "${_tokenInstance.name}" (${_tokenInstance.address}) from:${_from} to:${_to} for: ${longBalanceString}`)
         }
       } catch (error) {
         console.error(`showTransfer error: ${error}`);

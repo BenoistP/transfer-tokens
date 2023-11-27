@@ -295,7 +295,7 @@ const Step3 = ( {
       try {
         const amountStrings = getAmountStrings(_amount, _tokenInstanceToTransfer.decimals)
         const displayedAmount = (amountStrings.shortDisplayIsZero ? amountStrings.long : amountStrings.short)
-        console.info(`transfer : ${displayedAmount} (${_amount}) ${_tokenInstanceToTransfer.name} (${_tokenInstanceToTransfer.address}) to ${_destinationAddress}}`)
+        console.info(`transfer : ${displayedAmount} (${_amount}) ${_tokenInstanceToTransfer.name} (${_tokenInstanceToTransfer.address}) to ${_destinationAddress}`)
         // Transfer
         const { request:transferRequest } = await prepareWriteContract({
           address: _tokenInstanceToTransfer.address,
@@ -390,11 +390,16 @@ const Step3 = ( {
     [callTransferToken, setmigrationState, accountAddress, updateTokenInstanceTransferState, updateTokenOnTransferProcessed]
   )
 
+
+
+  
+
   /**
    * Transfer tokens
    * called on each update of tokensInstancesToMigrate
    */
-  const transferTokens = useCallback( async() =>
+  const transferTokens = useCallback(
+    async() =>
     {
       try {
         if (tokensInstancesToMigrate && tokensInstancesToMigrate.length && targetAddress) {
@@ -426,7 +431,7 @@ const Step3 = ( {
           if (!currentlyProcessing.current) {
             // Search for next token to transfer
             tokenInstanceIndex = 0;
-            tokenInstanceToTransfer = undefined; //  = undefined
+            tokenInstanceToTransfer = undefined;
             for (; ((tokenInstanceIndex < tokensInstancesToMigrate.length)); tokenInstanceIndex++) {
               while (paused.current) {
                 await new Promise(r => setTimeout(r, 250)); // wait 250ms before next check
@@ -434,21 +439,11 @@ const Step3 = ( {
               }
               if (stopped.current || currentlyProcessing.current) break;
               tokenInstanceToTransfer = tokensInstancesToMigrate[tokenInstanceIndex];
-
-              if ( //tokenInstanceToTransfer.transferState.processing && tokenInstanceToTransfer.selected && // processing
-                  tokenInstanceToTransfer.transferAmount // selected and with transfer amount (> 0)
-                  && (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none) // not yet processed
-                ) {
-                console.debug(`transferTokenS TRANSFER tokenInstanceToTransfer:`);
-                console.dir(tokenInstanceToTransfer);
-                break;
-              } else {
-                console.debug(`transferTokenS SKIP TRANSFER tokenInstanceToTransfer:`);
-                console.dir(tokenInstanceToTransfer);
-                continue;
-              }
-            } // for (let tokenInstanceIndex = 0 ...
+              if (tokenInstanceToTransfer.transferAmount && (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none) // amount and not yet processed
+              ) break;
+            }
             try {
+              // Unprocessed ? Transfer token
               if (tokenInstanceToTransfer && tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none)  {
                 currentlyProcessing.current = true // lock
                 updateTokenInstanceTransferState(tokenInstanceToTransfer.address, ETokenTransferState.processing)
