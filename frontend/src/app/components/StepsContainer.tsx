@@ -171,7 +171,7 @@ export default function StepsContainer (
    */
   const updateTokenInstanceBalancesAndTransferState = useCallback(
     ( _tokenInstanceAddress: TAddressString, _updateFromAddress: boolean, _fromAddress: TAddressString, _fromAddressBalanceUpdate: TTokenAmount,
-      _updateToAddress: boolean, _toAddress: TAddressString, _targetAddressBalanceUpdate: TTokenAmount, _processedState?: ETokenTransferState) =>
+      _updateToAddress: boolean, _toAddress: TAddressString, _toAddressBalanceUpdate: TTokenAmount, _processedState?: ETokenTransferState) =>
     {
       try {
         if (tokensInstances && tokensInstances.length && _tokenInstanceAddress && (_updateFromAddress||_updateToAddress||_processedState)) {
@@ -185,11 +185,11 @@ export default function StepsContainer (
               if (_updateFromAddress||_updateToAddress) {
                 userData = {...userData,
                   [fromADDRESS as any]: ( _updateFromAddress?{...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate }: {...userData[fromADDRESS as any]} ),
-                  [toADDRESS as any]: ( _updateToAddress?{...userData[toADDRESS as any], balance: _fromAddressBalanceUpdate }: {...userData[toADDRESS as any]} ) };
+                  [toADDRESS as any]: ( _updateToAddress?{...userData[toADDRESS as any], balance: _toAddressBalanceUpdate }: {...userData[toADDRESS as any]} ) };
                 const connectedADDRESS = connectedAddress?.toUpperCase()
                 // If connected address has NO BALANCE : set as unselectable/unselected, remove transfer amount and lock
                 if (  (connectedADDRESS == fromADDRESS && _updateFromAddress && !_fromAddressBalanceUpdate)
-                    || (connectedADDRESS == toADDRESS && _updateToAddress && !_targetAddressBalanceUpdate)) {
+                    || (connectedADDRESS == toADDRESS && _updateToAddress && !_toAddressBalanceUpdate)) {
                   selectable = false; selected = false; transferAmount = 0n; transferAmountLock = false;
                 }
               }
@@ -228,7 +228,7 @@ export default function StepsContainer (
     ( _tokenInstanceAddress: TAddressString, _processedState: ETokenTransferState) =>
     {
       try {
-        if (tokensInstances && tokensInstances.length && _processedState) {
+        if (tokensInstances && tokensInstances.length) {
           const newTokensInstances = tokensInstances.map( (tokenInstance:TTokenInstance) => {
             if (tokenInstance.address == _tokenInstanceAddress) {
               const {transferState} = tokenInstance;
@@ -252,6 +252,39 @@ export default function StepsContainer (
     },
     [tokensInstances]
   )
+
+  
+  /**
+   * Just a log displaying transfer events in console
+   * @param _tokenInstance
+   * @param _from
+   * @param _to
+   * @param _value
+   */
+  // const showTransfer = useCallback(
+  //   (_tokenInstance: TTokenInstance, _from: TAddressString, _to: TAddressString, _value: any) =>
+  //   {
+  //     try {
+  //       if (_tokenInstance && _from && _to && _value) {
+  //         const decimals = BigInt(_tokenInstance.decimals)
+  //         const intValue = ( _value / (10n**decimals) );
+  //         const decimalValue = _value - intValue * (10n**decimals);
+  //         let longBalanceString = "0";
+  //         if (decimalValue > 0) {
+  //           // exact decimals display
+  //           const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
+  //           longBalanceString = intValue+"."+longDecimalDisplayPadded;
+  //         } else {
+  //           longBalanceString = intValue.toString()+"."+"0".repeat(Number(decimals))
+  //         }
+  //         console.info(`> transfer of "${_tokenInstance.name}" (${_tokenInstance.address}) from:${_from} to:${_to} for: ${longBalanceString}`)
+  //       }
+  //     } catch (error) {
+  //       console.error(`showTransfer error: ${error}`);
+  //     }
+  //   },
+  //   [] // no dependencies
+  // ) // showTransfer
 
   /**
   * Update tokenInstance on transfer
@@ -297,38 +330,6 @@ export default function StepsContainer (
     [getTokenOnChainData_addressBalance, updateTokenInstanceBalancesAndTransferState]
   )
 
-  /**
-   * Just a log displaying transfer events in console
-   * @param _tokenInstance
-   * @param _from
-   * @param _to
-   * @param _value
-   */
-  const showTransfer = useCallback(
-    (_tokenInstance: TTokenInstance, _from: TAddressString, _to: TAddressString, _value: any) =>
-    {
-      try {
-        if (_tokenInstance && _from && _to && _value) {
-          const decimals = BigInt(_tokenInstance.decimals)
-          const intValue = ( _value / (10n**decimals) );
-          const decimalValue = _value - intValue * (10n**decimals);
-          let longBalanceString = "0";
-          if (decimalValue > 0) {
-            // exact decimals display
-            const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
-            longBalanceString = intValue+"."+longDecimalDisplayPadded;
-          } else {
-            longBalanceString = intValue.toString()+"."+"0".repeat(Number(decimals))
-          }
-          console.info(`> transfer of "${_tokenInstance.name}" (${_tokenInstance.address}) from:${_from} to:${_to} for: ${longBalanceString}`)
-        }
-      } catch (error) {
-        console.error(`showTransfer error: ${error}`);
-      }
-    },
-    [] // no dependencies
-  ) // showTransfer
-
   // ---
 
   const processTransferEvent = useCallback( async(logs:Log[]) =>
@@ -342,7 +343,7 @@ export default function StepsContainer (
             if (tokenInstance) {
               if (log.args) {
                 const from = log.args["from"], to = log.args["to"], value = log.args["value"];
-                showTransfer(tokenInstance, from, to, value)
+                // showTransfer(tokenInstance, from, to, value) // show ALL transfers
                 if (tokenInstance.userData && from && to && value) {
                     updateTokenOnTransferProcessed(tokenInstance, from, to)
                 } // if (from && to && value)
@@ -354,7 +355,7 @@ export default function StepsContainer (
         console.error(`processTransferEvent logs: ${logs} error: ${error}`);
       }
     },
-    [tokensInstanceIndex, updateTokenOnTransferProcessed, showTransfer]
+    [tokensInstanceIndex, updateTokenOnTransferProcessed]
   ); // processTransferEvent
 
   // ---
@@ -1388,44 +1389,34 @@ export default function StepsContainer (
    * Groups onchain data fetches
    * as well as contract instances initialization
    */
-  const loadTokensOnChainData = useCallback( async(
-    _tokensInstances: TTokensInstances, step:number,
-    _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef, _resultOnly:boolean
-    ): Promise<TTokensInstances> =>
+  const loadTokensOnChainData = useCallback(
+    async(  _tokensInstances: TTokensInstances, step:number,
+            _from:TAddressEmptyNullUndef, _to:TAddressEmptyNullUndef, _resultOnly:boolean ): Promise<TTokensInstances> =>
     {
       try {
         if (_tokensInstances && _tokensInstances.length) {
           switch (step) {
-            // Step contracts: get tokens contracts
             case EStepsLoadTokensData.contracts:
-              return await loadTokensContracts(_tokensInstances)
-            // Step sourceBalances: get tokens source user balances
-            case EStepsLoadTokensData.sourceBalances:
-              return loadTokensOnChainData_addressBalances(_tokensInstances, _resultOnly, _from);
-            // Step sourceTransferAbility: get canTransfer token from source address
+              return await loadTokensContracts(_tokensInstances) // Step contracts: get tokens contracts
+            case EStepsLoadTokensData.sourceBalances: // Step sourceBalances: get tokens source user balances
+              return loadTokensOnChainData_addressBalances(_tokensInstances, _resultOnly, _from); // Step sourceTransferAbility: get canTransfer token from source address
             case EStepsLoadTokensData.sourceTransferAbility:
               return loadTokensOnChainData_TransferAbility(_tokensInstances, _resultOnly, _from, _from);
-            // Step decimals: get token decimals
             case EStepsLoadTokensData.decimals:
-              return loadTokensOnChainData_decimals(_tokensInstances, _resultOnly);
-            // Step names: get token name
+              return loadTokensOnChainData_decimals(_tokensInstances, _resultOnly); // Step decimals: get token decimals
             case EStepsLoadTokensData.names:
-              return loadTokensOnChainData_names(_tokensInstances, _resultOnly);
-            // Step symbols: get token symbol
+              return loadTokensOnChainData_names(_tokensInstances, _resultOnly); // Step names: get token name
             case EStepsLoadTokensData.symbols:
-              return loadTokensOnChainData_symbols(_tokensInstances, _resultOnly);
-            // Step targetBalances: get tokens target user balances
+              return loadTokensOnChainData_symbols(_tokensInstances, _resultOnly); // Step symbols: get token symbol
             case EStepsLoadTokensData.targetBalances:
-              return loadTokensOnChainData_addressBalances(_tokensInstances, _resultOnly, _to);
-            // Step targetTransferAbility: get canTransfer token from source address to target  address
+              return loadTokensOnChainData_addressBalances(_tokensInstances, _resultOnly, _to); // Step targetBalances: get tokens target user balances
             case EStepsLoadTokensData.targetTransferAbility:
-              return loadTokensOnChainData_TransferAbility(_tokensInstances, _resultOnly, /* _from */_to, _to);
-            // Step ??: Watch transfers : TODO
+              return loadTokensOnChainData_TransferAbility(_tokensInstances, _resultOnly, /* _from */_to, _to); // Step targetTransferAbility: get canTransfer token from source address to target  address
             default:
               console.warn(`loadTokensOnChainData error: step=${step} not found`)
               return _tokensInstances;
-          } // switch (step)
-        } // if (tokens?.length > 0)
+          }
+        }
       }
       catch (error) {
         console.error(`loadTokensOnChainData error: ${error}`);
@@ -1433,40 +1424,40 @@ export default function StepsContainer (
     },
     [ loadTokensContracts, loadTokensOnChainData_addressBalances, loadTokensOnChainData_TransferAbility,
       loadTokensOnChainData_decimals, loadTokensOnChainData_names, loadTokensOnChainData_symbols ]
-  ); // loadTokensOnChainData
+  );
 
-  // ---
-
+  /**
+   * Callback to reset to initial step
+   */
   const resetToInitialStepCB = useCallback( () =>
     {
       resetToInitialStep()
     },
     [resetToInitialStep]
-  ) // resetToInitialStep
+  )
 
-  // ---
-
-  const getTokensInstanceIndex = useCallback( (tokensInstances:TTokensInstances):TTokenInstanceIndex =>
+  /**
+   * Get tokens instances index
+   */
+  const getTokensInstanceIndex = useCallback(
+    (tokensInstances:TTokensInstances):TTokenInstanceIndex =>
     {
       const tokenInstanceIndex: TTokenInstanceIndex = {};
       try {
-        if (tokensInstances) {
-          tokensInstances.forEach( (tokenInstance:TTokenInstance) => {
+          tokensInstances?.forEach( (tokenInstance:TTokenInstance) => {
             tokenInstanceIndex[tokenInstance.address.toUpperCase()] = tokenInstance;
           })
-        }
       } catch (error) {
         console.error(`getTokensInstanceIndex error: ${error}`);
       }
-      // console.debug(`getTokensInstanceIndex tokenInstanceIndex =`)
-      // console.dir(tokenInstanceIndex)
       return tokenInstanceIndex;
     },
     []
   )
 
-  // ---
-
+  /**
+   * Initialize tokens lists
+  */
   const initSelectableTokensLists = useCallback( async() =>
     {
 
@@ -1494,9 +1485,6 @@ export default function StepsContainer (
     [chainId, setselectableTokensLists, tokensLists]
   );
 
-  // ----------------------------------------------
-
-
   // ========================================================
   // USE EFFECTS
   // ========================================================
@@ -1515,22 +1503,12 @@ export default function StepsContainer (
       }
     },
     [chainId, connectedAddress, resetToInitialStepCB]
-  ) // useEffect
-
-  // ---
-
-  useEffect( () =>
-    {
-      try {
-        initSelectableTokensLists()
-      } catch (error) {
-        console.error(`useEffect [INIT SELECTABLE TOKENSLISTS] error: ${error}`);
-      }
-    },
-    [initSelectableTokensLists]
   )
 
-  // ---
+  /**
+   * Initialize tokens lists
+  */
+  useEffect( () => {initSelectableTokensLists()}, [initSelectableTokensLists] );
 
   /**
    * Update tokens migration state on step change
@@ -1540,6 +1518,7 @@ export default function StepsContainer (
     {
       try {
         if (step == ESteps.tokensToMigrate && previousStep.current == ESteps.migration) {
+          // Step back
           const updatedTokensInstances = tokensInstances?.map( (tokenInstance:TTokenInstance) => {
             if (tokenInstance.transferState.processing) {
               // processing ?
@@ -1549,26 +1528,17 @@ export default function StepsContainer (
           })
           settokensInstances(updatedTokensInstances)
         } else if (step == ESteps.migration && previousStep.current == ESteps.tokensToMigrate) {
-          // Update all selected tokens instances
+          // Step forward
+          // Update all SELECTED tokens instances
           const updatedTokensInstances = tokensInstances?.map( (tokenInstance:TTokenInstance) => {
-            /**
-             * @param transferState 
-             * @returns transferState
-             */
-            const updatePreviousTransferState = (transferState:ETokenTransferState) => {
-              switch (transferState) {
-                case ETokenTransferState.processed:
-                  return ETokenTransferState.previous_processed;
-                case ETokenTransferState.error:
-                  return ETokenTransferState.previous_error;
-                case ETokenTransferState.skipped:
-                  return ETokenTransferState.previous_skipped;
-                default:
-                  return transferState;
+            if (tokenInstance.selected) return {...tokenInstance, transferState: { processing: true, transfer: ETokenTransferState.none } } // Selected, mark as processing (= "to process") and reinit transfer state
+             // Not selected: reinit transfer state and change previously transfer state to "previous" state
+            return {...tokenInstance,
+              transferState: {
+                processing: tokenInstance.transferState.processing,
+                transfer: (tokenInstance.transferState.transfer==ETokenTransferState.processed?ETokenTransferState.previous_processed:(tokenInstance.transferState.transfer==ETokenTransferState.error?ETokenTransferState.previous_error:(tokenInstance.transferState.transfer==ETokenTransferState.skipped?ETokenTransferState.previous_skipped:tokenInstance.transferState.transfer)))
               }
             }
-            if (tokenInstance.selected) return {...tokenInstance, transferState: { processing: true, transfer: ETokenTransferState.none } } // Selected, mark as processing (= "to process") and reinit transfer state
-            return {...tokenInstance,  transferState: { processing: tokenInstance.transferState.processing, transfer: updatePreviousTransferState(tokenInstance.transferState.transfer) } } // Not selected: reinit transfer state
           })
           settokensInstances(updatedTokensInstances)
         }
@@ -1578,7 +1548,7 @@ export default function StepsContainer (
       }
     },
     [step, tokensInstances]
-  ) // useEffect
+  )
 
   /**
    * Handle tokensInstances loading
@@ -2192,9 +2162,7 @@ export default function StepsContainer (
     {
       const watchTransferEvents = async ():Promise<any> =>
       {
-        if (unwatch.current) {
-          unwatch.current() // remove previous watch
-        }
+        if (unwatch.current) unwatch.current() // remove previous watch
         if (tokensInstances && tokensInstances.length) {
           // array of tokens addresses
           const tokensAddresses = tokensInstances.map( (tokenInstance:TTokenInstance) => tokenInstance.address )

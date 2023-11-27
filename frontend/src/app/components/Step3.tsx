@@ -29,18 +29,18 @@ import { LinkIcon, XCircleIcon } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
-const Step3 = ( {
-  chainId,
-  tokensInstances,
-  setNextDisabled,
-  setShowProgressBar,
-  accountAddress,
-  targetAddress,
-  tokensInstancesListTablePropsHandlers,
-  setmigrationState,
-  updateTokenOnTransferProcessed,
-  updateTokenInstanceTransferState
-  }: IStep3Props ) => {
+export default function Step3 ( {
+    chainId,
+    tokensInstances,
+    setNextDisabled,
+    setShowProgressBar,
+    accountAddress,
+    targetAddress,
+    tokensInstancesListTablePropsHandlers,
+    setmigrationState,
+    updateTokenOnTransferProcessed,
+    updateTokenInstanceTransferState
+  }: IStep3Props ) {
 
   // ---
 
@@ -111,8 +111,7 @@ const Step3 = ( {
           const intValue = ( amountValue / (10n**decimals) );
           const decimalValue = amountValue - intValue * (10n**decimals);
           if (decimalValue > 0) {
-            // exact decimals display
-            // eg. decimalValue = "1000000000000000n" (= 1e15n = 1e-3 = 0.001)
+            // exact decimals display eg. decimalValue = "1000000000000000n" (= 1e15n = 1e-3 = 0.001)
             const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0"); // longDecimalDisplayPadded = "001000000000000000"
             const longDecimalDisplay = longDecimalDisplayPadded.replace(/0+$/,"") // remove ending zeros: longDecimalDisplay = "001"
             const zeroDecimalToFixed = Number("0."+longDecimalDisplay).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
@@ -295,7 +294,7 @@ const Step3 = ( {
       try {
         const amountStrings = getAmountStrings(_amount, _tokenInstanceToTransfer.decimals)
         const displayedAmount = (amountStrings.shortDisplayIsZero ? amountStrings.long : amountStrings.short)
-        console.info(`transfer : ${displayedAmount} (${_amount}) ${_tokenInstanceToTransfer.name} (${_tokenInstanceToTransfer.address}) to ${_destinationAddress}`)
+        console.info(`transfer : ${displayedAmount} (${_amount}) ${_tokenInstanceToTransfer.name} (${_tokenInstanceToTransfer.address}) to ${_destinationAddress}`) // Log transfer in console
         // Transfer
         const { request:transferRequest } = await prepareWriteContract({
           address: _tokenInstanceToTransfer.address,
@@ -309,8 +308,7 @@ const Step3 = ( {
           txResult.hash = transferTxHash
           await toast.promise(
             getWaitForTransactionPromise(txResult),
-            {
-              loading:
+            { loading:
                 <div>
                   <div className="font-medium">
                     {`${t("moveTokens.stepThree.transfer.awaitConfirm")} :`}
@@ -341,16 +339,13 @@ const Step3 = ( {
             txResult.userSkipped = true
             transferSkippedToast(_tokenInstanceToTransfer)
         } else {
-          console.error(`callTransferToken : error:`)
-          console.dir(error)
+          console.error(`transfer error: ${error} for: ${_tokenInstanceToTransfer.name} (${_tokenInstanceToTransfer.address}) to ${_destinationAddress}`)
         }
       }
-      return txResult; // RETURN
+      return txResult;
     },
     [getAmountStrings, t, getTxUri, transferSuccessToast, transferErrorToast, transferSkippedToast]
-  ) // callTransferToken
-
-  // ---
+  )
 
   /**
    * Transfer token
@@ -358,41 +353,26 @@ const Step3 = ( {
    * @param _to
    * Calls callTransferToken and updates states, balances depending on txResult
    */
+
   const transferToken = useCallback(
     async( _tokenInstanceToTransfer:TTokenInstance, _to:TAddressString ) =>
     {
       try {
         if (_tokenInstanceToTransfer?.transferAmount && accountAddress) {
           const txResult  = await callTransferToken( _tokenInstanceToTransfer, _to, _tokenInstanceToTransfer.transferAmount)
-          let state = ETokenTransferState.none
-          if (txResult.success) {
-            state = ETokenTransferState.processed;
-            migrationState.current.successItemsCount++;
-          } else if (txResult.userSkipped) {
-            state = ETokenTransferState.skipped;
-            migrationState.current.skippedItemsCount++;
-          } else {
-            // not found, timeout, error
-            state = ETokenTransferState.error;
-            migrationState.current.errorItemsCount++;
-          }
+          const state = (txResult.success ? ETokenTransferState.processed : (txResult.userSkipped ? ETokenTransferState.skipped : ETokenTransferState.error))
           // Instant transfer state update
           updateTokenInstanceTransferState(_tokenInstanceToTransfer.address, state)
           // Update balances after transfer, do not wait for event which may not be received
           updateTokenOnTransferProcessed(_tokenInstanceToTransfer, accountAddress, _to, REFRESH_BALANCE_DELAY_AFTER_TRANSFER, state)
-          setmigrationState( {...migrationState.current} )
+          // setmigrationState( {...migrationState.current} )
         }
       } catch (error) {
-        // _tokenInstanceToTransfer.transferState.transfer = ETokenTransferState.error;
         console.error(`transferToken ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_to} process error: ${error}`);
       }
     },
-    [callTransferToken, setmigrationState, accountAddress, updateTokenInstanceTransferState, updateTokenOnTransferProcessed]
+    [callTransferToken, /* setmigrationState, */ accountAddress, updateTokenInstanceTransferState, updateTokenOnTransferProcessed]
   )
-
-
-
-  
 
   /**
    * Transfer tokens
@@ -403,71 +383,40 @@ const Step3 = ( {
     {
       try {
         if (tokensInstancesToMigrate && tokensInstancesToMigrate.length && targetAddress) {
-          let tokenInstanceIndex = 0 ;
-          let errorItemsCount = 0, skippedItemsCount = 0, successItemsCount = 0;
-          let tokenInstanceToTransfer:TTokenInstance|undefined; //  = undefined
-          // Search for current migration state figures
-          // Update migration/transfer state
-          for (; ((tokenInstanceIndex < tokensInstancesToMigrate.length)); tokenInstanceIndex++) {
-            tokenInstanceToTransfer = tokensInstancesToMigrate[tokenInstanceIndex];
-            if (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.error) {
-              errorItemsCount++;
-            } else if (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.processed) {
-              successItemsCount++;
-            } else if (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.skipped) {
-              skippedItemsCount++;
-            }
-          } // for
-          migrationState.current = {
-            totalItemsCount: tokensInstancesToMigrate.length,
-            errorItemsCount,
-            skippedItemsCount,
-            successItemsCount,
-            paused: paused.current, stopped: stopped.current
-          };
-          setmigrationState( migrationState.current )
-
-          // if any token is processing, skip search and do nothing (exit)
+          let tokenInstanceToTransferFound:TTokenInstance|undefined;
+          // if any token is processing, skip search
           if (!currentlyProcessing.current) {
             // Search for next token to transfer
-            tokenInstanceIndex = 0;
-            tokenInstanceToTransfer = undefined;
-            for (; ((tokenInstanceIndex < tokensInstancesToMigrate.length)); tokenInstanceIndex++) {
+            for (let tokenInstanceIndex = 0 ; ((tokenInstanceIndex < tokensInstancesToMigrate.length)); tokenInstanceIndex++) {
               while (paused.current) {
                 await new Promise(r => setTimeout(r, 250)); // wait 250ms before next check
                 if (!paused.current || stopped.current) break;
               }
               if (stopped.current || currentlyProcessing.current) break;
-              tokenInstanceToTransfer = tokensInstancesToMigrate[tokenInstanceIndex];
-              if (tokenInstanceToTransfer.transferAmount && (tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none) // amount and not yet processed
+              tokenInstanceToTransferFound = tokensInstancesToMigrate[tokenInstanceIndex];
+              if (tokenInstanceToTransferFound.transferAmount && (tokenInstanceToTransferFound.transferState.transfer == ETokenTransferState.none) // amount > 0 and not yet processed
               ) break;
             }
             try {
-              // Unprocessed ? Transfer token
-              if (tokenInstanceToTransfer && tokenInstanceToTransfer.transferState.transfer == ETokenTransferState.none)  {
+              // If found token is unprocessed, transfer token
+              if (tokenInstanceToTransferFound && tokenInstanceToTransferFound.transferState.transfer == ETokenTransferState.none)  {
                 currentlyProcessing.current = true // lock
-                updateTokenInstanceTransferState(tokenInstanceToTransfer.address, ETokenTransferState.processing)
-                await transferToken( tokenInstanceToTransfer, targetAddress )
-                currentlyProcessing.current = false // unlock
+                updateTokenInstanceTransferState(tokenInstanceToTransferFound.address, ETokenTransferState.processing)
+                await transferToken( tokenInstanceToTransferFound, targetAddress )
               }
             } catch (error) {
-              console.error(`transferTokenS tokenInstanceToTransfer TRANSFER ERROR token symbol: '${tokenInstanceToTransfer?.symbol}' token address: '${tokenInstanceToTransfer?.address}' targetAddress: '${targetAddress}' for '${tokenInstanceToTransfer?.transferAmount}' amount process error: ${error}`);
-              currentlyProcessing.current = false // unlock
+              console.error(`transferTokenS tokenInstanceToTransfer TRANSFER ERROR token symbol: '${tokenInstanceToTransferFound?.symbol}' token address: '${tokenInstanceToTransferFound?.address}' targetAddress: '${targetAddress}' for '${tokenInstanceToTransferFound?.transferAmount}' amount process error: ${error}`);
             }
-
-            if (tokenInstanceIndex >= tokensInstancesToMigrate.length-1) {
-              setstopTransfers(true)
-              paused.current = false
-              stopped.current = true
-              setmigrationState( {...migrationState.current, paused: false, stopped: true} )
+            finally {
+              currentlyProcessing.current = false // unlock
             }
           }
         }
       } catch (error) {
         console.error(`transferTokenS error: ${error}`);
       }
-    }, [tokensInstancesToMigrate, setmigrationState, transferToken, targetAddress, updateTokenInstanceTransferState]
-  ) // transferTokens
+    }, [tokensInstancesToMigrate, transferToken, targetAddress, updateTokenInstanceTransferState]
+  )
 
   /**
    * Init
@@ -489,6 +438,49 @@ const Step3 = ( {
    * Only "processing" one should show
    */
   const getTokensToMigrate = useCallback( ():TTokensInstances =>  { return tokensInstances?.filter( (tokenInstance:TTokenInstance) => tokenInstance.transferState.processing ) }, [tokensInstances] )
+
+  /**
+   * Update migration state
+   */
+    useEffect( () =>
+    {
+      try {
+        if (tokensInstancesToMigrate && tokensInstancesToMigrate.length) {
+          // Search for current migration state figures
+          let errorItemsCount = 0, skippedItemsCount = 0, successItemsCount = 0, unprocessed = 0;
+          // Update migration/transfer state
+          for (let tokenInstanceIndex = 0; tokenInstanceIndex < tokensInstancesToMigrate.length; tokenInstanceIndex++) {
+            switch (tokensInstancesToMigrate[tokenInstanceIndex].transferState.transfer) {
+              case ETokenTransferState.error:
+                errorItemsCount++;
+                break;
+              case ETokenTransferState.processed:
+                successItemsCount++;
+                break;
+              case ETokenTransferState.skipped:
+                skippedItemsCount++;
+                break;
+              case ETokenTransferState.none:
+                unprocessed++;
+                break;
+            }
+          }
+          if (unprocessed == 0) {
+            setstopTransfers(true)
+            setpauseTransfers(false)
+            paused.current = false
+            stopped.current = true
+          }
+          migrationState.current = { totalItemsCount: tokensInstancesToMigrate.length, errorItemsCount, skippedItemsCount, successItemsCount, paused: paused.current, stopped: stopped.current };
+          setmigrationState(migrationState.current)
+        }
+      } catch (error) {
+        console.error(`useEffect error: ${error}`);
+      }
+
+    },
+    [setmigrationState, tokensInstancesToMigrate]
+  )
 
   /**
    * Set tokensInstancesToMigrate
@@ -551,7 +543,3 @@ const Step3 = ( {
   </div>
   );
 }
-
-// ------------------------------
-
-export default Step3;

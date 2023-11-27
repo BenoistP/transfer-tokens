@@ -1,7 +1,7 @@
 // React
 // ---
 // Components
-import { TokenInstance } from "@Components/TokenInstance";
+import TokenInstance from "@Components/TokenInstance";
 
 // ----------------------------
 
