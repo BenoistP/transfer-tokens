@@ -10,11 +10,10 @@ import { ArrowPathRoundedSquareIcon, ExclamationCircleIcon, InformationCircleIco
 import { clsLoadingTokenLists, clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
 
 export default function TokensListsSelect (
-  { selectableTokensLists, setselectableTokensLists, isLoading, isError }: ITokensListsSelectProps )
-  {
+  { selectableTokensLists, setselectableTokensLists, isLoading, isError }: ITokensListsSelectProps ) {
 
   const { t } = useTranslation()
-  const [isCheckAllDisabled, setisCheckAllDisabled] = useState(false)
+  const [checkAllDisabled, setcheckAllDisabled] = useState(false)
   const [checkAll, setCheckAll] = useState<boolean>(false);
 
   // Styles
@@ -63,7 +62,7 @@ export default function TokensListsSelect (
   useEffect( () =>
     {
       try {
-        setisCheckAllDisabled( (selectableTokensLists?.length ? selectableTokensLists.every ((selectableTokensList) => (selectableTokensList.selectable === false)) : true) )
+        setcheckAllDisabled( (selectableTokensLists?.length ? selectableTokensLists.every ((selectableTokensList) => (selectableTokensList.selectable === false)) : true) )
         setCheckAll( (selectableTokensLists?.length ? selectableTokensLists.every( (selectableTokensList) => ( selectableTokensList.selected || !selectableTokensList.selectable ) ) : false) )
       } catch (error) {
         console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
@@ -87,7 +86,7 @@ export default function TokensListsSelect (
                     <input type="checkbox" className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
                       checked={checkAll}
                       onChange={handleAllTokensListSelection}
-                      disabled={isCheckAllDisabled}
+                      disabled={checkAllDisabled}
                     />
                   </label>
                   <label>
@@ -103,11 +102,8 @@ export default function TokensListsSelect (
             </tbody>
           </table>
         </div>
-
           <table className="table table-zebra">
-
             <tbody>
-
             { (!isError && selectableTokensLists?.length) ?
 
               <SelectableTokensLists
@@ -150,11 +146,8 @@ export default function TokensListsSelect (
                 }
                   </td>
                 </tr>
-
             }
-
             </tbody>
-
           </table>
         </div>
 
