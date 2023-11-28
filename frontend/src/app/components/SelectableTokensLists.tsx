@@ -8,19 +8,15 @@ export default function SelectableTokensLists(
 
   return (
     <>
-      {
-        selectableTokensLists?.map((selectableTokensList: TSelectableTokensList, index: number) => {
-          const key = `${index}-${selectableTokensList?.tokensList?.id}`;
-          return (
-            <tr key={key}>
-              <SelectableTokensList
-                selectableTokensList={selectableTokensList}
-                handleSwapTokenListSelection={handleSwapTokenListSelection}
-              />
-            </tr>
-          )
-        })
-      }
+      {selectableTokensLists?.map(
+        (selectableTokensList: TSelectableTokensList) =>
+          <tr key={`${selectableTokensList?.tokensList?.id}-${selectableTokensList?.tokensList?.timestamp}`}>
+            <SelectableTokensList
+              selectableTokensList={selectableTokensList}
+              handleSwapTokenListSelection={handleSwapTokenListSelection}
+            />
+          </tr>
+      )}
     </>
   )
 

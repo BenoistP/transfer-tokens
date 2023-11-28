@@ -17,7 +17,7 @@ const GlobalAppContext = createContext<TGlobalAppContext>(
         setLanguage: (/* lang:string */) => {},
         getAvatarComponent: () => { return undefined },
         getAddress: () => { return undefined },
-        setAddress: (/* address:TAddressUndef */) => { /* return undefined */ },
+        setAddress: (/* address:TAddressStringUndef */) => { /* return undefined */ },
       }
   })
 
@@ -93,7 +93,7 @@ const GlobalAppProvider = ( { children }:any ) => {
       getAddress: () => {
         return globalAppData.address;
       },
-      setAddress: (newAddress:TAddressUndef) => {
+      setAddress: (newAddress:TAddressStringUndef) => {
         setglobalAppData( (prevGlobalAppData) => {
           const newData = {
             ...prevGlobalAppData,

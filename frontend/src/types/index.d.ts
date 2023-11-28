@@ -48,10 +48,10 @@ interface iFlagIconProps {
 
 type TUUID = string;
 type TAddressString = `0x${string}` ;
-type TAddressNullUndef = TAddressString | TNullUndef ;
-type TAddressEmpty = TAddressString | "" ;
-type TAddressEmptyNullUndef = TAddressNullUndef | "" ;
-type TAddressUndef = TAddressString | undefined ;
+type TAddressStringNullUndef = TAddressString | TNullUndef ;
+type TAddressStringEmpty = TAddressString | "" ;
+type TAddressStringEmptyNullUndef = TAddressStringNullUndef | "" ;
+type TAddressStringUndef = TAddressString | undefined ;
 type TTxHash = TAddressString;
 
 type TTokenContractAddress = TAddressString;
@@ -68,7 +68,7 @@ type TGlobalAppContext = {
 
 type TGlobalAppDataContext = {
   language:         string,
-  address:          TAddressUndef,
+  address:          TAddressStringUndef,
 }
 
 type TGlobalAppDataHandlersContext = {
@@ -284,7 +284,7 @@ type TsetNextDisabled = TreactSetState_boolean;
 
 type TsetSelectableTokensLists = React.Dispatch<React.SetStateAction<TSelectableTokensLists>>;
 type TsetTokensInstances = React.Dispatch<React.SetStateAction<TTokensInstances>>;
-type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressEmpty>>
+type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressStringEmpty>>
 
 
 // type TTokenLoadStatus = number;
@@ -370,8 +370,8 @@ interface ITF_ProgressContainer {
   migrationState: TmigrationState;
 }
 interface IAddressInputProps {
-  sourceAddress: TAddressNullUndef,
-  targetAddress: TAddressEmpty,
+  sourceAddress: TAddressStringNullUndef,
+  targetAddress: TAddressStringEmpty,
   settargetAddress:TsettargetAddress
 }
 
@@ -400,8 +400,8 @@ interface IStep0Props {
   setNextDisabled: TsetNextDisabled,
   selectableTokensLists: TSelectableTokensLists,
   setselectableTokensLists: TsetSelectableTokensLists,
-  accountAddress: TAddressNullUndef,
-  targetAddress: TAddressEmpty,
+  accountAddress: TAddressStringNullUndef,
+  targetAddress: TAddressStringEmpty,
   tokensInstances: TTokensInstances,
   chainId: ChainId;
   isLoadingTokensLists: boolean,
@@ -414,9 +414,9 @@ interface IStep0Props {
 
 interface IStep1Props {
   setNextDisabled: TsetNextDisabled,
-  accountAddress: TAddressNullUndef,
+  accountAddress: TAddressStringNullUndef,
   tokensInstances: TTokensInstances,
-  targetAddress: TAddressEmpty,
+  targetAddress: TAddressStringEmpty,
   settargetAddress:TsettargetAddress
   chainId: ChainId;
   isLoadingTokensInstances: boolean,
@@ -429,23 +429,23 @@ interface IStep2Props {
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
   setShowProgressBar: TsetShowProgressBar
-  accountAddress: TAddressNullUndef,
-  targetAddress: TAddressEmpty,
+  accountAddress: TAddressStringNullUndef,
+  targetAddress: TAddressStringEmpty,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
   isUpdatingTokensInstances: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
-type TtransferTokens = (TTokensInstances,TAddressEmptyNullUndef, TAddressEmptyNullUndef) => void;
+type TtransferTokens = (TTokensInstances,TAddressStringEmptyNullUndef, TAddressStringEmptyNullUndef) => void;
 
 interface IStep3Props {
   chainId: ChainId;
   setNextDisabled: TsetNextDisabled,
   tokensInstances: TTokensInstances,
   setShowProgressBar: TsetShowProgressBar
-  accountAddress: TAddressNullUndef,
-  targetAddress: TAddressEmpty,
+  accountAddress: TAddressStringNullUndef,
+  targetAddress: TAddressStringEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
   setmigrationState: TSetMigrationState,
   updateTokenOnTransferProcessed: IupdateTokenOnTransferProcessed,
@@ -497,26 +497,26 @@ type TsortTokensInstances = any;
 
 interface ITokenListProps {
   tokensInstances: TTokensInstances,
-  accountAddress: TAddressNullUndef,
-  targetAddress: TAddressEmpty,
+  accountAddress: TAddressStringNullUndef,
+  targetAddress: TAddressStringEmpty,
   sortTokensInstances: TsortTokensInstances,
 }
 
 interface ITokenListFilteredProps {
   tokensInstances: TTokensInstances,
-  accountAddress: TAddressNullUndef,
-  targetAddress: TAddressEmpty,
+  accountAddress: TAddressStringNullUndef,
+  targetAddress: TAddressStringEmpty,
   enableEditable: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers,
 }
 
 interface ITokenProps {
   tokenInstance : TTokenInstance;
-  accountAddress: TAddressNullUndef;
+  accountAddress: TAddressStringNullUndef;
   updateCheckboxStatus: IUpdateCheckboxStatus|null;
   updateTransferAmount: IUpdateTransferAmount|null;
   updateTransferAmountLock: ITransferAmountLock|null;
-  targetAddress: TAddressEmpty,
+  targetAddress: TAddressStringEmpty,
   enableEditable: boolean,
   showTransferAmountReadOnly: boolean,
 }
@@ -580,8 +580,8 @@ interface ITokensInstancesListTableStatesHandlers {
 
 interface ITokenInstancesMigrationListTableProps {
   tokensInstances:TTokensInstances;
-  accountAddress:TAddressNullUndef;
-  targetAddress: TAddressEmpty,
+  accountAddress:TAddressStringNullUndef;
+  targetAddress: TAddressStringEmpty,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
 }
 
@@ -604,9 +604,9 @@ interface ItokenInstanceFilterParamsUpdaters {
 
 interface ITokensListTableFilteredProps {
   tokensInstances:TTokensInstances;
-  accountAddress:TAddressNullUndef;
+  accountAddress:TAddressStringNullUndef;
   enableCheckboxes: boolean;
-  targetAddress: TAddressEmpty,
+  targetAddress: TAddressStringEmpty,
   isLoadingTokensInstances: boolean,
   isErrorTokensInstances: boolean,
   isUpdatingTokensInstances: boolean,
@@ -616,8 +616,8 @@ interface ITokensListTableFilteredProps {
 
 interface ITokensInstancesListTableProps {
   tokensInstances:TTokensInstances;
-  accountAddress:TAddressNullUndef;
-  targetAddress: TAddressEmpty,
+  accountAddress:TAddressStringNullUndef;
+  targetAddress: TAddressStringEmpty,
   isLoading: boolean,
   isError: boolean,
   tokensInstancesListTablePropsHandlers: ITokensInstancesListTableStatesHandlers
@@ -646,8 +646,8 @@ interface iFooterStatus {
 
 interface IupdateTokenOnTransferProcessed {
   ( tokenInstance: TTokenInstance,
-    fromADDRESS: TAddressNullUndef,
-    toADDRESS: TAddressUndef,
+    fromADDRESS: TAddressStringNullUndef,
+    toADDRESS: TAddressStringUndef,
     delay?:number,
     processedState?: ETokenTransferState,
   ) : void;
