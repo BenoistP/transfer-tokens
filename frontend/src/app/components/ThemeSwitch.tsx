@@ -37,8 +37,6 @@ export default function ThemeSwitch (): JSX.Element {
     setIcon_2_Cls(getCls(2, themeId, swapDefaultChecked));
   }, [setTheme, swapDefaultChecked, themeId, themes])
 
-
-
 /* -------------------------------------------------------------------------
   theme ThemeId checked?  display Moon           Sun             Home
   0      0        N       Moon    SWAP-OFF       swap-on         hidden
