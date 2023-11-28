@@ -7,7 +7,7 @@ import { SelectableTokensList } from "@Components/SelectableTokensList";
 const SelectableTokensLists = ( {
   selectableTokensLists,
   // chainId,
-  changeTokensListCheckboxStatus
+  handleSwapTokenListSelection
 }: ISelectableTokensListsProps ) => {
 
 // console.debug(`RealTokenInstanceList2.tsx render accountAddress: ${accountAddress}`);
@@ -26,7 +26,7 @@ const SelectableTokensLists = ( {
             >
               <SelectableTokensList
                   selectableTokensList={selectableTokensList}
-                  changeTokensListCheckboxStatus={changeTokensListCheckboxStatus}
+                  handleSwapTokenListSelection={handleSwapTokenListSelection}
               />
             </tr>
           )

@@ -450,7 +450,7 @@ interface IStep3Props {
   updateTokenInstanceTransferState: IupdateTokenInstanceTransferState,
 }
 
-interface IChangeTokensListCheckboxStatus {
+interface IHandleSwapTokenListSelection {
   (id: string) : void;
  }
 
@@ -465,13 +465,13 @@ interface ITokensListsSelectProps {
 interface ISelectableTokensListsProps
 {
   selectableTokensLists: TSelectableTokensLists,
-  changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
+  handleSwapTokenListSelection: IHandleSwapTokenListSelection
 }
 
 interface ISelectableTokensListProps
 {
   selectableTokensList: TSelectableTokensList,
-  changeTokensListCheckboxStatus: IChangeTokensListCheckboxStatus
+  handleSwapTokenListSelection: IHandleSwapTokenListSelection
 }
 
 type TsortOrder = number;

@@ -17,35 +17,14 @@ export default function TokensListsSelect (
   const [isCheckAllDisabled, setisCheckAllDisabled] = useState(false)
   const [checkAll, setCheckAll] = useState<boolean>(false);
 
-  const isAllChecked = useCallback( () =>
-    {
-      try {
-        if (selectableTokensLists) {
-          return selectableTokensLists.every( (selectableTokensList) => ( selectableTokensList.selected || !selectableTokensList.selectable ) )
-        }
-      } catch (error) {
-        console.error(`TokensListsSelect.tsx: isAllChecked: error=${error}`);
-      }
-      return false;
-    },
-    [selectableTokensLists]
-  );
+  // Styles
+  const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
+  + ( (!selectableTokensLists?.length) ? "fill-base-content opacity-10 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
 
-   const updateCheckAll = useCallback( (selectableTokensLists:TSelectableTokensLists) =>
-    {
-      try {
-        if (selectableTokensLists) {
-          setCheckAll(isAllChecked());
-        }
-      } catch (error) {
-        console.error(`TokensListsSelect.tsx: updateCheckAll: error=${error}`);
-      }
-    },
-    [isAllChecked]
-  );
-
-
-  const changeTokensListCheckboxStatus:IChangeTokensListCheckboxStatus = useCallback(
+  /**
+   * Swap one token list selection
+   */
+  const handleSwapTokenListSelection:IHandleSwapTokenListSelection = useCallback(
     (id) =>
     {
       try {
@@ -55,18 +34,19 @@ export default function TokensListsSelect (
             if (selectableTokensList.tokensList?.id === id)
               selectableTokensList.selected = !selectableTokensList.selected;
           });
-          updateCheckAll(new_selectableTokensLists);
           setselectableTokensLists(new_selectableTokensLists);
         }
       } catch (error) {
-        console.error(`TokensListsSelect.tsx: changeTokensListCheckboxStatus: error=${error}`);
+        console.error(`TokensListsSelect.tsx: handleSwapTokenListSelection: error=${error}`);
       }
     },
-    [selectableTokensLists, setselectableTokensLists, updateCheckAll],
+    [selectableTokensLists, setselectableTokensLists],
   )
 
-
-  const handleInvertAllChecks = useCallback( () =>
+  /**
+   * Invert all token lists selection
+   */
+  const handleInvertAllTokensListSelection = useCallback( () =>
     {
       try {
         if (selectableTokensLists && selectableTokensLists.length > 0) {
@@ -74,18 +54,18 @@ export default function TokensListsSelect (
           selectableTokensLists.map((selectableTokensList) => {
             selectableTokensList.selected = (selectableTokensList.selectable?!selectableTokensList.selected:false)
           });
-          updateCheckAll(new_selectableTokensLists);
           setselectableTokensLists(new_selectableTokensLists);
         }
       } catch (error) {
-        console.error(`TokensListsSelect.tsx: handleInvertAllChecks: error=${error}`);
+        console.error(`TokensListsSelect.tsx: handleInvertAllTokensListSelection: error=${error}`);
       }
     },
-    [selectableTokensLists, setselectableTokensLists, updateCheckAll]
+    [selectableTokensLists, setselectableTokensLists]
   );
 
- 
-
+  /**
+   * Select all token lists
+   */
   const handleCheckSelectAll = useCallback( () =>
     {
       try {
@@ -96,43 +76,29 @@ export default function TokensListsSelect (
             selectableTokensList.selected = (selectableTokensList.selectable?newCheckAll:false)
           });
           setselectableTokensLists(new_selectableTokensLists);
-          updateCheckAll(new_selectableTokensLists);
         }
         setCheckAll(newCheckAll);
       } catch (error) {
         console.error(`TokensListsSelect.tsx: handleCheckSelectAll: error=${error}`);
       }
     },
-    [checkAll, selectableTokensLists, setselectableTokensLists, updateCheckAll]
+    [checkAll, selectableTokensLists, setselectableTokensLists]
   );
 
+  /**
+   * Keep token lists "Check all" selection status updated
+   */
   useEffect( () =>
     {
       try {
         setisCheckAllDisabled( (selectableTokensLists?.length ? selectableTokensLists.every ((selectableTokensList) => (selectableTokensList.selectable === false)) : true) )
+        setCheckAll( (selectableTokensLists?.length ? selectableTokensLists.every( (selectableTokensList) => ( selectableTokensList.selected || !selectableTokensList.selectable ) ) : false) )
       } catch (error) {
         console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
       }
     }, [selectableTokensLists]
   );
 
-
-  useEffect( () =>
-    {
-      try {
-        updateCheckAll(selectableTokensLists);
-      }
-      catch (error) {
-        console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
-      }
-    }
-    , [selectableTokensLists, updateCheckAll]
-  )
-
-  const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
-   + ( ((selectableTokensLists?.length||0)=== 0) ? "fill-base-content opacity-10 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
-
- 
 
   return (
     <>
@@ -154,7 +120,7 @@ export default function TokensListsSelect (
                     />
                   </label>
                   <label>
-                    <ArrowPathRoundedSquareIcon className={iconClsInvert} onClick={handleInvertAllChecks} />
+                    <ArrowPathRoundedSquareIcon className={iconClsInvert} onClick={handleInvertAllTokensListSelection} />
                   </label>
                 </th>
                 <th className="p-2 text-center font-medium">{t('moveTokens.stepZero.tokensListsTable.listName')}</th>
@@ -175,7 +141,7 @@ export default function TokensListsSelect (
 
               <SelectableTokensLists
                 selectableTokensLists={selectableTokensLists}
-                changeTokensListCheckboxStatus={changeTokensListCheckboxStatus}
+                handleSwapTokenListSelection={handleSwapTokenListSelection}
               />
               :
               <tr>
