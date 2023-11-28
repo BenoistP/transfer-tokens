@@ -27,20 +27,10 @@ export default function TokensListsSelect (
   const handleSwapTokenListSelection:IHandleSwapTokenListSelection = useCallback(
     (id) =>
     {
-      try {
-        if (selectableTokensLists) {
-          const new_selectableTokensLists = [...selectableTokensLists];
-          selectableTokensLists.map((selectableTokensList) => {
-            if (selectableTokensList.tokensList?.id === id)
-              selectableTokensList.selected = !selectableTokensList.selected;
-          });
-          setselectableTokensLists(new_selectableTokensLists);
-        }
-      } catch (error) {
-        console.error(`TokensListsSelect.tsx: handleSwapTokenListSelection: error=${error}`);
-      }
+        setselectableTokensLists( selectableTokensLists?.map( (selectableTokensList) =>
+          ( selectableTokensList.tokensList?.id === id ? {...selectableTokensList, selected: !selectableTokensList.selected} : selectableTokensList ) ) );
     },
-    [selectableTokensLists, setselectableTokensLists],
+    [selectableTokensLists, setselectableTokensLists]
   )
 
   /**
@@ -48,17 +38,8 @@ export default function TokensListsSelect (
    */
   const handleInvertAllTokensListSelection = useCallback( () =>
     {
-      try {
-        if (selectableTokensLists && selectableTokensLists.length > 0) {
-          const new_selectableTokensLists = [...selectableTokensLists];
-          selectableTokensLists.map((selectableTokensList) => {
-            selectableTokensList.selected = (selectableTokensList.selectable?!selectableTokensList.selected:false)
-          });
-          setselectableTokensLists(new_selectableTokensLists);
-        }
-      } catch (error) {
-        console.error(`TokensListsSelect.tsx: handleInvertAllTokensListSelection: error=${error}`);
-      }
+      setselectableTokensLists( selectableTokensLists?.map( (selectableTokensList) =>
+        ( {...selectableTokensList, selected: ( selectableTokensList.selectable ? !selectableTokensList.selected : false )} ) ) );
     },
     [selectableTokensLists, setselectableTokensLists]
   );
@@ -66,21 +47,12 @@ export default function TokensListsSelect (
   /**
    * Select all token lists
    */
-  const handleCheckSelectAll = useCallback( () =>
+  const handleAllTokensListSelection = useCallback( () =>
     {
-      try {
-        const newCheckAll = !checkAll
-        if (selectableTokensLists) {
-          const new_selectableTokensLists = [...selectableTokensLists];
-          new_selectableTokensLists.map((selectableTokensList) => {
-            selectableTokensList.selected = (selectableTokensList.selectable?newCheckAll:false)
-          });
-          setselectableTokensLists(new_selectableTokensLists);
-        }
-        setCheckAll(newCheckAll);
-      } catch (error) {
-        console.error(`TokensListsSelect.tsx: handleCheckSelectAll: error=${error}`);
-      }
+      const newCheckAll = !checkAll
+      setCheckAll(newCheckAll);
+      setselectableTokensLists( selectableTokensLists?.map( (selectableTokensList) =>
+        ( {...selectableTokensList, selected: ( selectableTokensList.selectable ? newCheckAll : false )} ) ) );
     },
     [checkAll, selectableTokensLists, setselectableTokensLists]
   );
@@ -99,7 +71,6 @@ export default function TokensListsSelect (
     }, [selectableTokensLists]
   );
 
-
   return (
     <>
       <div className="w-full bg-base-200 overflow-x-hidden shadow-xl rounded-box bg-cover bg-top p-4 ">
@@ -115,7 +86,7 @@ export default function TokensListsSelect (
                   <label className="m-0 mr-2">
                     <input type="checkbox" className="checkbox checkbox-xs sm:checkbox-md md:checkbox-lg"
                       checked={checkAll}
-                      onChange={handleCheckSelectAll}
+                      onChange={handleAllTokensListSelection}
                       disabled={isCheckAllDisabled}
                     />
                   </label>
