@@ -9,34 +9,20 @@ import { ArrowPathRoundedSquareIcon, ExclamationCircleIcon, InformationCircleIco
 // Styles
 import { clsLoadingTokenLists, clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
 
-// ------------------------------
-
-const TokensListsSelect = ( { 
-  // chainId,
-  selectableTokensLists,
-  setselectableTokensLists,
-  isLoading, isError    }: ITokensListsSelectProps ) =>
+export default function TokensListsSelect (
+  { selectableTokensLists, setselectableTokensLists, isLoading, isError }: ITokensListsSelectProps )
   {
 
   const { t } = useTranslation()
   const [isCheckAllDisabled, setisCheckAllDisabled] = useState(false)
   const [checkAll, setCheckAll] = useState<boolean>(false);
 
-  // ---
-
   const isAllChecked = useCallback( () =>
     {
       try {
         if (selectableTokensLists) {
-          const isAllChecked = selectableTokensLists.every(
-            (selectableTokensList) => {
-              return (
-                selectableTokensList.selected || !selectableTokensList.selectable
-              )
-            }
-          ) // every
-          return isAllChecked;
-        } // if (selectableTokensLists)
+          return selectableTokensLists.every( (selectableTokensList) => ( selectableTokensList.selected || !selectableTokensList.selectable ) )
+        }
       } catch (error) {
         console.error(`TokensListsSelect.tsx: isAllChecked: error=${error}`);
       }
@@ -45,57 +31,19 @@ const TokensListsSelect = ( {
     [selectableTokensLists]
   );
 
-  // ---
-
-  useEffect( () =>
-    {
-      try {
-        if (!selectableTokensLists || ((selectableTokensLists.length||0) === 0)) {
-          setisCheckAllDisabled(true)
-        } else {
-          const notSelectable = selectableTokensLists.every ( (selectableTokensList) => {
-            return (
-              selectableTokensList.selectable === false
-            )
-          })
-          setisCheckAllDisabled(notSelectable)
-        }
-      } catch (error) {
-        console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
-      }
-    }, [selectableTokensLists]
-  );
-
-  // ---
-
-/* 
-  const SelectableTokensListsListMemo = useMemo(
-    () =>
-      <SelectableTokensLists
-        selectabletokensLists={selectableTokensLists}
-        chainId={chainId}
-        changeTokensListCheckboxStatus={changeTokensListCheckboxStatus}
-      />
-    , [ selectableTokensLists, chainId //, changeTokensListCheckboxStatus
-      ]
-  );
-*/
-
-  // ---
-
-  const updateCheckAll = useCallback( (selectableTokensLists:TSelectableTokensLists) =>
+   const updateCheckAll = useCallback( (selectableTokensLists:TSelectableTokensLists) =>
     {
       try {
         if (selectableTokensLists) {
           setCheckAll(isAllChecked());
-        } // if (selectableTokensLists)
+        }
       } catch (error) {
         console.error(`TokensListsSelect.tsx: updateCheckAll: error=${error}`);
       }
     },
     [isAllChecked]
   );
-  // ---
+
 
   const changeTokensListCheckboxStatus:IChangeTokensListCheckboxStatus = useCallback(
     (id) =>
@@ -117,7 +65,6 @@ const TokensListsSelect = ( {
     [selectableTokensLists, setselectableTokensLists, updateCheckAll],
   )
 
-  // ---
 
   const handleInvertAllChecks = useCallback( () =>
     {
@@ -135,9 +82,9 @@ const TokensListsSelect = ( {
       }
     },
     [selectableTokensLists, setselectableTokensLists, updateCheckAll]
-  ); // handleInvertAllChecks
+  );
 
-  // ---
+ 
 
   const handleCheckSelectAll = useCallback( () =>
     {
@@ -157,9 +104,18 @@ const TokensListsSelect = ( {
       }
     },
     [checkAll, selectableTokensLists, setselectableTokensLists, updateCheckAll]
-  ); // handleCheckSelectAll
+  );
 
-  // ---
+  useEffect( () =>
+    {
+      try {
+        setisCheckAllDisabled( (selectableTokensLists?.length ? selectableTokensLists.every ((selectableTokensList) => (selectableTokensList.selectable === false)) : true) )
+      } catch (error) {
+        console.error(`TokensListsSelect.tsx: useEffect[selectableTokensLists]: error=${error}`);
+      }
+    }, [selectableTokensLists]
+  );
+
 
   useEffect( () =>
     {
@@ -176,7 +132,7 @@ const TokensListsSelect = ( {
   const iconClsInvert = "w-6 h-6 sm:w-10 sm:h-10 -ml-1 -mt-1 sm:-mt-2 md:-mt-1 scale-75 hover:scale-85 md:scale-100 md:hover:scale-100 transition-all duration-300 ease-in-out "
    + ( ((selectableTokensLists?.length||0)=== 0) ? "fill-base-content opacity-10 cursor-not-allowed" : "fill-base-content opacity-40 cursor-pointer") ;
 
-  // ---
+ 
 
   return (
     <>
@@ -219,12 +175,9 @@ const TokensListsSelect = ( {
 
               <SelectableTokensLists
                 selectableTokensLists={selectableTokensLists}
-                // chainId={chainId}
                 changeTokensListCheckboxStatus={changeTokensListCheckboxStatus}
               />
-
               :
-
               <tr>
                 <td colSpan={2}>
                 {
@@ -273,7 +226,3 @@ const TokensListsSelect = ( {
     </>
   );
 }
-
-// ------------------------------
-
-export default TokensListsSelect;
