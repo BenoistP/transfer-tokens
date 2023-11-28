@@ -10,7 +10,7 @@ import { ArrowPathRoundedSquareIcon, ExclamationCircleIcon, InformationCircleIco
 import { clsLoadingTokenLists, clsIconStatusSize } from "@uiconsts/twDaisyUiStyles";
 
 export default function TokensListsSelect(
-  { selectableTokensLists, setselectableTokensLists, isLoading, isError }: ITokensListsSelectProps) {
+  { selectableTokensLists, setselectableTokensLists, isLoading, isError }: ITokensListsSelectProps): JSX.Element {
 
   const { t } = useTranslation()
   const [checkAllDisabled, setcheckAllDisabled] = useState(false)

@@ -136,7 +136,9 @@ type TTokensListVersion = {
   patch: number,
 }
 
-
+type PageProps = {
+  children: ReactNode
+}
 type TSelectableTokensLists = TSelectableTokensList[]|TNullUndef;
 
 type TSelectableTokensList = {

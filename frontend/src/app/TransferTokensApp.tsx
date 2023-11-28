@@ -13,24 +13,22 @@ import '@App/i18nConfig';
 import '@styles/global.css'
 import '@styles/tailwind.css'
 
-// ----------------------------------------------------------------------
+export default function TransferTokensApp(): JSX.Element {
 
-const TransferTokensApp = ( ) =>
-{
-return (
-  <BrowserRouter>
-    <I18nextProvider i18n={i18next} /* defaultNS={'translation'} */ >
+  return (
+    <BrowserRouter>
+      <I18nextProvider i18n={i18next} /* defaultNS={'translation'} */ >
 
         <TransferTokensAppPageLayout>
 
           <Routes>
 
             <Route path={"/transferTokens"}
-                element={
-                  <Suspense fallback="loading">
-                    <MainContent />
-                  </Suspense>
-                }
+              element={
+                <Suspense fallback="loading">
+                  <MainContent />
+                </Suspense>
+              }
             ></Route>
 
             {/* default redirect to home page */}
@@ -41,9 +39,6 @@ return (
         </TransferTokensAppPageLayout>
 
       </I18nextProvider>
-  </BrowserRouter>
+    </BrowserRouter>
   )
-
-} // TransferTokensApp
-
-export default TransferTokensApp;
+}
