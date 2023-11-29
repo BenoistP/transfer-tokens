@@ -235,7 +235,7 @@ type TTokenBasicData = {
 type TTokenType = "ERC20"|"COINBRIDGE"
 type TTokenExtraData = {
   type: TTokenType;
-  totalSupply: TTokenSupply;
+  totalSupply?: TTokenSupply;
   // ...
 }
 
