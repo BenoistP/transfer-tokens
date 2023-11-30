@@ -1740,13 +1740,13 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
   )
 
 
-  const updateTokensInstances = useCallback(
+  const updateChainTokenListTokensInstances = useCallback(
     async (_chainTokensList:TChainTokensList) =>
     {
       try {
-        console.debug(`updateTokensInstances: _chainTokensList=${_chainTokensList.chainId} tokensCount=${_chainTokensList.tokensCount} `)
+        console.debug(`updateChainTokenListTokensInstances: _chainTokensList=${_chainTokensList.chainId} tokensCount=${_chainTokensList.tokensCount} `)
         if (_chainTokensList.tokensCount && _chainTokensList?.tokens?.length && (!_chainTokensList.tokensInstances || (_chainTokensList.tokensCount != _chainTokensList.tokensInstances?.length))) {
-          console.debug(`updateTokensInstances: UPDATE `)
+          console.debug(`updateChainTokenListTokensInstances: UPDATE `)
           _chainTokensList.tokensInstances =  new Array<TTokenInstance>();
           for (let indexToken = 0; indexToken < _chainTokensList?.tokens?.length; indexToken++) {
             const _tokenInstance = initTokenInstance(_chainTokensList.tokens[indexToken], indexToken+1)
@@ -1755,11 +1755,11 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
         }
         await updateChainTokensListTokensInstances(_chainTokensList, targetAddress)
 
-        console.debug(`updateTokensInstances: after updateChainTokensListTokensInstances`)
+        console.debug(`updateChainTokenListTokensInstances: after updateChainTokensListTokensInstances`)
 
         // console.dir(_chainTokensList.tokensInstances)
       } catch (error) {
-        console.error(`updateTokensInstances error: ${error}`);
+        console.error(`updateChainTokenListTokensInstances error: ${error}`);
       }
     },
     [initTokenInstance, targetAddress, updateChainTokensListTokensInstances]
@@ -1876,10 +1876,14 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
     },
     [chainId, getSelectedTokenLists, selectableTokensLists, tokensLists]
   )
-
+/* 
   useEffect(
     () =>
     {
+      const wait5 = async () => {
+        await new Promise(r => setTimeout(r, 5000));
+        console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: after wait5`)
+      }
       console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]`)
       // console.dir(selectedChainsTokensList)
       // if (selectedChainTokensLists) {
@@ -1901,11 +1905,9 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
         // console.dir(selectedChainTokensList)
         if (selectedChainTokensList) {
           await updateTokensInstances(selectedChainTokensList)
+          console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: after await updateTokensInstances`)
         }
       })
-
-
-
       console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: after forEach await updateTokensInstances`)
 
       const tokensInstancesFromSelectedTokensLists: TTokensInstances = []
@@ -1917,8 +1919,12 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
         }
       })
 
-      settokensInstanceIndex(getTokensInstanceIndex(tokensInstancesFromSelectedTokensLists))
-      settokensInstances(tokensInstancesFromSelectedTokensLists)
+      // wait 5 seconds for tokensInstances to be updated
+      wait5().then( () => {
+        console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: settokensInstances`)
+        settokensInstanceIndex(getTokensInstanceIndex(tokensInstancesFromSelectedTokensLists))
+        settokensInstances(tokensInstancesFromSelectedTokensLists)
+        })
 
       // setStateLoadingTokensInstances(false)
       //       setStateUpdatingTokensInstances(false)
@@ -1927,8 +1933,46 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
     },
     [selectedChainTokensLists, updateTokensInstances, settokensInstanceIndex, getTokensInstanceIndex]
   )
+ */
 
-
+  useEffect(
+    () =>
+    {
+      const updateChainTokenListsTokensInstances = async () => {
+        // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: updateChainTokenListsTokensInstances`)
+        const promises:Promise<any>[] = []
+        selectedChainTokensLists?.forEach( async(selectedChainTokensList:TChainsTokensListNullUndef) => {
+          // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: updateChainTokenListsTokensInstances selectedChainTokensList=`)
+          // console.dir(selectedChainTokensList)
+          // if (selectedChainTokensList) {
+          //   // updateChainTokenListsTokensInstancesTokensInstances(selectedChainTokensList)
+          //   promises.push(updateChainTokenListTokensInstances(selectedChainTokensList))
+          //   // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: after await updateChainTokenListsTokensInstancesTokensInstances`)
+          // }
+          selectedChainTokensList && promises.push(updateChainTokenListTokensInstances(selectedChainTokensList))
+        })
+        await Promise.all(promises)
+        // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: updateChainTokenListsTokensInstances done`)
+      }
+      // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST] selectedChainTokensLists?.length=${selectedChainTokensLists?.length}`)
+      updateChainTokenListsTokensInstances().then( () => {
+        // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: after updateChainTokenListsTokensInstances THEN`)
+        const tokensInstancesFromSelectedTokensLists: TTokensInstances = []
+        selectedChainTokensLists?.forEach( (selectedChainTokensList:TChainsTokensListNullUndef) => {
+          // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: selectedChainTokensList=`)
+          // console.dir(selectedChainTokensList)
+          if (selectedChainTokensList?.tokensInstances) {
+            tokensInstancesFromSelectedTokensLists.push(...selectedChainTokensList.tokensInstances)
+          }
+        })
+        // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: settokensInstances`)
+        settokensInstanceIndex(getTokensInstanceIndex(tokensInstancesFromSelectedTokensLists))
+        settokensInstances(tokensInstancesFromSelectedTokensLists)
+      })
+      console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: after updateChainTokenListsTokensInstances`)
+    },
+    [selectedChainTokensLists, updateChainTokenListTokensInstances, settokensInstanceIndex, getTokensInstanceIndex]
+  )
 
   /**
    * Sets up the watch for Transfer Events
