@@ -1628,6 +1628,7 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
             _chainTokensList.loadState = EChainTokensListLoadState.contracts
           }
           if (_chainTokensList.loadState == EChainTokensListLoadState.contracts) {
+            console.debug(`updateChainTokensListTokensInstances EStepsLoadTokensData == CONTRACTS`)
             const connectedADDRESS = (connectedAddress?connectedAddress.toUpperCase():"");
             // Load : sourceBalances, decimals, names, symbols, sourceTransferAbility, [targetBalances, targetTransferAbility]
             // tokens names
@@ -1649,46 +1650,34 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
                 await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensSourceCanTransferPromises, tokensDecimalsPromises, tokensSymbolsPromises, tokensTargetBalancesPromises, tokensTargetCanTransferToPromises ]) :
                 await Promise.all( [tokensNamesPromises, tokensSourceBalancesPromises, tokensSourceCanTransferPromises, tokensDecimalsPromises, tokensSymbolsPromises]) ;
             // Check for errors
-            if ( (tokensNames && tokensNames.length || tokensSymbols && tokensSymbols.length) &&
-                tokensSourceBalances && tokensSourceCanTransfer && tokensDecimals &&
-                (!_targetAddress ? true : tokensTargetBalances && tokensTargetBalances.length && tokensTargetCanTransferTo && tokensTargetCanTransferTo.length) ) {
-
-              // const namesErrors = tokensNames?.some( (tokenName) => tokenName.name == undefined)
-              // const symbolsErrors = tokensSymbols?.some( (tokensSymbol) => tokensSymbol.symbol == undefined)
-              // console.debug(`updateChainTokensListTokensInstances MISSING names ${namesErrors} or symbols ${symbolsErrors}`)
-              // console.dir(tokensNames)
-              // console.dir(tokensSymbols)
-
-              const sourceBalancesErrors = tokensSourceBalances?.some( (tokenSourceBalance:any) => tokenSourceBalance.balance == undefined)
-              const sourceCanTransferErrors = tokensSourceCanTransfer?.some( (tokenSourceCanTransfer) => tokenSourceCanTransfer == undefined)
-              const decimalsErrors = tokensDecimals?.some( (tokenDecimals) => tokenDecimals.decimals == undefined)
-              // console.dir(tokensSourceBalances)
-              // console.dir(tokensSourceCanTransfer)
-              // console.dir(tokensDecimals)
-
-              if (sourceBalancesErrors || sourceCanTransferErrors || decimalsErrors) {
-                console.debug(`updateChainTokensListTokensInstances MISSING sourceBalances ${sourceBalancesErrors} or sourceCanTransfer ${sourceCanTransferErrors} or decimals ${decimalsErrors}`)
-                setStateErrorLoadingTokensInstances(true)
-                return
-              }
-
-              if (_targetAddress) {
-                const targetBalancesErrors = tokensTargetBalances?.some( (tokenTargetBalance:any) => { tokenTargetBalance == undefined})
-                const targetCanTransferToErrors = tokensTargetCanTransferTo?.some( (tokenTargetCanTransferTo:any) => { tokenTargetCanTransferTo == undefined})
-                console.dir(tokensTargetBalances)
-                console.dir(tokensTargetCanTransferTo)
-                if (targetBalancesErrors || targetCanTransferToErrors) {
-                  console.debug(`updateChainTokensListTokensInstances MISSING targetBalances ${targetBalancesErrors} or targetCanTransferTo ${targetCanTransferToErrors}`)
-                  setStateErrorLoadingTokensInstances(true)
-                  return
-                }
-              }
-
-            } else {
+            if (  (!(tokensNames && tokensNames.length) && !(tokensSymbols && tokensSymbols.length))
+                  || !tokensSourceBalances || !tokensSourceCanTransfer || !tokensDecimals
+                  || (_targetAddress && (!tokensTargetBalances || !tokensTargetCanTransferTo)) ) {
               // Missing promises results
               console.debug(`updateChainTokensListTokensInstances MISSING PROMISES RESULTS`)
               setStateErrorLoadingTokensInstances(true)
               return
+            }
+            // const namesErrors = tokensNames?.some( (tokenName) => tokenName.name == undefined)
+            // const symbolsErrors = tokensSymbols?.some( (tokensSymbol) => tokensSymbol.symbol == undefined)
+            const sourceBalancesErrors = tokensSourceBalances?.some( (tokenSourceBalance:any) => tokenSourceBalance.balance == undefined)
+            const sourceCanTransferErrors = tokensSourceCanTransfer?.some( (tokenSourceCanTransfer) => tokenSourceCanTransfer == undefined)
+            const decimalsErrors = tokensDecimals?.some( (tokenDecimals) => tokenDecimals.decimals == undefined)
+            if (sourceBalancesErrors || sourceCanTransferErrors || decimalsErrors) {
+              console.debug(`updateChainTokensListTokensInstances MISSING sourceBalances ${sourceBalancesErrors} or sourceCanTransfer ${sourceCanTransferErrors} or decimals ${decimalsErrors}`)
+              setStateErrorLoadingTokensInstances(true)
+              return
+            }
+            if (_targetAddress) {
+              const targetBalancesErrors = tokensTargetBalances?.some( (tokenTargetBalance:any) => { tokenTargetBalance == undefined})
+              const targetCanTransferToErrors = tokensTargetCanTransferTo?.some( (tokenTargetCanTransferTo:any) => { tokenTargetCanTransferTo == undefined})
+              // console.dir(tokensTargetBalances)
+              // console.dir(tokensTargetCanTransferTo)
+              if (targetBalancesErrors || targetCanTransferToErrors) {
+                console.debug(`updateChainTokensListTokensInstances MISSING targetBalances ${targetBalancesErrors} or targetCanTransferTo ${targetCanTransferToErrors}`)
+                setStateErrorLoadingTokensInstances(true)
+                return
+              }
             }
 
             // Merge loadTokensOnChainDataPromises results
@@ -1709,8 +1698,8 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
             _chainTokensList.loadState = (!_targetAddress?EChainTokensListLoadState.symbols:EChainTokensListLoadState.targetTransferAbility)
 
           } else if (_targetAddress) {
-            // console.debug(`updateChainTokensListTokensInstances _TARGETADDRESS _tokensInstances=`)
-            // console.dir(_chainTokensList.tokensInstances)
+            console.debug(`updateChainTokensListTokensInstances _TARGETADDRESS _tokensInstances=`)
+            console.dir(_chainTokensList.tokensInstances)
 
             const allInstancesWithTargetData = _chainTokensList.tokensInstances?.every( (_tokenInstance:TTokenInstance) =>
               _tokenInstance.userData && _tokenInstance.userData[targetADDRESS as any] && _tokenInstance.userData[targetADDRESS as any].balance && _tokenInstance.userData[targetADDRESS as any].canTransfer )
@@ -1754,9 +1743,7 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
           }
         }
         await updateChainTokensListTokensInstances(_chainTokensList, targetAddress)
-
-        console.debug(`updateChainTokenListTokensInstances: after updateChainTokensListTokensInstances`)
-
+        // console.debug(`updateChainTokenListTokensInstances: after updateChainTokensListTokensInstances`)
         // console.dir(_chainTokensList.tokensInstances)
       } catch (error) {
         console.error(`updateChainTokenListTokensInstances error: ${error}`);
@@ -1876,64 +1863,6 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
     },
     [chainId, getSelectedTokenLists, selectableTokensLists, tokensLists]
   )
-/* 
-  useEffect(
-    () =>
-    {
-      const wait5 = async () => {
-        await new Promise(r => setTimeout(r, 5000));
-        console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: after wait5`)
-      }
-      console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]`)
-      // console.dir(selectedChainsTokensList)
-      // if (selectedChainTokensLists) {
-      //   for (let i = 0; i < selectedChainTokensLists?.length; i++) {
-      //     const selectedChainTokensList = selectedChainTokensLists[i];
-      //     // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: selectedChainTokensList=`)
-      //     // console.dir(selectedChainTokensList)
-      //     selectedChainTokensList && updateTokensInstances(selectedChainTokensList)
-      //   }
-      // }
-
-      // setStateLoadingTokensInstances(true)
-      // setStateIsFetchingData(true)
-      // setStateErrorLoadingTokensInstances(false)
-      // fetchDataIssuesWarnShown.current = false;
-
-      selectedChainTokensLists?.forEach( async(selectedChainTokensList:TChainsTokensListNullUndef) => {
-        // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: selectedChainTokensList=`)
-        // console.dir(selectedChainTokensList)
-        if (selectedChainTokensList) {
-          await updateTokensInstances(selectedChainTokensList)
-          console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: after await updateTokensInstances`)
-        }
-      })
-      console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: after forEach await updateTokensInstances`)
-
-      const tokensInstancesFromSelectedTokensLists: TTokensInstances = []
-      selectedChainTokensLists?.forEach( (selectedChainTokensList:TChainsTokensListNullUndef) => {
-        // console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: selectedChainTokensList=`)
-        // console.dir(selectedChainTokensList)
-        if (selectedChainTokensList?.tokensInstances) {
-          tokensInstancesFromSelectedTokensLists.push(...selectedChainTokensList.tokensInstances)
-        }
-      })
-
-      // wait 5 seconds for tokensInstances to be updated
-      wait5().then( () => {
-        console.debug(`useEffect [SELECTEDCHAINSTOKENSLIST]: settokensInstances`)
-        settokensInstanceIndex(getTokensInstanceIndex(tokensInstancesFromSelectedTokensLists))
-        settokensInstances(tokensInstancesFromSelectedTokensLists)
-        })
-
-      // setStateLoadingTokensInstances(false)
-      //       setStateUpdatingTokensInstances(false)
-      //       setStateIsFetchingData(false)
-
-    },
-    [selectedChainTokensLists, updateTokensInstances, settokensInstanceIndex, getTokensInstanceIndex]
-  )
- */
 
   useEffect(
     () =>
