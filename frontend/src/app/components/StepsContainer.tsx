@@ -158,8 +158,55 @@ export default function StepsContainer (
     []
   ) // getTokenOnChainData_addressBalance
 
+
+  const updateChainTokenListTokenInstance = useCallback(
+    async( _tokenInstance:TTokenInstance ) =>
+    {
+      try {
+        console.debug(`updateChainTokenListTokenInstance _tokenInstance: ${_tokenInstance.name}`)
+        console.dir(_tokenInstance)
+
+        // console.debug(`updateChainTokenListTokenInstance selectedChainTokensLists:`)
+        // console.dir(selectedChainTokensLists)
+        // selectedChainTokensLists?.forEach( (chainTokensList:TChainsTokensListNullUndef) => {
+        //   console.dir(chainTokensList)
+        //   // if (chainTokensList) {
+        //   //   chainTokensList.tokensInstances?.forEach( (token:TTokenInstance) => {
+        //   //     if (token.address == _tokenInstance.address) {
+        //   //       token = _tokenInstance
+        //   //     }
+        //   //   })
+        //   // }
+        // })
+
+        // console.debug(`updateChainTokenListTokenInstance selectableTokensLists:`)
+        // console.dir(selectableTokensLists)
+        // selectableTokensLists?.forEach( (selectableTokensList:TSelectableTokensList) => {
+        //   console.dir(selectableTokensList)
+        //   // if (chainTokensList) {
+        //   //   chainTokensList.tokensInstances?.forEach( (token:TTokenInstance) => {
+        //   //     if (token.address == _tokenInstance.address) {
+        //   //       token = _tokenInstance
+        //   //     }
+        //   //   })
+        //   // }
+        // })
+        if (_tokenInstance.chainTokensList.tokensInstances && _tokenInstance.chainTokensList.tokensInstances.length > _tokenInstance.index) {
+          _tokenInstance.chainTokensList.tokensInstances[_tokenInstance.index] = _tokenInstance
+        }
+        console.debug(`updateChainTokenListTokenInstance _tokenInstance.chainTokensList.tokensInstances:`)
+        console.dir(_tokenInstance.chainTokensList.tokensInstances)
+
+      } catch (error) {
+        console.error(`updateChainTokenListTokenInstance error: ${error}`);
+      }
+    },
+    [/* selectableTokensLists, selectedChainTokensLists */]
+  ) // updateChainTokenListTokenInstance
+
   /**
    * Update tokenInstance with balances and transfer state
+   * @param _tokensInstances
    * @param _tokenInstanceAddress
    * @param _updateFromAddress
    * @param _fromAddress
@@ -169,83 +216,6 @@ export default function StepsContainer (
    * @param _targetAddressBalanceUpdate
    * @param _processedState optionnal ETokenTransferState when called from transfer
    */
-  /*
-  const updateTokenInstanceBalancesAndTransferState = useCallback(
-    ( _tokenInstanceAddress: TAddressString, _updateFromAddress: boolean, _fromAddress: TAddressString, _fromAddressBalanceUpdate: TTokenAmount,
-      _updateToAddress: boolean, _toAddress: TAddressString, _toAddressBalanceUpdate: TTokenAmount, _processedState?: ETokenTransferState) =>
-    {
-      try {
-        console.debug(`updateTokenInstanceBalancesAndTransferState _tokenInstanceAddress: ${_tokenInstanceAddress} _updateFromAddress: ${_updateFromAddress} _fromAddress: ${_fromAddress} _fromAddressBalanceUpdate: ${_fromAddressBalanceUpdate} _updateToAddress: ${_updateToAddress} _toAddress: ${_toAddress} _toAddressBalanceUpdate: ${_toAddressBalanceUpdate} _processedState: ${_processedState}`)
-        if (tokensInstances && tokensInstances.length && _tokenInstanceAddress && (_updateFromAddress||_updateToAddress||_processedState)) {
-          const newTokensInstances = tokensInstances.map( (tokenInstance:TTokenInstance) => {
-            if (tokenInstance.address == _tokenInstanceAddress) {
-              const fromADDRESS = _fromAddress?.toUpperCase()
-              const toADDRESS = _toAddress?.toUpperCase()
-              let {transferAmount, transferAmountLock, selected, selectable, userData} = tokenInstance;
-              const {transferState} = tokenInstance;
-              // Update balances
-              if (_updateFromAddress||_updateToAddress) {
-                // userData = {...userData,
-                //   [fromADDRESS as any]: ( _updateFromAddress?{...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate }: {...userData[fromADDRESS as any]} ),
-                //   [toADDRESS as any]: ( _updateToAddress?{...userData[toADDRESS as any], balance: _toAddressBalanceUpdate }: {...userData[toADDRESS as any]} ) };
-                if (_updateFromAddress) {
-                  userData = {...userData,
-                    [fromADDRESS as any]: ( _updateFromAddress?{...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate }: {...userData[fromADDRESS as any]} ) };
-                }
-                if (_updateToAddress) {
-                  userData = {...userData,
-                    [toADDRESS as any]: ( _updateToAddress?{...userData[toADDRESS as any], balance: _toAddressBalanceUpdate }: {...userData[toADDRESS as any]} ) };
-                }
-                const connectedADDRESS = connectedAddress?.toUpperCase()
-                // If connected address has NO BALANCE : set as unselectable/unselected, remove transfer amount and lock
-                // if (  (connectedADDRESS == fromADDRESS && _updateFromAddress && !_fromAddressBalanceUpdate)
-                //     || (connectedADDRESS == toADDRESS && _updateToAddress && !_toAddressBalanceUpdate)) {
-                //   selectable = false; selected = false; transferAmount = 0n; transferAmountLock = false;
-                // }
-                // debugger
-                if (connectedADDRESS == fromADDRESS && _updateFromAddress) {
-console.debug(`updateTokenInstanceBalancesAndTransferState update on connectedADDRESS(${connectedADDRESS})`)
-                  if  (!_fromAddressBalanceUpdate) {
-                    selectable = false; selected = false; transferAmount = 0n; transferAmountLock = false;
-console.debug(`updateTokenInstanceBalancesAndTransferState reset transferAmount to 0`)
-                  } else if (transferAmount > _fromAddressBalanceUpdate) {
-                    transferAmount = _fromAddressBalanceUpdate;
-console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to ${transferAmount}`)
-                  }
-                }
-                if (connectedADDRESS == toADDRESS && _updateToAddress) {
-console.debug(`updateTokenInstanceBalancesAndTransferState update on connectedADDRESS(${connectedADDRESS})`)
-                  if  (!_toAddressBalanceUpdate) {
-                    selectable = false; selected = false; transferAmount = 0n; transferAmountLock = false;
-console.debug(`updateTokenInstanceBalancesAndTransferState reset transferAmount to 0`)
-                  } else if (transferAmount > _toAddressBalanceUpdate) {
-                    transferAmount = _toAddressBalanceUpdate;
-console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to ${transferAmount}`)
-                  }
-                }
-              }
-              // Update processed state, reset selected, transfer amount and lock depending on processed state
-              if (_processedState) {
-                transferState.transfer = _processedState;
-                if (_processedState == ETokenTransferState.processed) {
-                  selected = false; transferAmount = 0n; transferAmountLock = false;
-                } else if (_processedState == ETokenTransferState.skipped) selected = false;
-              }
-              return {...tokenInstance, userData, transferAmount, transferAmountLock, selected, selectable,  transferState}
-            }
-            return tokenInstance
-          })
-          console.debug(`updateTokenInstanceBalancesAndTransferState newTokensInstances:`)
-          console.dir(newTokensInstances)
-          settokensInstances(newTokensInstances)
-        }
-      } catch (error) {
-        console.error(`updateTokenInstanceBalancesAndTransferState error: ${error}`);
-      }
-    },
-    [tokensInstances, connectedAddress]
-  )
-*/
   const updateTokenInstanceBalancesAndTransferState = useCallback(
     ( _tokensInstances: TTokensInstances, _tokenInstanceAddress: TAddressString, _updateFromAddress: boolean, _fromAddress: TAddressString, _fromAddressBalanceUpdate: TTokenAmount,
       _updateToAddress: boolean, _toAddress: TAddressString, _toAddressBalanceUpdate: TTokenAmount, _processedState?: ETokenTransferState) =>
@@ -261,9 +231,6 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
               const {transferState} = tokenInstance;
               // Update balances
               if (_updateFromAddress||_updateToAddress) {
-                // userData = {...userData,
-                //   [fromADDRESS as any]: ( _updateFromAddress?{...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate }: {...userData[fromADDRESS as any]} ),
-                //   [toADDRESS as any]: ( _updateToAddress?{...userData[toADDRESS as any], balance: _toAddressBalanceUpdate }: {...userData[toADDRESS as any]} ) };
                 if (_updateFromAddress) {
                   userData = {...userData,
                     [fromADDRESS as any]: ( _updateFromAddress?{...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate }: {...userData[fromADDRESS as any]} ) };
@@ -273,12 +240,6 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
                     [toADDRESS as any]: ( _updateToAddress?{...userData[toADDRESS as any], balance: _toAddressBalanceUpdate }: {...userData[toADDRESS as any]} ) };
                 }
                 const connectedADDRESS = connectedAddress?.toUpperCase()
-                // If connected address has NO BALANCE : set as unselectable/unselected, remove transfer amount and lock
-                // if (  (connectedADDRESS == fromADDRESS && _updateFromAddress && !_fromAddressBalanceUpdate)
-                //     || (connectedADDRESS == toADDRESS && _updateToAddress && !_toAddressBalanceUpdate)) {
-                //   selectable = false; selected = false; transferAmount = 0n; transferAmountLock = false;
-                // }
-                // debugger
                 if (connectedADDRESS == fromADDRESS && _updateFromAddress) {
 console.debug(`updateTokenInstanceBalancesAndTransferState update on connectedADDRESS(${connectedADDRESS})`)
                   if  (!_fromAddressBalanceUpdate) {
@@ -307,7 +268,9 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
                   selected = false; transferAmount = 0n; transferAmountLock = false;
                 } else if (_processedState == ETokenTransferState.skipped) selected = false;
               }
-              return {...tokenInstance, userData, transferAmount, transferAmountLock, selected, selectable,  transferState}
+              const newTokenInstance = {...tokenInstance, userData, transferAmount, transferAmountLock, selected, selectable,  transferState}
+              updateChainTokenListTokenInstance(newTokenInstance)
+              return newTokenInstance
             }
             return tokenInstance
           })
@@ -319,7 +282,7 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
         console.error(`updateTokenInstanceBalancesAndTransferState error: ${error}`);
       }
     },
-    [connectedAddress]
+    [connectedAddress, updateChainTokenListTokenInstance]
   )
 
   /**
@@ -349,7 +312,9 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
               } else if (_processedState == ETokenTransferState.skipped) {
                 selected = false; // UNselect
               }
-              return {...tokenInstance, transferAmount, transferAmountLock, selected, transferState}
+              const newTokenInstance = {...tokenInstance, transferAmount, transferAmountLock, selected, transferState}
+              updateChainTokenListTokenInstance(newTokenInstance)
+              return newTokenInstance
             }
             return tokenInstance
           })
@@ -359,7 +324,7 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
         console.error(`updateTokenInstanceTransferState error: ${error}`);
       }
     },
-    [tokensInstances]
+    [tokensInstances, updateChainTokenListTokenInstance]
   )
 
   
@@ -437,7 +402,7 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
       }
     },
     [getTokenOnChainData_addressBalance, updateTokenInstanceBalancesAndTransferState, tokensInstances]
-  )
+  );
 
   // ---
 
@@ -455,22 +420,25 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
                 // showTransfer(tokenInstance, from, to, value) // show ALL transfers
                 if (tokenInstance.userData && from && to && value) {
                     updateTokenOnTransferProcessed(tokenInstance, from, to)
-                } // if (from && to && value)
-              } // if (log.args)
-            } // if (tokenInstance)
-          }) // logs.forEach
-        } // if (logs && logs.length)
+                }
+              }
+            }
+          })
+        }
       } catch (error) {
         console.error(`processTransferEvent logs: ${logs} error: ${error}`);
       }
     },
     [tokensInstanceIndex, updateTokenOnTransferProcessed]
-  ); // processTransferEvent
+  );
 
-  // ---
+  // ------------------------------
 
-  // Filter
+  // Filters
 
+  /**
+   * Name filter
+   */
   const updateNameFilter = useCallback(
     (e: React.FormEvent<HTMLInputElement>): void =>
       {
@@ -481,10 +449,11 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
         }
       },
       []
-  ); // updateNameFilter
+  );
 
-  // ---
-
+  /**
+   * Balance filter
+   */
   const updateBalanceFilter = useCallback(
     (e: React.FormEvent<HTMLInputElement>): void =>
       {
@@ -497,8 +466,9 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
       []
   ); // updateBalanceFilter
 
-  // ---
-
+  /**
+   * Balance > 0 filter
+   */
   const switchBalanceGt0Filter = useCallback(
     (): void =>
       {
@@ -511,8 +481,9 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
       [balanceGt0Filter]
   ); // switchBalanceGt0Filter
 
-  // ---
-
+  /**
+   * Address filter
+   */
   const updateAddressFilter = useCallback(
     (e: React.FormEvent<HTMLInputElement>): void =>
       {
@@ -525,8 +496,9 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
       []
   ); // updateAddressFilter
 
-  // ---
-
+  /**
+   * Clear all filters
+   */
   const clearAllFilters = useCallback(
     (): void =>
       {
@@ -546,16 +518,20 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
     updateNameFilter, switchBalanceGt0Filter, updateBalanceFilter, updateAddressFilter, clearAllFilters
   }
 
-  // ---
-
+  /**
+   * TokenInstance Filter Params (name, balance, address, balanceGt0) memoized
+   */
   const tokenInstanceFilterParams = useMemo(() => {
     return {
       name: nameFilter, balanceGt0: balanceGt0Filter, balance: balanceFilter, address: addressFilter
     }
   }, [nameFilter, balanceGt0Filter, balanceFilter, addressFilter]);
 
-  // ---
-
+  /**
+   * TokenInstance Filter
+   * @param token
+   * @returns true if tokenInstance should be filtered out
+   */
   const filterTokenInstance = useCallback( (token:TTokenInstance) =>
     {
       const filterTokenInstanceWithFilterProps = (filter: ITokenInstanceListFilterStates, token:TTokenInstance) =>
@@ -603,6 +579,9 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
 
   // Sort
 
+  /**
+   * Sort tokensInstances by displayId
+   */
   const sortByTokenDisplayId = useCallback( () => {
     if (sortOrderTokenDisplayId === 0) {
       setsortOrderTokenDisplayId(1)
@@ -613,8 +592,9 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
     }
   }, [sortOrderTokenDisplayId] );
 
-  // ---
-
+  /**
+   * Sort tokensInstances by tokenName
+   */
   const sortByTokenName = useCallback( () => {
     if (sortOrderTokenName === 0) {
       setsortOrderTokenName(1)
@@ -625,8 +605,9 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
     }
   }, [sortOrderTokenName] );
 
-  // ---
-
+  /**
+   * Sort tokensInstances by tokenBalance
+   */
   const sortByTokenBalance = useCallback( () => {
     if (sortOrderTokenBalance === 0) {
       setsortOrderTokenBalance(1)
@@ -637,8 +618,9 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
     }
   }, [sortOrderTokenBalance] );
 
-  // ---
-
+  /**
+   * Sort order params
+   */
   const sortOrderParams = { displayId: sortOrderTokenDisplayId, tokenName: sortOrderTokenName, tokenBalance: sortOrderTokenBalance } as ISortOrderParams
 
   /**
@@ -959,7 +941,7 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
   // ------------------------------
 
   // Tokens Data init & loading
-
+/* 
   const initTokenInstance = useCallback( (_token:TTokenChainData, _displayId:TDisplayId ): TTokenInstance|TNullUndef =>
     {
       if (_token?.address) {
@@ -978,6 +960,31 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
           userData: tokenInstanceUserDataArray,
         }
         return _tokenInstance
+      }
+    },
+    [chainId, connectedAddress]
+  )
+ */
+  const initTokenInstance = useCallback( (_chainTokensList:TChainTokensList, _indexToken:number): TTokenInstance|TNullUndef =>
+    {
+      if (_chainTokensList.tokens) {
+        const _token = _chainTokensList.tokens[_indexToken]
+        if (_token?.address) {
+          const connectedADDRESS = (connectedAddress?connectedAddress.toUpperCase():"");
+          const tokenInstanceUserDataArray:TTokenInstanceUserData[] = new Array<TTokenInstanceUserData>()
+          if (connectedADDRESS) {
+            tokenInstanceUserDataArray[connectedADDRESS as any] = {
+              balance: null,
+              canTransfer: true, // warn: COULD BE FALSE for non transferable tokens, should be defaulted to false then checked with a multicall
+            }
+          }
+          return {
+            chainId, type: (_token.extraData && _token.extraData.type ? _token.extraData.type : "ERC20" as TTokenType),
+            address: _token.address, contract: null, decimals: 18, name: "", symbol: "", displayed: true, displayId: _indexToken+1, selectID: chainId+"-"+_token.address,
+            selectable: false, selected: false, transferAmount: 0n, transferAmountLock: false, transferState: { processing: false, transfer: ETokenTransferState.none},
+            userData: tokenInstanceUserDataArray, chainTokensList: _chainTokensList, index: _indexToken,
+          }
+        }
       }
     },
     [chainId, connectedAddress]
@@ -1738,7 +1745,8 @@ console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount to
           console.debug(`updateChainTokenListTokensInstances: UPDATE `)
           _chainTokensList.tokensInstances =  new Array<TTokenInstance>();
           for (let indexToken = 0; indexToken < _chainTokensList?.tokens?.length; indexToken++) {
-            const _tokenInstance = initTokenInstance(_chainTokensList.tokens[indexToken], indexToken+1)
+            // const _tokenInstance = initTokenInstance(_chainTokensList.tokens[indexToken], indexToken+1)
+            const _tokenInstance = initTokenInstance(_chainTokensList, indexToken)
             if (_tokenInstance) _chainTokensList.tokensInstances.push(_tokenInstance);
           }
         }

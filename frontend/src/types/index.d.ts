@@ -300,6 +300,8 @@ type TTokenTransferState = {
 }
 
 type TTokenInstance = {
+  chainTokensList: TChainTokensList;
+  index: number;
   chainId: ChainId;
   address: TokenContractNullableAddress;// TokenContractAddress;
   type: TTokenType;
