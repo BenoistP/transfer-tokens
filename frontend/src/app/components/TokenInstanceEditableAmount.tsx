@@ -55,6 +55,7 @@ export default function TokenInstanceEditableAmount({
 	 */
 	const updateAmount = (e: React.FormEvent<HTMLInputElement>): void => {
 		try {
+console.debug(`TokenInstanceEditableAmount: updateAmount e.currentTarget.value: ${e.currentTarget.value} `)
 			const strValue = e.currentTarget.value
 			const strInt = strValue.split('.')[0]
 			const strFloat = strValue.split('.')[1]

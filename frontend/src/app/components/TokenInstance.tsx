@@ -56,7 +56,7 @@ export default function TokenInstance({
 	const [isCheckboxDisabled, setisCheckboxDisabled] = useState<boolean>(true)
 
 	const [transferAmount, settransferAmount] = useState<TTokenAmount | null>(tokenInstance.transferAmount)
-	const [transferAmountLock, settransferAmountLock] = useState<boolean>(tokenInstance.transferAmountLock)
+	const [lockTransferAmount, settransferAmountLock] = useState<boolean>(tokenInstance.lockTransferAmount)
 
   const canTransferFrom = tokenInstance.userData[accountADDRESS as any]?.canTransfer
   const canTransferTo = tokenInstance.userData[targetADDRESS as any]?.canTransfer
@@ -103,11 +103,11 @@ export default function TokenInstance({
 	 */
 	useEffect(
 		() => {
-			tokenInstance.transferAmountLock != transferAmountLock &&
+			tokenInstance.lockTransferAmount != lockTransferAmount &&
 				updateTransferAmountLock &&
-				updateTransferAmountLock(tokenInstance.selectID, transferAmountLock)
+				updateTransferAmountLock(tokenInstance.selectID, lockTransferAmount)
 		},
-		[transferAmountLock, tokenInstance.transferAmountLock, tokenInstance.selectID, updateTransferAmountLock],
+		[lockTransferAmount, tokenInstance.lockTransferAmount, tokenInstance.selectID, updateTransferAmountLock],
 	)
 
 	/**
@@ -294,7 +294,7 @@ export default function TokenInstance({
 							balance={balanceFrom && balanceFrom.valueOf() ? balanceFrom.valueOf() : 0n}
 							amount={transferAmount && transferAmount.valueOf() ? transferAmount.valueOf() : 0n}
 							setamount={settransferAmount}
-							transferAmountLock={transferAmountLock}
+							transferAmountLock={lockTransferAmount}
 							settransferAmountLock={settransferAmountLock}
 							decimals={Number(decimals)}
 							unSelect={unSelect}
@@ -313,7 +313,7 @@ export default function TokenInstance({
 						balance={balanceFrom && balanceFrom.valueOf() ? balanceFrom.valueOf() : 0n}
 						amount={transferAmount && transferAmount.valueOf() ? transferAmount.valueOf() : 0n}
 						setamount={settransferAmount}
-						transferAmountLock={transferAmountLock}
+						transferAmountLock={lockTransferAmount}
 						settransferAmountLock={settransferAmountLock}
 						decimals={Number(decimals)}
 						unSelect={unSelect}

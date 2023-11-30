@@ -1008,7 +1008,7 @@ const getTokensList_TokenData_fromJsonAPI = async(tokensList: TTokensList, fetch
 // ---
 /*
 // const filteredTokensListsFromTokensLists = async(tokensLists:TTokensLists, chainId:TChainIdNullUndef):Promise<TFilteredTokensListsNullUndef>  =>
-const filterTokensListByChain = (tokensList:TTokensList, chainId:TChainIdNullUndef):TChainsTokensListNullUndef  =>
+const filterTokensListByChain = (tokensList:TTokensList, chainId:TChainIdNullUndef):TChainTokensListNullUndef  =>
 {
   try {
     console.debug(`filterTokensListByChain: chainId=${chainId} tokensList.URI=${tokensList.URI} tokensList.chains=${tokensList.chains}` )
@@ -1211,7 +1211,7 @@ const getChainsTokenListsArray = async(tokens: TTokenChainDataArray, chains: TCh
 
 // ---
 
-const getChainTokensList = (tokensList:TTokensList, chainId:TChainId):TChainsTokensListNullUndef  => {
+const getChainTokensList = (tokensList:TTokensList, chainId:TChainId):TChainTokensListNullUndef  => {
   try {
     // console.debug(`getChainTokensList: chainId=${chainId} tokensList.URI=${tokensList.URI}`)
 /*

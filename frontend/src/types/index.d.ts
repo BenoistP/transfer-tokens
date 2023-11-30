@@ -194,9 +194,9 @@ type TTokensList = {
   chainsTokenLists?: TChainsTokensListArrayNullUndef,
 }
 
-type TChainsTokensListArrayNullUndef = TChainsTokensListNullUndef[]|TNullUndef;
+type TChainsTokensListArrayNullUndef = TChainTokensListNullUndef[]|TNullUndef;
 
-type TChainsTokensListNullUndef = TChainTokensList|TNullUndef;
+type TChainTokensListNullUndef = TChainTokensList|TNullUndef;
 
 type TChainTokensList = {
   tokensListId: TTokensListId,
@@ -316,9 +316,13 @@ type TTokenInstance = {
   selectID: TSelectId;
 
   selectable: boolean;
-  selected: boolean,
+  selected: boolean;
   transferAmount: TTokenAmount;
-  transferAmountLock: boolean;
+  // transferAmount: bigint;
+  // XtransferAmountLock: boolean;
+  lockTransferAmount: boolean;
+
+  testAmount: TTokenAmount; // TODO: REMOVE <----------------- TEST ONLY
 
   transferState: TTokenTransferState;
 
