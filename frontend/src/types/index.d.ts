@@ -324,9 +324,8 @@ type TTokenInstanceUserData = {
   canTransfer: boolean;
 }
 
-type TTokenInstanceIndex = {
-  [key: string]: TTokenInstance;
-}
+type TTokenInstanceIndex = Map<TTokenContractAddress, TTokenInstance>;
+
 type TokenID = string;
 
 type TChecked = {
