@@ -15,9 +15,9 @@
 ☑️ i18n switch
 
 ☑️ Toasts
-🚧  Toasts with links
+☑️ Toasts with links
 
-☑️ Theme 🌗
+☑️ Themes 🌗
 ☑️ Theme switch
 ☑️ Theme switch to finalize (multiple themes)
 ☑️ Theme colors: realOrange Theme
@@ -43,7 +43,7 @@ use tokens lists in context to display tokens list in client
 
 🚧 More languages
 
-All Steps : 🚧
+All Steps :
 
 - ☑️ Handle chain change (back to step 0, remove checked token lists)
 
@@ -94,12 +94,12 @@ Step 3:
 - ☑️ Transfer progress state is not up to date on resume from pause
 - ☑️ Show success toast with txhash link
 - ☑️ Fix wrong tx link in toasts
-- 🚧 add PENDING toast waiting for tx hash
+- ☑️ PENDING toast waiting for tx hash
 
 🚧 avatar list/select style
 
 ☑️ Make an address component and properly check address validity
-🚧 check if destination address is a contract and show a warning
+🚧 check: if destination address is a contract show a warning
 
 Bugs :
   🐜
