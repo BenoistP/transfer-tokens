@@ -172,13 +172,13 @@ type TTokensListNullUndef = TTokensList | TNullUndef;
 
 type TTokensList = {
   id: TTokensListId,
-  name: TStringNullUndef, // RealTokens, Coingecko Ethereum, Coingecko Gnosis
+  name: TStringNullUndef, // RealTokens, Coingecko Ethereum, Coingecko Gnosis, ...
   description: TStringNullUndef,
   version?: TTokensListVersion,
   timestamp: TTimeStamp,
   sha?: TSha,
   fetchLen?: number,
-  source?: TStringNullUndef, // Coingecko, RealT
+  source?: TStringNullUndef, // Coingecko, RealT, ...
   keywords?: TTokensListKeywords, // [ "default", "list", "cowswap" ]
   type: TTokensListType,
   tokensCount?: TtokenCount,
@@ -236,7 +236,6 @@ type TTokenType = "ERC20"|"COINBRIDGE"
 type TTokenExtraData = {
   type: TTokenType;
   totalSupply?: TTokenSupply;
-  // ...
 }
 
 type TTokensList_TokenData = TTokenList_TokenData[]|TNullUndef;
