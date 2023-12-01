@@ -286,9 +286,6 @@ type TsetSelectableTokensLists = React.Dispatch<React.SetStateAction<TSelectable
 type TsetTokensInstances = React.Dispatch<React.SetStateAction<TTokensInstances>>;
 type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressStringEmpty>>
 
-
-// type TTokenLoadStatus = number;
-
 type TTokensInstances = TTokenInstance[]|TNullUndef;
 
 type TDisplayId = number
@@ -310,7 +307,6 @@ type TTokenInstance = {
   name: TTokenName;
   symbol: TTokenSymbol;
 
-  // status: TTokenLoadStatus;
   displayed: boolean;
   displayId: TDisplayId;
   selectID: TSelectId;
@@ -318,14 +314,9 @@ type TTokenInstance = {
   selectable: boolean;
   selected: boolean;
   transferAmount: TTokenAmount;
-  // transferAmount: bigint;
-  // XtransferAmountLock: boolean;
   lockTransferAmount: boolean;
 
-  // testAmount: TTokenAmount; // TODO: REMOVE <----------------- TEST ONLY
-
   transferState: TTokenTransferState;
-
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x... IN UPPERCASE)
 }
 
