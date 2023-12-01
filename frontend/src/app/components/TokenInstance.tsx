@@ -42,9 +42,9 @@ export default function TokenInstance({
 		(balance: bigint) => void,
 	]
 
-	const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(false)
-	const [shortBalanceString, setshortBalanceString] = useState('') as [string, (balance: string) => void]
-	const [longBalanceString, setlongBalanceString] = useState('') as [string, (balance: string) => void]
+	const [fromIsRoundedDisplayAmount, setfromIsRoundedDisplayAmount] = useState<boolean>(false)
+	const [fromShortBalanceString, setfromShortBalanceString] = useState('') as [string, (balance: string) => void]
+	const [fromLongBalanceString, setfromLongBalanceString] = useState('') as [string, (balance: string) => void]
 
 	const [isRoundedTargetDisplayAmount, setisRoundedTargetDisplayAmount] = useState<boolean>(false)
 	const [shortTargetBalanceString, setshortTargetBalanceString] = useState('') as [string, (balance: string) => void]
@@ -62,6 +62,10 @@ export default function TokenInstance({
 	const balanceFrom = tokenInstance.userData[accountADDRESS as any]?.balance || 0n
 	const balanceTo = tokenInstance.userData[targetADDRESS as any]?.balance || 0n
 
+	const LONG_BALANCE_STRING_DECIMALS = '.' + '0'.repeat(Number(decimals))
+	const LONG_BALANCE_STRING_ZERO = '0' + LONG_BALANCE_STRING_DECIMALS
+	const DECIMALS_MULTIPLIER = 10n ** decimals
+
 	// Styles
 	const clsTextSize = 'text-xs sm:text-sm md:text-base'
 	const clsTextLight = 'font-light ' + clsTextSize
@@ -70,6 +74,74 @@ export default function TokenInstance({
 	const clsText = clsTextPaddingLeft + (balanceFrom && balanceFrom.valueOf() > 0n ? clsTextReadable : clsTextLight)
 	const clsTooltipLeft = 'tooltip tooltip-left ' + clsTextReadable
 	const clsIconSize = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6'
+
+	/**
+	 * Balances display computations
+	 */
+	const updateBalance = useCallback(
+		(_balance: bigint,
+			_setLongBalanceString: (balance: string) => void,
+			_setShortBalanceString: (balance: string) => void,
+			_setIsRoundedDisplayAmount: React.Dispatch<React.SetStateAction<boolean>>) => {
+			try {
+				if (_balance) {
+					const balanceValue = _balance.valueOf()
+					const intValue = balanceValue / DECIMALS_MULTIPLIER
+					const decimalValue = balanceValue - intValue * DECIMALS_MULTIPLIER
+					if (decimalValue > 0) {
+						// exact decimals display
+						const longDecimalDisplayPadded = decimalValue.toString().padStart(Number(decimals), '0')
+						const zeroDecimalToFixed = Number('0.' + longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+						const shortDecimalDisplay = zeroDecimalToFixed.substring(2)
+						const roundUpShortDisplay = zeroDecimalToFixed.substring(0, 2) == '1.'
+						const longBalanceString = intValue + '.' + longDecimalDisplayPadded
+						const shortBalanceString = `${roundUpShortDisplay ? intValue + 1n : intValue}.${shortDecimalDisplay}`
+						_setLongBalanceString(longBalanceString)
+						_setShortBalanceString(shortBalanceString)
+						if (
+							roundUpShortDisplay ||
+							!longBalanceString.startsWith(shortBalanceString) ||
+							!longBalanceString.substring(shortBalanceString.length).match(/^0+$/)
+						) {
+							_setIsRoundedDisplayAmount(true)
+						}
+					} else {
+						_setLongBalanceString(intValue.toString() + LONG_BALANCE_STRING_DECIMALS)
+						_setShortBalanceString(intValue.toString())
+					}
+				} else if (_balance == 0n) {
+					_setLongBalanceString(LONG_BALANCE_STRING_ZERO)
+					_setShortBalanceString('0')
+				}
+			} catch (error) {
+				console.error(`TokenInstance.tsx updateBalance error=${error}`)
+			}
+		},
+		[LONG_BALANCE_STRING_DECIMALS, LONG_BALANCE_STRING_ZERO, DECIMALS_MULTIPLIER, decimals],
+	)
+
+	/**
+	 * Update checkbox status on transfer ability change
+	 */
+	const unSelect = useCallback(() => {
+		balanceFrom &&
+			tokenInstance.selected &&
+			canTransferTo &&
+			updateCheckboxStatus &&
+			updateCheckboxStatus(tokenInstance.selectID, { checked: false })
+	}, [canTransferTo, balanceFrom, updateCheckboxStatus, tokenInstance.selectID, tokenInstance.selected])
+
+	/**
+	 * Update checkbox status on transfer amount change
+	 */
+	const handleCheckboxClick = useCallback(() => {
+		transferAmount &&
+			transferAmount.valueOf() > 0n &&
+			balanceFrom &&
+			canTransferTo &&
+			updateCheckboxStatus &&
+			updateCheckboxStatus(tokenInstance.selectID)
+	}, [tokenInstance.selectID, canTransferTo, transferAmount, balanceFrom, updateCheckboxStatus])
 
 	/**
 	 * Name update
@@ -119,84 +191,20 @@ export default function TokenInstance({
 			updateTransferAmountLock(tokenInstance.selectID, lockTransferAmount)
 	}, [lockTransferAmount, tokenInstance.lockTransferAmount, tokenInstance.selectID, updateTransferAmountLock])
 
-	/**
-	 * trigger Balance computations for display on : decimals, balance
-	 */
-	useEffect(() => {
-		try {
-			if (balanceFrom) {
-				const balanceValue = balanceFrom.valueOf()
-				const intValue = balanceValue / 10n ** decimals
-				const decimalValue = balanceValue - intValue * 10n ** decimals
-				if (decimalValue > 0) {
-					// exact decimals display
-					const longDecimalDisplayPadded = decimalValue.toString().padStart(Number(decimals), '0')
-					const zeroDecimalToFixed = Number('0.' + longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
-					const shortDecimalDisplay = zeroDecimalToFixed.substring(2)
-					const roundUpShortDisplay = zeroDecimalToFixed.substring(0, 2) == '1.'
-					const longBalanceString = intValue + '.' + longDecimalDisplayPadded
-					const shortBalanceString = `${roundUpShortDisplay ? intValue + 1n : intValue}.${shortDecimalDisplay}`
-					setlongBalanceString(longBalanceString)
-					setshortBalanceString(shortBalanceString)
-					if (
-						roundUpShortDisplay ||
-						!longBalanceString.startsWith(shortBalanceString) ||
-						!longBalanceString.substring(shortBalanceString.length).match(/^0+$/)
-					) {
-						setisRoundedDisplayAmount(true)
-					}
-				} else {
-					setlongBalanceString(intValue.toString() + '.' + '0'.repeat(Number(decimals)))
-					setshortBalanceString(intValue.toString())
-				}
-			} else if (balanceFrom == 0n) {
-				setlongBalanceString('0.' + '0'.repeat(Number(decimals)))
-				setshortBalanceString('0')
-			}
-		} catch (error) {
-			console.error(`TokenInstance.tsx useEffect [decimals, balance] error=${error}`)
-		}
-	}, [decimals, balanceFrom, tokenInstance.displayId])
 
 	/**
-	 * trigger target Balance computations for display on : decimals, balance
+	 * trigger connected address balance computations for display
 	 */
 	useEffect(() => {
-		try {
-			const targetBalance = balanceTo
-			if (targetBalance) {
-				const balanceValue = targetBalance.valueOf()
-				const intValue = balanceValue / 10n ** decimals
-				const decimalValue = balanceValue - intValue * 10n ** decimals
-				if (decimalValue > 0) {
-					// exact decimals display
-					const longDecimalDisplayPadded = decimalValue.toString().padStart(Number(decimals), '0')
-					const zeroDecimalToFixed = Number('0.' + longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
-					const shortDecimalDisplay = zeroDecimalToFixed.substring(2)
-					const roundUpShortDisplay = zeroDecimalToFixed.substring(0, 2) == '1.'
-					const longBalanceString = intValue + '.' + longDecimalDisplayPadded
-					const shortBalanceString = `${roundUpShortDisplay ? intValue + 1n : intValue}.${shortDecimalDisplay}`
-					setlongTargetBalanceString(longBalanceString)
-					setshortTargetBalanceString(shortBalanceString)
-					if (
-						roundUpShortDisplay ||
-						!longBalanceString.startsWith(shortBalanceString) ||
-						!longBalanceString.substring(shortBalanceString.length).match(/^0+$/)
-					) {
-						setisRoundedTargetDisplayAmount(true)
-					}
-				} else {
-					setlongTargetBalanceString(intValue.toString() + '.' + '0'.repeat(Number(decimals)))
-					setshortTargetBalanceString(intValue.toString())
-				}
-			} else if (targetBalance == 0n) {
-				setlongTargetBalanceString('0.' + '0'.repeat(Number(decimals)))
-				setshortTargetBalanceString('0')
-			}
-		} catch (error) {
-			console.error(`TokenInstance.tsx useEffect [decimals, balance] error=${error}`)
-		}
-	}, [balanceTo, decimals])
+		updateBalance(balanceFrom, setfromLongBalanceString, setfromShortBalanceString, setfromIsRoundedDisplayAmount)
+	}, [balanceFrom, setfromLongBalanceString, updateBalance])
+
+	/**
+	 * trigger target balance computations for display
+	 */
+	useEffect(() => {
+		updateBalance(balanceTo, setlongTargetBalanceString, setshortTargetBalanceString, setisRoundedTargetDisplayAmount)
+	}, [balanceTo, updateBalance])
 
 	/**
 	 * isSelected
@@ -226,37 +234,14 @@ export default function TokenInstance({
 		}
 	}, [canTransferFrom, canTransferTo, tokenInstance.selectable, balanceFrom, transferAmount])
 
-	/**
-	 * Update checkbox status on transfer ability change
-	 */
-	const unSelect = useCallback(() => {
-		balanceFrom &&
-			tokenInstance.selected &&
-			canTransferTo &&
-			updateCheckboxStatus &&
-			updateCheckboxStatus(tokenInstance.selectID, { checked: false })
-	}, [canTransferTo, balanceFrom, updateCheckboxStatus, tokenInstance.selectID, tokenInstance.selected])
-
-	/**
-	 * Update checkbox status on transfer amount change
-	 */
-	const handleCheckboxClick = useCallback(() => {
-		transferAmount &&
-			transferAmount.valueOf() > 0n &&
-			balanceFrom &&
-			canTransferTo &&
-			updateCheckboxStatus &&
-			updateCheckboxStatus(tokenInstance.selectID)
-	}, [tokenInstance.selectID, canTransferTo, transferAmount, balanceFrom, updateCheckboxStatus])
-
 	return (
 		<>
 			<td className={clsTextPaddingLeft + 'w-8 text-center font-thin'}>{tokenInstance.displayId}</td>
 			<td className={clsText + ' text-ellipsis min-w-full '}>{name ? name : symbol ? symbol : <Loading />}</td>
 			<td className={clsText + ' text-right pr-2'}>
-				{longBalanceString ? (
-					<div className="tooltip tooltip-info" data-tip={longBalanceString}>
-						<p className={isRoundedDisplayAmount ? 'italic font-medium' : ''}>{shortBalanceString}</p>
+				{fromLongBalanceString ? (
+					<div className="tooltip tooltip-info" data-tip={fromLongBalanceString}>
+						<p className={fromIsRoundedDisplayAmount ? 'italic font-medium' : ''}>{fromShortBalanceString}</p>
 					</div>
 				) : (
 					<Loading />
@@ -364,16 +349,16 @@ export default function TokenInstance({
 					)}
 					{(tokenInstance.transferState.transfer == ETokenTransferState.processed ||
 						tokenInstance.transferState.transfer == ETokenTransferState.previous_processed) && (
-						<div
-							className={clsTooltipLeft + 'pl-1 text-info tooltip-success'}
-							data-tip={t('moveTokens.stepAny.token.transfer.success')}>
-							<CheckCircleIcon
-								className={
-									clsIconSize + ' fill-success' + (tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')
-								}
-							/>
-						</div>
-					)}
+							<div
+								className={clsTooltipLeft + 'pl-1 text-info tooltip-success'}
+								data-tip={t('moveTokens.stepAny.token.transfer.success')}>
+								<CheckCircleIcon
+									className={
+										clsIconSize + ' fill-success' + (tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')
+									}
+								/>
+							</div>
+						)}
 					{tokenInstance.transferState.transfer == ETokenTransferState.skipped && (
 						<div className={clsTooltipLeft + 'pl-1  '} data-tip={t('moveTokens.stepAny.token.transfer.skipped')}>
 							<StopCircleIcon
