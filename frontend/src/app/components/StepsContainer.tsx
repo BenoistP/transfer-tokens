@@ -221,8 +221,7 @@ export default function StepsContainer (
       _updateToAddress: boolean, _toAddress: TAddressString, _toAddressBalanceUpdate: TTokenAmount, _processedState?: ETokenTransferState) =>
     {
       try {
-        // console.debug(`updateTokenInstanceBalancesAndTransferState _tokenInstanceAddress: ${_tokenInstanceAddress} _updateFromAddress: ${_updateFromAddress} _fromAddress: ${_fromAddress} _fromAddressBalanceUpdate: ${_fromAddressBalanceUpdate} _updateToAddress: ${_updateToAddress} _toAddress: ${_toAddress} _toAddressBalanceUpdate: ${_toAddressBalanceUpdate} _processedState: ${_processedState}`)
-        // console.debug(`updateTokenInstanceBalancesAndTransferState typeof _fromAddressBalanceUpdate: ${typeof _fromAddressBalanceUpdate} typeof _toAddressBalanceUpdate: ${typeof _toAddressBalanceUpdate}`)
+        console.debug(`updateTokenInstanceBalancesAndTransferState _tokenInstanceAddress: ${_tokenInstanceAddress} _updateFromAddress: ${_updateFromAddress} _fromAddress: ${_fromAddress} _fromAddressBalanceUpdate: ${_fromAddressBalanceUpdate} _updateToAddress: ${_updateToAddress} _toAddress: ${_toAddress} _toAddressBalanceUpdate: ${_toAddressBalanceUpdate} _processedState: ${_processedState}`)
         if (_tokensInstances && _tokensInstances.length && _tokenInstanceAddress && (_updateFromAddress||_updateToAddress||_processedState)) {
           const tokensInstancesUpdate = _tokensInstances.map( (tokenInstance:TTokenInstance) => {
             if (tokenInstance.address == _tokenInstanceAddress) {
@@ -241,16 +240,21 @@ export default function StepsContainer (
                   userData = {...userData,
                     [toADDRESS as any]: ( _updateToAddress?{...userData[toADDRESS as any], balance: _toAddressBalanceUpdate }: {...userData[toADDRESS as any]} ) };
                 }
-                // debugger
                 const connectedADDRESS = connectedAddress?.toUpperCase()
                 if (connectedADDRESS == fromADDRESS && _updateFromAddress) {
                   console.debug(`updateTokenInstanceBalancesAndTransferState update on connectedADDRESS(${connectedADDRESS})`)
                   if  (!_fromAddressBalanceUpdate) {
                     selectable = false; selected = false; transferAmount = 0n; lockTransferAmount = false;
                     console.debug(`updateTokenInstanceBalancesAndTransferState reset transferAmount to 0`)
-                  } else if (transferAmount > _fromAddressBalanceUpdate) {
-                    console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount from ${transferAmount} to ${_fromAddressBalanceUpdate}`)
-                    transferAmount = _fromAddressBalanceUpdate;
+                  } else {
+                    if (transferAmount > _fromAddressBalanceUpdate) {
+                      console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount from ${transferAmount} to ${_fromAddressBalanceUpdate}`)
+                      transferAmount = _fromAddressBalanceUpdate;
+                    }
+                    if (_fromAddressBalanceUpdate) {
+                      console.debug(`updateTokenInstanceBalancesAndTransferState _fromAddressBalanceUpdate set selectable to true`)
+                      selectable = true;
+                    }
                   }
                 }
                 if (connectedADDRESS == toADDRESS && _updateToAddress) {
@@ -258,9 +262,15 @@ export default function StepsContainer (
                   if  (!_toAddressBalanceUpdate) {
                     selectable = false; selected = false; transferAmount = 0n; lockTransferAmount = false;
                     console.debug(`updateTokenInstanceBalancesAndTransferState reset transferAmount to 0`)
-                  } else if (transferAmount > _toAddressBalanceUpdate) {
-                    console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount from ${transferAmount} to ${_toAddressBalanceUpdate}`)
-                    transferAmount = _toAddressBalanceUpdate;
+                  } else {
+                    if (transferAmount > _toAddressBalanceUpdate) {
+                      console.debug(`updateTokenInstanceBalancesAndTransferState set transferAmount from ${transferAmount} to ${_toAddressBalanceUpdate}`)
+                      transferAmount = _toAddressBalanceUpdate;
+                    }
+                    if (_toAddressBalanceUpdate) {
+                      console.debug(`updateTokenInstanceBalancesAndTransferState _toAddressBalanceUpdate set selectable to true`)
+                      selectable = true;
+                    }
                   }
                 }
               }
