@@ -53,8 +53,6 @@ export default function StepsContainer(
   const [selectedChainTokensLists, setselectedChainTokensLists] = useState<TChainsTokensListArrayNullUndef>(null)
   const [tokensInstances, settokensInstances] = useState<TTokensInstances>(null)
   // Array of tokensInstances indexed by address in UPPER CASE (used for events)
-  // const [tokensInstancesIndex, settokensInstancesIndex] = useState<TTokenInstanceIndex>(new Map<"", TTokenInstance>())
-  // const [tokensInstancesIndex, settokensInstancesIndex] = useState<TTokenInstanceIndex>(new Map<"0x", TTokenInstance>())
   const [tokensInstancesIndex, settokensInstancesIndex] = useState<TTokenInstanceIndex>(new Map())
 
   const [targetAddress, settargetAddress] = useState<TAddressStringEmpty>("")
@@ -64,9 +62,10 @@ export default function StepsContainer(
   const [isUpdatingTokensInstances, setisUpdatingTokensInstances] = useState(false)
 
   // Sorting
-  const [sortOrderTokenDisplayId, setsortOrderTokenDisplayId] = useState<TsortOrder>(0) // 0: unsorted, 1: lowest first , 2 highest first
-  const [sortOrderTokenName, setsortOrderTokenName] = useState<TsortOrder>(0) // 0: unsorted, 1: lowest first , 2 highest first
-  const [sortOrderTokenBalance, setsortOrderTokenBalance] = useState<TsortOrder>(0) // 0: unsorted, 1: lowest first , 2 highest first
+  // 0: unsorted, 1: lowest first , 2 highest first
+  const [sortOrderTokenDisplayId, setsortOrderTokenDisplayId] = useState<TsortOrder>(0) 
+  const [sortOrderTokenName, setsortOrderTokenName] = useState<TsortOrder>(0)
+  const [sortOrderTokenBalance, setsortOrderTokenBalance] = useState<TsortOrder>(0)
 
   // Filtering
   const [nameFilter, setFilterName] = useState<string>("")
@@ -302,38 +301,6 @@ export default function StepsContainer(
   )
 
   /**
-   * Just a log displaying transfer events in console
-   * @param _tokenInstance
-   * @param _from
-   * @param _to
-   * @param _value
-   */
-  // const showTransfer = useCallback(
-  //   (_tokenInstance: TTokenInstance, _from: TAddressString, _to: TAddressString, _value: any) =>
-  //   {
-  //     try {
-  //       if (_tokenInstance && _from && _to && _value) {
-  //         const decimals = BigInt(_tokenInstance.decimals)
-  //         const intValue = ( _value / (10n**decimals) );
-  //         const decimalValue = _value - intValue * (10n**decimals);
-  //         let longBalanceString = "0";
-  //         if (decimalValue > 0) {
-  //           // exact decimals display
-  //           const longDecimalDisplayPadded = decimalValue.toString().padStart( Number(decimals) , "0");
-  //           longBalanceString = intValue+"."+longDecimalDisplayPadded;
-  //         } else {
-  //           longBalanceString = intValue.toString()+"."+"0".repeat(Number(decimals))
-  //         }
-  //         console.info(`> transfer of "${_tokenInstance.name}" (${_tokenInstance.address}) from:${_from} to:${_to} for: ${longBalanceString}`)
-  //       }
-  //     } catch (error) {
-  //       console.error(`showTransfer error: ${error}`);
-  //     }
-  //   },
-  //   [] // no dependencies
-  // ) // showTransfer
-
-  /**
   * Update tokenInstance on transfer
   * check if From and/or To address has data and if balances have been updated
   * @param _tokenInstance
@@ -434,7 +401,7 @@ export default function StepsContainer(
       }
     },
     []
-  ); // updateBalanceFilter
+  );
 
   /**
    * Balance > 0 filter
@@ -448,7 +415,7 @@ export default function StepsContainer(
       }
     },
     [balanceGt0Filter]
-  ); // switchBalanceGt0Filter
+  );
 
   /**
    * Address filter
@@ -462,7 +429,7 @@ export default function StepsContainer(
       }
     },
     []
-  ); // updateAddressFilter
+  );
 
   /**
    * Clear all filters
@@ -479,7 +446,7 @@ export default function StepsContainer(
       }
     },
     []
-  ); // clearAllFilters
+  );
 
   const tokenInstanceFilterParamsUpdaters = {
     updateNameFilter, switchBalanceGt0Filter, updateBalanceFilter, updateAddressFilter, clearAllFilters
@@ -538,7 +505,7 @@ export default function StepsContainer(
     }
   },
     [connectedAddress, tokenInstanceFilterParams]
-  ) // filterTokenInstance
+  )
 
   // ------------------------------
 
@@ -632,7 +599,7 @@ export default function StepsContainer(
       console.error(`sortTokensInstances error: ${error} connectedAddress=${connectedAddress}`);
       return 0
     }
-  } // sortTokensInstances
+  }
 
   // ------------------------------
 
@@ -717,7 +684,7 @@ export default function StepsContainer(
                 tokensInstance.selected = newCheckAll;
               }
             }
-            return { ...tokensInstance }
+            return {...tokensInstance }
           });
           settokensInstances(tokensInstancesCheckAll);
           if (filter) {
@@ -898,32 +865,8 @@ export default function StepsContainer(
     [chainId]
   )
 
-  // ------------------------------
-
-  // Tokens Data init & loading
-  /* 
-    const initTokenInstance = useCallback( (_token:TTokenChainData, _displayId:TDisplayId ): TTokenInstance|TNullUndef =>
-      {
-        if (_token?.address) {
-          const connectedADDRESS = (connectedAddress?connectedAddress.toUpperCase():"");
-          const tokenInstanceUserDataArray:TTokenInstanceUserData[] = new Array<TTokenInstanceUserData>()
-          if (connectedADDRESS) {
-            tokenInstanceUserDataArray[connectedADDRESS as any] = {
-              balance: null,
-              canTransfer: true, // warn: COULD BE FALSE for non transferable tokens, should be defaulted to false then checked with a multicall
-            }
-          }
-          const _tokenInstance = {
-            chainId, type: (_token.extraData && _token.extraData.type ? _token.extraData.type : "ERC20" as TTokenType),
-            address: _token.address, contract: null, decimals: 18, name: "", symbol: "", displayed: true, displayId: _displayId, selectID: chainId+"-"+_token.address,
-            selectable: false, selected: false, transferAmount: 0n, lockTransferAmount: false, transferState: { processing: false, transfer: ETokenTransferState.none},
-            userData: tokenInstanceUserDataArray,
-          }
-          return _tokenInstance
-        }
-      },
-      [chainId, connectedAddress]
-    )
+  /**
+   * Sets default values for tokenInstance
    */
   const initTokenInstance = useCallback((_chainTokensList: TChainTokensList, _indexToken: number): TTokenInstance | TNullUndef => {
     if (_chainTokensList.tokens) {
@@ -956,21 +899,15 @@ export default function StepsContainer(
   }, []
   )
 
-  // ---
-
   const setStateUpdatingTokensInstances = useCallback((isUpdating: boolean) => {
     setisUpdatingTokensInstances(isUpdating)
   }, []
   )
 
-  // ---
-
   const setStateErrorLoadingTokensInstances = useCallback((isError: boolean) => {
     setisErrorTokensInstances(isError)
   }, []
   )
-
-  // ---
 
   const setStateIsFetchingData = useCallback((isWorking: boolean) => {
     setshowActivity(isWorking)
@@ -1005,13 +942,14 @@ export default function StepsContainer(
   const MAXBATCHSIZE: number = useMemo(
     () => getMaxBatchSize(PUBLIC_MULTICALL_MAX_BATCH_SIZE_DEFAULT),
     []
-  ); // MAXBATCHSIZE
+  );
 
 
   /**
    * Contracts instanciation
    */
-  const loadTokensContracts = useCallback(async (tokensInstances: TTokensInstances): Promise<TTokensInstances> => {
+  const loadTokensContracts = useCallback(
+    async (tokensInstances: TTokensInstances): Promise<TTokensInstances> => {
     try {
       const contractCoinBridgeTokenABI = JSON.parse(CoinBridgeToken.ABI)
       tokensInstances?.forEach((tokenInstance: TTokenInstance) => {
@@ -1032,7 +970,8 @@ export default function StepsContainer(
   /**
    * Fetches token onchain data using multicall
    */
-  const getOnChainData = useCallback(async (multicallInput: any[], _maxbatchSize: number = MAXBATCHSIZE): Promise<any[]> => {
+  const getOnChainData = useCallback(
+    async (multicallInput: any[], _maxbatchSize: number = MAXBATCHSIZE): Promise<any[]> => {
     let multicallAllBatchesResult: any[] = [];
     try {
       for (let i = 0; i < Math.ceil(multicallInput.length / _maxbatchSize); i++) {
@@ -1231,7 +1170,7 @@ export default function StepsContainer(
               return {
                 value: [true],
               }
-            } // if (token?.contract)
+            }
             return null;
           });
           const multicallData = await Promise.all(multicallArray);
@@ -1258,7 +1197,7 @@ export default function StepsContainer(
       }
     },
     [fetchOnChainDataWrapper]
-  ); // loadTokensOnChainData_TransferAbility callback
+  );
 
   /**
  * Fetches token onchain data for tokens decimals
@@ -1325,7 +1264,7 @@ export default function StepsContainer(
       }
     },
     [fetchOnChainDataWrapper]
-  ); // loadTokensOnChainData_names callback
+  );
 
   /**
    * Fetches token onchain data for tokens symbols
@@ -1358,7 +1297,7 @@ export default function StepsContainer(
       }
     },
     [fetchOnChainDataWrapper]
-  ); // loadTokensOnChainData_symbols callback
+  );
 
   /**
    * Groups onchain data fetches
