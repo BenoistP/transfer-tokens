@@ -257,9 +257,9 @@ type TRealTokenReferenceData = {
   tokenPrice: number,
   currency: string,
   uuid: TUUID,
-  ethereumContract: TokenContractNullableAddress,
-  xDaiContract: TokenContractNullableAddress,
-  gnosisContract: TokenContractNullableAddress,
+  ethereumContract: TTokenContractAddressNullUndef,
+  xDaiContract: TTokenContractAddressNullUndef,
+  gnosisContract: TTokenContractAddressNullUndef,
   lastUpdate: {
     date: LastUpdateDate,
     timezone_type: Timezone_type,
@@ -303,7 +303,7 @@ type TTokenInstance = {
   chainTokensList: TChainTokensList;
   index: number;
   chainId: ChainId;
-  address: TokenContractNullableAddress;// TokenContractAddress;
+  address: TTokenContractAddress;
   type: TTokenType;
   contract: any; // Wagmi contract
   decimals: TTokenDecimals;
@@ -322,7 +322,7 @@ type TTokenInstance = {
   // XtransferAmountLock: boolean;
   lockTransferAmount: boolean;
 
-  testAmount: TTokenAmount; // TODO: REMOVE <----------------- TEST ONLY
+  // testAmount: TTokenAmount; // TODO: REMOVE <----------------- TEST ONLY
 
   transferState: TTokenTransferState;
 

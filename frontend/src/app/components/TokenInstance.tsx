@@ -61,8 +61,8 @@ export default function TokenInstance({
   const canTransferFrom = tokenInstance.userData[accountADDRESS as any]?.canTransfer
   const canTransferTo = tokenInstance.userData[targetADDRESS as any]?.canTransfer
 
-  const balanceFrom = tokenInstance.userData[accountADDRESS as any]?.balance
-  const balanceTo = tokenInstance.userData[targetADDRESS as any]?.balance
+  const balanceFrom = tokenInstance.userData[accountADDRESS as any]?.balance||0n
+  const balanceTo = tokenInstance.userData[targetADDRESS as any]?.balance||0n
 
 	/**
 	 * Name update
@@ -88,14 +88,37 @@ export default function TokenInstance({
 	/**
 	 * TransferAmount update
 	 */
+		// useEffect(() => {
+		// 	console.debug(`TokenInstance.tsx useEffect [tokenInstance.transferAmount] tokenInstance.selectID=${tokenInstance.selectID}`)
+		// 	settransferAmount(tokenInstance.transferAmount)
+		// }, [tokenInstance.selectID, tokenInstance.transferAmount])
+
+	/**
+	 * TransferAmount update
+	 * reflect object property changes
+	 */
 	useEffect(
 		() => {
-			transferAmount &&
-				tokenInstance.transferAmount != transferAmount &&
+			console.dir(`TokenInstance.tsx useEffect [tokenInstance.transferAmount]`)
+			settransferAmount(tokenInstance.transferAmount)
+		},
+		[tokenInstance.transferAmount],
+	)
+
+	/**
+	 * TransferAmount update
+	 * reflect user input changes
+	 */
+	useEffect(
+		() => {
+			console.debug(`TokenInstance.tsx useEffect [transferAmount, tokenInstance.transferAmount] tokenInstance.selectID=${tokenInstance.selectID} transferAmount=${transferAmount} tokenInstance.transferAmount=${tokenInstance.transferAmount} balanceFrom=${balanceFrom}`)
+			if (transferAmount && tokenInstance.transferAmount != transferAmount && transferAmount < balanceFrom) {
+				console.debug(`TokenInstance.tsx useEffect UPDATE [transferAmount, tokenInstance.transferAmount]`)
 				updateTransferAmount &&
 				updateTransferAmount(tokenInstance.selectID, transferAmount)
+			}
 		},
-		[transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID],
+		[transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID, balanceFrom],
 	)
 
 	/**
