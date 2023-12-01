@@ -53,7 +53,9 @@ export default function StepsContainer(
   const [selectedChainTokensLists, setselectedChainTokensLists] = useState<TChainsTokensListArrayNullUndef>(null)
   const [tokensInstances, settokensInstances] = useState<TTokensInstances>(null)
   // Array of tokensInstances indexed by address in UPPER CASE (used for events)
-  const [tokensInstanceIndex, settokensInstanceIndex] = useState<TTokenInstanceIndex>({})
+  // const [tokensInstancesIndex, settokensInstancesIndex] = useState<TTokenInstanceIndex>(new Map<"", TTokenInstance>())
+  // const [tokensInstancesIndex, settokensInstancesIndex] = useState<TTokenInstanceIndex>(new Map<"0x", TTokenInstance>())
+  const [tokensInstancesIndex, settokensInstancesIndex] = useState<TTokenInstanceIndex>(new Map())
 
   const [targetAddress, settargetAddress] = useState<TAddressStringEmpty>("")
 
@@ -374,15 +376,16 @@ export default function StepsContainer(
     [getTokenOnChainData_addressBalance, updateTokenInstanceBalancesAndTransferState, tokensInstances]
   );
 
-  // ---
-
+  /**
+   * Update tokenInstance on transfer
+  */
   const processTransferEvent = useCallback(async (logs: Log[]) => {
     try {
       if (logs && logs.length) {
         logs.forEach(async (log: any) => {
           const logADDRESS = log.address.toUpperCase()
           // Find token instance in indexed "array"
-          const tokenInstance = tokensInstanceIndex[logADDRESS]
+          const tokenInstance = tokensInstancesIndex.get(logADDRESS)
           if (tokenInstance) {
             if (log.args) {
               const from = log.args["from"], to = log.args["to"], value = log.args["value"];
@@ -398,7 +401,7 @@ export default function StepsContainer(
       console.error(`processTransferEvent logs: ${logs} error: ${error}`);
     }
   },
-    [tokensInstanceIndex, updateTokenOnTransferProcessed]
+    [tokensInstancesIndex, updateTokenOnTransferProcessed]
   );
 
   // ------------------------------
@@ -1409,13 +1412,13 @@ export default function StepsContainer(
   /**
    * Get tokens instances index
    */
-  const getTokensInstanceIndex = useCallback(
+  const getTokensInstancesIndex = useCallback(
     (tokensInstances: TTokensInstances): TTokenInstanceIndex => {
-      const tokenInstanceIndex: TTokenInstanceIndex = {};
+      const tokenInstanceIndex: TTokenInstanceIndex = new Map();
       try {
-        tokensInstances?.forEach((tokenInstance: TTokenInstance) => tokenInstanceIndex[tokenInstance.address.toUpperCase()] = tokenInstance)
+        tokensInstances?.forEach( (tokenInstance: TTokenInstance) => tokenInstanceIndex.set(tokenInstance.address.toUpperCase() as TTokenContractAddress, tokenInstance) )
       } catch (error) {
-        console.error(`getTokensInstanceIndex error: ${error}`);
+        console.error(`getTokensInstancesIndex error: ${error}`);
       }
       return tokenInstanceIndex;
     },
@@ -1655,9 +1658,9 @@ export default function StepsContainer(
   const watchTransferEvents = useCallback(
     async (): Promise<any> => {
       if (unwatch.current) unwatch.current() // remove previous watch
-      if (tokensInstances && tokensInstances.length) {
+      if (tokensInstancesIndex && tokensInstancesIndex.size) {
         // array of tokens addresses
-        const tokensAddresses = tokensInstances.map((tokenInstance: TTokenInstance) => tokenInstance.address)
+        const tokensAddresses = Array.from(tokensInstancesIndex.values(), (tokenInstance: TTokenInstance) => tokenInstance.address)
         const unwatchFn = publicClient.watchContractEvent({
           address: tokensAddresses,
           strict: true,
@@ -1669,10 +1672,11 @@ export default function StepsContainer(
           eventName: 'Transfer',
           onLogs: (logs: Log[]) => processTransferEvent(logs)
         })
+
         unwatch.current = unwatchFn;
       }
     },
-    [processTransferEvent, publicClient, reportWatchError, tokensInstances]
+    [processTransferEvent, publicClient, reportWatchError, tokensInstancesIndex]
   )
 
   // ========================================================
@@ -1685,7 +1689,7 @@ export default function StepsContainer(
   useEffect(() => {
     resetToInitialStepCB()
     settokensInstances(null)
-    settokensInstanceIndex({})
+    settokensInstancesIndex(new Map())
   },
     [chainId, connectedAddress, resetToInitialStepCB]
   )
@@ -1738,20 +1742,6 @@ export default function StepsContainer(
   )
 
   /**
-   * DEBUG
-   * DEBUG
-   * DEBUG
-   * DEBUG
-   */
-  useEffect(
-    () => {
-      console.debug(`useEffect DEBUG [TOKENSINSTANCES] tokensInstances=`)
-      console.dir(tokensInstances)
-    },
-    [tokensInstances]
-  )
-
-  /**
    * Update all selected chain tokensLists
    */
   useEffect(
@@ -1783,7 +1773,7 @@ export default function StepsContainer(
         })
         await Promise.all(promises)
       }
-      const start: number = Date.now()
+      // const start: number = Date.now()
       setStateErrorLoadingTokensInstances(false)
       setStateLoadingTokensInstances(true)
       setStateIsFetchingData(true)
@@ -1798,12 +1788,12 @@ export default function StepsContainer(
         setStateLoadingTokensInstances(false)
         setStateUpdatingTokensInstances(false)
         setStateIsFetchingData(false)
-        settokensInstanceIndex(getTokensInstanceIndex(tokensInstancesFromSelectedTokensLists))
+        settokensInstancesIndex(getTokensInstancesIndex(tokensInstancesFromSelectedTokensLists))
         settokensInstances(tokensInstancesFromSelectedTokensLists)
-        console.log(`updateChainTokenListsTokensInstances took: ${Date.now() - start}ms`)
+        // console.log(`updateChainTokenListsTokensInstances took: ${Date.now() - start}ms`)
       })
     },
-    [selectedChainTokensLists, updateChainTokenListTokensInstances, settokensInstanceIndex, getTokensInstanceIndex,
+    [selectedChainTokensLists, updateChainTokenListTokensInstances, settokensInstancesIndex, getTokensInstancesIndex,
       setStateErrorLoadingTokensInstances, setStateLoadingTokensInstances, setStateIsFetchingData, setStateUpdatingTokensInstances]
   )
 
@@ -1815,7 +1805,6 @@ export default function StepsContainer(
       watchTransferEvents()
     }, [watchTransferEvents]
   )
-  // ---------------------------------------------------
 
   return (
     <>
