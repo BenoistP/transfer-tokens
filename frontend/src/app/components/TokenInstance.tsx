@@ -19,8 +19,6 @@ import {
 	Cog8ToothIcon as CogToothProcessing,
 } from '@heroicons/react/24/solid'
 
-// ------------------------------
-
 export default function TokenInstance({
 	tokenInstance,
 	accountAddress,
@@ -58,11 +56,20 @@ export default function TokenInstance({
 	const [transferAmount, settransferAmount] = useState<TTokenAmount | null>(tokenInstance.transferAmount)
 	const [lockTransferAmount, settransferAmountLock] = useState<boolean>(tokenInstance.lockTransferAmount)
 
-  const canTransferFrom = tokenInstance.userData[accountADDRESS as any]?.canTransfer
-  const canTransferTo = tokenInstance.userData[targetADDRESS as any]?.canTransfer
+	const canTransferFrom = tokenInstance.userData[accountADDRESS as any]?.canTransfer
+	const canTransferTo = tokenInstance.userData[targetADDRESS as any]?.canTransfer
 
-  const balanceFrom = tokenInstance.userData[accountADDRESS as any]?.balance||0n
-  const balanceTo = tokenInstance.userData[targetADDRESS as any]?.balance||0n
+	const balanceFrom = tokenInstance.userData[accountADDRESS as any]?.balance || 0n
+	const balanceTo = tokenInstance.userData[targetADDRESS as any]?.balance || 0n
+
+	// Styles
+	const clsTextSize = 'text-xs sm:text-sm md:text-base'
+	const clsTextLight = 'font-light ' + clsTextSize
+	const clsTextReadable = 'font-normal ' + clsTextSize
+	const clsTextPaddingLeft = 'pl-2 '
+	const clsText = clsTextPaddingLeft + (balanceFrom && balanceFrom.valueOf() > 0n ? clsTextReadable : clsTextLight)
+	const clsTooltipLeft = 'tooltip tooltip-left ' + clsTextReadable
+	const clsIconSize = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6'
 
 	/**
 	 * Name update
@@ -87,51 +94,30 @@ export default function TokenInstance({
 
 	/**
 	 * TransferAmount update
-	 */
-		// useEffect(() => {
-		// 	console.debug(`TokenInstance.tsx useEffect [tokenInstance.transferAmount] tokenInstance.selectID=${tokenInstance.selectID}`)
-		// 	settransferAmount(tokenInstance.transferAmount)
-		// }, [tokenInstance.selectID, tokenInstance.transferAmount])
-
-	/**
-	 * TransferAmount update
 	 * reflect object property changes
 	 */
-	useEffect(
-		() => {
-			console.dir(`TokenInstance.tsx useEffect [tokenInstance.transferAmount]`)
-			settransferAmount(tokenInstance.transferAmount)
-		},
-		[tokenInstance.transferAmount],
-	)
+	useEffect(() => {
+		settransferAmount(tokenInstance.transferAmount)
+	}, [tokenInstance.transferAmount])
 
 	/**
 	 * TransferAmount update
 	 * reflect user input changes
 	 */
-	useEffect(
-		() => {
-			console.debug(`TokenInstance.tsx useEffect [transferAmount, tokenInstance.transferAmount] tokenInstance.selectID=${tokenInstance.selectID} transferAmount=${transferAmount} tokenInstance.transferAmount=${tokenInstance.transferAmount} balanceFrom=${balanceFrom}`)
-			if (transferAmount && tokenInstance.transferAmount != transferAmount && transferAmount < balanceFrom) {
-				console.debug(`TokenInstance.tsx useEffect UPDATE [transferAmount, tokenInstance.transferAmount]`)
-				updateTransferAmount &&
-				updateTransferAmount(tokenInstance.selectID, transferAmount)
-			}
-		},
-		[transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID, balanceFrom],
-	)
+	useEffect(() => {
+		if (transferAmount && tokenInstance.transferAmount != transferAmount && transferAmount < balanceFrom) {
+			updateTransferAmount && updateTransferAmount(tokenInstance.selectID, transferAmount)
+		}
+	}, [transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID, balanceFrom])
 
 	/**
 	 * TransferAmountLock update
 	 */
-	useEffect(
-		() => {
-			tokenInstance.lockTransferAmount != lockTransferAmount &&
-				updateTransferAmountLock &&
-				updateTransferAmountLock(tokenInstance.selectID, lockTransferAmount)
-		},
-		[lockTransferAmount, tokenInstance.lockTransferAmount, tokenInstance.selectID, updateTransferAmountLock],
-	)
+	useEffect(() => {
+		tokenInstance.lockTransferAmount != lockTransferAmount &&
+			updateTransferAmountLock &&
+			updateTransferAmountLock(tokenInstance.selectID, lockTransferAmount)
+	}, [lockTransferAmount, tokenInstance.lockTransferAmount, tokenInstance.selectID, updateTransferAmountLock])
 
 	/**
 	 * trigger Balance computations for display on : decimals, balance
@@ -175,45 +161,42 @@ export default function TokenInstance({
 	/**
 	 * trigger target Balance computations for display on : decimals, balance
 	 */
-	useEffect(
-		() => {
-			try {
-					const targetBalance = balanceTo
-					if (targetBalance) {
-						const balanceValue = targetBalance.valueOf()
-						const intValue = balanceValue / 10n ** decimals
-						const decimalValue = balanceValue - intValue * 10n ** decimals
-						if (decimalValue > 0) {
-							// exact decimals display
-							const longDecimalDisplayPadded = decimalValue.toString().padStart(Number(decimals), '0')
-							const zeroDecimalToFixed = Number('0.' + longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
-							const shortDecimalDisplay = zeroDecimalToFixed.substring(2)
-							const roundUpShortDisplay = zeroDecimalToFixed.substring(0, 2) == '1.'
-							const longBalanceString = intValue + '.' + longDecimalDisplayPadded
-							const shortBalanceString = `${roundUpShortDisplay ? intValue + 1n : intValue}.${shortDecimalDisplay}`
-							setlongTargetBalanceString(longBalanceString)
-							setshortTargetBalanceString(shortBalanceString)
-							if (
-								roundUpShortDisplay ||
-								!longBalanceString.startsWith(shortBalanceString) ||
-								!longBalanceString.substring(shortBalanceString.length).match(/^0+$/)
-							) {
-								setisRoundedTargetDisplayAmount(true)
-							}
-						} else {
-							setlongTargetBalanceString(intValue.toString() + '.' + '0'.repeat(Number(decimals)))
-							setshortTargetBalanceString(intValue.toString())
-						}
-					} else if (targetBalance == 0n) {
-						setlongTargetBalanceString('0.' + '0'.repeat(Number(decimals)))
-						setshortTargetBalanceString('0')
+	useEffect(() => {
+		try {
+			const targetBalance = balanceTo
+			if (targetBalance) {
+				const balanceValue = targetBalance.valueOf()
+				const intValue = balanceValue / 10n ** decimals
+				const decimalValue = balanceValue - intValue * 10n ** decimals
+				if (decimalValue > 0) {
+					// exact decimals display
+					const longDecimalDisplayPadded = decimalValue.toString().padStart(Number(decimals), '0')
+					const zeroDecimalToFixed = Number('0.' + longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+					const shortDecimalDisplay = zeroDecimalToFixed.substring(2)
+					const roundUpShortDisplay = zeroDecimalToFixed.substring(0, 2) == '1.'
+					const longBalanceString = intValue + '.' + longDecimalDisplayPadded
+					const shortBalanceString = `${roundUpShortDisplay ? intValue + 1n : intValue}.${shortDecimalDisplay}`
+					setlongTargetBalanceString(longBalanceString)
+					setshortTargetBalanceString(shortBalanceString)
+					if (
+						roundUpShortDisplay ||
+						!longBalanceString.startsWith(shortBalanceString) ||
+						!longBalanceString.substring(shortBalanceString.length).match(/^0+$/)
+					) {
+						setisRoundedTargetDisplayAmount(true)
 					}
-			} catch (error) {
-				console.error(`TokenInstance.tsx useEffect [decimals, balance] error=${error}`)
+				} else {
+					setlongTargetBalanceString(intValue.toString() + '.' + '0'.repeat(Number(decimals)))
+					setshortTargetBalanceString(intValue.toString())
+				}
+			} else if (targetBalance == 0n) {
+				setlongTargetBalanceString('0.' + '0'.repeat(Number(decimals)))
+				setshortTargetBalanceString('0')
 			}
-		},
-		[balanceTo, decimals],
-	)
+		} catch (error) {
+			console.error(`TokenInstance.tsx useEffect [decimals, balance] error=${error}`)
+		}
+	}, [balanceTo, decimals])
 
 	/**
 	 * isSelected
@@ -247,7 +230,10 @@ export default function TokenInstance({
 	 * Update checkbox status on transfer ability change
 	 */
 	const unSelect = useCallback(() => {
-		balanceFrom && tokenInstance.selected && canTransferTo && updateCheckboxStatus &&
+		balanceFrom &&
+			tokenInstance.selected &&
+			canTransferTo &&
+			updateCheckboxStatus &&
 			updateCheckboxStatus(tokenInstance.selectID, { checked: false })
 	}, [canTransferTo, balanceFrom, updateCheckboxStatus, tokenInstance.selectID, tokenInstance.selected])
 
@@ -255,25 +241,13 @@ export default function TokenInstance({
 	 * Update checkbox status on transfer amount change
 	 */
 	const handleCheckboxClick = useCallback(() => {
-			transferAmount &&
+		transferAmount &&
 			transferAmount.valueOf() > 0n &&
 			balanceFrom &&
 			canTransferTo &&
 			updateCheckboxStatus &&
 			updateCheckboxStatus(tokenInstance.selectID)
 	}, [tokenInstance.selectID, canTransferTo, transferAmount, balanceFrom, updateCheckboxStatus])
-
-	// ------------------------------
-
-	const clsTextSize = 'text-xs sm:text-sm md:text-base'
-	const clsTextLight = 'font-light ' + clsTextSize
-	const clsTextReadable = 'font-normal ' + clsTextSize
-	const clsTextPaddingLeft = 'pl-2 '
-	const clsText = clsTextPaddingLeft + (balanceFrom && balanceFrom.valueOf() > 0n ? clsTextReadable : clsTextLight)
-	const clsTooltipLeft = 'tooltip tooltip-left ' + clsTextReadable
-	const clsIconSize = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6'
-
-	// ------------------------------
 
 	return (
 		<>
@@ -443,8 +417,6 @@ export default function TokenInstance({
 		</>
 	)
 }
-
-// ------------------------------
 
 const Loading = () => {
 	return (
