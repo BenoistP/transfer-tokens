@@ -1524,8 +1524,6 @@ export default function StepsContainer(
             if (_targetAddress) {
               const targetBalancesErrors = tokensTargetBalances?.some((tokenTargetBalance: any) => { tokenTargetBalance == undefined })
               const targetCanTransferToErrors = tokensTargetCanTransferTo?.some((tokenTargetCanTransferTo: any) => { tokenTargetCanTransferTo == undefined })
-              // console.dir(tokensTargetBalances)
-              // console.dir(tokensTargetCanTransferTo)
               if (targetBalancesErrors || targetCanTransferToErrors) {
                 setStateErrorLoadingTokensInstances(true)
                 return

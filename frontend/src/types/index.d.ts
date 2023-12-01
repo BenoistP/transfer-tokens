@@ -15,12 +15,10 @@ enum EChainTokensListLoadState {
 
 enum ETokenTransferState {
   none = -1, // not processed yet
-  
   processing = 0, // pending processing
   processed = 1, // success
   skipped = 2, // skipped by user
   error = 3, // error during processing
-
   previous_processed = processed + 10, // previous success
   previous_skipped = skipped + 10, // previous skipped by user
   previous_error = error + 10, // previous error during processing
