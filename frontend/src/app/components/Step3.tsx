@@ -42,8 +42,6 @@ export default function Step3 ( {
     updateTokenInstanceTransferState
   }: IStep3Props ) {
 
-  // ---
-
   const { t } = useTranslation()
   const [tokensInstancesToMigrate, settokensInstancesToMigrate] = useState<TTokensInstances>(null)
 
@@ -365,7 +363,6 @@ export default function Step3 ( {
           updateTokenInstanceTransferState(_tokenInstanceToTransfer.address, state)
           // Update balances after transfer, do not wait for event which may not be received
           updateTokenOnTransferProcessed(_tokenInstanceToTransfer, accountAddress, _to, REFRESH_BALANCE_DELAY_AFTER_TRANSFER, state)
-          // setmigrationState( {...migrationState.current} )
         }
       } catch (error) {
         console.error(`transferToken ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_to} process error: ${error}`);
@@ -508,8 +505,6 @@ export default function Step3 ( {
     },
     [tokensInstancesToMigrate, targetAddress, transferTokens]
   )
-
-  // ------------------------------
 
   return (
     <div className="w-full p-0 m-0">
