@@ -19,8 +19,6 @@ import {
 	Cog8ToothIcon as CogToothProcessing,
 } from '@heroicons/react/24/solid'
 
-// ------------------------------
-
 export default function TokenInstance({
 	tokenInstance,
 	accountAddress,
@@ -39,15 +37,14 @@ export default function TokenInstance({
 	const [name, setname] = useState<string>('')
 	const [symbol, setsymbol] = useState<string>('')
 
-	const [balance, setbalance] = useState<TTokenAmount | null>(tokenInstance.userData[accountADDRESS as any]?.balance)
 	const [decimals, setdecimals] = useState<bigint>(BigInt(tokenInstance.decimals || ERC20_DECIMALS_DEFAULT)) as [
 		bigint,
 		(balance: bigint) => void,
 	]
 
-	const [isRoundedDisplayAmount, setisRoundedDisplayAmount] = useState<boolean>(false)
-	const [shortBalanceString, setshortBalanceString] = useState('') as [string, (balance: string) => void]
-	const [longBalanceString, setlongBalanceString] = useState('') as [string, (balance: string) => void]
+	const [fromIsRoundedDisplayAmount, setfromIsRoundedDisplayAmount] = useState<boolean>(false)
+	const [fromShortBalanceString, setfromShortBalanceString] = useState('') as [string, (balance: string) => void]
+	const [fromLongBalanceString, setfromLongBalanceString] = useState('') as [string, (balance: string) => void]
 
 	const [isRoundedTargetDisplayAmount, setisRoundedTargetDisplayAmount] = useState<boolean>(false)
 	const [shortTargetBalanceString, setshortTargetBalanceString] = useState('') as [string, (balance: string) => void]
@@ -56,23 +53,95 @@ export default function TokenInstance({
 	const [isSelected, setIsSelected] = useState<boolean>(false)
 	const [isCheckboxDisabled, setisCheckboxDisabled] = useState<boolean>(true)
 
-  // const [fromUserData, setfromUserData] = useState(tokenInstance.userData[accountADDRESS as any])
-  // const [toUserData, settoUserData] = useState(tokenInstance.userData[targetADDRESS as any])
-
 	const [transferAmount, settransferAmount] = useState<TTokenAmount | null>(tokenInstance.transferAmount)
-	const [transferAmountLock, settransferAmountLock] = useState<boolean>(tokenInstance.transferAmountLock)
+	const [lockTransferAmount, settransferAmountLock] = useState<boolean>(tokenInstance.lockTransferAmount)
 
+	const canTransferFrom = tokenInstance.userData[accountADDRESS as any]?.canTransfer
+	const canTransferTo = tokenInstance.userData[targetADDRESS as any]?.canTransfer
 
-	const [canTransferFrom, setcanTransferFrom] = useState<boolean>(
-		accountADDRESS && tokenInstance.userData[accountADDRESS as any]
-			? tokenInstance.userData[accountADDRESS as any]?.canTransfer
-			: false,
+	const balanceFrom = tokenInstance.userData[accountADDRESS as any]?.balance || 0n
+	const balanceTo = tokenInstance.userData[targetADDRESS as any]?.balance || 0n
+
+	const LONG_BALANCE_STRING_DECIMALS = '.' + '0'.repeat(Number(decimals))
+	const LONG_BALANCE_STRING_ZERO = '0' + LONG_BALANCE_STRING_DECIMALS
+	const DECIMALS_MULTIPLIER = 10n ** decimals
+
+	// Styles
+	const clsTextSize = 'text-xs sm:text-sm md:text-base'
+	const clsTextLight = 'font-light ' + clsTextSize
+	const clsTextReadable = 'font-normal ' + clsTextSize
+	const clsTextPaddingLeft = 'pl-2 '
+	const clsText = clsTextPaddingLeft + (balanceFrom && balanceFrom.valueOf() > 0n ? clsTextReadable : clsTextLight)
+	const clsTooltipLeft = 'tooltip tooltip-left ' + clsTextReadable
+	const clsIconSize = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6'
+
+	/**
+	 * Balances display computations
+	 */
+	const updateBalance = useCallback(
+		(_balance: bigint,
+			_setLongBalanceString: (balance: string) => void,
+			_setShortBalanceString: (balance: string) => void,
+			_setIsRoundedDisplayAmount: React.Dispatch<React.SetStateAction<boolean>>) => {
+			try {
+				if (_balance) {
+					const balanceValue = _balance.valueOf()
+					const intValue = balanceValue / DECIMALS_MULTIPLIER
+					const decimalValue = balanceValue - intValue * DECIMALS_MULTIPLIER
+					if (decimalValue > 0) {
+						// exact decimals display
+						const longDecimalDisplayPadded = decimalValue.toString().padStart(Number(decimals), '0')
+						const zeroDecimalToFixed = Number('0.' + longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
+						const shortDecimalDisplay = zeroDecimalToFixed.substring(2)
+						const roundUpShortDisplay = zeroDecimalToFixed.substring(0, 2) == '1.'
+						const longBalanceString = intValue + '.' + longDecimalDisplayPadded
+						const shortBalanceString = `${roundUpShortDisplay ? intValue + 1n : intValue}.${shortDecimalDisplay}`
+						_setLongBalanceString(longBalanceString)
+						_setShortBalanceString(shortBalanceString)
+						if (
+							roundUpShortDisplay ||
+							!longBalanceString.startsWith(shortBalanceString) ||
+							!longBalanceString.substring(shortBalanceString.length).match(/^0+$/)
+						) {
+							_setIsRoundedDisplayAmount(true)
+						}
+					} else {
+						_setLongBalanceString(intValue.toString() + LONG_BALANCE_STRING_DECIMALS)
+						_setShortBalanceString(intValue.toString())
+					}
+				} else if (_balance == 0n) {
+					_setLongBalanceString(LONG_BALANCE_STRING_ZERO)
+					_setShortBalanceString('0')
+				}
+			} catch (error) {
+				console.error(`TokenInstance.tsx updateBalance error=${error}`)
+			}
+		},
+		[LONG_BALANCE_STRING_DECIMALS, LONG_BALANCE_STRING_ZERO, DECIMALS_MULTIPLIER, decimals],
 	)
-	const [canTransferTo, setcanTransferTo] = useState<boolean>(
-		targetADDRESS && tokenInstance.userData[targetADDRESS as any]
-			? tokenInstance.userData[targetADDRESS as any]?.canTransfer
-			: false,
-	)
+
+	/**
+	 * Update checkbox status on transfer ability change
+	 */
+	const unSelect = useCallback(() => {
+		balanceFrom &&
+			tokenInstance.selected &&
+			canTransferTo &&
+			updateCheckboxStatus &&
+			updateCheckboxStatus(tokenInstance.selectID, { checked: false })
+	}, [canTransferTo, balanceFrom, updateCheckboxStatus, tokenInstance.selectID, tokenInstance.selected])
+
+	/**
+	 * Update checkbox status on transfer amount change
+	 */
+	const handleCheckboxClick = useCallback(() => {
+		transferAmount &&
+			transferAmount.valueOf() > 0n &&
+			balanceFrom &&
+			canTransferTo &&
+			updateCheckboxStatus &&
+			updateCheckboxStatus(tokenInstance.selectID)
+	}, [tokenInstance.selectID, canTransferTo, transferAmount, balanceFrom, updateCheckboxStatus])
 
 	/**
 	 * Name update
@@ -95,153 +164,47 @@ export default function TokenInstance({
 		setdecimals(BigInt(tokenInstance.decimals || ERC20_DECIMALS_DEFAULT))
 	}, [tokenInstance.decimals])
 
-
-  // useEffect(() => {
-  //   if (accountADDRESS) {
-  //     setfromUserData(tokenInstance.userData[accountADDRESS as any])
-  //   }
-  // }, [accountADDRESS, tokenInstance.userData])
-
-  // useEffect(() => {
-  //   if (targetADDRESS) {
-  //     settoUserData(tokenInstance.userData[targetADDRESS as any])
-  //   }
-  // }, [targetADDRESS, tokenInstance.userData])
-
 	/**
-	 * Balance
+	 * TransferAmount update
+	 * reflect object property changes
 	 */
-	useEffect(
-		() => {
-			if (accountADDRESS) {
-				const accountBalance = tokenInstance.userData[accountADDRESS as any]?.balance
-				setbalance(accountBalance ? accountBalance : 0n)
-			}
-		}, // eslint-disable-next-line react-hooks/exhaustive-deps
-		[tokenInstance.userData[accountADDRESS as any]?.balance, accountADDRESS],
-	)
-
-	/**
-	 * trigger Balance computations for display on : decimals, balance
-	 */
-	useEffect(
-		() => {
-			try {
-				if (targetADDRESS) {
-					const targetBalance = tokenInstance.userData[targetADDRESS as any]?.balance
-					if (targetBalance) {
-						const balanceValue = targetBalance.valueOf()
-						const intValue = balanceValue / 10n ** decimals
-						const decimalValue = balanceValue - intValue * 10n ** decimals
-						if (decimalValue > 0) {
-							// exact decimals display
-							const longDecimalDisplayPadded = decimalValue.toString().padStart(Number(decimals), '0')
-							const zeroDecimalToFixed = Number('0.' + longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
-							const shortDecimalDisplay = zeroDecimalToFixed.substring(2)
-							const roundUpShortDisplay = zeroDecimalToFixed.substring(0, 2) == '1.'
-							const longBalanceString = intValue + '.' + longDecimalDisplayPadded
-							const shortBalanceString = `${roundUpShortDisplay ? intValue + 1n : intValue}.${shortDecimalDisplay}`
-							setlongTargetBalanceString(longBalanceString)
-							setshortTargetBalanceString(shortBalanceString)
-							if (
-								roundUpShortDisplay ||
-								!longBalanceString.startsWith(shortBalanceString) ||
-								!longBalanceString.substring(shortBalanceString.length).match(/^0+$/)
-							) {
-								setisRoundedTargetDisplayAmount(true)
-							}
-						} else {
-							setlongTargetBalanceString(intValue.toString() + '.' + '0'.repeat(Number(decimals)))
-							setshortTargetBalanceString(intValue.toString())
-						}
-					} else if (targetBalance == 0n) {
-						setlongTargetBalanceString('0.' + '0'.repeat(Number(decimals)))
-						setshortTargetBalanceString('0')
-					}
-				}
-			} catch (error) {
-				console.error(`TokenInstance.tsx useEffect [decimals, balance] error=${error}`)
-			}
-		}, // eslint-disable-next-line react-hooks/exhaustive-deps
-		[tokenInstance.userData[targetADDRESS as any]?.balance, targetADDRESS, decimals],
-	)
+	useEffect(() => {
+		settransferAmount(tokenInstance.transferAmount)
+	}, [tokenInstance.transferAmount])
 
 	/**
 	 * TransferAmount update
+	 * reflect user input changes
 	 */
-	useEffect(
-		() => {
-			if (transferAmount != null && tokenInstance.transferAmount != transferAmount && updateTransferAmount) {
-				updateTransferAmount(tokenInstance.selectID, transferAmount)
-			}
-		}, // eslint-disable-next-line react-hooks/exhaustive-deps
-		[transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID],
-	)
+	useEffect(() => {
+		if (transferAmount && tokenInstance.transferAmount != transferAmount && transferAmount < balanceFrom) {
+			updateTransferAmount && updateTransferAmount(tokenInstance.selectID, transferAmount)
+		}
+	}, [transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID, balanceFrom])
 
 	/**
 	 * TransferAmountLock update
 	 */
-	useEffect(
-		() => {
-			if (tokenInstance.transferAmountLock != transferAmountLock && updateTransferAmountLock) {
-				updateTransferAmountLock(tokenInstance.selectID, transferAmountLock)
-			}
-		}, // eslint-disable-next-line react-hooks/exhaustive-deps
-		[transferAmountLock, tokenInstance.transferAmountLock, tokenInstance.selectID, updateTransferAmountLock],
-	)
-
-	/**
-	 * canTransferFrom, canTransferTo
-	 */
-	useEffect(
-		() => {
-			setcanTransferFrom(accountADDRESS ? tokenInstance.userData[accountADDRESS as any]?.canTransfer : false)
-			setcanTransferTo(targetADDRESS ? tokenInstance.userData[targetADDRESS as any]?.canTransfer : false)
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-    [accountADDRESS, targetADDRESS, tokenInstance.userData[accountADDRESS as any]?.canTransfer, tokenInstance.userData[targetADDRESS as any]?.canTransfer]
-,
-	)
+	useEffect(() => {
+		tokenInstance.lockTransferAmount != lockTransferAmount &&
+			updateTransferAmountLock &&
+			updateTransferAmountLock(tokenInstance.selectID, lockTransferAmount)
+	}, [lockTransferAmount, tokenInstance.lockTransferAmount, tokenInstance.selectID, updateTransferAmountLock])
 
 
 	/**
-	 * trigger Balance computations for display on : decimals, balance
+	 * trigger connected address balance computations for display
 	 */
 	useEffect(() => {
-		try {
-			if (balance) {
-				const balanceValue = balance.valueOf()
-				const intValue = balanceValue / 10n ** decimals
-				const decimalValue = balanceValue - intValue * 10n ** decimals
-				if (decimalValue > 0) {
-					// exact decimals display
-					const longDecimalDisplayPadded = decimalValue.toString().padStart(Number(decimals), '0')
-					const zeroDecimalToFixed = Number('0.' + longDecimalDisplayPadded).toFixed(SHORT_DISPLAY_DECIMAL_COUNT)
-					const shortDecimalDisplay = zeroDecimalToFixed.substring(2)
-					const roundUpShortDisplay = zeroDecimalToFixed.substring(0, 2) == '1.'
-					const longBalanceString = intValue + '.' + longDecimalDisplayPadded
-					const shortBalanceString = `${roundUpShortDisplay ? intValue + 1n : intValue}.${shortDecimalDisplay}`
-					setlongBalanceString(longBalanceString)
-					setshortBalanceString(shortBalanceString)
-					if (
-						roundUpShortDisplay ||
-						!longBalanceString.startsWith(shortBalanceString) ||
-						!longBalanceString.substring(shortBalanceString.length).match(/^0+$/)
-					) {
-						setisRoundedDisplayAmount(true)
-					}
-				} else {
-					setlongBalanceString(intValue.toString() + '.' + '0'.repeat(Number(decimals)))
-					setshortBalanceString(intValue.toString())
-				}
-			} else if (balance == 0n) {
-				setlongBalanceString('0.' + '0'.repeat(Number(decimals)))
-				setshortBalanceString('0')
-			}
-		} catch (error) {
-			console.error(`TokenInstance.tsx useEffect [decimals, balance] error=${error}`)
-		}
-	}, [decimals, balance, tokenInstance.displayId])
+		updateBalance(balanceFrom, setfromLongBalanceString, setfromShortBalanceString, setfromIsRoundedDisplayAmount)
+	}, [balanceFrom, setfromLongBalanceString, updateBalance])
+
+	/**
+	 * trigger target balance computations for display
+	 */
+	useEffect(() => {
+		updateBalance(balanceTo, setlongTargetBalanceString, setshortTargetBalanceString, setisRoundedTargetDisplayAmount)
+	}, [balanceTo, updateBalance])
 
 	/**
 	 * isSelected
@@ -259,78 +222,26 @@ export default function TokenInstance({
 	 */
 	useEffect(() => {
 		if (
-			!accountADDRESS ||
-			!targetADDRESS ||
-			!tokenInstance.selectable ||
-			!tokenInstance.userData ||
-			!tokenInstance.userData[accountADDRESS as any]?.canTransfer ||
-			!tokenInstance.userData[targetADDRESS as any]?.canTransfer ||
-			(balance?.valueOf() || 0n) == 0n ||
-			(transferAmount || 0n) == 0n
-		)
-			setisCheckboxDisabled(true)
-		else setisCheckboxDisabled(false)
-	}, [accountADDRESS, targetADDRESS, tokenInstance.selectable, tokenInstance.userData, balance, transferAmount])
-
-	/**
-	 * Update checkbox status on transfer ability change
-	 */
-	const unSelect = useCallback(() => {
-		if (
-			balance &&
-			targetADDRESS &&
-			tokenInstance.selected &&
-			tokenInstance.userData[targetADDRESS as any]?.canTransfer &&
-			updateCheckboxStatus
+			tokenInstance.selectable &&
+			canTransferFrom &&
+			canTransferTo &&
+			(balanceFrom?.valueOf() || 0n) > 0n &&
+			(transferAmount || 0n) > 0n
 		) {
-			updateCheckboxStatus(tokenInstance.selectID, { checked: false })
+			setisCheckboxDisabled(false)
+		} else {
+			setisCheckboxDisabled(true)
 		}
-	}, [
-		targetADDRESS,
-		balance,
-		updateCheckboxStatus,
-		tokenInstance.userData,
-		tokenInstance.selectID,
-		tokenInstance.selected,
-	])
-
-	/**
-	 * Update checkbox status on transfer amount change
-	 */
-	const handleCheckboxClick = useCallback(() => {
-		if (transferAmount && transferAmount.valueOf() > 0n) {
-			if (
-				balance &&
-				targetADDRESS &&
-				tokenInstance.userData &&
-				tokenInstance.userData[targetADDRESS as any]?.canTransfer &&
-				updateCheckboxStatus
-			) {
-				updateCheckboxStatus(tokenInstance.selectID)
-			}
-		}
-	}, [targetADDRESS, tokenInstance.selectID, tokenInstance.userData, transferAmount, balance, updateCheckboxStatus])
-
-	// ------------------------------
-
-	const clsTextSize = 'text-xs sm:text-sm md:text-base'
-	const clsTextLight = 'font-light ' + clsTextSize
-	const clsTextReadable = 'font-normal ' + clsTextSize
-	const clsTextPaddingLeft = 'pl-2 '
-	const clsText = clsTextPaddingLeft + (balance && balance.valueOf() > 0n ? clsTextReadable : clsTextLight)
-	const clsTooltipLeft = 'tooltip tooltip-left ' + clsTextReadable
-	const clsIconSize = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6'
-
-	// ------------------------------
+	}, [canTransferFrom, canTransferTo, tokenInstance.selectable, balanceFrom, transferAmount])
 
 	return (
 		<>
 			<td className={clsTextPaddingLeft + 'w-8 text-center font-thin'}>{tokenInstance.displayId}</td>
 			<td className={clsText + ' text-ellipsis min-w-full '}>{name ? name : symbol ? symbol : <Loading />}</td>
 			<td className={clsText + ' text-right pr-2'}>
-				{longBalanceString ? (
-					<div className="tooltip tooltip-info" data-tip={longBalanceString}>
-						<p className={isRoundedDisplayAmount ? 'italic font-medium' : ''}>{shortBalanceString}</p>
+				{fromLongBalanceString ? (
+					<div className="tooltip tooltip-info" data-tip={fromLongBalanceString}>
+						<p className={fromIsRoundedDisplayAmount ? 'italic font-medium' : ''}>{fromShortBalanceString}</p>
 					</div>
 				) : (
 					<Loading />
@@ -362,10 +273,10 @@ export default function TokenInstance({
 						<TokenInstanceEditableAmount
 							selectable={tokenInstance.selectable}
 							readonly={false}
-							balance={balance && balance.valueOf() ? balance.valueOf() : 0n}
+							balance={balanceFrom && balanceFrom.valueOf() ? balanceFrom.valueOf() : 0n}
 							amount={transferAmount && transferAmount.valueOf() ? transferAmount.valueOf() : 0n}
 							setamount={settransferAmount}
-							transferAmountLock={transferAmountLock}
+							transferAmountLock={lockTransferAmount}
 							settransferAmountLock={settransferAmountLock}
 							decimals={Number(decimals)}
 							unSelect={unSelect}
@@ -381,10 +292,10 @@ export default function TokenInstance({
 					<TokenInstanceEditableAmount
 						selectable={false}
 						readonly={true}
-						balance={balance && balance.valueOf() ? balance.valueOf() : 0n}
+						balance={balanceFrom && balanceFrom.valueOf() ? balanceFrom.valueOf() : 0n}
 						amount={transferAmount && transferAmount.valueOf() ? transferAmount.valueOf() : 0n}
 						setamount={settransferAmount}
-						transferAmountLock={transferAmountLock}
+						transferAmountLock={lockTransferAmount}
 						settransferAmountLock={settransferAmountLock}
 						decimals={Number(decimals)}
 						unSelect={unSelect}
@@ -438,16 +349,16 @@ export default function TokenInstance({
 					)}
 					{(tokenInstance.transferState.transfer == ETokenTransferState.processed ||
 						tokenInstance.transferState.transfer == ETokenTransferState.previous_processed) && (
-						<div
-							className={clsTooltipLeft + 'pl-1 text-info tooltip-success'}
-							data-tip={t('moveTokens.stepAny.token.transfer.success')}>
-							<CheckCircleIcon
-								className={
-									clsIconSize + ' fill-success' + (tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')
-								}
-							/>
-						</div>
-					)}
+							<div
+								className={clsTooltipLeft + 'pl-1 text-info tooltip-success'}
+								data-tip={t('moveTokens.stepAny.token.transfer.success')}>
+								<CheckCircleIcon
+									className={
+										clsIconSize + ' fill-success' + (tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')
+									}
+								/>
+							</div>
+						)}
 					{tokenInstance.transferState.transfer == ETokenTransferState.skipped && (
 						<div className={clsTooltipLeft + 'pl-1  '} data-tip={t('moveTokens.stepAny.token.transfer.skipped')}>
 							<StopCircleIcon
@@ -491,8 +402,6 @@ export default function TokenInstance({
 		</>
 	)
 }
-
-// ------------------------------
 
 const Loading = () => {
 	return (

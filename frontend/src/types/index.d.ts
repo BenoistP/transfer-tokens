@@ -172,13 +172,13 @@ type TTokensListNullUndef = TTokensList | TNullUndef;
 
 type TTokensList = {
   id: TTokensListId,
-  name: TStringNullUndef, // RealTokens, Coingecko Ethereum, Coingecko Gnosis
+  name: TStringNullUndef, // RealTokens, Coingecko Ethereum, Coingecko Gnosis, ...
   description: TStringNullUndef,
   version?: TTokensListVersion,
   timestamp: TTimeStamp,
   sha?: TSha,
   fetchLen?: number,
-  source?: TStringNullUndef, // Coingecko, RealT
+  source?: TStringNullUndef, // Coingecko, RealT, ...
   keywords?: TTokensListKeywords, // [ "default", "list", "cowswap" ]
   type: TTokensListType,
   tokensCount?: TtokenCount,
@@ -194,9 +194,9 @@ type TTokensList = {
   chainsTokenLists?: TChainsTokensListArrayNullUndef,
 }
 
-type TChainsTokensListArrayNullUndef = TChainsTokensListNullUndef[]|TNullUndef;
+type TChainsTokensListArrayNullUndef = TChainTokensListNullUndef[]|TNullUndef;
 
-type TChainsTokensListNullUndef = TChainTokensList|TNullUndef;
+type TChainTokensListNullUndef = TChainTokensList|TNullUndef;
 
 type TChainTokensList = {
   tokensListId: TTokensListId,
@@ -236,7 +236,6 @@ type TTokenType = "ERC20"|"COINBRIDGE"
 type TTokenExtraData = {
   type: TTokenType;
   totalSupply?: TTokenSupply;
-  // ...
 }
 
 type TTokensList_TokenData = TTokenList_TokenData[]|TNullUndef;
@@ -257,9 +256,9 @@ type TRealTokenReferenceData = {
   tokenPrice: number,
   currency: string,
   uuid: TUUID,
-  ethereumContract: TokenContractNullableAddress,
-  xDaiContract: TokenContractNullableAddress,
-  gnosisContract: TokenContractNullableAddress,
+  ethereumContract: TTokenContractAddressNullUndef,
+  xDaiContract: TTokenContractAddressNullUndef,
+  gnosisContract: TTokenContractAddressNullUndef,
   lastUpdate: {
     date: LastUpdateDate,
     timezone_type: Timezone_type,
@@ -286,9 +285,6 @@ type TsetSelectableTokensLists = React.Dispatch<React.SetStateAction<TSelectable
 type TsetTokensInstances = React.Dispatch<React.SetStateAction<TTokensInstances>>;
 type TsettargetAddress = React.Dispatch<React.SetStateAction<TAddressStringEmpty>>
 
-
-// type TTokenLoadStatus = number;
-
 type TTokensInstances = TTokenInstance[]|TNullUndef;
 
 type TDisplayId = number
@@ -300,26 +296,26 @@ type TTokenTransferState = {
 }
 
 type TTokenInstance = {
+  chainTokensList: TChainTokensList;
+  index: number;
   chainId: ChainId;
-  address: TokenContractNullableAddress;// TokenContractAddress;
+  address: TTokenContractAddress;
   type: TTokenType;
   contract: any; // Wagmi contract
   decimals: TTokenDecimals;
   name: TTokenName;
   symbol: TTokenSymbol;
 
-  // status: TTokenLoadStatus;
   displayed: boolean;
   displayId: TDisplayId;
   selectID: TSelectId;
 
   selectable: boolean;
-  selected: boolean,
+  selected: boolean;
   transferAmount: TTokenAmount;
-  transferAmountLock: boolean;
+  lockTransferAmount: boolean;
 
   transferState: TTokenTransferState;
-
   userData: TTokenInstanceUserData[]; // not an array but a dictionnary indexed by strings (adresses 0x... IN UPPERCASE)
 }
 
