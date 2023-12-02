@@ -4,7 +4,8 @@
 // Ethereum Mainnet
 // const TOKENS_LIST__COINGECKO__ETHEREUM = 'https://tokens.coingecko.com/ethereum/all.json'
 // Gnosis (xDAI)
-// const TOKENS_LIST__COINGECKO__GNOSIS = 'https://tokens.coingecko.com/xdai/all.json'
+const TOKENS_LIST__COINGECKO__GNOSIS = 'https://tokens.coingecko.com/xdai/all.json'
+
 
 // RealT API
 // BASE URL
@@ -14,10 +15,15 @@ const DEFAULT_API__REALT_PUBLIC__LIST_ALL_TOKENS='v1/token'
 // Logo
 const DEFAULT_TOKENS_LIST_REALT_API_LOGO = 'https://yt3.googleusercontent.com/ytc/AOPolaQLI9Vbm8mEvFilGnLm0wcbiKNF6RQxkKXJt9n5=s176-c-k-c0x00ffffff-no-rj'
 
+const DEFAULT_TOKENS_LIST_COINGECKO_LOGO = 'https://avatars.githubusercontent.com/u/7111837?s=200&v=4'
+
 const API__REALT_PUBLIC__BASE_URL = import.meta.env.PUBLIC_REALT_API_BASE_URL || DEFAULT_API__REALT_PUBLIC__BASE_URL
 const API__REALT_PUBLIC__LIST_ALL_TOKENS = import.meta.env.PUBLIC_REALT_API_LIST_ALL_TOKENS || DEFAULT_API__REALT_PUBLIC__LIST_ALL_TOKENS
 
 const TOKENS_LIST_REALT_API_LOGO = import.meta.env.PUBLIC_REALT_API_LOGO || DEFAULT_TOKENS_LIST_REALT_API_LOGO
+
+
+
 // Tokenlistooor Token List
 // const TOKENS_LIST__TOKENLISTOOOR = 'https://raw.githubusercontent.com/Migratooor/tokenLists/main/lists/tokenlistooor.json'
 
@@ -29,7 +35,7 @@ const TOKENS_LIST_REALT_API_LOGO = import.meta.env.PUBLIC_REALT_API_LOGO || DEFA
 
 
 const TOKENS_LISTS_SOURCES: TTokensLists = [
-  /* 
+  /*
   {
     // Intentionnaly broken list
     id: '0',
@@ -69,6 +75,18 @@ const TOKENS_LISTS_SOURCES: TTokensLists = [
   },
   */
 
+  {
+    id: '2',
+    name: 'Coingecko',
+    description: "Coingecko Gnosis (xDAI)",
+    timestamp: null,
+    source: 'Coingecko',
+    type: 'URI',
+    chains: [100],
+    URI: TOKENS_LIST__COINGECKO__GNOSIS,
+    status: 'notLoaded',
+    logoURI: DEFAULT_TOKENS_LIST_COINGECKO_LOGO,
+  },
   {
     id: '3',
     name: 'RealT',

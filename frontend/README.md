@@ -32,3 +32,6 @@ If you are developing a production application, we recommend updating the config
 
 CoinBridgeToken on Gnosis can be found at:
 [CoinBridgeToken Contract 0x7a2AbA1FB4647850778658B4C69d4170104a3DCf](https://gnosisscan.io/address/0x7a2aba1fb4647850778658b4c69d4170104a3dcf#code)
+
+
+[Tokens lists definitions](src/app/js/constants/tokensListsSource.ts)

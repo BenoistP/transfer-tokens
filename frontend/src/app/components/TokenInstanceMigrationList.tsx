@@ -1,27 +1,18 @@
 // React
-// ---
+
 // Components
-import { TokenInstance } from "@Components/TokenInstance";
+import TokenInstance from "@Components/TokenInstance";
 
-// ----------------------------
-
-const TokenInstanceMigrationList = ( {
-  tokensInstances,
-  accountAddress,
-  targetAddress,
-  sortTokensInstances,
- }: ITokenListProps ) => {
-
-  // ----------------------------
+export default function TokenInstanceMigrationList(
+  { tokensInstances, accountAddress, targetAddress, sortTokensInstances, }: ITokenListProps): JSX.Element {
 
   return (
     <>
       {
-        tokensInstances?.sort(sortTokensInstances).map( (tokenInstance:TTokenInstance) => {
-          const key = accountAddress+'-'+tokenInstance.address; // TODO: use selectID ?
+        tokensInstances?.sort(sortTokensInstances).map((tokenInstance: TTokenInstance) => {
           return (
             <tr className="min-w-full even:bg-base-300 odd:bg-base-200 hover:bg-base-100"
-              key={key}
+              key={tokenInstance.selectID}
             >
               <TokenInstance
                 tokenInstance={tokenInstance}
@@ -39,7 +30,4 @@ const TokenInstanceMigrationList = ( {
       }
     </>
   )
-
 }
-
-export default TokenInstanceMigrationList;

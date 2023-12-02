@@ -23,7 +23,7 @@
           "balance": "Solde",
           "balanceGt0": {
             "label": "> 0",
-            "hint": "N'afficher que les tokens dont l'adresse a un solde > 0"
+            "hint": "N'afficher que les tokens dont l'adresse d'envoi a un solde > 0"
           },
           "clearAll": {
             "label": "Effacer",

@@ -7,7 +7,7 @@ import { QuestionMarkCircleIcon  } from '@heroicons/react/24/solid'
 
 // ------------------------------
 
-const SelectableTokensList = ( { selectableTokensList, changeTokensListCheckboxStatus }: ISelectableTokensListProps ) => {
+const SelectableTokensList = ( { selectableTokensList, handleSwapTokenListSelection }: ISelectableTokensListProps ) => {
 
   const iconCls = "fill-base-content w-6 h-6 sm:w-10 sm:h-10";
   const { t } = useTranslation()
@@ -17,9 +17,9 @@ const SelectableTokensList = ( { selectableTokensList, changeTokensListCheckboxS
   const handleCheckboxClick = useCallback( () =>
     {
       const id:TTokensListId = selectableTokensList.tokensList?.id;
-      changeTokensListCheckboxStatus(id);
+      handleSwapTokenListSelection(id);
     },
-    [changeTokensListCheckboxStatus, selectableTokensList.tokensList?.id]
+    [handleSwapTokenListSelection, selectableTokensList.tokensList?.id]
   );
 
   // ------------------------------

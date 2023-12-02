@@ -1,40 +1,23 @@
 // React
 
+// Components
 import { SelectableTokensList } from "@Components/SelectableTokensList";
 
-// ------------------------------
-
-const SelectableTokensLists = ( {
-  selectableTokensLists,
-  // chainId,
-  changeTokensListCheckboxStatus
-}: ISelectableTokensListsProps ) => {
-
-// console.debug(`RealTokenInstanceList2.tsx render accountAddress: ${accountAddress}`);
-
-// ------------------------------
+export default function SelectableTokensLists(
+  { selectableTokensLists, handleSwapTokenListSelection }: ISelectableTokensListsProps): JSX.Element {
 
   return (
     <>
-      {
-        selectableTokensLists?.map( (selectableTokensList:TSelectableTokensList, index:number) =>
-        {
-          const key = `${index}-${selectableTokensList?.tokensList?.id}`;
-          return (
-            <tr className=" "
-              key={key}
-            >
-              <SelectableTokensList
-                  selectableTokensList={selectableTokensList}
-                  changeTokensListCheckboxStatus={changeTokensListCheckboxStatus}
-              />
-            </tr>
-          )
-        })
-      }
+      {selectableTokensLists?.map(
+        (selectableTokensList: TSelectableTokensList) =>
+          <tr key={`${selectableTokensList?.tokensList?.id}-${selectableTokensList?.tokensList?.timestamp}`}>
+            <SelectableTokensList
+              selectableTokensList={selectableTokensList}
+              handleSwapTokenListSelection={handleSwapTokenListSelection}
+            />
+          </tr>
+      )}
     </>
   )
 
 }
-
-export default SelectableTokensLists;
