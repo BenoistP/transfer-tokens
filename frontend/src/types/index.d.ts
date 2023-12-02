@@ -221,13 +221,13 @@ type TTokenList_TokenImageUri = TStringNullUndef
 type TTokenChainDataArray = TTokenChainData[] | TNullUndef
 
 type TTokenChainData =
-	| {
-			chainId: TChainId
-			address: TTokenContractAddressNullUndef
-			basicData: TTokenBasicData
-			extraData: TTokenExtraData
-			contract: any // Wagmi contract
-	  }
+| {
+    chainId: TChainId
+    address: TTokenContractAddressNullUndef
+    basicData: TTokenBasicData
+    extraData: TTokenExtraData
+    contract: any // Wagmi contract
+  }
 	| TNullUndef
 
 type TTokenBasicData = {
