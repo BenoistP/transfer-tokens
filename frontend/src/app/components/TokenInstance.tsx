@@ -53,8 +53,8 @@ export default function TokenInstance({
 	const [isSelected, setIsSelected] = useState<boolean>(false)
 	const [isCheckboxDisabled, setisCheckboxDisabled] = useState<boolean>(true)
 
-	const [transferAmount, settransferAmount] = useState<TTokenAmount | null>(tokenInstance.transferAmount)
-	const [lockTransferAmount, settransferAmountLock] = useState<boolean>(tokenInstance.lockTransferAmount)
+	// const [transferAmount, settransferAmount] = useState<TTokenAmount | null>(tokenInstance.transferAmount)
+	// const [lockTransferAmount, settransferAmountLock] = useState<boolean>(tokenInstance.lockTransferAmount)
 
 	const canTransferFrom = tokenInstance.userData[accountADDRESS as any]?.canTransfer
 	const canTransferTo = tokenInstance.userData[targetADDRESS as any]?.canTransfer
@@ -135,13 +135,13 @@ export default function TokenInstance({
 	 * Update checkbox status on transfer amount change
 	 */
 	const handleCheckboxClick = useCallback(() => {
-		transferAmount &&
-			transferAmount.valueOf() > 0n &&
+		// transferAmount &&
+		// 	transferAmount.valueOf() > 0n &&
 			balanceFrom &&
 			canTransferTo &&
 			updateCheckboxStatus &&
 			updateCheckboxStatus(tokenInstance.selectID)
-	}, [tokenInstance.selectID, canTransferTo, transferAmount, balanceFrom, updateCheckboxStatus])
+	}, [tokenInstance.selectID, canTransferTo, /* transferAmount, */ balanceFrom, updateCheckboxStatus])
 
 	/**
 	 * Name update
@@ -168,28 +168,30 @@ export default function TokenInstance({
 	 * TransferAmount update
 	 * reflect object property changes
 	 */
-	useEffect(() => {
-		settransferAmount(tokenInstance.transferAmount)
-	}, [tokenInstance.transferAmount])
+	// useEffect(() => {
+	// 	console.debug(`TokenInstance.tsx useEffect tokenInstance.transferAmount update`)
+	// 	settransferAmount(tokenInstance.transferAmount)
+	// }, [tokenInstance.transferAmount])
 
 	/**
 	 * TransferAmount update
 	 * reflect user input changes
 	 */
-	useEffect(() => {
-		if (transferAmount && tokenInstance.transferAmount != transferAmount && transferAmount < balanceFrom) {
-			updateTransferAmount && updateTransferAmount(tokenInstance.selectID, transferAmount)
-		}
-	}, [transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID, balanceFrom])
+	// useEffect(() => {
+	// console.debug(`TokenInstance.tsx useEffect transferAmount update transferAmount: ${transferAmount} tokenInstance.transferAmount: ${tokenInstance.transferAmount} balanceFrom: ${balanceFrom}`)
+	// 	if (transferAmount != null  && tokenInstance.transferAmount != transferAmount && transferAmount <= balanceFrom) {
+	// 		updateTransferAmount && updateTransferAmount(tokenInstance.selectID, transferAmount)
+	// 	}
+	// }, [transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID, balanceFrom])
 
 	/**
 	 * TransferAmountLock update
 	 */
-	useEffect(() => {
-		tokenInstance.lockTransferAmount != lockTransferAmount &&
-			updateTransferAmountLock &&
-			updateTransferAmountLock(tokenInstance.selectID, lockTransferAmount)
-	}, [lockTransferAmount, tokenInstance.lockTransferAmount, tokenInstance.selectID, updateTransferAmountLock])
+	// useEffect(() => {
+	// 	tokenInstance.lockTransferAmount != lockTransferAmount &&
+	// 		updateTransferAmountLock &&
+	// 		updateTransferAmountLock(tokenInstance.selectID, lockTransferAmount)
+	// }, [lockTransferAmount, tokenInstance.lockTransferAmount, tokenInstance.selectID, updateTransferAmountLock])
 
 
 	/**
@@ -225,14 +227,15 @@ export default function TokenInstance({
 			tokenInstance.selectable &&
 			canTransferFrom &&
 			canTransferTo &&
-			(balanceFrom?.valueOf() || 0n) > 0n &&
-			(transferAmount || 0n) > 0n
+			(balanceFrom?.valueOf() || 0n) > 0n
+			// &&
+			// (transferAmount || 0n) > 0n
 		) {
 			setisCheckboxDisabled(false)
 		} else {
 			setisCheckboxDisabled(true)
 		}
-	}, [canTransferFrom, canTransferTo, tokenInstance.selectable, balanceFrom, transferAmount])
+	}, [canTransferFrom, canTransferTo, tokenInstance.selectable, balanceFrom/* , transferAmount */])
 
 	return (
 		<>
@@ -274,10 +277,20 @@ export default function TokenInstance({
 							selectable={tokenInstance.selectable}
 							readonly={false}
 							balance={balanceFrom && balanceFrom.valueOf() ? balanceFrom.valueOf() : 0n}
-							amount={transferAmount && transferAmount.valueOf() ? transferAmount.valueOf() : 0n}
-							setamount={settransferAmount}
-							transferAmountLock={lockTransferAmount}
-							settransferAmountLock={settransferAmountLock}
+
+							// amount={transferAmount && transferAmount.valueOf() ? transferAmount.valueOf() : 0n}
+							// amountLock={lockTransferAmount}
+							amount={tokenInstance.transferAmount && tokenInstance.transferAmount.valueOf() ? tokenInstance.transferAmount.valueOf() : 0n}
+							amountLock={tokenInstance.lockTransferAmount}
+
+							selectID={tokenInstance.selectID}
+							updateTransferAmount={updateTransferAmount}
+							updateTransferAmountLock={updateTransferAmountLock}
+
+
+							// setamount={settransferAmount}
+							// setamountLock={settransferAmountLock}
+
 							decimals={Number(decimals)}
 							unSelect={unSelect}
 						/>
@@ -293,10 +306,19 @@ export default function TokenInstance({
 						selectable={false}
 						readonly={true}
 						balance={balanceFrom && balanceFrom.valueOf() ? balanceFrom.valueOf() : 0n}
-						amount={transferAmount && transferAmount.valueOf() ? transferAmount.valueOf() : 0n}
-						setamount={settransferAmount}
-						transferAmountLock={lockTransferAmount}
-						settransferAmountLock={settransferAmountLock}
+
+						// amount={transferAmount && transferAmount.valueOf() ? transferAmount.valueOf() : 0n}
+						// amountLock={lockTransferAmount}
+						amount={tokenInstance.transferAmount && tokenInstance.transferAmount.valueOf() ? tokenInstance.transferAmount.valueOf() : 0n}
+						amountLock={tokenInstance.lockTransferAmount}
+
+						// setamount={settransferAmount}
+						// setamountLock={settransferAmountLock}
+
+						selectID={tokenInstance.selectID}
+						updateTransferAmount={updateTransferAmount}
+						updateTransferAmountLock={updateTransferAmountLock}
+
 						decimals={Number(decimals)}
 						unSelect={unSelect}
 					/>

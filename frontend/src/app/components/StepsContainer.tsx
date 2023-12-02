@@ -483,7 +483,6 @@ console.debug(`updateTokenOnTransferProcessed _tokenInstance.address: ${_tokenIn
               const from = log.args["from"], to = log.args["to"], value = log.args["value"];
               // showTransfer(tokenInstance, from, to, value) // show ALL transfers
               if (tokenInstance.userData && from && to && value) {
-console.debug(`processTransferEvent from: ${from} to: ${to} value: ${value}`)
                 updateTokenOnTransferProcessed(tokenInstance, from, to)
               }
             }

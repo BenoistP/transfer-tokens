@@ -519,12 +519,16 @@ interface ITokenInstanceAmountProps {
 	readonly: boolean
 	balance: TTokenAmount
 	amount: TTokenAmount
-	setamount: Tsetamount
-	transferAmountLock: boolean
-	settransferAmountLock: TsetamountLock
-
+	amountLock: boolean
+	// setamount: Tsetamount
+	// setamountLock: TsetamountLock
 	decimals: number
 	unSelect: () => void
+
+	selectID: TSelectId
+	updateTransferAmount: IUpdateTransferAmount | null
+	updateTransferAmountLock: ITransferAmountLock | null
+
 }
 
 interface IsortTokensInstancesOrdersStates {
