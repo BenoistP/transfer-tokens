@@ -159,11 +159,38 @@ export default function StepsContainer(
   ) // getTokenOnChainData_addressBalance
 
   /**
+   * Update tokenInstance in its chainTokensList and in tokensInstancesIndex
+   * @param _tokenInstance
+   */
+  // const updateChainTokenListTokenInstance = useCallback(
+  //   async (_tokenInstance: TTokenInstance) => {
+  //     try {
+  //       if (_tokenInstance.chainTokensList.tokensInstances && _tokenInstance.chainTokensList.tokensInstances.length > _tokenInstance.index) {
+  //         _tokenInstance.chainTokensList.tokensInstances[_tokenInstance.index] = _tokenInstance
+  //       }
+  //     } catch (error) {
+  //       console.error(`updateChainTokenListTokenInstance error: ${error}`);
+  //     }
+  //   },
+  //   []
+  // )
+
+  // const updateTokensInstancesIndex = useCallback(
+  //   async (_tokenInstance: TTokenInstance) => {
+  //       tokensInstancesIndex.set(_tokenInstance.address.toUpperCase() as TTokenContractAddress, _tokenInstance)
+  //   },
+  //   [tokensInstancesIndex]
+  // )
+
+  /**
    * Update tokenInstance in its chainTokensList
    */
-  const updateChainTokenListTokenInstance = useCallback(
+  const updateTokenInstanceRefs = useCallback(
     async (_tokenInstance: TTokenInstance) => {
       try {
+        // updateChainTokenListTokenInstance(_tokenInstance)
+        // updateTokensInstancesIndex(_tokenInstance)
+        tokensInstancesIndex.set(_tokenInstance.address.toUpperCase() as TTokenContractAddress, _tokenInstance)
         if (_tokenInstance.chainTokensList.tokensInstances && _tokenInstance.chainTokensList.tokensInstances.length > _tokenInstance.index) {
           _tokenInstance.chainTokensList.tokensInstances[_tokenInstance.index] = _tokenInstance
         }
@@ -171,8 +198,23 @@ export default function StepsContainer(
         console.error(`updateChainTokenListTokenInstance error: ${error}`);
       }
     },
-    [/* selectableTokensLists, selectedChainTokensLists */]
-  ) // updateChainTokenListTokenInstance
+    [/* updateChainTokenListTokenInstance, updateTokensInstancesIndex */tokensInstancesIndex]
+  )
+
+  // const updateAllTokensInstanceRefs = useCallback(
+  //   async (_tokenInstance: TTokenInstance) => {
+  //     try {
+  //       tokensInstancesIndex.set(_tokenInstance.address.toUpperCase() as TTokenContractAddress, _tokenInstance)
+  //       if (_tokenInstance.chainTokensList.tokensInstances && _tokenInstance.chainTokensList.tokensInstances.length > _tokenInstance.index) {
+  //         _tokenInstance.chainTokensList.tokensInstances[_tokenInstance.index] = _tokenInstance
+  //       }
+  //     } catch (error) {
+  //       console.error(`updateChainTokenListTokenInstance error: ${error}`);
+  //     }
+  //   },
+  //   [/* updateChainTokenListTokenInstance, updateTokensInstancesIndex */tokensInstancesIndex]
+  // )
+
 
   /**
    * Update tokenInstance with balances and transfer state
@@ -186,12 +228,87 @@ export default function StepsContainer(
    * @param _targetAddressBalanceUpdate
    * @param _processedState optionnal ETokenTransferState when called from transfer
    */
+  // const updateTokenInstanceBalancesAndTransferState = useCallback(
+  //   (_tokensInstances: TTokensInstances, _tokenInstanceAddress: TAddressString, _updateFromAddress: boolean, _fromAddress: TAddressString, _fromAddressBalanceUpdate: TTokenAmount,
+  //     _updateToAddress: boolean, _toAddress: TAddressString, _toAddressBalanceUpdate: TTokenAmount, _processedState?: ETokenTransferState) => {
+  //     try {
+  //       if (_tokensInstances && _tokensInstances.length && _tokenInstanceAddress && (_updateFromAddress || _updateToAddress || _processedState)) {
+  //         const tokensInstancesUpdate = _tokensInstances.map((tokenInstance: TTokenInstance) => {
+  //           if (tokenInstance.address == _tokenInstanceAddress) {
+  //             const fromADDRESS = _fromAddress?.toUpperCase()
+  //             const toADDRESS = _toAddress?.toUpperCase()
+  //             let { transferAmount, lockTransferAmount, selected, selectable, userData } = tokenInstance;
+  //             const { transferState } = tokenInstance;
+  //             // Update balances
+  //             if (_updateFromAddress || _updateToAddress) {
+  //               if (_updateFromAddress) {
+  //                 userData = {
+  //                   ...userData,
+  //                   [fromADDRESS as any]: (_updateFromAddress ? { ...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate } : { ...userData[fromADDRESS as any] })
+  //                 };
+  //               }
+  //               if (_updateToAddress) {
+  //                 userData = {
+  //                   ...userData,
+  //                   [toADDRESS as any]: (_updateToAddress ? { ...userData[toADDRESS as any], balance: _toAddressBalanceUpdate } : { ...userData[toADDRESS as any] })
+  //                 };
+  //               }
+  //               const connectedADDRESS = connectedAddress?.toUpperCase()
+  //               if (connectedADDRESS == fromADDRESS && _updateFromAddress) {
+  //                 if (!_fromAddressBalanceUpdate) {
+  //                   selectable = false; selected = false; transferAmount = 0n; lockTransferAmount = false;
+  //                 } else {
+  //                   if (transferAmount > _fromAddressBalanceUpdate) {
+  //                     transferAmount = _fromAddressBalanceUpdate;
+  //                   }
+  //                   if (_fromAddressBalanceUpdate) {
+  //                     selectable = true;
+  //                   }
+  //                 }
+  //               }
+  //               if (connectedADDRESS == toADDRESS && _updateToAddress) {
+  //                 if (!_toAddressBalanceUpdate) {
+  //                   selectable = false; selected = false; transferAmount = 0n; lockTransferAmount = false;
+  //                 } else {
+  //                   if (transferAmount > _toAddressBalanceUpdate) {
+  //                     transferAmount = _toAddressBalanceUpdate;
+  //                   }
+  //                   if (_toAddressBalanceUpdate) {
+  //                     selectable = true;
+  //                   }
+  //                 }
+  //               }
+  //             }
+  //             // Update processed state, reset selected, transfer amount and lock depending on processed state
+  //             if (_processedState) {
+  //               transferState.transfer = _processedState;
+  //               if (_processedState == ETokenTransferState.processed) {
+  //                 selected = false; transferAmount = 0n; lockTransferAmount = false;
+  //               } else if (_processedState == ETokenTransferState.skipped) selected = false;
+  //             }
+  //             const tokenInstanceUpdate = { ...tokenInstance, userData, transferAmount, lockTransferAmount, selected, selectable, transferState }
+  //             // updateChainTokenListTokenInstance(tokenInstanceUpdate)
+  //             updateTokenInstanceRefs(tokenInstanceUpdate)
+  //             return tokenInstanceUpdate
+  //           }
+  //           return tokenInstance
+  //         })
+  //         settokensInstances(tokensInstancesUpdate)
+  //       }
+  //     } catch (error) {
+  //       console.error(`updateTokenInstanceBalancesAndTransferState error: ${error}`);
+  //     }
+  //   },
+  //   [connectedAddress, /* updateChainTokenListTokenInstance */updateTokenInstanceRefs]
+  // )
+
   const updateTokenInstanceBalancesAndTransferState = useCallback(
-    (_tokensInstances: TTokensInstances, _tokenInstanceAddress: TAddressString, _updateFromAddress: boolean, _fromAddress: TAddressString, _fromAddressBalanceUpdate: TTokenAmount,
+    (/* _tokensInstances: TTokensInstances, */ _tokenInstanceAddress: TAddressString, _updateFromAddress: boolean, _fromAddress: TAddressString, _fromAddressBalanceUpdate: TTokenAmount,
       _updateToAddress: boolean, _toAddress: TAddressString, _toAddressBalanceUpdate: TTokenAmount, _processedState?: ETokenTransferState) => {
       try {
-        if (_tokensInstances && _tokensInstances.length && _tokenInstanceAddress && (_updateFromAddress || _updateToAddress || _processedState)) {
-          const tokensInstancesUpdate = _tokensInstances.map((tokenInstance: TTokenInstance) => {
+        const tokensInstances = Array.from(tokensInstancesIndex.values(), (tokenInstance: TTokenInstance) => tokenInstance)
+        if (tokensInstances && tokensInstances.length && _tokenInstanceAddress && (_updateFromAddress || _updateToAddress || _processedState)) {
+          const tokensInstancesUpdate = tokensInstances.map((tokenInstance: TTokenInstance) => {
             if (tokenInstance.address == _tokenInstanceAddress) {
               const fromADDRESS = _fromAddress?.toUpperCase()
               const toADDRESS = _toAddress?.toUpperCase()
@@ -245,7 +362,8 @@ export default function StepsContainer(
                 } else if (_processedState == ETokenTransferState.skipped) selected = false;
               }
               const tokenInstanceUpdate = { ...tokenInstance, userData, transferAmount, lockTransferAmount, selected, selectable, transferState }
-              updateChainTokenListTokenInstance(tokenInstanceUpdate)
+              // updateChainTokenListTokenInstance(tokenInstanceUpdate)
+              updateTokenInstanceRefs(tokenInstanceUpdate)
               return tokenInstanceUpdate
             }
             return tokenInstance
@@ -256,7 +374,7 @@ export default function StepsContainer(
         console.error(`updateTokenInstanceBalancesAndTransferState error: ${error}`);
       }
     },
-    [connectedAddress, updateChainTokenListTokenInstance]
+    [connectedAddress, /* updateChainTokenListTokenInstance */updateTokenInstanceRefs, tokensInstancesIndex]
   )
 
   /**
@@ -274,7 +392,7 @@ export default function StepsContainer(
     (_tokenInstanceAddress: TAddressString, _processedState: ETokenTransferState) => {
       try {
         if (tokensInstances && tokensInstances.length) {
-          const newTokensInstances = tokensInstances.map((tokenInstance: TTokenInstance) => {
+          const tokensInstancesUpdate = tokensInstances.map((tokenInstance: TTokenInstance) => {
             if (tokenInstance.address == _tokenInstanceAddress) {
               const { transferState } = tokenInstance;
               let { transferAmount, lockTransferAmount, selected } = tokenInstance;
@@ -283,21 +401,22 @@ export default function StepsContainer(
               if (_processedState == ETokenTransferState.processed) {
                 selected = false; transferAmount = 0n; lockTransferAmount = false;
               } else if (_processedState == ETokenTransferState.skipped) {
-                selected = false; // UNselect
+                selected = false;
               }
-              const newTokenInstance = { ...tokenInstance, transferAmount, lockTransferAmount, selected, transferState }
-              updateChainTokenListTokenInstance(newTokenInstance)
-              return newTokenInstance
+              const tokenInstanceUpdate = { ...tokenInstance, transferAmount, lockTransferAmount, selected, transferState }
+              // updateChainTokenListTokenInstance(tokenInstanceUpdate)
+              updateTokenInstanceRefs(tokenInstanceUpdate)
+              return tokenInstanceUpdate
             }
             return tokenInstance
           })
-          settokensInstances(newTokensInstances)
+          settokensInstances(tokensInstancesUpdate)
         }
       } catch (error) {
         console.error(`updateTokenInstanceTransferState error: ${error}`);
       }
     },
-    [tokensInstances, updateChainTokenListTokenInstance]
+    [tokensInstances, /* updateChainTokenListTokenInstance */updateTokenInstanceRefs]
   )
 
   /**
@@ -333,14 +452,15 @@ export default function StepsContainer(
             }
           }
           if (updateFromAddress || updateToAddress || _processedState) {
-            updateTokenInstanceBalancesAndTransferState(tokensInstances, _tokenInstance.address, updateFromAddress, _fromAddress, fromAddressBalanceUpdate, updateToAddress, _toAddress, toAddressBalanceUpdate, _processedState)
+            // updateTokenInstanceBalancesAndTransferState(tokensInstances, _tokenInstance.address, updateFromAddress, _fromAddress, fromAddressBalanceUpdate, updateToAddress, _toAddress, toAddressBalanceUpdate, _processedState)
+            updateTokenInstanceBalancesAndTransferState(_tokenInstance.address, updateFromAddress, _fromAddress, fromAddressBalanceUpdate, updateToAddress, _toAddress, toAddressBalanceUpdate, _processedState)
           }
         }
       } catch (error) {
         console.error(`updateTokenOnTransferProcessed error: ${error}`);
       }
     },
-    [getTokenOnChainData_addressBalance, updateTokenInstanceBalancesAndTransferState, tokensInstances]
+    [getTokenOnChainData_addressBalance, updateTokenInstanceBalancesAndTransferState/* , tokensInstances */]
   );
 
   /**
@@ -679,9 +799,11 @@ export default function StepsContainer(
               if (filter) {
                 if (filterTokenInstance(tokensInstance)) {
                   tokensInstance.selected = newCheckAll;
+                  updateTokenInstanceRefs(tokensInstance)
                 }
               } else {
                 tokensInstance.selected = newCheckAll;
+                updateTokenInstanceRefs(tokensInstance)
               }
             }
             return {...tokensInstance }
@@ -700,7 +822,7 @@ export default function StepsContainer(
       }
     },
     [tokensInstances, connectedAddress, targetAddress, selectAll,
-      filterTokenInstance, updateCheckAll, selectAllVisible, updateCheckAllVisible]
+      filterTokenInstance, updateCheckAll, selectAllVisible, updateCheckAllVisible, updateTokenInstanceRefs]
   );
 
   /**
@@ -722,9 +844,11 @@ export default function StepsContainer(
                 if (filter) {
                   if (filterTokenInstance(tokensInstance)) {
                     tokensInstance.selected = !tokensInstance.selected;
+                    updateTokenInstanceRefs(tokensInstance)
                   }
                 } else {
                   tokensInstance.selected = !tokensInstance.selected;
+                  updateTokenInstanceRefs(tokensInstance)
                 }
               }
             }
@@ -744,7 +868,7 @@ export default function StepsContainer(
       }
     },
     [tokensInstances, invertAll, connectedAddress, targetAddress,
-      filterTokenInstance, updateCheckAll, updateCheckAllVisible, invertAllVisible]
+      filterTokenInstance, updateCheckAll, updateCheckAllVisible, invertAllVisible, updateTokenInstanceRefs]
   );
 
   /**
@@ -763,6 +887,7 @@ export default function StepsContainer(
             } else {
               tokenInstance.selected = !tokenInstance.selected;
             }
+            updateTokenInstanceRefs(tokenInstance)
           }
         }
         return { ...tokenInstance }
@@ -786,6 +911,7 @@ export default function StepsContainer(
         const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
           if (tokenInstance.selectID === id) {
             tokenInstance.transferAmount = amount;
+            updateTokenInstanceRefs(tokenInstance)
           }
           return { ...tokenInstance }
         })
@@ -796,7 +922,7 @@ export default function StepsContainer(
         console.error(`updateTransferAmount error: ${error}`);
       }
     },
-    [tokensInstances, updateCheckAll, updateCheckAllVisible]
+    [tokensInstances, updateCheckAll, updateCheckAllVisible, updateTokenInstanceRefs]
   )
 
   /**
@@ -812,6 +938,7 @@ export default function StepsContainer(
           if (tokenInstance.selectID === id) {
             if (connectedADDRESS && tokenInstance.userData && tokenInstance.userData[connectedADDRESS as any]) {
               tokenInstance.lockTransferAmount = value;
+              updateTokenInstanceRefs(tokenInstance)
             }
           }
           return { ...tokenInstance }
@@ -821,7 +948,7 @@ export default function StepsContainer(
         console.error(`updateTransferAmountLock error: ${error}`);
       }
     },
-    [tokensInstances, connectedAddress]
+    [tokensInstances, connectedAddress, updateTokenInstanceRefs]
   )
 
   /**
@@ -1596,6 +1723,7 @@ export default function StepsContainer(
     async (): Promise<any> => {
       if (unwatch.current) unwatch.current() // remove previous watch
       if (tokensInstancesIndex && tokensInstancesIndex.size) {
+        console.log(`watchTransferEvents: tokensInstancesIndex.size=${tokensInstancesIndex.size}`)
         // array of tokens addresses
         const tokensAddresses = Array.from(tokensInstancesIndex.values(), (tokenInstance: TTokenInstance) => tokenInstance.address)
         const unwatchFn = publicClient.watchContractEvent({
@@ -1648,7 +1776,9 @@ export default function StepsContainer(
           // Step back
           const updatedTokensInstances = tokensInstances?.map((tokenInstance: TTokenInstance) => {
             if (tokenInstance.transferState.processing) {
-              return { ...tokenInstance, transferState: { ...tokenInstance.transferState, processing: false } } // reset processing state
+              const tokenInstanceUpdate = { ...tokenInstance, transferState: { ...tokenInstance.transferState, processing: false } } // reset processing state
+              updateTokenInstanceRefs(tokenInstanceUpdate)
+              return tokenInstanceUpdate
             }
             return tokenInstance;
           })
@@ -1656,17 +1786,25 @@ export default function StepsContainer(
         } else if (step == ESteps.migration && previousStep.current == ESteps.tokensToMigrate) {
           // Step forward
           const updatedTokensInstances = tokensInstances?.map((tokenInstance: TTokenInstance) => {
-            if (tokenInstance.selected)
-              return { ...tokenInstance, transferState: { processing: true, transfer: ETokenTransferState.none } } // Selected, mark as processing (= "to process") and reinit transfer state
-            return {
-              ...tokenInstance, // Not selected: reinit transfer state and change previously transfer state to "previous" state
-              transferState: {
-                processing: tokenInstance.transferState.processing,
-                transfer: (tokenInstance.transferState.transfer == ETokenTransferState.processed ?
-                  ETokenTransferState.previous_processed : (tokenInstance.transferState.transfer == ETokenTransferState.error ? ETokenTransferState.previous_error :
-                    (tokenInstance.transferState.transfer == ETokenTransferState.skipped ? ETokenTransferState.previous_skipped : tokenInstance.transferState.transfer)))
-              }
+            if (tokenInstance.selected) {
+              const tokenInstanceUpdate = { ...tokenInstance, transferState: { processing: true, transfer: ETokenTransferState.none } } // Selected, mark as processing (= "to process") and reinit transfer state
+              updateTokenInstanceRefs(tokenInstanceUpdate)
+              return tokenInstanceUpdate
             }
+            if (tokenInstance.transferState.transfer == ETokenTransferState.processed || tokenInstance.transferState.transfer == ETokenTransferState.error || tokenInstance.transferState.transfer == ETokenTransferState.skipped) {
+              const tokenInstanceUpdate = {
+                ...tokenInstance, // Not selected: reinit transfer state and change previously transferred state to "previous" state
+                transferState: {
+                  processing: tokenInstance.transferState.processing,
+                  transfer: (tokenInstance.transferState.transfer == ETokenTransferState.processed ?
+                    ETokenTransferState.previous_processed : (tokenInstance.transferState.transfer == ETokenTransferState.error ? ETokenTransferState.previous_error :
+                      (tokenInstance.transferState.transfer == ETokenTransferState.skipped ? ETokenTransferState.previous_skipped : tokenInstance.transferState.transfer)))
+                }
+              }
+              updateTokenInstanceRefs(tokenInstanceUpdate)
+              return tokenInstanceUpdate
+            }
+            return tokenInstance;
           })
           settokensInstances(updatedTokensInstances)
         }
@@ -1675,7 +1813,7 @@ export default function StepsContainer(
         console.error(`useEffect step error: ${error}`);
       }
     },
-    [step, tokensInstances]
+    [step, tokensInstances, updateTokenInstanceRefs]
   )
 
   /**
@@ -1733,6 +1871,10 @@ export default function StepsContainer(
     [selectedChainTokensLists, updateChainTokenListTokensInstances, settokensInstancesIndex, getTokensInstancesIndex,
       setStateErrorLoadingTokensInstances, setStateLoadingTokensInstances, setStateIsFetchingData, setStateUpdatingTokensInstances]
   )
+
+  console.dir(tokensInstancesIndex)
+  console.dir(tokensInstances)
+
 
   /**
    * Sets up the watch for Transfer Events
