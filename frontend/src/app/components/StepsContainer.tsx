@@ -25,7 +25,7 @@ import {
   ESteps, ETokenTransferState
 } from "@jsconsts/enums";
 import {
-  DURATION_LONG,
+  TOAST_DURATION_LONG,
   FETCHDATA_MULTICALL_MAX_RETRY, FETCHDATA_MULTICALL_SUCCESSSTATUS
 } from "@App/js/constants/ui/uiConsts";
 import { TOAST_OPACITY_ALPHA } from "@App/js/constants/ui/twDaisyUiStyles";
@@ -112,7 +112,7 @@ export default function StepsContainer(
               </div>
             </div>
           ),
-          { duration: DURATION_LONG }
+          { duration: TOAST_DURATION_LONG }
         )
       } catch (error) {
         console.error(`showWarningToast error: ${error}`)
@@ -188,6 +188,7 @@ export default function StepsContainer(
   const updateTokenInstanceRefs = useCallback(
     async (_tokenInstance: TTokenInstance) => {
       try {
+        console.debug(`updateTokenInstanceRefs _tokenInstance.address: ${_tokenInstance.address} _tokenInstance.index: ${_tokenInstance.index}`)
         // updateChainTokenListTokenInstance(_tokenInstance)
         // updateTokensInstancesIndex(_tokenInstance)
         tokensInstancesIndex.set(_tokenInstance.address.toUpperCase() as TTokenContractAddress, _tokenInstance)
@@ -308,6 +309,7 @@ export default function StepsContainer(
       try {
         const tokensInstances = Array.from(tokensInstancesIndex.values(), (tokenInstance: TTokenInstance) => tokenInstance)
         if (tokensInstances && tokensInstances.length && _tokenInstanceAddress && (_updateFromAddress || _updateToAddress || _processedState)) {
+console.debug(`updateTokenInstanceBalancesAndTransferState _tokenInstanceAddress: ${_tokenInstanceAddress} _updateFromAddress: ${_updateFromAddress} _fromAddress: ${_fromAddress} _fromAddressBalanceUpdate: ${_fromAddressBalanceUpdate} _updateToAddress: ${_updateToAddress} _toAddress: ${_toAddress} _toAddressBalanceUpdate: ${_toAddressBalanceUpdate} _processedState: ${_processedState}`)
           const tokensInstancesUpdate = tokensInstances.map((tokenInstance: TTokenInstance) => {
             if (tokenInstance.address == _tokenInstanceAddress) {
               const fromADDRESS = _fromAddress?.toUpperCase()
@@ -362,6 +364,8 @@ export default function StepsContainer(
                 } else if (_processedState == ETokenTransferState.skipped) selected = false;
               }
               const tokenInstanceUpdate = { ...tokenInstance, userData, transferAmount, lockTransferAmount, selected, selectable, transferState }
+              console.debug(`updateTokenInstanceBalancesAndTransferState tokenInstanceUpdate=}`)
+              console.dir(tokenInstanceUpdate)
               // updateChainTokenListTokenInstance(tokenInstanceUpdate)
               updateTokenInstanceRefs(tokenInstanceUpdate)
               return tokenInstanceUpdate
@@ -452,6 +456,7 @@ export default function StepsContainer(
             }
           }
           if (updateFromAddress || updateToAddress || _processedState) {
+console.debug(`updateTokenOnTransferProcessed _tokenInstance.address: ${_tokenInstance.address} _fromAddress: ${_fromAddress} _toAddress: ${_toAddress} _processedState: ${_processedState}`)
             // updateTokenInstanceBalancesAndTransferState(tokensInstances, _tokenInstance.address, updateFromAddress, _fromAddress, fromAddressBalanceUpdate, updateToAddress, _toAddress, toAddressBalanceUpdate, _processedState)
             updateTokenInstanceBalancesAndTransferState(_tokenInstance.address, updateFromAddress, _fromAddress, fromAddressBalanceUpdate, updateToAddress, _toAddress, toAddressBalanceUpdate, _processedState)
           }
@@ -478,6 +483,7 @@ export default function StepsContainer(
               const from = log.args["from"], to = log.args["to"], value = log.args["value"];
               // showTransfer(tokenInstance, from, to, value) // show ALL transfers
               if (tokenInstance.userData && from && to && value) {
+console.debug(`processTransferEvent from: ${from} to: ${to} value: ${value}`)
                 updateTokenOnTransferProcessed(tokenInstance, from, to)
               }
             }
@@ -908,6 +914,7 @@ export default function StepsContainer(
   const updateTransferAmount: IUpdateTransferAmount = useCallback(
     (id: string, amount: TTokenAmount) => {
       try {
+console.debug(`updateTransferAmount id: ${id} amount: ${amount}`)
         const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
           if (tokenInstance.selectID === id) {
             tokenInstance.transferAmount = amount;
@@ -1737,7 +1744,6 @@ export default function StepsContainer(
           eventName: 'Transfer',
           onLogs: (logs: Log[]) => processTransferEvent(logs)
         })
-
         unwatch.current = unwatchFn;
       }
     },

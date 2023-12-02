@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 // Consts & Enums
 import { DEFAULT_ETHEREUM_EXPLORER_BASE_URI, DEFAULT_ETHEREUM_EXPLORER_TX_URI,
   DEFAULT_GNOSIS_EXPLORER_BASE_URI, DEFAULT_GNOSIS_EXPLORER_TX_URI,
-  DURATION_LONG, DURATION_MEDIUM, DURATION_TX_TIMEOUT,
+  TOAST_DURATION_LONG, TOAST_DURATION_MEDIUM, DURATION_TX_TIMEOUT,
   USER_REJECT_TX_REGEXP, REFRESH_BALANCE_DELAY_AFTER_TRANSFER
 } from "@App/js/constants/ui/uiConsts";
 import { NULL_ADDRESS } from "@App/js/constants/addresses";
@@ -205,7 +205,7 @@ export default function Step3 ( {
               </div>
             </div>
           ),
-          { duration: DURATION_MEDIUM }
+          { duration: TOAST_DURATION_MEDIUM }
         )
       }
     },
@@ -326,9 +326,9 @@ export default function Step3 ( {
                 transferErrorToast(txResult, displayedAmount, _tokenInstanceToTransfer, _destinationAddress),
             },
             { success:
-                {duration: DURATION_LONG},
+                {duration: TOAST_DURATION_LONG},
               error:
-                {duration: DURATION_LONG},
+                {duration: TOAST_DURATION_LONG},
             }
           )
         }
