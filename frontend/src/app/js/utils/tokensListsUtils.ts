@@ -1,5 +1,3 @@
-// tokensListsUtils.ts
-
 import { EChainTokensListLoadState } from "@jsconsts/enums";
 
 /**
@@ -14,7 +12,7 @@ const isValidUri = async( URI:TStringNullUndef ):Promise<boolean> => {
     }
   }
   catch (error) {
-    // return false
+    // error: URI not valid
   }
   return false
 }
@@ -134,45 +132,24 @@ const getChainArray_from_tokensLists = (tokensLists: TTokensLists):TChainIdArray
 * for use with a META-URI list
 */
 const getTokenChainDataArray_from_tokensLists = (tokensLists: TTokensLists):TTokenChainDataArray => {
-  // const start:number = Date.now()
-  // let countTotal:number = 0
-  // let countDuplicates:number = 0
-  // let count = 0
-  // let countForEachTokensLists = 0
-  // let countForEachTokensChainData = 0
   try
   {
     const tokenChainDataArray: TTokenChainDataArray = []
-    // First Loop: for each list
-    tokensLists?.forEach( (tokensList:TTokensList/* , index:number */) =>
-    {
-      // countForEachTokensLists++
+    tokensLists?.forEach( (tokensList:TTokensList) => {
       const { allTokensChainData } = tokensList
-      // console.debug(`getTokenChainDataArray_from_tokensLists: LIST index=${index} tokensList.name=${tokensList.name} tokens?.length=${allTokensChainData?.length}` )
       if (allTokensChainData && allTokensChainData.length>0) {
         allTokensChainData?.forEach( (tokenChainData_curr:TTokenChainData) => {
-          // countForEachTokensChainData++
           if (tokenChainData_curr) {
             tokenChainDataArray.push(tokenChainData_curr)
-            // count++
           }
-        }) // tokensListChainIds_.forEach
+        })
       }
-      // throw("exit"); // TODO: remove
-    }) // tokens?.forEach
-    // countTotal = tokenChainDataArray.length
+    })
     return tokenChainDataArray
   } catch (error) {
     console.error('getTokenChainDataArray_from_tokensLists: error=', error);
   }
-  // finally {
-  //   const elapsed = Date.now() - start
-  //   // console.debug(`getTokenChainDataArray_from_tokensLists: countTotal=${countTotal} countDuplicates=${countDuplicates} elapsed=${elapsed} DONE` );
-  //   console.debug(`getTokenChainDataArray_from_tokensLists: countTotal=${countTotal} count=${count} countForEachTokensLists=${countForEachTokensLists} countForEachTokensChainData=${countForEachTokensChainData} elapsed=${elapsed} DONE` );
-  //   // console.debug(`getTokenChainDataArray_from_tokensLists: elapsed=${elapsed} DONE` );
-  // }
-} // getTokenChainDataArray_from_tokensLists
-
+}
 
 /**
  * 
@@ -275,17 +252,14 @@ const getMetaTokensListUriCommitFromTokensListURI = async (URI:TTokenListUri):Pr
  */
 const getMetaTokensListUriFromTokensListMetaURI = async (URI:TTokenListUri, summaryURI:TTokenListUri):Promise<TMetaTokensListUri|undefined> => {
   try {
-    // console.debug(`getMetaTokensListUriCommitFromTokensListURI: URI=${URI}` )
     if (URI && summaryURI) {
       const metaTokensListUriCommit = await getMetaTokensListUriCommitFromTokensListURI(URI)
       if (metaTokensListUriCommit) {
         const {sha} = metaTokensListUriCommit
-        // console.debug(`getMetaTokensListUriFromTokensListMetaURI: sha=${sha}` )
         const metaListURI = summaryURI.replace(/!SHA!/g, sha)
-        // console.debug(`getMetaTokensListUriFromTokensListMetaURI: metaListURI=${metaListURI}` )
-        return { URI: metaListURI, sha } // as TMetaTokensListUri
+        return { URI: metaListURI, sha }
       }
-    } // if (URI && summaryURI)
+    }
   } catch (error) {
     console.error(`getMetaTokensListUriFromTokensListMetaURI: error=${error}` );
   }
