@@ -7,13 +7,8 @@
 
 
 @layer base {
-
   body, input, select, option{
   font-family: 'Kanit', sans-serif;
-  /* color: theme('colors.blueMV.dark'); */
-  /* background-color: theme('colors.whiteMV'); */
-   /* @apply text-blueMV-dark bg-whiteMV */
-   /*dark:text-whiteMV dark:bg-blackMV*/ ;
 }
 
 } /* @layer base */
