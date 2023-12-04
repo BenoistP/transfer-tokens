@@ -1,7 +1,7 @@
 // React
 import { ReactNode, useCallback, useState } from 'react'
 // Components
-import Navbar from '@Components/Navbar'
+import Navbar from '@Navbar/Navbar'
 import { MoveTokensAppProvider } from '@Providers/MoveTokensAppProvider/MoveTokensAppContext'
 // Context
 import { ThemeProvider, useTheme } from "next-themes";

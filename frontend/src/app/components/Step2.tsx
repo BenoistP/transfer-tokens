@@ -1,7 +1,7 @@
 // React
 import { useEffect } from "react";
 // Components
-import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
+import TokenInstanceListTableFiltered from "@UIElements/TokenInstanceListTableFiltered";
 
 export default function Step2({
   setNextDisabled,
@@ -11,7 +11,7 @@ export default function Step2({
   targetAddress,
   isLoadingTokensInstances, isErrorTokensInstances, isUpdatingTokensInstances,
   tokensInstancesListTablePropsHandlers,
-}: IStep2Props) {
+}: IStep2Props): JSX.Element {
 
   useEffect(() => {
     setShowProgressBar(false)

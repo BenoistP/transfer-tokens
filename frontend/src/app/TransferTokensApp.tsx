@@ -2,7 +2,7 @@
 import { Suspense } from 'react';
 // Components
 import TransferTokensAppPageLayout from '@App/TransferTokensAppPageLayout';
-import { MainContent } from '@Components/MainContent';
+import MainContent from '@Components/MainContent';
 // Router
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 // Translation

@@ -409,7 +409,7 @@ const getTokensList_TokenData_FromJsonLists = async(tokensListsJson: any):Promis
 
     }
   } catch (error) {
-    console.debug(`getTokensList_FromJsonLists: error=${error}` );
+    console.error(`getTokensList_FromJsonLists: error=${error}` );
   }
 }
 

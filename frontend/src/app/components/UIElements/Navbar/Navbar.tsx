@@ -1,11 +1,11 @@
 // React
 
 // Components
-import LanguageSelector from "@Components/LanguageSelector";
-import ThemeSwitch from "@Components/ThemeSwitch";
+import LanguageSelector from "@Navbar/LanguageSelector";
+import ThemeSwitch from "@Navbar/ThemeSwitch";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Avatar } from "@Components/NavbarAvatar";
-import { NavbarStatus } from "@Components/NavbarStatus";
+import Avatar from "@Navbar/NavbarAvatar";
+import NavbarStatus from "@Navbar/NavbarStatus";
 
 export default function Navbar(): JSX.Element {
   return (

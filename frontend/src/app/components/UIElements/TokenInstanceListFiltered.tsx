@@ -2,7 +2,7 @@
 import { useCallback } from 'react'
 
 // Components
-import TokenInstance from '@Components/TokenInstance'
+import TokenInstance from '@UIElements/TokenInstance'
 
 export default function TokenInstanceListFiltered({
 	tokensInstances,
@@ -10,7 +10,7 @@ export default function TokenInstanceListFiltered({
 	targetAddress,
 	tokensInstancesListTablePropsHandlers,
 	enableEditable,
-}: ITokenListFilteredProps) {
+}: ITokenListFilteredProps): JSX.Element {
 	const filterTokenInstanceCB = useCallback(
 		(token: TTokenInstance) => tokensInstancesListTablePropsHandlers.filterHandlers.filterTokenInstance(token),
 		[tokensInstancesListTablePropsHandlers.filterHandlers],

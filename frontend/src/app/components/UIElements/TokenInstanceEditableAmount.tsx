@@ -8,17 +8,13 @@ export default function TokenInstanceEditableAmount({
 	readonly,
 	balance,
 	amount,
-	// setamount,
 	amountLock,
-	// setamountLock,
 	decimals,
 	unSelect,
-
 	selectID,
 	updateTransferAmount,
 	updateTransferAmountLock
-
-}: ITokenInstanceAmountProps) {
+}: ITokenInstanceAmountProps): JSX.Element {
 	const [editableAmountString, seteditableAmountString] = useState('0') as [string, (balance: string) => void]
 	const [editable, seteditable] = useState<boolean>(selectable)
 	const Decimals = BigInt(decimals)
@@ -28,26 +24,23 @@ export default function TokenInstanceEditableAmount({
 	 * Set amount to MAX
 	 */
 	const setMaxAmount = useCallback(() => {
-		// setamount(MAX)
 		updateTransferAmount && updateTransferAmount(selectID, MAX)
-	}, [MAX, /* setamount, */ selectID, updateTransferAmount])
+	}, [MAX, selectID, updateTransferAmount])
 
 	/**
 	 * Set amount to 0
 	 * clears amount
 	 */
 	const setZeroAmount = useCallback(() => {
-		// setamount(0n)
 		updateTransferAmount && updateTransferAmount(selectID, 0n)
-	}, [selectID, /* setamount, */ updateTransferAmount])
+	}, [selectID, updateTransferAmount])
 
 	/**
 	 * Lock amount (disable editing)
 	 */
 	const setLockAmount = useCallback(() => {
-		// if (setamountLock) setamountLock(true)
 		updateTransferAmountLock && updateTransferAmountLock(selectID, true)
-	}, [/* setamountLock, */ selectID, updateTransferAmountLock])
+	}, [selectID, updateTransferAmountLock])
 
 	/**
 	 * Unlock amount (enable editing)
@@ -55,7 +48,7 @@ export default function TokenInstanceEditableAmount({
 	const setUnLockAmount = useCallback(() => {
 		// if (setamountLock) setamountLock(false)
 		updateTransferAmountLock && updateTransferAmountLock(selectID, false)
-	}, [/* setamountLock, */ selectID, updateTransferAmountLock]
+	}, [selectID, updateTransferAmountLock]
 	)
 
 	/**
@@ -65,7 +58,6 @@ export default function TokenInstanceEditableAmount({
 	 */
 	const updateAmount = (e: React.FormEvent<HTMLInputElement>): void => {
 		try {
-// console.log(`updateAmount e.currentTarget.value: ${e.currentTarget.value} `)
 			const strValue = e.currentTarget.value
 			const strInt = strValue.split('.')[0]
 			const strFloat = strValue.split('.')[1]
@@ -76,13 +68,8 @@ export default function TokenInstanceEditableAmount({
 			const amountValueFloat =
 				BigInt(Math.pow(10, decimals - (leadingZeros + floatValue.toString().length))) * floatValue
 			const value = amountValueInt + amountValueFloat
-
 			const _value = value > MAX ? MAX : value
-console.log(`updateAmount e.currentTarget.value: ${e.currentTarget.value} _value: ${_value}`)
-			// setamount(_value)
 			updateTransferAmount && updateTransferAmount(selectID, _value)
-
-			// setamount(value > MAX ? MAX : value)
 		} catch (error) {
 			console.error(`updateAmount e.currentTarget.value: ${e.currentTarget.value} error: ${error}`)
 		}
@@ -93,7 +80,6 @@ console.log(`updateAmount e.currentTarget.value: ${e.currentTarget.value} _value
 	 */
 	useEffect(() => {
 		try {
-console.debug(`TokenInstanceEditableAmount.tsx useEffect balance display `)
 			if (amount) {
 				const amountValue = amount.valueOf()
 				const intValue = amountValue / 10n ** Decimals
@@ -133,7 +119,7 @@ console.debug(`TokenInstanceEditableAmount.tsx useEffect balance display `)
 					<div className="flex flex-row justify-left">
 						<div className="flex grow-0 m-0 pr-1 p-0 ">
 							<label className="swap swap-rotate">
-								<input type="checkbox" checked={amountLock} onChange={() => {}} />
+								<input type="checkbox" checked={amountLock} onChange={() => { }} />
 								<LockClosedIcon
 									className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current"
 									onClick={() => {
@@ -168,7 +154,7 @@ console.debug(`TokenInstanceEditableAmount.tsx useEffect balance display `)
 						</div>
 						<div className="flex grow-0 m-0 p-0 ">
 							<label className={'swap swap-rotate ' + (amountLock ? 'invisible' : 'visible')}>
-								<input type="checkbox" checked={amount && amount > 0n ? false : true} onChange={() => {}} />
+								<input type="checkbox" checked={amount && amount > 0n ? false : true} onChange={() => { }} />
 								<PlusCircleIcon
 									className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current"
 									onClick={() => {
@@ -194,11 +180,11 @@ console.debug(`TokenInstanceEditableAmount.tsx useEffect balance display `)
 							<input type="checkbox" />
 							<LockClosedIcon
 								className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current"
-								onClick={() => {}}
+								onClick={() => { }}
 							/>
 							<LockOpenIcon
 								className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current"
-								onClick={() => {}}
+								onClick={() => { }}
 							/>
 						</label>
 					</div>

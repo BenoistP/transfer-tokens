@@ -1,7 +1,7 @@
 // React
 
 // Components
-import TokenInstance from "@Components/TokenInstance";
+import TokenInstance from "@UIElements/TokenInstance";
 
 export default function TokenInstanceMigrationList(
   { tokensInstances, accountAddress, targetAddress, sortTokensInstances, }: ITokenListProps): JSX.Element {

@@ -1,10 +1,12 @@
 // React
 
 // Components
-import { SelectableTokensList } from "@Components/SelectableTokensList";
+import SelectableTokensList from "@UIElements/SelectableTokensList";
 
 export default function SelectableTokensLists(
-  { selectableTokensLists, handleSwapTokenListSelection }: ISelectableTokensListsProps): JSX.Element {
+  { selectableTokensLists,
+    handleSwapTokenListSelection
+  }: ISelectableTokensListsProps): JSX.Element {
 
   return (
     <>

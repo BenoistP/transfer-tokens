@@ -99,9 +99,11 @@
       "titleStep": "Destinataire",
       "destination": "Destinataire",
       "destinationPlaceholder": "0x...",
-      "detinationEmpty":"Saisir l'adresse destinataire",
+      "destinationEmpty":"Saisir l'adresse destinataire",
+      "destinationWarningSmartContract": "L'adresse destinataire est un smart contract",
       "destinationError": "Addresse invalide",
-      "destinationErrorSame": "L'adresse de destination ne peut pas être la même que l'adresse source",
+      "destinationNotAllowed": "Addresse non autorisée",
+      "destinationErrorSame": "Adresse destinataire identique à l'adresse source",
       "destinationOk": "Addresse valide"
     },
     
@@ -115,6 +117,9 @@
       "titleStep": "Migration",
       "tokensMigrationListTable": {
         "noTokens": "Aucun token trouvé"
+      },
+      "stepError": {
+        "label": "Erreur"
       },
       "migrationProgressBar": {
         "success": "Succès",

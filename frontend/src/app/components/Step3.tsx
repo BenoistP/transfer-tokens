@@ -1,7 +1,7 @@
 // React
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 // Components
-import TokenInstanceMigrationListTable from "@Components/TokenInstanceMigrationListTable"
+import TokenInstanceMigrationListTable from "@UIElements/TokenInstanceMigrationListTable"
 // Transactions & ABIs
 import { erc20ABI, prepareWriteContract, writeContract, waitForTransaction } from '@wagmi/core'
 import { WaitForTransactionReceiptTimeoutError, TransactionNotFoundError } from 'viem';
@@ -39,7 +39,7 @@ export default function Step3({
   setmigrationState,
   updateTokenOnTransferProcessed,
   updateTokenInstanceTransferState
-}: IStep3Props) {
+}: IStep3Props): JSX.Element {
 
   const { t } = useTranslation()
   const [tokensInstancesToMigrate, settokensInstancesToMigrate] = useState<TTokensInstances>(null)

@@ -1,8 +1,8 @@
 // React
 import { useMemo } from 'react'
 // Components
-import TokenInstanceMigrationList from '@Components/TokenInstanceMigrationList'
-import SortIcon from '@Components/SortIcon'
+import TokenInstanceMigrationList from '@UIElements/TokenInstanceMigrationList'
+import SortIcon from '@UIElements/SortIcon'
 // Utils
 import { shortenAddress } from '@App/js/utils/blockchainUtils'
 // Icons
@@ -17,7 +17,7 @@ export default function TokenInstanceMigrationListTable({
 	accountAddress,
 	targetAddress,
 	tokensInstancesListTablePropsHandlers,
-}: ITokenInstancesMigrationListTableProps) {
+}: ITokenInstancesMigrationListTableProps): JSX.Element {
 	const { t } = useTranslation()
 
 	const TokenInstanceMigrationListMemo = useMemo(

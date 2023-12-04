@@ -1,19 +1,20 @@
 // React
 import { useEffect } from "react";
 // Components
-import AddressInput from "@Components/AddressInput";
-import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
+import AddressInput from "@App/components/UIElements/AddressInput";
+import TokenInstanceListTableFiltered from "@UIElements/TokenInstanceListTableFiltered";
 // Utils
 import { isValidAddress } from "@jsutils/blockchainUtils";
 
 export default function Step1({
   accountAddress,
+  chainId,
   setNextDisabled,
   tokensInstances,
   targetAddress,
   settargetAddress,
   isLoadingTokensInstances, isErrorTokensInstances, isUpdatingTokensInstances,
-  tokensInstancesListTablePropsHandlers }: IStep1Props) {
+  tokensInstancesListTablePropsHandlers }: IStep1Props): JSX.Element {
 
   useEffect(() => {
     setNextDisabled(!isValidAddress(targetAddress) || targetAddress == accountAddress || isLoadingTokensInstances || isErrorTokensInstances)
@@ -27,7 +28,7 @@ export default function Step1({
 
         <div className="w-full flex bg-base-300 gap-2 overflow-x-hidden rounded-box bg-cover bg-top py-2 px-4 ">
           <div className="bg-neutral min-w-fit m-0 p-1 rounded-box">
-            <AddressInput sourceAddress={accountAddress} targetAddress={targetAddress} settargetAddress={settargetAddress} />
+            <AddressInput sourceAddress={accountAddress} targetAddress={targetAddress} settargetAddress={settargetAddress} chainId={chainId}/>
           </div>
           <div className="flex min-w-fit"></div>
         </div>

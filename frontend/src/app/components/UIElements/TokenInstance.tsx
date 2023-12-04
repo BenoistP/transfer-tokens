@@ -1,7 +1,7 @@
 // React
 import { useEffect, useCallback, useState } from 'react'
 // Components
-import TokenInstanceEditableAmount from '@Components/TokenInstanceEditableAmount'
+import TokenInstanceEditableAmount from '@UIElements/TokenInstanceEditableAmount'
 // Consts & Enums
 import { ERC20_DECIMALS_DEFAULT, SHORT_DISPLAY_DECIMAL_COUNT } from '@uiconsts/misc'
 import { ETokenTransferState } from '@jsconsts/enums'
@@ -28,7 +28,7 @@ export default function TokenInstance({
 	updateTransferAmountLock,
 	enableEditable,
 	showTransferAmountReadOnly,
-}: ITokenProps) {
+}: ITokenProps): JSX.Element {
 	const { t } = useTranslation()
 
 	const accountADDRESS = accountAddress ? accountAddress.toUpperCase() : ''
@@ -52,9 +52,6 @@ export default function TokenInstance({
 
 	const [isSelected, setIsSelected] = useState<boolean>(false)
 	const [isCheckboxDisabled, setisCheckboxDisabled] = useState<boolean>(true)
-
-	// const [transferAmount, settransferAmount] = useState<TTokenAmount | null>(tokenInstance.transferAmount)
-	// const [lockTransferAmount, settransferAmountLock] = useState<boolean>(tokenInstance.lockTransferAmount)
 
 	const canTransferFrom = tokenInstance.userData[accountADDRESS as any]?.canTransfer
 	const canTransferTo = tokenInstance.userData[targetADDRESS as any]?.canTransfer
@@ -135,13 +132,11 @@ export default function TokenInstance({
 	 * Update checkbox status on transfer amount change
 	 */
 	const handleCheckboxClick = useCallback(() => {
-		// transferAmount &&
-		// 	transferAmount.valueOf() > 0n &&
 			balanceFrom &&
 			canTransferTo &&
 			updateCheckboxStatus &&
 			updateCheckboxStatus(tokenInstance.selectID)
-	}, [tokenInstance.selectID, canTransferTo, /* transferAmount, */ balanceFrom, updateCheckboxStatus])
+	}, [tokenInstance.selectID, canTransferTo, balanceFrom, updateCheckboxStatus])
 
 	/**
 	 * Name update
@@ -163,36 +158,6 @@ export default function TokenInstance({
 	useEffect(() => {
 		setdecimals(BigInt(tokenInstance.decimals || ERC20_DECIMALS_DEFAULT))
 	}, [tokenInstance.decimals])
-
-	/**
-	 * TransferAmount update
-	 * reflect object property changes
-	 */
-	// useEffect(() => {
-	// 	console.debug(`TokenInstance.tsx useEffect tokenInstance.transferAmount update`)
-	// 	settransferAmount(tokenInstance.transferAmount)
-	// }, [tokenInstance.transferAmount])
-
-	/**
-	 * TransferAmount update
-	 * reflect user input changes
-	 */
-	// useEffect(() => {
-	// console.debug(`TokenInstance.tsx useEffect transferAmount update transferAmount: ${transferAmount} tokenInstance.transferAmount: ${tokenInstance.transferAmount} balanceFrom: ${balanceFrom}`)
-	// 	if (transferAmount != null  && tokenInstance.transferAmount != transferAmount && transferAmount <= balanceFrom) {
-	// 		updateTransferAmount && updateTransferAmount(tokenInstance.selectID, transferAmount)
-	// 	}
-	// }, [transferAmount, tokenInstance.transferAmount, updateTransferAmount, tokenInstance.selectID, balanceFrom])
-
-	/**
-	 * TransferAmountLock update
-	 */
-	// useEffect(() => {
-	// 	tokenInstance.lockTransferAmount != lockTransferAmount &&
-	// 		updateTransferAmountLock &&
-	// 		updateTransferAmountLock(tokenInstance.selectID, lockTransferAmount)
-	// }, [lockTransferAmount, tokenInstance.lockTransferAmount, tokenInstance.selectID, updateTransferAmountLock])
-
 
 	/**
 	 * trigger connected address balance computations for display
@@ -228,14 +193,12 @@ export default function TokenInstance({
 			canTransferFrom &&
 			canTransferTo &&
 			(balanceFrom?.valueOf() || 0n) > 0n
-			// &&
-			// (transferAmount || 0n) > 0n
 		) {
 			setisCheckboxDisabled(false)
 		} else {
 			setisCheckboxDisabled(true)
 		}
-	}, [canTransferFrom, canTransferTo, tokenInstance.selectable, balanceFrom/* , transferAmount */])
+	}, [canTransferFrom, canTransferTo, tokenInstance.selectable, balanceFrom])
 
 	return (
 		<>
@@ -277,20 +240,11 @@ export default function TokenInstance({
 							selectable={tokenInstance.selectable}
 							readonly={false}
 							balance={balanceFrom && balanceFrom.valueOf() ? balanceFrom.valueOf() : 0n}
-
-							// amount={transferAmount && transferAmount.valueOf() ? transferAmount.valueOf() : 0n}
-							// amountLock={lockTransferAmount}
 							amount={tokenInstance.transferAmount && tokenInstance.transferAmount.valueOf() ? tokenInstance.transferAmount.valueOf() : 0n}
 							amountLock={tokenInstance.lockTransferAmount}
-
 							selectID={tokenInstance.selectID}
 							updateTransferAmount={updateTransferAmount}
 							updateTransferAmountLock={updateTransferAmountLock}
-
-
-							// setamount={settransferAmount}
-							// setamountLock={settransferAmountLock}
-
 							decimals={Number(decimals)}
 							unSelect={unSelect}
 						/>
@@ -306,15 +260,8 @@ export default function TokenInstance({
 						selectable={false}
 						readonly={true}
 						balance={balanceFrom && balanceFrom.valueOf() ? balanceFrom.valueOf() : 0n}
-
-						// amount={transferAmount && transferAmount.valueOf() ? transferAmount.valueOf() : 0n}
-						// amountLock={lockTransferAmount}
 						amount={tokenInstance.transferAmount && tokenInstance.transferAmount.valueOf() ? tokenInstance.transferAmount.valueOf() : 0n}
 						amountLock={tokenInstance.lockTransferAmount}
-
-						// setamount={settransferAmount}
-						// setamountLock={settransferAmountLock}
-
 						selectID={tokenInstance.selectID}
 						updateTransferAmount={updateTransferAmount}
 						updateTransferAmountLock={updateTransferAmountLock}

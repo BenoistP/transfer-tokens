@@ -85,7 +85,6 @@ type TMoveTokensAppDataContext = {
 	minStep: number
 	maxStep: number
 	tokensLists: TTokensLists | null | undefined
-	// language:         string,
 }
 
 type TMoveTokensAppDataHandlersContext = {
@@ -365,6 +364,7 @@ interface IAddressInputProps {
 	sourceAddress: TAddressStringNullUndef
 	targetAddress: TAddressStringEmpty
 	settargetAddress: TsettargetAddress
+	chainId: ChainId
 }
 
 type TSetMigrationState = React.Dispatch<React.SetStateAction<TmigrationState>>
@@ -520,15 +520,11 @@ interface ITokenInstanceAmountProps {
 	balance: TTokenAmount
 	amount: TTokenAmount
 	amountLock: boolean
-	// setamount: Tsetamount
-	// setamountLock: TsetamountLock
 	decimals: number
 	unSelect: () => void
-
 	selectID: TSelectId
 	updateTransferAmount: IUpdateTransferAmount | null
 	updateTransferAmountLock: ITransferAmountLock | null
-
 }
 
 interface IsortTokensInstancesOrdersStates {
