@@ -38,8 +38,7 @@ export default function Step3({
   tokensInstancesListTablePropsHandlers,
   setmigrationState,
   updateTokenOnTransferProcessed,
-  updateTokenInstanceTransferState
-}: IStep3Props): JSX.Element {
+  updateTokenInstanceTransferState}: IStep3Props): JSX.Element {
 
   const { t } = useTranslation()
   const [tokensInstancesToMigrate, settokensInstancesToMigrate] = useState<TTokensInstances>(null)
@@ -184,7 +183,7 @@ export default function Step3({
    * @param _tokenInstanceToTransfer
    */
   const transferSkippedToast = useCallback(
-    (_tokenInstanceToTransfer: TTokenInstance) => {
+    (displayedAmount: string, _tokenInstanceToTransfer: TTokenInstance) => {
       if (_tokenInstanceToTransfer) {
         toast.custom(
           (_toast) => (
@@ -196,7 +195,7 @@ export default function Step3({
             >
               <div className="grid grid-cols-8 gap-0 m-0 p-0">
                 <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
-                <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.skipped")}: ${_tokenInstanceToTransfer.name}`}</div>
+                <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.skipped")}: ${displayedAmount} ${_tokenInstanceToTransfer.name}`}</div>
               </div>
             </div>
           ),
@@ -281,9 +280,10 @@ export default function Step3({
   const callTransferToken = useCallback(
     async (_tokenInstanceToTransfer: TTokenInstance, _destinationAddress: TAddressString, _amount: TTokenAmount): Promise<TTxResult> => {
       const txResult: TTxResult = { hash: NULL_ADDRESS, success: false, timeout: false, error: false, notFound: false, errorMessage: "", userSkipped: false }
+      const amountStrings = getAmountStrings(_amount, _tokenInstanceToTransfer.decimals)
+      const displayedAmount = (amountStrings.shortDisplayIsZero ? amountStrings.long : amountStrings.short)
       try {
-        const amountStrings = getAmountStrings(_amount, _tokenInstanceToTransfer.decimals)
-        const displayedAmount = (amountStrings.shortDisplayIsZero ? amountStrings.long : amountStrings.short)
+
         console.info(`transfer : ${displayedAmount} (${_amount}) ${_tokenInstanceToTransfer.name} (${_tokenInstanceToTransfer.address}) to ${_destinationAddress}`) // Log transfer in console
         // Transfer
         const { request: transferRequest } = await prepareWriteContract({
@@ -329,7 +329,7 @@ export default function Step3({
       } catch (error) {
         if (error instanceof Error && error.message.match(USER_REJECT_TX_REGEXP)) {
           txResult.userSkipped = true
-          transferSkippedToast(_tokenInstanceToTransfer)
+          transferSkippedToast(displayedAmount, _tokenInstanceToTransfer)
         } else {
           console.error(`transfer error: ${error} for: ${_tokenInstanceToTransfer.name} (${_tokenInstanceToTransfer.address}) to ${_destinationAddress}`)
         }
@@ -434,7 +434,7 @@ export default function Step3({
     try {
       if (tokensInstancesToMigrate && tokensInstancesToMigrate.length) {
         // Search for current migration state figures
-        let errorItemsCount = 0, skippedItemsCount = 0, successItemsCount = 0, unprocessed = 0;
+        let errorItemsCount = 0, skippedItemsCount = 0, successItemsCount = 0, unprocessed = 0, processing = 0;
         // Update migration/transfer state
         for (let tokenInstanceIndex = 0; tokenInstanceIndex < tokensInstancesToMigrate.length; tokenInstanceIndex++) {
           switch (tokensInstancesToMigrate[tokenInstanceIndex].transferState.transfer) {
@@ -450,9 +450,12 @@ export default function Step3({
             case ETokenTransferState.none:
               unprocessed++;
               break;
+            case ETokenTransferState.processing:
+              processing++;
+              break;
           }
         }
-        if (unprocessed == 0) {
+        if (processing==0 && unprocessed==0) {
           setstopTransfers(true)
           setpauseTransfers(false)
           paused.current = false
