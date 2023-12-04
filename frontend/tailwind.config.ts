@@ -1,15 +1,10 @@
 /* tailwind.config.ts */
 
-// import { darkTheme, lightTheme } from '@rainbow-me/rainbowkit';
 import type { Config } from 'tailwindcss'
 
-// const defaultTheme = require("tailwindcss/defaultTheme");
-// const plugin = require('tailwindcss/plugin')
 import defaultTheme from "tailwindcss/defaultTheme";
 import plugin from 'tailwindcss/plugin'
 
-
-/* todo: opacity https://tailwindcss.com/blog/tailwindcss-v3-1#easier-css-variable-color-configuration */
 
 export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
@@ -73,24 +68,13 @@ export default {
       /* --- colors START --- */
       colors:
       {
-        someColor: {
-          // lightest: '#5dddfb',
-          // lighter1: '#4dcdeb',
-          // lighter2: '#3dbddb',
-          // light: '#2dadcb',
-          DEFAULT: '#1d9dbb',
-          // dark: '#0d8dab',
-          // darker: '#007d9b',
-        },
-    },
+      },
       /* --- colors END --- */ 
 
       /* --- fontFamily START --- */
       fontFamily: {
         'sans-serif': ['Kanit',  ...defaultTheme.fontFamily.sans,],
-        // 'ui-sans-serif': [ "Kanit",  ...defaultTheme.fontFamily.sans,],
         'sans': [ "Kanit",  ...defaultTheme.fontFamily.sans,],
-        // Kanit : ["Kanit",  ...defaultTheme.fontFamily.sans,]
       },
       /* --- fontFamily END --- */
     
@@ -105,8 +89,6 @@ export default {
 
   // daisyUI config (optional - here are the default values)
   daisyui: {
-    // themes: false, // true: all themes | false: only light + dark | array: specific themes like this ["light", "dark", "cupcake"]
-    // themes: ['light', 'dark', 'realOrange'],
 
     themes: [
       'dark', 'light',
@@ -144,20 +126,14 @@ export default {
           'base-300' : '#F27F01',          /* Base color, even more darker */
           'base-content' : '#000',      /* Foreground content color to use on base color */
 
-          /* 'info' : '#2094f3', */              /* Info */
-          // 'info' : '#678be0',   
           'info' : '#486178',              /* Info */
-
-          /* 'info-content' : '#2094f3', */              /* Will be a readable tone of info if not specified */
           'info-content' : '#FFF',
-          /* 'success' : '#33CD32', */           /* Success */
           'success' : '#249494',           /* Success */
-          'success-content' : '#000',   /* Will be a readable tone of success if not specified */
+          'success-content' : '#FFF',   /* Will be a readable tone of success if not specified */
           'warning' : '#EF6400',           /* Warning */
-          /* 'warning-content' : '#dd7700', */   /* Will be a readable tone of warning if not specified */
-          'warning-content' : '#000',
+          'warning-content' : '#FFF',
           'error' : '#FE4006',             /* Error */
-          'error-content' : '#000',     /* Will be a readable tone of error if not specified */
+          'error-content' : '#FFF',     /* Will be a readable tone of error if not specified */
         }
       },
     ],
@@ -174,22 +150,10 @@ export default {
   /* --- plugins START --- */
   plugins: [
     require("daisyui"),
-    
     /* https://github.com/adoxography/tailwind-scrollbar */
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('tailwind-scrollbar')({ nocompatible: true }),
     // require('tailwind-scrollbar-hide'),
-    /*
-    function ({ addUtilities }) {
-      addUtilities({
-        '.overflow-initial': { overflow: 'initial' },
-        '.overflow-inherit': { overflow: 'inherit' },
-        '.flex-no-grow': {flexGrow: '0'},
-        '.flex-no-shrink': {flexShrink: '0'},
-      })
-    }
-    */
-
     // !!!! This plugin should be copied for all loading spinners !!!!
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     plugin(({ matchUtilities, theme }:any) => {
@@ -209,7 +173,5 @@ export default {
     }),
 
   ],
-
-  
   /* --- plugins END --- */
 } satisfies Config
