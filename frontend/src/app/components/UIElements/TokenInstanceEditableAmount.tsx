@@ -15,6 +15,7 @@ export default function TokenInstanceEditableAmount({
 	updateTransferAmount,
 	updateTransferAmountLock
 }: ITokenInstanceAmountProps): JSX.Element {
+
 	const [editableAmountString, seteditableAmountString] = useState('0') as [string, (balance: string) => void]
 	const [editable, seteditable] = useState<boolean>(selectable)
 	const Decimals = BigInt(decimals)
@@ -58,7 +59,12 @@ export default function TokenInstanceEditableAmount({
 	 */
 	const updateAmount = (e: React.FormEvent<HTMLInputElement>): void => {
 		try {
+			// debugger
 			const strValue = e.currentTarget.value
+			if (strValue === '') {
+				updateTransferAmount && updateTransferAmount(selectID, 0n)
+				return
+			}
 			const strInt = strValue.split('.')[0]
 			const strFloat = strValue.split('.')[1]
 			const leadingZeros: number = strFloat?.match(/^0+/)?.[0].length || 0

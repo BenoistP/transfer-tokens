@@ -335,8 +335,6 @@ export default function StepsContainer(
             }
           }
           if (updateFromAddress || updateToAddress || _processedState) {
-console.debug(`updateTokenOnTransferProcessed _tokenInstance.address: ${_tokenInstance.address} _fromAddress: ${_fromAddress} _toAddress: ${_toAddress} _processedState: ${_processedState}`)
-            // updateTokenInstanceBalancesAndTransferState(tokensInstances, _tokenInstance.address, updateFromAddress, _fromAddress, fromAddressBalanceUpdate, updateToAddress, _toAddress, toAddressBalanceUpdate, _processedState)
             updateTokenInstanceBalancesAndTransferState(_tokenInstance.address, updateFromAddress, _fromAddress, fromAddressBalanceUpdate, updateToAddress, _toAddress, toAddressBalanceUpdate, _processedState)
           }
         }
@@ -792,7 +790,6 @@ console.debug(`updateTokenOnTransferProcessed _tokenInstance.address: ${_tokenIn
   const updateTransferAmount: IUpdateTransferAmount = useCallback(
     (id: string, amount: TTokenAmount) => {
       try {
-console.debug(`updateTransferAmount id: ${id} amount: ${amount}`)
         const tokensInstancesUpdated = tokensInstances?.map((tokenInstance) => {
           if (tokenInstance.selectID === id) {
             tokenInstance.transferAmount = amount;
