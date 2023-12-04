@@ -1,19 +1,13 @@
 // React
 import { useEffect } from "react";
 
-// ------------------------------
+export default function StepError (
+  { setpreviousDisabled, setNextDisabled }: IStepErrorProps ) {
 
-const StepError = ( { setpreviousDisabled, setNextDisabled }: IStepErrorProps ) => {
-
-  // console.debug(`StepError.tsx render`)
- 
   useEffect( () => {
-    // console.debug(`StepError.tsx useEffect`)
     setpreviousDisabled(true)
     setNextDisabled(true)
   }, [setpreviousDisabled, setNextDisabled] )
-
-
 
   return (
     <>
@@ -25,9 +19,3 @@ const StepError = ( { setpreviousDisabled, setNextDisabled }: IStepErrorProps ) 
     </>
   );
 }
-
-
-
-// ------------------------------
-
-export default StepError;

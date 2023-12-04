@@ -4,9 +4,7 @@ import { useEffect } from "react";
 import TokensListsSelect from "@Components/TokensListsSelect";
 import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
 
-// ------------------------------
-
-const Step0 = (  {
+export default function Step0 (  {
     accountAddress,
     chainId,
     setNextDisabled,
@@ -17,23 +15,17 @@ const Step0 = (  {
     isLoadingTokensLists, isErrorTokensLists,
     isLoadingTokensInstances, isErrorTokensInstances, isUpdatingTokensInstances,
     tokensInstancesListTablePropsHandlers
-    } :IStep0Props ) =>
+    } :IStep0Props )
 {
-
-  // ---
 
   const someTokensListsSelected = selectableTokensLists?.some ( (tokensList) => tokensList.selected ) || false
 
-    // ---
-
-    useEffect( () =>
+  useEffect( () =>
     {
       setNextDisabled(!someTokensListsSelected || isLoadingTokensLists || isErrorTokensLists || isLoadingTokensInstances)
     },
     [setNextDisabled, someTokensListsSelected, isLoadingTokensLists, isErrorTokensLists, isLoadingTokensInstances]
   )
-
-// ------------------------------
 
   return (
     <>
@@ -68,7 +60,3 @@ const Step0 = (  {
     </>
   );
 }
-
-// ------------------------------
-
-export default Step0;
