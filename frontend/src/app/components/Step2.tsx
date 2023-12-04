@@ -1,11 +1,9 @@
 // React
 import { useEffect } from "react";
 // Components
-import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
+import TokenInstanceListTableFiltered from "@UIElements/TokenInstanceListTableFiltered";
 
-// ------------------------------
-
-const Step2 = ( {
+export default function Step2({
   setNextDisabled,
   setShowProgressBar,
   tokensInstances,
@@ -13,43 +11,34 @@ const Step2 = ( {
   targetAddress,
   isLoadingTokensInstances, isErrorTokensInstances, isUpdatingTokensInstances,
   tokensInstancesListTablePropsHandlers,
-  }: IStep2Props ) => {
+}: IStep2Props): JSX.Element {
 
-  // ---
+  useEffect(() => {
+    setShowProgressBar(false)
 
-  useEffect( () =>
-    {
-      setShowProgressBar(false)
+    const someSelected = tokensInstances?.some((tokensInstance) => {
+      return tokensInstance.selected;
+    });
 
-      const someSelected = tokensInstances?.some( (tokensInstance) => {
-          return tokensInstance.selected;
-      });
+    setNextDisabled(!someSelected || isErrorTokensInstances)
 
-      setNextDisabled(!someSelected || isErrorTokensInstances)
-
-    },
+  },
     [tokensInstances, isErrorTokensInstances, setNextDisabled, setShowProgressBar]
   )
-
-  // ---
 
   return (
     <>
       <div className="w-full p-0 m-0">
-          <TokenInstanceListTableFiltered
-            tokensInstances={tokensInstances}
-            accountAddress={accountAddress}
-            enableCheckboxes={true}
-            targetAddress={targetAddress}
-            isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances} isUpdatingTokensInstances={isUpdatingTokensInstances}
-            tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
-            enableEditable={true}
-          />
+        <TokenInstanceListTableFiltered
+          tokensInstances={tokensInstances}
+          accountAddress={accountAddress}
+          enableCheckboxes={true}
+          targetAddress={targetAddress}
+          isLoadingTokensInstances={isLoadingTokensInstances} isErrorTokensInstances={isErrorTokensInstances} isUpdatingTokensInstances={isUpdatingTokensInstances}
+          tokensInstancesListTablePropsHandlers={tokensInstancesListTablePropsHandlers}
+          enableEditable={true}
+        />
       </div>
     </>
   );
 }
-
-// ------------------------------
-
-export default Step2;

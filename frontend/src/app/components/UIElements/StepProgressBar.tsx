@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-// ------------------------------
-
-const StepProgressBar = ( { step }: any ) => {
+export default function StepProgressBar({ step }: any): JSX.Element {
 
   const { t } = useTranslation();
   const clsStepBase = "step "
@@ -13,8 +11,6 @@ const StepProgressBar = ( { step }: any ) => {
   const clsStep1 = step === 1 ? clsStepCurrent : step > 1 ? clsStepPreviousCurrent : clsStepNext
   const clsStep2 = step === 2 ? clsStepCurrent : step > 2 ? clsStepPreviousCurrent : clsStepNext
   const clsStep3 = step === 3 ? clsStepCurrent : clsStepNext
-
-  // ------------------------------
 
   return (
     <>
@@ -29,7 +25,3 @@ const StepProgressBar = ( { step }: any ) => {
     </>
   );
 }
-
-// ------------------------------
-
-export default StepProgressBar;

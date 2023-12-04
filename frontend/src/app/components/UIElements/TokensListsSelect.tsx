@@ -1,7 +1,7 @@
 // React
 import { useCallback, useEffect, useState } from "react"
 // Components
-import SelectableTokensLists from "@Components/SelectableTokensLists"
+import SelectableTokensLists from "@UIElements/SelectableTokensLists"
 // Translation
 import { useTranslation } from "react-i18next"
 // Icons

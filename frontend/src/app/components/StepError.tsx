@@ -1,33 +1,21 @@
 // React
 import { useEffect } from "react";
 
-// ------------------------------
+export default function StepError(
+  { setpreviousDisabled, setNextDisabled }: IStepErrorProps): JSX.Element {
 
-const StepError = ( { setpreviousDisabled, setNextDisabled }: IStepErrorProps ) => {
-
-  // console.debug(`StepError.tsx render`)
- 
-  useEffect( () => {
-    // console.debug(`StepError.tsx useEffect`)
+  useEffect(() => {
     setpreviousDisabled(true)
     setNextDisabled(true)
-  }, [setpreviousDisabled, setNextDisabled] )
-
-
+  }, [setpreviousDisabled, setNextDisabled])
 
   return (
     <>
       <div className=" text-red-500">
         <p className="text-sm sm:text-base md:text-lg overflow-hidden text-ellipsis">
-          {"TODO STEP ERROR"}
+          {"moveTokens.stepError.label"}
         </p>
       </div>
     </>
   );
 }
-
-
-
-// ------------------------------
-
-export default StepError;

@@ -13,6 +13,8 @@
       "@css/*": ["./src/app/styles/*"],
       "@ui/*": ["./src/app/ui/*"],
       "@Components/*": ["./src/app/components/*"],
+      "@UIElements/*": ["./src/app/components/UIElements/*"],
+      "@Navbar/*": ["./src/app/components/UIElements/Navbar/*"],
       "@Toasts/*": ["./src/app/components/UIElements/Toasts/*"],
       "@uiconsts/*": ["./src/app/js/constants/ui/*"],
       "@i18n/*": ["./src/app/js/ui/i18n/*"],

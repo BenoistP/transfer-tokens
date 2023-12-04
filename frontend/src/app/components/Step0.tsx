@@ -1,54 +1,44 @@
 // React
 import { useEffect } from "react";
 // Components
-import TokensListsSelect from "@Components/TokensListsSelect";
-import TokenInstanceListTableFiltered from "@Components/TokenInstanceListTableFiltered";
+import TokensListsSelect from "@UIElements/TokensListsSelect";
+import TokenInstanceListTableFiltered from "@UIElements/TokenInstanceListTableFiltered";
 
-// ------------------------------
+export default function Step0({
+  accountAddress,
+  chainId,
+  setNextDisabled,
+  targetAddress,
+  selectableTokensLists,
+  setselectableTokensLists,
+  tokensInstances,
+  isLoadingTokensLists, isErrorTokensLists,
+  isLoadingTokensInstances, isErrorTokensInstances, isUpdatingTokensInstances,
+  tokensInstancesListTablePropsHandlers
+}: IStep0Props): JSX.Element {
 
-const Step0 = (  {
-    accountAddress,
-    chainId,
-    setNextDisabled,
-    targetAddress,
-    selectableTokensLists,
-    setselectableTokensLists,
-    tokensInstances,
-    isLoadingTokensLists, isErrorTokensLists,
-    isLoadingTokensInstances, isErrorTokensInstances, isUpdatingTokensInstances,
-    tokensInstancesListTablePropsHandlers
-    } :IStep0Props ) =>
-{
+  const someTokensListsSelected = selectableTokensLists?.some((tokensList) => tokensList.selected) || false
 
-  // ---
-
-  const someTokensListsSelected = selectableTokensLists?.some ( (tokensList) => tokensList.selected ) || false
-
-    // ---
-
-    useEffect( () =>
-    {
-      setNextDisabled(!someTokensListsSelected || isLoadingTokensLists || isErrorTokensLists || isLoadingTokensInstances)
-    },
+  useEffect(() => {
+    setNextDisabled(!someTokensListsSelected || isLoadingTokensLists || isErrorTokensLists || isLoadingTokensInstances)
+  },
     [setNextDisabled, someTokensListsSelected, isLoadingTokensLists, isErrorTokensLists, isLoadingTokensInstances]
   )
-
-// ------------------------------
 
   return (
     <>
       <div className="w-full p-0 m-0">
 
-          <div className="w-full flex">
-            <TokensListsSelect
-              chainId={chainId}
-              selectableTokensLists={selectableTokensLists}
-              setselectableTokensLists={setselectableTokensLists}
-              isLoading={isLoadingTokensLists} isError={isErrorTokensLists}
-            />
-          </div>
+        <div className="w-full flex">
+          <TokensListsSelect
+            chainId={chainId}
+            selectableTokensLists={selectableTokensLists}
+            setselectableTokensLists={setselectableTokensLists}
+            isLoading={isLoadingTokensLists} isError={isErrorTokensLists}
+          />
+        </div>
 
-          { someTokensListsSelected &&
+        {someTokensListsSelected &&
           <div className="w-full py-4 bg-base-100">
             <div className="min-w-fit m-0 p-1 rounded-box border border-base-300 ">
               <TokenInstanceListTableFiltered
@@ -62,13 +52,9 @@ const Step0 = (  {
               />
             </div>
           </div>
-          }
+        }
 
       </div>
     </>
   );
 }
-
-// ------------------------------
-
-export default Step0;

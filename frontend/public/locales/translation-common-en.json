@@ -99,12 +99,14 @@
       "titleStep": "Destination",
       "destination": "Destination",
       "destinationPlaceholder": "0x...",
-      "detinationEmpty":"Please input destination address",
+      "destinationEmpty":"Please input destination address",
+      "destinationWarningSmartContract": "Destination address is a smart contract",
       "destinationError": "Invalid address",
-      "destinationErrorSame": "Destination address cannot be the same as the source address",
+      "destinationNotAllowed": "Destination address is not allowed",
+      "destinationErrorSame": "Destination and source addresses cannot be identical",
       "destinationOk": "Address is valid"
     },
-    
+
     "stepTwo": {
       "title": "Select tokens",
       "titleStep": "Tokens"
@@ -139,6 +141,10 @@
         "confirmed": "Confirmed",
         "rejected": "Error"
       }
+    },
+
+    "stepError": {
+      "label": "Error"
     },
 
     "Footer": {

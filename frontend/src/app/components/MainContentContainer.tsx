@@ -1,9 +1,7 @@
 // React
 import { PropsWithChildren } from 'react'
 
-// ------------------------------
-
-const MainContentContainer = (props: PropsWithChildren ) => {
+export default function MainContentContainer(props: PropsWithChildren): JSX.Element {
 
   return (
     <>
@@ -13,7 +11,3 @@ const MainContentContainer = (props: PropsWithChildren ) => {
     </>
   );
 }
-
-// ------------------------------
-
-export default MainContentContainer;

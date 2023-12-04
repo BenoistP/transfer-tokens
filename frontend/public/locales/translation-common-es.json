@@ -98,8 +98,10 @@
       "titleStep": "Destino",
       "destination": "Destino",
       "destinationPlaceholder": "0x...",
-      "detinationEmpty": "Por favor ingrese la dirección de destino",
+      "destinationEmpty": "Por favor ingrese la dirección de destino",
+      "destinationWarningSmartContract": "La dirección del destinatario es un contrato inteligente",
       "destinationError": "Dirección inválida",
+      "destinationNotAllowed": "La dirección de destino no está permitida",
       "destinationErrorSame": "La dirección de destino no puede ser la misma que la dirección de origen.",
       "destinationOk": "La dirección es válida."
     },
@@ -112,6 +114,9 @@
       "titleStep": "Migración",
       "tokensMigrationListTable": {
         "noTokens": "No se encontró ningún token"
+      },
+      "stepError": {
+        "label": "Error"
       },
       "migrationProgressBar": {
         "success": "Éxito",
