@@ -1,0 +1,153 @@
+{
+  "moveTokens": {
+    "warnings": {
+      "connectawallet": "Por favor conecta o desbloquea tu cartera",
+      "wrongchain": "Cambie a una red compatible: Ethereum o Gnosis",
+      "watchTransfers": "Observación: Perdida de conexión, los saldos pueden no ser exactos",
+      "fetchData": "Data loading: errors while fetching data, more time may be required due to retries"
+    },
+    "common": {
+      "notAvailable": "Indisponible"
+    },
+    "progress": {
+      "previous": "Anterior",
+      "next": "Próximo"
+    },
+    "stepAny": {
+      "tokensTable": {
+        "loadingTokens": "Cargando tókenes",
+        "errorLoadingTokens": "Error al cargar tokens",
+        "noTokens": "No se encontró ningún token",
+        "search": {
+          "name": "Nombre",
+          "balance": "Balance",
+          "balanceGt0": {
+            "label": "> 0",
+            "hint": "Mostrar solo tokens con saldo"
+          },
+          "clearAll": {
+            "label": "Claro",
+            "hint": "Limpiar todos los filtros"
+          },
+          "additional": {
+            "title": "Filtros adicionales",
+            "address": "DIRECCIÓN"
+          }
+        },
+        "select": {
+          "any": {
+            "hint": "Seleccione TODOS los tókenes",
+            "selectAll": "Todo",
+            "invertSelection": "Invertir"
+          },
+          "visible": {
+            "hint": "Seleccione solo VISIBLE",
+            "selectAll": "Todo visible",
+            "invertSelection": "Invertir"
+          }
+        },
+        "results": {
+          "found": {
+            "selected": "Seleccionado",
+            "visible": "Visible",
+            "hidden": "Oculto",
+            "total": "Total"
+          },
+          "titles": {
+            "tokenId": "Identificador",
+            "tokenName": "Nombre",
+            "sourceTokenBalance": "Balance",
+            "selected": "",
+            "tokenAmount": "Cantidad",
+            "tokenInfo": "Información.",
+            "targetTokenBalance": "Balance"
+          }
+        }
+      },
+      "token": {
+        "canTransferFrom": "Puede transferir (enviar) este token DESDE esta dirección",
+        "canTransferTo": "La dirección de destino puede recibir este token",
+        "noTransferFrom": "No se puede transferir (enviar) DESDE esta dirección",
+        "noTransferTo": "No se puede transferir A esta dirección",
+        "details": "Detalles",
+        "transfer": {
+          "success": "Éxito",
+          "error": "Error",
+          "skipped": "Saltado",
+          "processing": "En marcha"
+        }
+      },
+      "address": {
+        "placeholder": "0x..."
+      }
+    },
+    "stepZero": {
+      "title": "Seleccionar listas de tokens",
+      "titleStep": "Listas de tokens",
+      "tokensListsTable": {
+        "listName": "Nombre",
+        "listDescription": "Descripción",
+        "loadingTokensLists": "Cargando listas de tokens",
+        "noTokensLists": "No se encontró ninguna lista de tokens",
+        "errorLoadingTokensLists": "Error al cargar la lista de tokens",
+        "details": "Detalles"
+      }
+    },
+    "stepOne": {
+      "title": "Seleccionar destino",
+      "titleStep": "Destino",
+      "destination": "Destino",
+      "destinationPlaceholder": "0x...",
+      "destinationEmpty": "Por favor ingrese la dirección de destino",
+      "destinationWarningSmartContract": "La dirección del destinatario es un contrato inteligente",
+      "destinationError": "Dirección inválida",
+      "destinationNotAllowed": "La dirección de destino no está permitida",
+      "destinationErrorSame": "La dirección de destino no puede ser la misma que la dirección de origen.",
+      "destinationOk": "La dirección es válida."
+    },
+    "stepTwo": {
+      "title": "Seleccionar tókenes",
+      "titleStep": "Tókenes"
+    },
+    "stepThree": {
+      "title": "Migración",
+      "titleStep": "Migración",
+      "tokensMigrationListTable": {
+        "noTokens": "No se encontró ningún token"
+      },
+      "stepError": {
+        "label": "Error"
+      },
+      "migrationProgressBar": {
+        "success": "Éxito",
+        "skipped": "Saltado",
+        "failed": "Fallido",
+        "status": {
+          "label": "Estado",
+          "progress": "En curso",
+          "completed": "Terminado"
+        }
+      },
+        "transfer": {
+          "skipped": "Saltado",
+          "error": "Fallido",
+          "errorReason": "Causa",
+          "errorReasonUnknown": "desconocida",
+          "gasTooLowSuggest": "¿Costes de transacción demasiado bajos?",
+          "success": "Enviado",
+          "to": "a",
+          "txHash": "Transacción",
+          "awaitConfirm": "Awaiting confirmation",
+          "confirmed": "Confirmed",
+          "rejected": "Fallido"
+        }
+    },
+    "Footer": {
+      "info": {
+        "title": "©",
+        "text": "Pronto Pronto Research Laboratories"
+      },
+      "center": ""
+    }
+  }
+}

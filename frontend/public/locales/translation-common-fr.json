@@ -1,0 +1,157 @@
+{
+  "moveTokens" : {
+    "warnings": {
+      "connectawallet": "Connecter ou déverrouiller un portefeuille",
+      "wrongchain": "Les chaînes supportées sont: Ethereum ou Gnosis",
+      "watchTransfers": "Surveillance des transferts: connexion perdue, les mises à jour des transferts peuvent êtres affectées",
+      "fetchData": "Récupération des données: erreurs pendant le chargement dont le temps sera allongé par les tentatives successives"
+    },
+    "common": {
+      "notAvailable": "Non disponible"
+    },
+    "progress": {
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+    "stepAny": {
+      "tokensTable" : {
+        "loadingTokens": "Chargement",
+        "errorLoadingTokens": "Erreur de chargement des tokens",
+        "noTokens": "Aucun token trouvé",
+        "search" : {
+          "name": "Nom",
+          "balance": "Solde",
+          "balanceGt0": {
+            "label": "> 0",
+            "hint": "N'afficher que les tokens dont l'adresse d'envoi a un solde > 0"
+          },
+          "clearAll": {
+            "label": "Effacer",
+            "hint": "Effacer tous les filtres"
+          },
+          "additional": {
+            "title": "Critères supplémentaires",
+            "address": "Adresse"
+          }
+        },
+        "select" : {
+          "any" : {
+            "hint": "TOUT sélectionner",
+            "selectAll": "Tout",
+            "invertSelection": "Inverser"
+            },
+          "visible" : {
+            "hint": "VISIBLES seulement",
+            "selectAll": "Tout les visibles",
+            "invertSelection": "Inverser visibles"
+            }
+        },
+        "results": {
+          "found": {
+            "selected": "Sélectionné(s)",
+            "visible": "Visible(s)",
+            "hidden": "Caché(s)",
+            "total": "Total"
+          },
+          "titles" : {
+            "tokenId": "Id.",
+            "tokenName": "Nom",
+            "sourceTokenBalance": "Quantité",
+            "selected": "",
+            "tokenAmount": "Montant",
+            "tokenInfo": "Info.",
+            "targetTokenBalance": "Quantité"
+          }
+        }
+      },
+      "token": {
+        "canTransferFrom": "Transfert (envoi) autorisé DEPUIS cette addresse",
+        "canTransferTo": "Réception du token autorisé par le destinataire",
+        "noTransferFrom": "Transfert (envoi) interdit DEPUIS cette addresse",
+        "noTransferTo": "Transfert interdit VERS cette addresse",
+        "details": "Détails",
+        "transfer": {
+          "success": "Succès",
+          "error": "Erreur",
+          "skipped": "Omis",
+          "processing": "processing"
+        }
+
+      },
+      "address": {
+        "placeholder": "0x..."
+      }
+    },
+    "stepZero": {
+      "title": "Choisir des listes de tokens",
+      "titleStep": "Listes de tokens",
+      "tokensListsTable": {
+        "listName": "Nom",
+        "listDescription": "Description",
+        "loadingTokensLists": "Chargement",
+        "emptyTokensLists": "Aucune liste de tokens trouvée",
+        "errorLoadingTokensLists": "Le chargement de la liste a échoué",
+        "details": "Détails"
+      }
+    },
+    "stepOne": {
+      "title": "Sélectionner une adresse destinataire",
+      "titleStep": "Destinataire",
+      "destination": "Destinataire",
+      "destinationPlaceholder": "0x...",
+      "destinationEmpty":"Saisir l'adresse destinataire",
+      "destinationWarningSmartContract": "L'adresse destinataire est un smart contract",
+      "destinationError": "Addresse invalide",
+      "destinationNotAllowed": "Addresse non autorisée",
+      "destinationErrorSame": "Adresse destinataire identique à l'adresse source",
+      "destinationOk": "Addresse valide"
+    },
+    
+    "stepTwo": {
+      "title": "Choisir des tokens",
+      "titleStep": "Tokens"
+    },
+
+    "stepThree": {
+      "title": "Migration",
+      "titleStep": "Migration",
+      "tokensMigrationListTable": {
+        "noTokens": "Aucun token trouvé"
+      },
+      "stepError": {
+        "label": "Erreur"
+      },
+      "migrationProgressBar": {
+        "success": "Succès",
+        "skipped": "Omis",
+        "failed": "Erreurs",
+        "status": {
+          "label": "Etat",
+          "progress": "En cours",
+          "completed": "Terminé"
+          }
+      },
+      "transfer": {
+        "skipped": "Omis",
+        "error": "Echec",
+        "errorReason": "Cause",
+        "errorReasonUnknown": "inconnue",
+        "gasTooLowSuggest": "Frais de transaction trop bas ?",
+        "success": "Envoi de",
+        "to": "à",
+        "txHash": "Transaction",
+        "awaitConfirm": "En attente de confirmation",
+        "confirmed": "Confirmée",
+        "rejected": "Erreur"
+      }
+    },
+
+    "Footer": {
+      "info": {
+        "title": "©",
+        "text": "Soon Soon Research Laboratories"
+      },
+      "center": ""
+    }
+  }
+}

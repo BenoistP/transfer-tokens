@@ -1,0 +1,25 @@
+
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@App/*": [
+        "./src/app/*"
+      ],
+      "@js/*": ["./src/app/js/*"],
+      "@jsutils/*": ["./src/app/js/utils/*"],
+      "@jsconsts/*": ["./src/app/js/constants/*"],
+      "@styles/*": ["./src/app/styles/*"],
+      "@css/*": ["./src/app/styles/*"],
+      "@ui/*": ["./src/app/ui/*"],
+      "@Components/*": ["./src/app/components/*"],
+      "@UIElements/*": ["./src/app/components/UIElements/*"],
+      "@Navbar/*": ["./src/app/components/UIElements/Navbar/*"],
+      "@Toasts/*": ["./src/app/components/UIElements/Toasts/*"],
+      "@uiconsts/*": ["./src/app/js/constants/ui/*"],
+      "@i18n/*": ["./src/app/js/ui/i18n/*"],
+      "@abis/*": ["./src/app/abis/*"],
+      "@Providers/*": ["./src/app/js/providers/*"],
+    }
+  }
+}
