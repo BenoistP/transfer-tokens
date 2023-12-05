@@ -1,5 +1,9 @@
 {
   "moveTokens": {
+    "disclaimer": {
+      "title": "Disclaimer",
+      "text": "This tool is provided as is, without any warranty. Use it at your own risk. We are not responsible for any loss of funds or any other damages caused by using this tool. Please make sure you understand what you are doing before using it."
+    },
     "warnings": {
       "connectawallet": "Please connect or unlock your wallet",
       "wrongchain": "Please switch to a supported chain: Ethereum or Gnosis",

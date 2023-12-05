@@ -1,5 +1,9 @@
 {
   "moveTokens": {
+    "disclaimer": {
+      "title": "Descargo de responsabilidad",
+      "text": "Esta herramienta se proporciona tal cual, sin ninguna garantía. Utilícela bajo su propia responsabilidad. No nos hacemos responsables de ninguna pérdida de fondos ni de ningún otro daño causado por el uso de esta herramienta. Por favor, asegúrese de que entiende lo que está haciendo antes de utilizarla."
+    },
     "warnings": {
       "connectawallet": "Por favor conecta o desbloquea tu cartera",
       "wrongchain": "Cambie a una red compatible: Ethereum o Gnosis",
