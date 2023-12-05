@@ -163,6 +163,7 @@ const RainbowOutletWrapper = ({ chains, children, t }: IRainbowOutletWrapper) =>
       avatar={getAvatarComponent()}
       coolMode
       chains={chains as Chain[]}
+      initialChain={chains[0]}
       theme={rainbowTheme()}
       appInfo={{
         appName: import.meta.env.PUBLIC_APPNAME,
