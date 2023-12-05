@@ -2,7 +2,7 @@
 
 // Coingecko 
 // Ethereum Mainnet
-// const TOKENS_LIST__COINGECKO__ETHEREUM = 'https://tokens.coingecko.com/ethereum/all.json'
+const TOKENS_LIST__COINGECKO__ETHEREUM = 'https://tokens.coingecko.com/ethereum/all.json'
 // Gnosis (xDAI)
 const TOKENS_LIST__COINGECKO__GNOSIS = 'https://tokens.coingecko.com/xdai/all.json'
 
@@ -15,7 +15,7 @@ const DEFAULT_API__REALT_PUBLIC__LIST_ALL_TOKENS='v1/token'
 // Logo
 const DEFAULT_TOKENS_LIST_REALT_API_LOGO = 'https://yt3.googleusercontent.com/ytc/AOPolaQLI9Vbm8mEvFilGnLm0wcbiKNF6RQxkKXJt9n5=s176-c-k-c0x00ffffff-no-rj'
 
-const DEFAULT_TOKENS_LIST_COINGECKO_LOGO = 'https://avatars.githubusercontent.com/u/7111837?s=200&v=4'
+const DEFAULT_TOKENS_LIST_COINGECKO_LOGO = 'https://avatars.githubusercontent.com/u/7111837'
 
 const API__REALT_PUBLIC__BASE_URL = import.meta.env.PUBLIC_REALT_API_BASE_URL || DEFAULT_API__REALT_PUBLIC__BASE_URL
 const API__REALT_PUBLIC__LIST_ALL_TOKENS = import.meta.env.PUBLIC_REALT_API_LIST_ALL_TOKENS || DEFAULT_API__REALT_PUBLIC__LIST_ALL_TOKENS
@@ -24,59 +24,30 @@ const TOKENS_LIST_REALT_API_LOGO = import.meta.env.PUBLIC_REALT_API_LOGO || DEFA
 
 
 
-// Tokenlistooor Token List
+// Tokenlistooor
 // const TOKENS_LIST__TOKENLISTOOOR = 'https://raw.githubusercontent.com/Migratooor/tokenLists/main/lists/tokenlistooor.json'
-
-// const TOKENS_LIST__1INCH = 'https://raw.githubusercontent.com/SmolDapp/tokenLists/main/lists/1inch.json'
-
-
 // const META_TOKENS_LIST__TOKENLISTOOOR =  'https://api.github.com/repos/migratooor/tokenlists/commits?sha=main&per_page=1'
 // `https://raw.githubusercontent.com/Migratooor/tokenLists/${sha}/lists/summary.json`
 
+// 1inch
+// const TOKENS_LIST__1INCH = 'https://raw.githubusercontent.com/SmolDapp/tokenLists/main/lists/1inch.json'
+
 
 const TOKENS_LISTS_SOURCES: TTokensLists = [
-  /*
   {
-    // Intentionnaly broken list
-    id: '0',
-    name: 'Coin list error test',
-    description: null,
-    timestamp: null,
-    source: 'source url error',
-    type: 'URI',
-    chains: [1],
-    URI: TOKENS_LIST__COINGECKO__GNOSIS+'zfkzêk^',
-    status: 'notLoaded',
-    logoURI: undefined,
-  },
-  {
-    id: '1',
+    id: 'cgEth',
     name: 'Ethereum tokens',
-    description: null,
+    description: "Coingecko Ethereum",
     timestamp: null,
     source: 'Coingecko',
     type: 'URI',
     chains: [1],
     URI: TOKENS_LIST__COINGECKO__ETHEREUM,
     status: 'notLoaded',
-    logoURI: undefined,
+    logoURI: DEFAULT_TOKENS_LIST_COINGECKO_LOGO,
   },
   {
-    id: '2',
-    name: 'Coingecko',
-    description: "Coingecko Gnosis (xDAI)",
-    timestamp: null,
-    source: 'Coingecko',
-    type: 'URI',
-    chains: [1],
-    URI: TOKENS_LIST__COINGECKO__GNOSIS, // test: mismatch between chaind id (1) and file content (100)
-    status: 'notLoaded',
-    logoURI: undefined,
-  },
-  */
-
-  {
-    id: '2',
+    id: 'cgGnosis',
     name: 'Coingecko',
     description: "Coingecko Gnosis (xDAI)",
     timestamp: null,
@@ -88,7 +59,7 @@ const TOKENS_LISTS_SOURCES: TTokensLists = [
     logoURI: DEFAULT_TOKENS_LIST_COINGECKO_LOGO,
   },
   {
-    id: '3',
+    id: 'realtAPI',
     name: 'RealT',
     description: "RealT API",
     timestamp: null,
@@ -99,7 +70,7 @@ const TOKENS_LISTS_SOURCES: TTokensLists = [
     status: 'notLoaded',
     logoURI: TOKENS_LIST_REALT_API_LOGO,
   },
-/* 
+/*
   {
     id: '4',
     name: 'Tokenlistooor',
@@ -107,12 +78,11 @@ const TOKENS_LISTS_SOURCES: TTokensLists = [
     timestamp: null,
     source: 'Tokenlistooor',
     type: 'URI',
-    chains: [1,10, 56, 100,137,250,8453,42161,43114],
+    chains: [1,10, 56, 100, 137, 250, 8453, 42161, 43114],
     URI: TOKENS_LIST__TOKENLISTOOOR,
     status: 'notLoaded',
     logoURI: null,
   },
-
   {
     id: '5',
     name: '1inch Token List',
@@ -125,7 +95,6 @@ const TOKENS_LISTS_SOURCES: TTokensLists = [
     status: 'notLoaded',
     logoURI: null,
   },
-
   {
     id: '6',
     name: 'SmolDapp Meta Token List',
