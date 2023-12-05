@@ -36,8 +36,8 @@ export default function TransferTokensAppPageLayout({ children }: PageProps) {
   const { t } = useTranslation()
 
   const mainnetChains = [
-    mainnet,
-    { ...gnosis, iconUrl: import.meta.env.PUBLIC_GNOSIS_ICON_URL || DEFAULT_GNOSIS_ICON_URL }
+    { ...gnosis, iconUrl: import.meta.env.PUBLIC_GNOSIS_ICON_URL || DEFAULT_GNOSIS_ICON_URL },
+    mainnet
   ];
   const testnetChains = [
     goerli, sepolia,
@@ -53,9 +53,9 @@ export default function TransferTokensAppPageLayout({ children }: PageProps) {
 
     mainnetChains?.forEach(() => {
       if (import.meta.env.APIKEY_ALCHEMY || "") {
-        mainnetChainsProviders.push(alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY || "" })); // Gnosis
+        mainnetChainsProviders.push(alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY || "" }));
       } else if (import.meta.env.APIKEY_INFURA || "") {
-        mainnetChainsProviders.push(infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA || "" })); // Ethereum
+        mainnetChainsProviders.push(infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA || "" }));
       }
     });
     mainnetChainsProviders.push(publicProvider());
