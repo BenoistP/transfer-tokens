@@ -132,7 +132,7 @@ export default function TokenInstance({
 	 * Update checkbox status on transfer amount change
 	 */
 	const handleCheckboxClick = useCallback(() => {
-			balanceFrom &&
+		balanceFrom &&
 			canTransferTo &&
 			updateCheckboxStatus &&
 			updateCheckboxStatus(tokenInstance.selectID)
@@ -187,18 +187,22 @@ export default function TokenInstance({
 	/**
 	 * isCheckboxDisabled
 	 */
-	useEffect(() => {
-		if (
-			tokenInstance.selectable &&
-			canTransferFrom &&
-			canTransferTo &&
-			(balanceFrom?.valueOf() || 0n) > 0n
-		) {
-			setisCheckboxDisabled(false)
-		} else {
-			setisCheckboxDisabled(true)
-		}
-	}, [canTransferFrom, canTransferTo, tokenInstance.selectable, balanceFrom])
+	useEffect(() =>
+		{
+			if (
+				tokenInstance.selectable &&
+				canTransferFrom &&
+				canTransferTo &&
+				balanceFrom?.valueOf() > 0n &&
+				tokenInstance.transferAmount?.valueOf() > 0n
+			) {
+				setisCheckboxDisabled(false)
+			} else {
+				setisCheckboxDisabled(true)
+			}
+		},
+		[canTransferFrom, canTransferTo, tokenInstance.selectable, tokenInstance.transferAmount, balanceFrom]
+	)
 
 	return (
 		<>
@@ -260,12 +264,11 @@ export default function TokenInstance({
 						selectable={false}
 						readonly={true}
 						balance={balanceFrom && balanceFrom.valueOf() ? balanceFrom.valueOf() : 0n}
-						amount={tokenInstance.transferAmount && tokenInstance.transferAmount.valueOf() ? tokenInstance.transferAmount.valueOf() : 0n}
+						amount={tokenInstance.transferState.transferAmount && tokenInstance.transferState.transferAmount.valueOf() ? tokenInstance.transferState.transferAmount.valueOf() : 0n}
 						amountLock={tokenInstance.lockTransferAmount}
 						selectID={tokenInstance.selectID}
 						updateTransferAmount={updateTransferAmount}
 						updateTransferAmountLock={updateTransferAmountLock}
-
 						decimals={Number(decimals)}
 						unSelect={unSelect}
 					/>

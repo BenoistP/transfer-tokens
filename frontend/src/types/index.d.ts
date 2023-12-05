@@ -295,6 +295,7 @@ type TSelectId = string
 type TTokenTransferState = {
 	processing: boolean
 	transfer: ETokenTransferState
+	transferAmount: TTokenAmount
 }
 
 type TTokenInstance = {

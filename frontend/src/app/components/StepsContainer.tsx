@@ -201,15 +201,13 @@ export default function StepsContainer(
               // Update balances
               if (_updateFromAddress || _updateToAddress) {
                 if (_updateFromAddress) {
-                  userData = {
-                    ...userData,
-                    [fromADDRESS as any]: (_updateFromAddress ? { ...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate } : { ...userData[fromADDRESS as any] })
+                  userData = {...userData,
+                    [fromADDRESS as any]: (_updateFromAddress ? {...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate } : { ...userData[fromADDRESS as any] })
                   };
                 }
                 if (_updateToAddress) {
-                  userData = {
-                    ...userData,
-                    [toADDRESS as any]: (_updateToAddress ? { ...userData[toADDRESS as any], balance: _toAddressBalanceUpdate } : { ...userData[toADDRESS as any] })
+                  userData = {...userData,
+                    [toADDRESS as any]: (_updateToAddress ? {...userData[toADDRESS as any], balance: _toAddressBalanceUpdate } : { ...userData[toADDRESS as any] })
                   };
                 }
                 const connectedADDRESS = connectedAddress?.toUpperCase()
@@ -245,7 +243,7 @@ export default function StepsContainer(
                   selected = false; transferAmount = 0n; lockTransferAmount = false;
                 } else if (_processedState == ETokenTransferState.skipped) selected = false;
               }
-              const tokenInstanceUpdate = { ...tokenInstance, userData, transferAmount, lockTransferAmount, selected, selectable, transferState }
+              const tokenInstanceUpdate = {...tokenInstance, userData, transferAmount, lockTransferAmount, selected, selectable, transferState}
               updateTokenInstanceRefs(tokenInstanceUpdate)
               return tokenInstanceUpdate
             }
@@ -892,7 +890,7 @@ export default function StepsContainer(
         return {
           chainId, type: (_token.extraData && _token.extraData.type ? _token.extraData.type : "ERC20" as TTokenType),
           address: _token.address, contract: null, decimals: 18, name: "", symbol: "", displayed: true, displayId: _indexToken + 1, selectID: chainId + "-" + _token.address,
-          selectable: false, selected: false, transferAmount: 0n, lockTransferAmount: false, transferState: { processing: false, transfer: ETokenTransferState.none },
+          selectable: false, selected: false, transferAmount: 0n, lockTransferAmount: false, transferState: { processing: false, transfer: ETokenTransferState.none, transferAmount: 0n },
           userData: tokenInstanceUserDataArray, chainTokensList: _chainTokensList, index: _indexToken,
         }
       }
@@ -1449,11 +1447,13 @@ export default function StepsContainer(
   )
 
   /**
-   * Update chainTokensList tokensInstances with rules:
-   * - if targetAddress is set, load target data (balance, canTransfer)
-   * - if connectedAddress is set, load source data (balance, canTransfer)
+   * Update chainTokensList tokensInstances with rules
    * @param _chainTokensList
    * @param _targetAddress
+   * @description
+   * transferAmount = 0 : not selectable, not selected
+   * transferAmount > 0 : selectable, selected
+   * lockTransferAmount : disable if not selectable
    */
   const updateChainTokensListTokensInstancesDisplayProperties = useCallback(
     async (_chainTokensList: TChainTokensList, _targetAddress: TAddressStringEmpty) => {
@@ -1667,7 +1667,7 @@ export default function StepsContainer(
           // Step forward
           const updatedTokensInstances = tokensInstances?.map((tokenInstance: TTokenInstance) => {
             if (tokenInstance.selected) {
-              const tokenInstanceUpdate = { ...tokenInstance, transferState: { processing: true, transfer: ETokenTransferState.none } } // Selected, mark as processing (= "to process") and reinit transfer state
+              const tokenInstanceUpdate = { ...tokenInstance, transferState: { processing: true, transfer: ETokenTransferState.none, transferAmount: tokenInstance.transferAmount } } // Selected, mark as processing (= "to process") and reinit transfer state
               updateTokenInstanceRefs(tokenInstanceUpdate)
               return tokenInstanceUpdate
             }
@@ -1678,7 +1678,8 @@ export default function StepsContainer(
                   processing: tokenInstance.transferState.processing,
                   transfer: (tokenInstance.transferState.transfer == ETokenTransferState.processed ?
                     ETokenTransferState.previous_processed : (tokenInstance.transferState.transfer == ETokenTransferState.error ? ETokenTransferState.previous_error :
-                      (tokenInstance.transferState.transfer == ETokenTransferState.skipped ? ETokenTransferState.previous_skipped : tokenInstance.transferState.transfer)))
+                      (tokenInstance.transferState.transfer == ETokenTransferState.skipped ? ETokenTransferState.previous_skipped : tokenInstance.transferState.transfer))),
+                  transferAmount: 0n
                 }
               }
               updateTokenInstanceRefs(tokenInstanceUpdate)
