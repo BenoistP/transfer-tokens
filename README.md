@@ -1,8 +1,8 @@
 # Simple tool for transferring tokens from one account to another
 
-## Currently supporting **RealT tokens**
+## Currently supporting **RealT tokens** on **[Gnosis chain](https://www.gnosis.io/)**  ![Gnosis logo](https://assets-global.website-files.com/63692bf32544bee8b1836ea6/637b01428c7bd8e16af26756_favicon-32.png)
 
-- RealT Tokens data is fetched from : https://api.realt.community/v1/token
+- RealT Tokens data fetched from : https://api.realt.community/v1/token
 
 > **Note:** see **PUBLIC_REALT_API_BASE_URL**, **PUBLIC_REALT_API_LIST_ALL_TOKENS**
 > in [.env.MD](frontend/.env.md)

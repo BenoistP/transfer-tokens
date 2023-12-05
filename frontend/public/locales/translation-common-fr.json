@@ -1,5 +1,9 @@
 {
   "moveTokens" : {
+    "disclaimer": {
+      "title": "Avertissement",
+      "text": "Cet outil est fourni tel quel, sans aucune garantie. Vous l'utilisez à vos propres risques. Nous ne sommes pas responsables de la perte de fonds ou de tout autre dommage causé par l'utilisation de cet outil. Assurez-vous de bien comprendre ce que vous faites avant de l'utiliser."
+    },
     "warnings": {
       "connectawallet": "Connecter ou déverrouiller un portefeuille",
       "wrongchain": "Les chaînes supportées sont: Ethereum ou Gnosis",

@@ -29,6 +29,7 @@ export default function TokenInstance({
 	enableEditable,
 	showTransferAmountReadOnly,
 }: ITokenProps): JSX.Element {
+
 	const { t } = useTranslation()
 
 	const accountADDRESS = accountAddress ? accountAddress.toUpperCase() : ''
@@ -187,20 +188,19 @@ export default function TokenInstance({
 	/**
 	 * isCheckboxDisabled
 	 */
-	useEffect(() =>
-		{
-			if (
-				tokenInstance.selectable &&
-				canTransferFrom &&
-				canTransferTo &&
-				balanceFrom?.valueOf() > 0n &&
-				tokenInstance.transferAmount?.valueOf() > 0n
-			) {
-				setisCheckboxDisabled(false)
-			} else {
-				setisCheckboxDisabled(true)
-			}
-		},
+	useEffect(() => {
+		if (
+			tokenInstance.selectable &&
+			canTransferFrom &&
+			canTransferTo &&
+			balanceFrom?.valueOf() > 0n &&
+			tokenInstance.transferAmount?.valueOf() > 0n
+		) {
+			setisCheckboxDisabled(false)
+		} else {
+			setisCheckboxDisabled(true)
+		}
+	},
 		[canTransferFrom, canTransferTo, tokenInstance.selectable, tokenInstance.transferAmount, balanceFrom]
 	)
 

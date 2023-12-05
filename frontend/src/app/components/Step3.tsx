@@ -38,7 +38,7 @@ export default function Step3({
   tokensInstancesListTablePropsHandlers,
   setmigrationState,
   updateTokenOnTransferProcessed,
-  updateTokenInstanceTransferState}: IStep3Props): JSX.Element {
+  updateTokenInstanceTransferState }: IStep3Props): JSX.Element {
 
   const { t } = useTranslation()
   const [tokensInstancesToMigrate, settokensInstancesToMigrate] = useState<TTokensInstances>(null)
@@ -456,7 +456,7 @@ export default function Step3({
               break;
           }
         }
-        if (processing==0 && unprocessed==0) {
+        if (processing == 0 && unprocessed == 0) {
           setstopTransfers(true)
           setpauseTransfers(false)
           paused.current = false

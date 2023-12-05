@@ -11,6 +11,8 @@ import { configureChains, createConfig, WagmiConfig, Chain } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 import { infuraProvider } from 'wagmi/providers/infura'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
+// Translation
+import { useTranslation } from 'react-i18next'
 // Consts
 import THEMES_NAMES from "@uiconsts/themes";
 import { DEFAULT_GNOSIS_ICON_URL } from '@uiconsts/uiConsts';
@@ -31,9 +33,11 @@ import {
 
 export default function TransferTokensAppPageLayout({ children }: PageProps) {
 
+  const { t } = useTranslation()
+
   const mainnetChains = [
-    mainnet,
-    { ...gnosis, iconUrl: import.meta.env.PUBLIC_GNOSIS_ICON_URL || DEFAULT_GNOSIS_ICON_URL }
+    { ...gnosis, iconUrl: import.meta.env.PUBLIC_GNOSIS_ICON_URL || DEFAULT_GNOSIS_ICON_URL },
+    mainnet
   ];
   const testnetChains = [
     goerli, sepolia,
@@ -49,9 +53,9 @@ export default function TransferTokensAppPageLayout({ children }: PageProps) {
 
     mainnetChains?.forEach(() => {
       if (import.meta.env.APIKEY_ALCHEMY || "") {
-        mainnetChainsProviders.push(alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY || "" })); // Gnosis
+        mainnetChainsProviders.push(alchemyProvider({ apiKey: import.meta.env.APIKEY_ALCHEMY || "" }));
       } else if (import.meta.env.APIKEY_INFURA || "") {
-        mainnetChainsProviders.push(infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA || "" })); // Ethereum
+        mainnetChainsProviders.push(infuraProvider({ apiKey: import.meta.env.APIKEY_INFURA || "" }));
       }
     });
     mainnetChainsProviders.push(publicProvider());
@@ -109,6 +113,7 @@ export default function TransferTokensAppPageLayout({ children }: PageProps) {
                     </>
                   }
                   chains={chains}
+                  t={t}
                 />
               </GlobalAppProvider>
             </WagmiConfig>
@@ -124,18 +129,19 @@ export default function TransferTokensAppPageLayout({ children }: PageProps) {
 interface IRainbowOutletWrapper {
   chains: Chain[];
   children: ReactNode;
+  t: any;
 }
 
-const RainbowOutletWrapper = ({ chains, children }: IRainbowOutletWrapper) => {
+const RainbowOutletWrapper = ({ chains, children, t }: IRainbowOutletWrapper) => {
   const { theme } = useTheme()
   const { globalAppDataHandlers: { getAvatarComponent } } = useGlobalAppContext()
+  const repositoryUrl = import.meta.env.PUBLIC_REPOSITORY;
 
   const Disclaimer: DisclaimerComponent = ({ Text, Link }: any) => (
     <Text>
-      By connecting your wallet, you agree to the{' '}
-      <Link href="https://termsofservice.xyz">Terms of Service</Link> and
-      acknowledge you have read and understand the protocol{' '}
-      <Link href="https://disclaimer.xyz">Disclaimer</Link>
+      <p className='font-bold'>{t("moveTokens.disclaimer.title")}</p>
+      <p className=''>{t("moveTokens.disclaimer.text")}</p>
+      <Link href={repositoryUrl} target="_blank" rel="noopener noreferrer">GitHub repository</Link>
     </Text>
   );
 
@@ -157,6 +163,7 @@ const RainbowOutletWrapper = ({ chains, children }: IRainbowOutletWrapper) => {
       avatar={getAvatarComponent()}
       coolMode
       chains={chains as Chain[]}
+      initialChain={chains[0]}
       theme={rainbowTheme()}
       appInfo={{
         appName: import.meta.env.PUBLIC_APPNAME,
