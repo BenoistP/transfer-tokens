@@ -151,10 +151,10 @@ export default function AddressInput({
                     :
                     isAddressInputSmartContract ?
                       <>
-                        <ExclamationTriangleIcon className={clsAddressIconHelper} />
-                        &nbsp;{t("moveTokens.stepOne.destinationWarningSmartContract")}
                         <CheckIcon className={clsAddressIconHelper} />
                         &nbsp;{t("moveTokens.stepOne.destinationOk")}
+                        &nbsp;<ExclamationTriangleIcon className={clsAddressIconHelper} />
+                        &nbsp;{t("moveTokens.stepOne.destinationWarningSmartContract")}
                       </>
                       :
                       <>
