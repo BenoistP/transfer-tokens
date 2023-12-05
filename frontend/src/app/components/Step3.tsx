@@ -330,6 +330,7 @@ export default function Step3({
         if (error instanceof Error && error.message.match(USER_REJECT_TX_REGEXP)) {
           txResult.userSkipped = true
           transferSkippedToast(displayedAmount, _tokenInstanceToTransfer)
+          console.info(`transfer skipped: ${displayedAmount} (${_amount}) ${_tokenInstanceToTransfer.name} (${_tokenInstanceToTransfer.address})`)
         } else {
           console.error(`transfer error: ${error} for: ${_tokenInstanceToTransfer.name} (${_tokenInstanceToTransfer.address}) to ${_destinationAddress}`)
         }
@@ -349,8 +350,8 @@ export default function Step3({
   const transferToken = useCallback(
     async (_tokenInstanceToTransfer: TTokenInstance, _to: TAddressString) => {
       try {
-        if (_tokenInstanceToTransfer?.transferAmount && accountAddress) {
-          const txResult = await callTransferToken(_tokenInstanceToTransfer, _to, _tokenInstanceToTransfer.transferAmount)
+        if (_tokenInstanceToTransfer?.transferState.transferAmount && accountAddress) {
+          const txResult = await callTransferToken(_tokenInstanceToTransfer, _to, _tokenInstanceToTransfer.transferState.transferAmount)
           const state = (txResult.success ? ETokenTransferState.processed : (txResult.userSkipped ? ETokenTransferState.skipped : ETokenTransferState.error))
           // Instant transfer state update
           updateTokenInstanceTransferState(_tokenInstanceToTransfer.address, state)
@@ -358,7 +359,7 @@ export default function Step3({
           updateTokenOnTransferProcessed(_tokenInstanceToTransfer, accountAddress, _to, REFRESH_BALANCE_DELAY_AFTER_TRANSFER, state)
         }
       } catch (error) {
-        console.error(`transferToken ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferAmount} ${_to} process error: ${error}`);
+        console.error(`transferToken ${_tokenInstanceToTransfer.address} ${_tokenInstanceToTransfer.transferState.transferAmount} ${_to} process error: ${error}`);
       }
     },
     [callTransferToken, accountAddress, updateTokenInstanceTransferState, updateTokenOnTransferProcessed]
@@ -383,7 +384,7 @@ export default function Step3({
               }
               if (stopped.current || currentlyProcessingRef.current) break;
               tokenInstanceToTransferFound = tokensInstancesToMigrate[tokenInstanceIndex];
-              if (tokenInstanceToTransferFound.transferAmount && (tokenInstanceToTransferFound.transferState.transfer == ETokenTransferState.none) // amount > 0 and not yet processed
+              if (tokenInstanceToTransferFound.transferState.transferAmount && (tokenInstanceToTransferFound.transferState.transfer == ETokenTransferState.none) // amount > 0 and not yet processed
               ) break;
             }
             try {

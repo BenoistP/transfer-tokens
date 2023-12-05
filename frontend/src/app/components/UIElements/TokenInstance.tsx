@@ -260,12 +260,11 @@ export default function TokenInstance({
 						selectable={false}
 						readonly={true}
 						balance={balanceFrom && balanceFrom.valueOf() ? balanceFrom.valueOf() : 0n}
-						amount={tokenInstance.transferAmount && tokenInstance.transferAmount.valueOf() ? tokenInstance.transferAmount.valueOf() : 0n}
+						amount={tokenInstance.transferState.transferAmount && tokenInstance.transferState.transferAmount.valueOf() ? tokenInstance.transferState.transferAmount.valueOf() : 0n}
 						amountLock={tokenInstance.lockTransferAmount}
 						selectID={tokenInstance.selectID}
 						updateTransferAmount={updateTransferAmount}
 						updateTransferAmountLock={updateTransferAmountLock}
-
 						decimals={Number(decimals)}
 						unSelect={unSelect}
 					/>
