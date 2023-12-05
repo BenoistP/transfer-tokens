@@ -8,7 +8,6 @@ export default defineConfig({
 	build: {
 		rollupOptions: {
 			output: {
-
 				manualChunks(id) {
 					if (id.includes('node_modules')) {
 						if (id.includes('dicebear') || id.includes('heroicons') || id.includes('country-flag-icons')) {
@@ -41,7 +40,6 @@ export default defineConfig({
 			},
 		},
 	},
-
 	plugins: [react(), tsconfigPaths()],
 	preview: {
 		port: 8000, // serve BUILD
