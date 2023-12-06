@@ -146,10 +146,10 @@
           "rejected": "Fallido"
         }
     },
-    "Footer": {
+    "footer": {
       "info": {
-        "title": "©",
-        "text": "Pronto Pronto Research Laboratories"
+        "title": "ⓘ",
+        "text": "Para más información, consulte la cláusula de exención de responsabilidad en la ventana de acceso conexión a cartera"
       },
       "center": ""
     }

@@ -7,6 +7,8 @@ import { ERC20_DECIMALS_DEFAULT, SHORT_DISPLAY_DECIMAL_COUNT } from '@uiconsts/m
 import { ETokenTransferState } from '@jsconsts/enums'
 // Translation
 import { useTranslation } from 'react-i18next'
+// Styles
+import { clsTextNormal, clsTextLight, clsIconMedium } from "@uiconsts/twDaisyUiStyles";
 // Icons
 import {
 	NoSymbolIcon,
@@ -65,13 +67,9 @@ export default function TokenInstance({
 	const DECIMALS_MULTIPLIER = 10n ** decimals
 
 	// Styles
-	const clsTextSize = 'text-xs sm:text-sm md:text-base'
-	const clsTextLight = 'font-light ' + clsTextSize
-	const clsTextReadable = 'font-normal ' + clsTextSize
 	const clsTextPaddingLeft = 'pl-2 '
-	const clsText = clsTextPaddingLeft + (balanceFrom && balanceFrom.valueOf() > 0n ? clsTextReadable : clsTextLight)
-	const clsTooltipLeft = 'tooltip tooltip-left ' + clsTextReadable
-	const clsIconSize = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6'
+	const clsText = clsTextPaddingLeft + (balanceFrom && balanceFrom.valueOf() > 0n ? clsTextNormal : clsTextLight)
+	const clsTooltipLeft = 'tooltip tooltip-left ' + clsTextNormal
 
 	/**
 	 * Balances display computations
@@ -254,7 +252,7 @@ export default function TokenInstance({
 						/>
 					) : (
 						<div className="flex justify-center text-neutral">
-							<MinusSmallIcon className={clsIconSize + ' fill-current'} />
+							<MinusSmallIcon className={clsIconMedium + ' fill-current'} />
 						</div>
 					)}
 				</td>
@@ -293,7 +291,7 @@ export default function TokenInstance({
 									? 'moveTokens.stepAny.token.canTransferFrom'
 									: 'moveTokens.stepAny.token.noTransferFrom',
 							)}>
-							<ArrowSend className={clsIconSize + ' fill-current'} />
+							<ArrowSend className={clsIconMedium + ' fill-current'} />
 						</div>
 					) : (
 						<div
@@ -303,20 +301,20 @@ export default function TokenInstance({
 									? 'moveTokens.stepAny.token.canTransferFrom'
 									: 'moveTokens.stepAny.token.noTransferFrom',
 							)}>
-							<NoSymbolIcon className={clsIconSize + ' fill-current'} />
+							<NoSymbolIcon className={clsIconMedium + ' fill-current'} />
 						</div>
 					)}
 					{!targetADDRESS ? null : canTransferTo ? (
 						<div
 							className={clsTooltipLeft + 'pl-1 text-info tooltip-info'}
 							data-tip={t('moveTokens.stepAny.token.canTransferTo')}>
-							<ArrowReceive className={clsIconSize + ' fill-current'} />
+							<ArrowReceive className={clsIconMedium + ' fill-current'} />
 						</div>
 					) : (
 						<div
 							className={clsTooltipLeft + 'pl-1 text-warning tooltip-warning'}
 							data-tip={t('moveTokens.stepAny.token.noTransferTo')}>
-							<NoSymbolIcon className={clsIconSize + ' fill-current'} />
+							<NoSymbolIcon className={clsIconMedium + ' fill-current'} />
 						</div>
 					)}
 					{(tokenInstance.transferState.transfer == ETokenTransferState.processed ||
@@ -326,7 +324,7 @@ export default function TokenInstance({
 								data-tip={t('moveTokens.stepAny.token.transfer.success')}>
 								<CheckCircleIcon
 									className={
-										clsIconSize + ' fill-success' + (tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')
+										clsIconMedium + ' fill-success' + (tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')
 									}
 								/>
 							</div>
@@ -334,7 +332,7 @@ export default function TokenInstance({
 					{tokenInstance.transferState.transfer == ETokenTransferState.skipped && (
 						<div className={clsTooltipLeft + 'pl-1  '} data-tip={t('moveTokens.stepAny.token.transfer.skipped')}>
 							<StopCircleIcon
-								className={clsIconSize + (tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')}
+								className={clsIconMedium + (tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')}
 							/>
 						</div>
 					)}
@@ -344,7 +342,7 @@ export default function TokenInstance({
 							data-tip={t('moveTokens.stepAny.token.transfer.error')}>
 							<ExclamationCircleIcon
 								className={
-									clsIconSize + ' fill-error' + (tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')
+									clsIconMedium + ' fill-error' + (tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')
 								}
 							/>
 						</div>
@@ -355,7 +353,7 @@ export default function TokenInstance({
 							data-tip={t('moveTokens.stepAny.token.transfer.processing')}>
 							<CogToothProcessing
 								className={
-									clsIconSize +
+									clsIconMedium +
 									' animate-spin fill-info' +
 									(tokenInstance.transferState.transfer > 10 ? ' opacity-50' : '')
 								}

@@ -13,7 +13,7 @@ import {
   InformationCircleIcon, BackspaceIcon, EyeIcon, EyeSlashIcon
 } from '@heroicons/react/24/solid'
 // Styles
-import { clsLoadingTokenLists, clsIconStatusSize, clsIconMedium } from "@uiconsts/twDaisyUiStyles";
+import { clsLoadingTokenLists, clsIconStatusSize, clsIconMedium, clsTextNormal, clsTextSemibold } from "@uiconsts/twDaisyUiStyles";
 
 export default function TokenInstanceListTableFiltered(
   { tokensInstances,
@@ -115,7 +115,6 @@ export default function TokenInstanceListTableFiltered(
     + (selectAllDisabled ? "fill-base-content opacity-30 cursor-not-allowed" : "fill-base-content opacity-50 cursor-pointer");
 
   const clsStatus = "flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl"
-  const clsTextSize = "text-xs sm:text-sm md:text-base"
 
   return (
     <>
@@ -131,7 +130,7 @@ export default function TokenInstanceListTableFiltered(
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
                 <thead className="min-w-full bg-base-300 text-left">
-                  <tr className={clsTextSize + " font-semibold"}>
+                  <tr className={clsTextSemibold}>
                     <th className="p-0 pl-1 font-medium"><FunnelIcon className={clsIconMedium} /></th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.name")}</th>
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.balance")}</th>
@@ -139,11 +138,11 @@ export default function TokenInstanceListTableFiltered(
                     <th className="p-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.clearAll.label")}</th>
                   </tr>
                 </thead>
-                <tbody className={"min-w-full" + clsTextSize}>
+                <tbody className={"min-w-full" + clsTextNormal}>
                   <tr className="bg-base-300">
                     <td className="p-0"></td>
                     <td className="p-2 pl-0 w-full">
-                      <input className={"w-full input input-bordered input-xs sm:input-sm md:input-md " + clsTextSize}
+                      <input className={"w-full input input-bordered input-xs sm:input-sm md:input-md " + clsTextNormal}
                         type="text"
                         value={tokensInstancesListTablePropsHandlers.filterStates.name}
                         onChange={(e) => { tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateNameFilter(e) }}
@@ -189,7 +188,7 @@ export default function TokenInstanceListTableFiltered(
               <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
                 <thead className="min-w-full bg-base-300 text-left">
-                  <tr className={clsTextSize + " font-semibold"}>
+                  <tr className={clsTextNormal + " font-semibold"}>
                     <th colSpan={2} className="p-0 pl-12 font-medium">
                       <div className="tooltip tooltip-right" data-tip={t("moveTokens.stepAny.tokensTable.select.any.hint")}>
                         <EyeSlashIcon className={clsIconSelectSmall} />
@@ -202,7 +201,7 @@ export default function TokenInstanceListTableFiltered(
                     </th>
                   </tr>
                 </thead>
-                <tbody className={clsTextSize + " min-w-full"}>
+                <tbody className={clsTextNormal + " min-w-full"}>
 
                   <tr className="bg-base-300 text-center font-thin">
                     <td className="">
@@ -277,7 +276,7 @@ export default function TokenInstanceListTableFiltered(
           <div className="px-1 pt-1">
             <div className="collapse collapse-arrow bg-base-300">
               <input type="checkbox" />
-              <div className={"collapse-title font-light justify-left flex " + clsTextSize}>
+              <div className={"collapse-title font-light justify-left flex " + clsTextNormal}>
                 <FunnelIcon className={clsIconMedium} />
                 {t("moveTokens.stepAny.tokensTable.search.additional.title")}
               </div>
@@ -287,16 +286,16 @@ export default function TokenInstanceListTableFiltered(
                 <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content transition-all">
 
                   <thead className="min-w-full bg-base-200 text-left">
-                    <tr className={clsTextSize + " font-semibold"}>
+                    <tr className={clsTextNormal + " font-semibold"}>
                       <th className="p-0 pl-2 font-medium">{t("moveTokens.stepAny.tokensTable.search.additional.address")}</th>
                       <th className="p-2"></th>
                     </tr>
                   </thead>
-                  <tbody className={"min-w-full " + clsTextSize}>
+                  <tbody className={"min-w-full " + clsTextNormal}>
                     <tr className="bg-base-200">
                       <td className="p-2">
                         <input type="text" value={tokensInstancesListTablePropsHandlers.filterStates.address} onChange={(e) => { tokensInstancesListTablePropsHandlers.filterHandlers.tokenInstanceFilterParamsUpdaters.updateAddressFilter(e) }}
-                          className={"input input-bordered input-xs sm:input-sm md:input-md w-full " + clsTextSize} placeholder={t("moveTokens.stepAny.address.placeholder")} >
+                          className={"input input-bordered input-xs sm:input-sm md:input-md w-full " + clsTextNormal} placeholder={t("moveTokens.stepAny.address.placeholder")} >
                         </input>
                       </td>
                       <td className="p-2"></td>
@@ -339,7 +338,7 @@ export default function TokenInstanceListTableFiltered(
             <table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
 
               <thead className="min-w-full text-neutral-content text-left">
-                <tr className={clsTextSize + " font-semibold bg-neutral"}>
+                <tr className={clsTextNormal + " font-semibold bg-neutral"}>
                   <th className="p-2 font-medium justify-center flex-none">
                     <div className="flex  w-min-full">
                       <SortIcon sortOrder={tokensInstancesListTablePropsHandlers.sortStates.sortOrderTokenDisplayId} changeSortFnCb={tokensInstancesListTablePropsHandlers.sortHandlers.sortByTokenDisplayId} />
@@ -383,7 +382,7 @@ export default function TokenInstanceListTableFiltered(
               </thead>
 
 
-              <tbody className={"min-w-full mt-2 " + clsTextSize}>
+              <tbody className={"min-w-full mt-2 " + clsTextNormal}>
                 {TokenInstanceListFilteredMemo}
               </tbody>
 

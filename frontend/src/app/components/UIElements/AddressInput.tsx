@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { BackspaceIcon, CheckIcon, ExclamationTriangleIcon, InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/solid'
 // Check if address input is a contract
 import { usePublicClient } from 'wagmi'
+// Styles
+import { clsIconMedium } from "@uiconsts/twDaisyUiStyles";
 
 export default function AddressInput({
   sourceAddress,
@@ -103,7 +105,6 @@ export default function AddressInput({
 
   const clsAddressTextContentHelper = (inputStatus == 0 ? 'text-info-content' : (inputStatus == 1 ? 'text-success-content' : (inputStatus == 2 ? 'text-warning-content' : 'text-error-content')));
   const clsAddresBgHelper = (inputStatus == 0 ? 'bg-info' : (inputStatus == 1 ? 'bg-success' : (inputStatus == 2 ? 'bg-warning' : 'bg-error')));
-  const clsAddressIconHelper = 'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'
   const clsInput = "input join-item tracking-tight ring ring-neutral border-1 input-neutral text-left w-80 input-xs sm:input-sm sm:w-96 md:input-md text-accent-content m-1 " +
     (isAddressEmpty ? 'border-info' : (isAddressInputValid ? ((isAddressForbidden) ? 'border-error' : (isAddressInputSmartContract ? 'border-warning' : 'border-success')) : 'border-error'))
 
@@ -126,7 +127,7 @@ export default function AddressInput({
               className="btn btn-xs join-item min-h-full ring ring-inset ring-neutral"
               onClick={() => eraseAddressInput()}
             >
-              <BackspaceIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6  " />
+              <BackspaceIcon className={clsIconMedium} />
             </button>
           </div>
         </div>
@@ -139,36 +140,36 @@ export default function AddressInput({
 
                 isAddressSame ?
                   <>
-                    <ExclamationTriangleIcon className={clsAddressIconHelper} />
+                    <ExclamationTriangleIcon className={clsIconMedium} />
                     &nbsp;{t("moveTokens.stepOne.destinationErrorSame")}
                   </>
                   :
                   isAddressForbidden ?
                     <>
-                      <ExclamationTriangleIcon className={clsAddressIconHelper} />
+                      <ExclamationTriangleIcon className={clsIconMedium} />
                       &nbsp;{t("moveTokens.stepOne.destinationNotAllowed")}
                     </>
                     :
                     isAddressInputSmartContract ?
                       <>
-                        <CheckIcon className={clsAddressIconHelper} />
+                        <CheckIcon className={clsIconMedium} />
                         &nbsp;{t("moveTokens.stepOne.destinationOk")}
-                        &nbsp;<ExclamationTriangleIcon className={clsAddressIconHelper} />
+                        &nbsp;<ExclamationTriangleIcon className={clsIconMedium} />
                         &nbsp;{t("moveTokens.stepOne.destinationWarningSmartContract")}
                       </>
                       :
                       <>
-                        <CheckIcon className={clsAddressIconHelper} />
+                        <CheckIcon className={clsIconMedium} />
                         &nbsp;{t("moveTokens.stepOne.destinationOk")}
                       </>
                 :
                 isAddressEmpty ?
                   <>
-                    <InformationCircleIcon className={clsAddressIconHelper} /> &nbsp;{t("moveTokens.stepOne.destinationEmpty")}
+                    <InformationCircleIcon className={clsIconMedium} /> &nbsp;{t("moveTokens.stepOne.destinationEmpty")}
                   </>
                   :
                   <>
-                    <XMarkIcon className={clsAddressIconHelper} />
+                    <XMarkIcon className={clsIconMedium} />
                     &nbsp;{t("moveTokens.stepOne.destinationError")}
                   </>
               }

@@ -23,10 +23,14 @@ import { ERC20_DECIMALS_DEFAULT, SHORT_DISPLAY_DECIMAL_COUNT } from "@App/js/con
 import { ETHEREUM_CHAIN_ID, GNOSIS_XDAI_CHAIN_ID } from "@App/js/constants/chainIds";
 import { TOAST_OPACITY_ALPHA } from "@App/js/constants/ui/twDaisyUiStyles";
 import { ETokenTransferState } from "@jsconsts/enums";
+// Styles
+import { clsIconMedium } from "@uiconsts/twDaisyUiStyles";
 // Utils
 import { shortenAddress } from "@App/js/utils/blockchainUtils";
 // Icons
 import { LinkIcon, XCircleIcon } from '@heroicons/react/24/solid'
+
+
 
 export default function Step3({
   chainId,
@@ -194,7 +198,7 @@ export default function Step3({
               }}
             >
               <div className="grid grid-cols-8 gap-0 m-0 p-0">
-                <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+                <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={clsIconMedium} /></button></div>
                 <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t("moveTokens.stepThree.transfer.skipped")}: ${displayedAmount} ${_tokenInstanceToTransfer.name}`}</div>
               </div>
             </div>

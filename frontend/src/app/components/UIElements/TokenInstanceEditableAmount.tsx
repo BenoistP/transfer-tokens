@@ -2,6 +2,8 @@
 import { useEffect, useCallback, useState } from 'react'
 // Icons
 import { PlusCircleIcon, XCircleIcon, LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/solid'
+// Styles
+import { clsTextNormal, clsIconMedium } from "@uiconsts/twDaisyUiStyles";
 
 export default function TokenInstanceEditableAmount({
 	selectable,
@@ -127,13 +129,13 @@ export default function TokenInstanceEditableAmount({
 							<label className="swap swap-rotate">
 								<input type="checkbox" checked={amountLock} onChange={() => { }} />
 								<LockClosedIcon
-									className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current"
+									className={clsIconMedium+" text-base-content swap-on fill-current"}
 									onClick={() => {
 										setLockAmount()
 									}}
 								/>
 								<LockOpenIcon
-									className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current"
+									className={clsIconMedium+" text-base-content swap-off fill-current"}
 									onClick={() => {
 										setUnLockAmount()
 									}}
@@ -155,20 +157,20 @@ export default function TokenInstanceEditableAmount({
 								min={0}
 								max={10_000_000_000_000}
 								readOnly={amountLock}
-								className="input input-bordered text-xs sm:text-sm md:text-base h-6"
+								className={"input input-bordered h-6 " + clsTextNormal}
 								placeholder="..."></input>
 						</div>
 						<div className="flex grow-0 m-0 p-0 ">
 							<label className={'swap swap-rotate ' + (amountLock ? 'invisible' : 'visible')}>
 								<input type="checkbox" checked={amount && amount > 0n ? false : true} onChange={() => { }} />
 								<PlusCircleIcon
-									className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current"
+									className={clsIconMedium+" text-base-content swap-on fill-current"}
 									onClick={() => {
 										setZeroAmount()
 									}}
 								/>
 								<XCircleIcon
-									className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current"
+									className={clsIconMedium+" text-base-content swap-off fill-current"}
 									onClick={() => {
 										setMaxAmount()
 									}}
@@ -185,11 +187,11 @@ export default function TokenInstanceEditableAmount({
 						<label className="swap swap-rotate">
 							<input type="checkbox" />
 							<LockClosedIcon
-								className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-on fill-current"
+								className={clsIconMedium+" text-base-content swap-on fill-current"}
 								onClick={() => { }}
 							/>
 							<LockOpenIcon
-								className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-base-content swap-off fill-current"
+								className={clsIconMedium+" text-base-content swap-off fill-current"}
 								onClick={() => { }}
 							/>
 						</label>
@@ -199,7 +201,7 @@ export default function TokenInstanceEditableAmount({
 							type="text"
 							value={editableAmountString}
 							readOnly={true}
-							className="input input-bordered text-xs sm:text-sm md:text-base h-6"></input>
+							className={"input input-bordered h-6 " + clsTextNormal}></input>
 					</div>
 					<div className="block grow-0 m-0 p-0"></div>
 				</div>
