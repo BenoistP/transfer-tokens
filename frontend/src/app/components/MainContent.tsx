@@ -5,7 +5,6 @@ import ProgressContainer from "@Components/ProgressContainer";
 import StepsContainer from "@Components/StepsContainer";
 import MainContentContainer from "@Components/MainContentContainer";
 import Footer from '@UIElements/Footer'
-import ContentBottomPadding from '@UIElements/ContentBottomPadding'
 // Toasts
 import CustomToaster from '@App/components/UIElements/Toasts/CustomToaster'
 // Utils
@@ -123,10 +122,9 @@ export default function MainContent(): JSX.Element {
                     setshowActivity={setshowActivity}
                   />
                   <CustomToaster />
-                  <ContentBottomPadding />
-                  <Footer showActivity={showActivity} />
 
                 </div>
+                <Footer showActivity={showActivity} />
               </div>
           }
 
