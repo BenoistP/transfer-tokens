@@ -39,7 +39,7 @@ export default function TokenInstanceMigrationListTable({
 
 	return (
 		<div className="w-full p-1">
-			<div className="min-w-full rounded-lg my-1 transition-all" id="currenttop">
+			<div className="min-w-full rounded-lg mb-4 transition-all" id="currenttop">
 				{tokensInstances?.length ? (
 					<table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
 						<thead className="min-w-full text-neutral-content text-left">
