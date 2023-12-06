@@ -119,7 +119,7 @@ export default function TokenInstanceListTableFiltered(
   return (
     <>
 
-      <div className="w-full">
+      <div className="w-full mb-5 ">
 
         <div className="min-w-full rounded-lg ">
 
@@ -331,7 +331,7 @@ export default function TokenInstanceListTableFiltered(
 
         </div> {/* Search parameters */}
 
-        <div className="min-w-full rounded-lg  mt-2 transition-all">
+        <div className="min-w-full rounded-lg mt-1 transition-all">
 
           {((!isErrorTokensInstances || isUpdatingTokensInstances) && tokensInstances?.length) ?
 
