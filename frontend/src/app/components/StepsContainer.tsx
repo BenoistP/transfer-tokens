@@ -28,7 +28,7 @@ import {
   TOAST_DURATION_LONG,
   FETCHDATA_MULTICALL_MAX_RETRY, FETCHDATA_MULTICALL_SUCCESSSTATUS
 } from "@App/js/constants/ui/uiConsts";
-import { TOAST_OPACITY_ALPHA } from "@App/js/constants/ui/twDaisyUiStyles";
+import { TOAST_OPACITY_ALPHA, clsIconMedium } from "@App/js/constants/ui/twDaisyUiStyles";
 // Events
 import { usePublicClient } from 'wagmi'
 import { Log } from "viem";
@@ -107,7 +107,7 @@ export default function StepsContainer(
               }}
             >
               <div className="grid grid-cols-8 gap-0 m-0 p-0">
-                <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={'w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 stroke-2'} /></button></div>
+                <div className="-p-0 m-0"><button onClick={() => toast.dismiss(_toast.id)}><XCircleIcon className={clsIconMedium} /></button></div>
                 <div className="p-0 pl-1 pt-1 m-0 col-span-7">{`${t(_message)}`}</div>
               </div>
             </div>

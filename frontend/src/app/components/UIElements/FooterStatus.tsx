@@ -27,7 +27,7 @@ export default function FooterStatus({ showActivity = false }: iFooterStatus): J
   )
 
   return (
-    <div className="flex">
+    <div className="flex font-normal">
 
       <div className="w-16 text-xs text-content">
         {showActivity &&

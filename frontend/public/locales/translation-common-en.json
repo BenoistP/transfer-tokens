@@ -151,10 +151,10 @@
       "label": "Error"
     },
 
-    "Footer": {
+    "footer": {
       "info": {
-        "title": "©",
-        "text": "Soon Soon Research Laboratories"
+        "title": "ⓘ",
+        "text": "See disclaimer in wallet connection popup for more information"
       },
       "center": ""
     }

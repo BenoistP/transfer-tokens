@@ -10,7 +10,7 @@ import { ExclamationCircleIcon } from '@heroicons/react/24/solid'
 // Translation
 import { useTranslation } from 'react-i18next'
 // Styles
-import { clsIconStatusSize } from '@uiconsts/twDaisyUiStyles'
+import { clsIconStatusSize, clsTextNormal, clsTextSemibold } from '@uiconsts/twDaisyUiStyles'
 
 export default function TokenInstanceMigrationListTable({
 	tokensInstances,
@@ -43,7 +43,7 @@ export default function TokenInstanceMigrationListTable({
 				{tokensInstances?.length ? (
 					<table className="w-full rounded-lg border-collapse overflow-hidden min-w-full table-auto m-0 text-base-content">
 						<thead className="min-w-full text-neutral-content text-left">
-							<tr className="bg-neutral text-xs sm:text-sm md:text-base font-semibold">
+							<tr className={"bg-neutral "+clsTextSemibold}>
 								<th className="p-2 font-medium justify-center flex-none">
 									<div className="flex">
 										<SortIcon
@@ -90,7 +90,7 @@ export default function TokenInstanceMigrationListTable({
 								)}
 							</tr>
 						</thead>
-						<tbody className="min-w-full mt-2 text-xs sm:text-sm md:text-base">{TokenInstanceMigrationListMemo}</tbody>
+						<tbody className={"min-w-full mt-2 "+clsTextNormal}>{TokenInstanceMigrationListMemo}</tbody>
 					</table>
 				) : (
 					<div className="flex justify-center font-semibold pt-2 text-md sm:text-base md:text-xl text-warning pb-2">

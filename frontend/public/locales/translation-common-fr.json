@@ -150,10 +150,10 @@
       }
     },
 
-    "Footer": {
+    "footer": {
       "info": {
-        "title": "©",
-        "text": "Soon Soon Research Laboratories"
+        "title": "ⓘ",
+        "text": "Se reporter à l'avertissement présent dans la popup de connexion au portefeuille pour plus d'informations"
       },
       "center": ""
     }
