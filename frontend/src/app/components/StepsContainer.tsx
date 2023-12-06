@@ -272,6 +272,7 @@ export default function StepsContainer(
   const updateTokenInstanceTransferState = useCallback(
     (_tokenInstanceAddress: TAddressString, _processedState: ETokenTransferState) => {
       try {
+        const tokensInstances = Array.from(tokensInstancesIndex.values(), (tokenInstance: TTokenInstance) => tokenInstance)
         if (tokensInstances && tokensInstances.length) {
           const tokensInstancesUpdate = tokensInstances.map((tokenInstance: TTokenInstance) => {
             if (tokenInstance.address == _tokenInstanceAddress) {
@@ -297,7 +298,7 @@ export default function StepsContainer(
         console.error(`updateTokenInstanceTransferState error: ${error}`);
       }
     },
-    [tokensInstances, /* updateChainTokenListTokenInstance */updateTokenInstanceRefs]
+    [tokensInstancesIndex, updateTokenInstanceRefs]
   )
 
   /**

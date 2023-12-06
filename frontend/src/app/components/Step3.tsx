@@ -355,6 +355,7 @@ export default function Step3({
     async (_tokenInstanceToTransfer: TTokenInstance, _to: TAddressString) => {
       try {
         if (_tokenInstanceToTransfer?.transferState.transferAmount && accountAddress) {
+          updateTokenInstanceTransferState(_tokenInstanceToTransfer.address, ETokenTransferState.processing)
           const txResult = await callTransferToken(_tokenInstanceToTransfer, _to, _tokenInstanceToTransfer.transferState.transferAmount)
           const state = (txResult.success ? ETokenTransferState.processed : (txResult.userSkipped ? ETokenTransferState.skipped : ETokenTransferState.error))
           // Instant transfer state update
@@ -395,7 +396,7 @@ export default function Step3({
               // If found token is unprocessed, transfer token
               if (tokenInstanceToTransferFound && tokenInstanceToTransferFound.transferState.transfer == ETokenTransferState.none) {
                 currentlyProcessingRef.current = true // lock
-                updateTokenInstanceTransferState(tokenInstanceToTransferFound.address, ETokenTransferState.processing)
+                // updateTokenInstanceTransferState(tokenInstanceToTransferFound.address, ETokenTransferState.processing)
                 await transferToken(tokenInstanceToTransferFound, targetAddress)
               }
             } catch (error) {
