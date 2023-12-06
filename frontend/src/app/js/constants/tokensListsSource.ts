@@ -13,7 +13,7 @@ const DEFAULT_API__REALT_PUBLIC__BASE_URL='https://api.realt.community/'
 // Tokens
 const DEFAULT_API__REALT_PUBLIC__LIST_ALL_TOKENS='v1/token'
 // Logo
-const DEFAULT_TOKENS_LIST_REALT_API_LOGO = 'https://yt3.googleusercontent.com/ytc/AOPolaQLI9Vbm8mEvFilGnLm0wcbiKNF6RQxkKXJt9n5=s176-c-k-c0x00ffffff-no-rj'
+const DEFAULT_TOKENS_LIST_REALT_API_LOGO = 'realtlogo-list-alpha.webp'
 
 const DEFAULT_TOKENS_LIST_COINGECKO_LOGO = 'https://avatars.githubusercontent.com/u/7111837'
 
