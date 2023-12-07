@@ -1475,18 +1475,29 @@ export default function StepsContainer(
     [connectedAddress]
   )
 
+  /**
+   * Check if one tokensInstance userData is valid for an address
+   * @param _tokenInstance
+   * @param _ADDRESS
+   * @description
+   * _ADDRESS must be uppercase
+   * userData is valid if balance is not null
+   */
   const isTokenInstanceUserDataValid = useCallback(
-    (_tokenInstance: TTokenInstance, _ADDRESS: TAddressString): boolean =>
-    {
+    (_tokenInstance: TTokenInstance, _ADDRESS: TAddressString): boolean => {
       if (!_tokenInstance.userData[_ADDRESS as any]) return false
       return _tokenInstance.userData[_ADDRESS as any] && _tokenInstance.userData[_ADDRESS as any]?.balance != null
     },
     []
   )
 
+  /**
+   * Check if all tokensInstances userData is valid for an address
+   * @param _tokensInstances an array of TTokenInstance
+   * @param _address
+   */
   const isTokenInstancesUserDataValid = useCallback(
-    (_tokensInstances: TTokensInstances, _address: TAddressString): boolean =>
-    {
+    (_tokensInstances: TTokensInstances, _address: TAddressString): boolean => {
       if (!_tokensInstances) return false;
       const ADDRESS = _address.toUpperCase() as TAddressString;
       return _tokensInstances?.every((tokenInstance: TTokenInstance) => isTokenInstanceUserDataValid(tokenInstance, ADDRESS))
