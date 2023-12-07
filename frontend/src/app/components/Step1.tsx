@@ -11,15 +11,17 @@ export default function Step1({
   chainId,
   setNextDisabled,
   tokensInstances,
+  setShowProgressBar,
   targetAddress,
   settargetAddress,
   isLoadingTokensInstances, isErrorTokensInstances, isUpdatingTokensInstances,
   tokensInstancesListTablePropsHandlers }: IStep1Props): JSX.Element {
 
   useEffect(() => {
+    setShowProgressBar(false)
     setNextDisabled(!isValidAddress(targetAddress) || targetAddress == accountAddress || isLoadingTokensInstances || isErrorTokensInstances)
   },
-    [accountAddress, targetAddress, isLoadingTokensInstances, isErrorTokensInstances, setNextDisabled]
+    [accountAddress, targetAddress, isLoadingTokensInstances, isErrorTokensInstances, setNextDisabled, setShowProgressBar]
   )
 
   return (

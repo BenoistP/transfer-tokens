@@ -1825,6 +1825,7 @@ export default function StepsContainer(
               accountAddress={connectedAddress}
               targetAddress={targetAddress}
               tokensInstances={tokensInstances}
+              setShowProgressBar={setShowProgressBar}
               chainId={chainId}
               isLoadingTokensLists={isLoadingTokensLists}
               isErrorTokensLists={isErrorTokensLists}
@@ -1842,6 +1843,7 @@ export default function StepsContainer(
               setNextDisabled={setNextDisabled}
               accountAddress={connectedAddress}
               tokensInstances={tokensInstances}
+              setShowProgressBar={setShowProgressBar}
               chainId={chainId}
               targetAddress={targetAddress}
               settargetAddress={settargetAddress}

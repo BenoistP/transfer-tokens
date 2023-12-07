@@ -30,8 +30,6 @@ import { shortenAddress } from "@App/js/utils/blockchainUtils";
 // Icons
 import { LinkIcon, XCircleIcon } from '@heroicons/react/24/solid'
 
-
-
 export default function Step3({
   chainId,
   tokensInstances,

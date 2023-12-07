@@ -9,6 +9,7 @@ export default function Step0({
   chainId,
   setNextDisabled,
   targetAddress,
+  setShowProgressBar,
   selectableTokensLists,
   setselectableTokensLists,
   tokensInstances,
@@ -20,9 +21,10 @@ export default function Step0({
   const someTokensListsSelected = selectableTokensLists?.some((tokensList) => tokensList.selected) || false
 
   useEffect(() => {
+    setShowProgressBar(false)
     setNextDisabled(!someTokensListsSelected || isLoadingTokensLists || isErrorTokensLists || isLoadingTokensInstances)
   },
-    [setNextDisabled, someTokensListsSelected, isLoadingTokensLists, isErrorTokensLists, isLoadingTokensInstances]
+    [setNextDisabled, someTokensListsSelected, isLoadingTokensLists, isErrorTokensLists, isLoadingTokensInstances, setShowProgressBar]
   )
 
   return (

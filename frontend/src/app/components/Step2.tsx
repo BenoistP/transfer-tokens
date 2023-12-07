@@ -15,7 +15,6 @@ export default function Step2({
 
   useEffect(() => {
     setShowProgressBar(false)
-
     const someSelected = tokensInstances?.some((tokensInstance) => {
       return tokensInstance.selected;
     });

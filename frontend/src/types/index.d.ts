@@ -396,6 +396,7 @@ interface IStep0Props {
 	accountAddress: TAddressStringNullUndef
 	targetAddress: TAddressStringEmpty
 	tokensInstances: TTokensInstances
+	setShowProgressBar: TsetShowProgressBar
 	chainId: ChainId
 	isLoadingTokensLists: boolean
 	isErrorTokensLists: boolean
@@ -409,6 +410,7 @@ interface IStep1Props {
 	setNextDisabled: TsetNextDisabled
 	accountAddress: TAddressStringNullUndef
 	tokensInstances: TTokensInstances
+	setShowProgressBar: TsetShowProgressBar
 	targetAddress: TAddressStringEmpty
 	settargetAddress: TsettargetAddress
 	chainId: ChainId
