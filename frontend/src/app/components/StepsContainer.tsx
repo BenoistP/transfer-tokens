@@ -63,7 +63,7 @@ export default function StepsContainer(
 
   // Sorting
   // 0: unsorted, 1: lowest first , 2 highest first
-  const [sortOrderTokenDisplayId, setsortOrderTokenDisplayId] = useState<TsortOrder>(0) 
+  const [sortOrderTokenDisplayId, setsortOrderTokenDisplayId] = useState<TsortOrder>(0)
   const [sortOrderTokenName, setsortOrderTokenName] = useState<TsortOrder>(0)
   const [sortOrderTokenBalance, setsortOrderTokenBalance] = useState<TsortOrder>(0)
 
@@ -187,7 +187,7 @@ export default function StepsContainer(
    * @param _processedState optionnal ETokenTransferState when called from transfer
    */
   const updateTokenInstanceBalancesAndTransferState = useCallback(
-    ( _tokenInstanceAddress: TAddressString, _updateFromAddress: boolean, _fromAddress: TAddressString, _fromAddressBalanceUpdate: TTokenAmount,
+    (_tokenInstanceAddress: TAddressString, _updateFromAddress: boolean, _fromAddress: TAddressString, _fromAddressBalanceUpdate: TTokenAmount,
       _updateToAddress: boolean, _toAddress: TAddressString, _toAddressBalanceUpdate: TTokenAmount, _processedState?: ETokenTransferState) => {
       try {
         const tokensInstances = Array.from(tokensInstancesIndex.values(), (tokenInstance: TTokenInstance) => tokenInstance)
@@ -201,13 +201,15 @@ export default function StepsContainer(
               // Update balances
               if (_updateFromAddress || _updateToAddress) {
                 if (_updateFromAddress) {
-                  userData = {...userData,
-                    [fromADDRESS as any]: (_updateFromAddress ? {...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate } : { ...userData[fromADDRESS as any] })
+                  userData = {
+                    ...userData,
+                    [fromADDRESS as any]: (_updateFromAddress ? { ...userData[fromADDRESS as any], balance: _fromAddressBalanceUpdate } : { ...userData[fromADDRESS as any] })
                   };
                 }
                 if (_updateToAddress) {
-                  userData = {...userData,
-                    [toADDRESS as any]: (_updateToAddress ? {...userData[toADDRESS as any], balance: _toAddressBalanceUpdate } : { ...userData[toADDRESS as any] })
+                  userData = {
+                    ...userData,
+                    [toADDRESS as any]: (_updateToAddress ? { ...userData[toADDRESS as any], balance: _toAddressBalanceUpdate } : { ...userData[toADDRESS as any] })
                   };
                 }
                 const connectedADDRESS = connectedAddress?.toUpperCase()
@@ -243,7 +245,7 @@ export default function StepsContainer(
                   selected = false; transferAmount = 0n; lockTransferAmount = false;
                 } else if (_processedState == ETokenTransferState.skipped) selected = false;
               }
-              const tokenInstanceUpdate = {...tokenInstance, userData, transferAmount, lockTransferAmount, selected, selectable, transferState}
+              const tokenInstanceUpdate = { ...tokenInstance, userData, transferAmount, lockTransferAmount, selected, selectable, transferState }
               updateTokenInstanceRefs(tokenInstanceUpdate)
               return tokenInstanceUpdate
             }
@@ -687,7 +689,7 @@ export default function StepsContainer(
                 updateTokenInstanceRefs(tokensInstance)
               }
             }
-            return {...tokensInstance }
+            return { ...tokensInstance }
           });
           settokensInstances(tokensInstancesCheckAll);
           if (filter) {
@@ -958,20 +960,20 @@ export default function StepsContainer(
    */
   const loadTokensContracts = useCallback(
     async (tokensInstances: TTokensInstances): Promise<TTokensInstances> => {
-    try {
-      const contractCoinBridgeTokenABI = JSON.parse(CoinBridgeToken.ABI)
-      tokensInstances?.forEach((tokenInstance: TTokenInstance) => {
-        const abi = tokenInstance.type == "COINBRIDGE" as TTokenType ? contractCoinBridgeTokenABI : erc20ABI;
-        if (tokenInstance?.address) {
-          tokenInstance.contract = getContract({ address: tokenInstance.address, abi })
-        }
-      })
-      return tokensInstances
-    }
-    catch (error) {
-      console.error(`loadTokensContracts error: ${error}`);
-    }
-  },
+      try {
+        const contractCoinBridgeTokenABI = JSON.parse(CoinBridgeToken.ABI)
+        tokensInstances?.forEach((tokenInstance: TTokenInstance) => {
+          const abi = tokenInstance.type == "COINBRIDGE" as TTokenType ? contractCoinBridgeTokenABI : erc20ABI;
+          if (tokenInstance?.address) {
+            tokenInstance.contract = getContract({ address: tokenInstance.address, abi })
+          }
+        })
+        return tokensInstances
+      }
+      catch (error) {
+        console.error(`loadTokensContracts error: ${error}`);
+      }
+    },
     []
   );
 
@@ -980,21 +982,21 @@ export default function StepsContainer(
    */
   const getOnChainData = useCallback(
     async (multicallInput: any[], _maxbatchSize: number = MAXBATCHSIZE): Promise<any[]> => {
-    let multicallAllBatchesResult: any[] = [];
-    try {
-      for (let i = 0; i < Math.ceil(multicallInput.length / _maxbatchSize); i++) {
-        const batch = multicallInput.slice(i * _maxbatchSize, (i + 1) * _maxbatchSize);
-        const multicallBatchResult = await multicall({
-          contracts: batch, // allowFailure: true, // silently fail, error logged in results array
-        })
-        multicallAllBatchesResult = multicallAllBatchesResult.concat(multicallBatchResult);
+      let multicallAllBatchesResult: any[] = [];
+      try {
+        for (let i = 0; i < Math.ceil(multicallInput.length / _maxbatchSize); i++) {
+          const batch = multicallInput.slice(i * _maxbatchSize, (i + 1) * _maxbatchSize);
+          const multicallBatchResult = await multicall({
+            contracts: batch, // allowFailure: true, // silently fail, error logged in results array
+          })
+          multicallAllBatchesResult = multicallAllBatchesResult.concat(multicallBatchResult);
+        }
       }
+      catch (error) {
+        console.error(`getOnChainData error: ${error}`);
+      }
+      return multicallAllBatchesResult;
     }
-    catch (error) {
-      console.error(`getOnChainData error: ${error}`);
-    }
-    return multicallAllBatchesResult;
-  }
     ,
     [MAXBATCHSIZE]
   );
@@ -1363,7 +1365,7 @@ export default function StepsContainer(
     (tokensInstances: TTokensInstances): TTokenInstanceIndex => {
       const tokenInstanceIndex: TTokenInstanceIndex = new Map();
       try {
-        tokensInstances?.forEach( (tokenInstance: TTokenInstance) => tokenInstanceIndex.set(tokenInstance.address.toUpperCase() as TTokenContractAddress, tokenInstance) )
+        tokensInstances?.forEach((tokenInstance: TTokenInstance) => tokenInstanceIndex.set(tokenInstance.address.toUpperCase() as TTokenContractAddress, tokenInstance))
       } catch (error) {
         console.error(`getTokensInstancesIndex error: ${error}`);
       }
@@ -1396,51 +1398,50 @@ export default function StepsContainer(
     } catch (error) {
       console.error(`TokensListsSelect.tsx: initSelectableTokensLists: error=${error}`);
     }
-
   },
     [chainId, setselectableTokensLists, tokensLists]
   );
 
 
   /**
-   * Sets target (to) data (balance, canTransfer) for tokensInstances
+   * Sets address data (balance, canTransfer) for tokensInstances
    * @param _tokensInstances 
    * @param _targetAddress 
    * @returns updated tokensInstances
    */
-  const loadTargetData = useCallback(
-    async (_tokensInstances: TTokensInstances, _targetAddress: TAddressStringEmpty): Promise<TTokenInstance[]> => {
+  const loadAddressData = useCallback(
+    async (_tokensInstances: TTokensInstances, _address: TAddressStringEmpty): Promise<TTokenInstance[]> => {
       let tokensInstancesData: TTokenInstance[] = []
       try {
-        if (_tokensInstances && _targetAddress) {
-          const targetADDRESS = _targetAddress.toUpperCase();
-          const targetTokensBalancesPromises = loadTokensOnChainData(_tokensInstances, EStepsLoadTokensData.targetBalances, null, _targetAddress, true); // tokens target user balances
-          const targetCanTransferTokensPromises = loadTokensOnChainData(_tokensInstances, EStepsLoadTokensData.targetTransferAbility, null, _targetAddress, true); // tokens transfer ability
-          const [targetTokensBalances, targetCanTransferTokens] = await Promise.all([targetTokensBalancesPromises, targetCanTransferTokensPromises]); // Wait for all promises to resolve
+        if (_tokensInstances && _address) {
+          const ADDRESS = _address.toUpperCase();
+          const addressTokensBalancesPromises = loadTokensOnChainData(_tokensInstances, EStepsLoadTokensData.targetBalances, null, _address, true); // tokens target user balances
+          const addressCanTransferTokensPromises = loadTokensOnChainData(_tokensInstances, EStepsLoadTokensData.targetTransferAbility, null, _address, true); // tokens transfer ability
+          const [addressTokensBalances, addressCanTransferTokens] = await Promise.all([addressTokensBalancesPromises, addressCanTransferTokensPromises]); // Wait for all promises to resolve
           // Check for errors: empty results arrays
-          if (!(targetTokensBalances && targetTokensBalances.length && targetCanTransferTokens && targetCanTransferTokens.length)) {
+          if (!(addressTokensBalances && addressTokensBalances.length && addressCanTransferTokens && addressCanTransferTokens.length)) {
             setStateErrorLoadingTokensInstances(true)
             return _tokensInstances; // Errors ? return original tokensInstances
           }
           // Check for errors: undefined results in arrays
-          const targetTokensBalancesErrors = targetTokensBalances?.some((targetTokenBalance: any) => { targetTokenBalance == undefined })
-          const targetCanTransferTokensToErrors = targetTokensBalances?.some((targetCanTransferTokenTo: any) => { targetCanTransferTokenTo == undefined })
+          const targetTokensBalancesErrors = addressTokensBalances?.some((targetTokenBalance: any) => { targetTokenBalance == undefined })
+          const targetCanTransferTokensToErrors = addressTokensBalances?.some((targetCanTransferTokenTo: any) => { targetCanTransferTokenTo == undefined })
           if (targetTokensBalancesErrors || targetCanTransferTokensToErrors) {
             setStateErrorLoadingTokensInstances(true)
             return _tokensInstances; // Errors ? return original tokensInstances
           }
           // Merge promises results
           tokensInstancesData = _tokensInstances?.map((_tokenInstance: TTokenInstance, index: number) => {
-            _tokenInstance.userData[targetADDRESS as any] = {
-              ..._tokenInstance.userData[targetADDRESS as any],
-              ...targetTokensBalances[index], // target balances
-              ...targetCanTransferTokens[index], // can transfer
+            _tokenInstance.userData[ADDRESS as any] = {
+              ..._tokenInstance.userData[ADDRESS as any],
+              ...addressTokensBalances[index], // target balances
+              ...addressCanTransferTokens[index], // can transfer
             }
             return _tokenInstance;
           })
         }
       } catch (error) {
-        console.error(`loadTargetData error: ${error}`);
+        console.error(`loadAddressData error: ${error}`);
       }
       return tokensInstancesData;
     },
@@ -1472,6 +1473,25 @@ export default function StepsContainer(
       _chainTokensList.tokensInstances = updatedChainTokensListTokensInstancesProps;
     },
     [connectedAddress]
+  )
+
+  const isTokenInstanceUserDataValid = useCallback(
+    (_tokenInstance: TTokenInstance, _ADDRESS: TAddressString): boolean =>
+    {
+      if (!_tokenInstance.userData[_ADDRESS as any]) return false
+      return _tokenInstance.userData[_ADDRESS as any] && _tokenInstance.userData[_ADDRESS as any]?.balance != null
+    },
+    []
+  )
+
+  const isTokenInstancesUserDataValid = useCallback(
+    (_tokensInstances: TTokensInstances, _address: TAddressString): boolean =>
+    {
+      if (!_tokensInstances) return false;
+      const ADDRESS = _address.toUpperCase() as TAddressString;
+      return _tokensInstances?.every((tokenInstance: TTokenInstance) => isTokenInstanceUserDataValid(tokenInstance, ADDRESS))
+    },
+    [isTokenInstanceUserDataValid]
   )
 
   /**
@@ -1556,16 +1576,30 @@ export default function StepsContainer(
             })
             _chainTokensList.loadState = (!_targetAddress ? EChainTokensListLoadState.symbols : EChainTokensListLoadState.targetTransferAbility)
 
-          } else if (_targetAddress) {
-            const allInstancesWithTargetData = _chainTokensList.tokensInstances?.every((_tokenInstance: TTokenInstance) =>
-              _tokenInstance.userData && _tokenInstance.userData[targetADDRESS as any] && _tokenInstance.userData[targetADDRESS as any].balance && _tokenInstance.userData[targetADDRESS as any].canTransfer)
-            if (!allInstancesWithTargetData) {
-              // TODO: hack to avoid hidding already loaded data
-              setStateUpdatingTokensInstances(true)
-              const tokensInstancesTargetData = await loadTargetData(_chainTokensList.tokensInstances, _targetAddress)
-              if (tokensInstancesTargetData && tokensInstancesTargetData.length) {
-                _chainTokensList.loadState = EChainTokensListLoadState.targetTransferAbility
-                _chainTokensList.tokensInstances = tokensInstancesTargetData
+          } else {
+            // All data loaded, update connectedAddress data if needed
+            if (connectedAddress) {
+              const allInstancesWithConnectedAddressData = isTokenInstancesUserDataValid(_chainTokensList.tokensInstances, connectedAddress)
+              if (!allInstancesWithConnectedAddressData) {
+                // TODO: hack to avoid hidding already loaded data
+                setStateUpdatingTokensInstances(true)
+                const tokensInstancesTargetData = await loadAddressData(_chainTokensList.tokensInstances, connectedAddress)
+                if (tokensInstancesTargetData && tokensInstancesTargetData.length) {
+                  _chainTokensList.tokensInstances = tokensInstancesTargetData
+                }
+              }
+            }
+            // All data loaded, update target data if needed
+            if (_targetAddress) {
+              const allInstancesWithTargetData = isTokenInstancesUserDataValid(_chainTokensList.tokensInstances, _targetAddress)
+              if (!allInstancesWithTargetData) {
+                // TODO: hack to avoid hidding already loaded data
+                setStateUpdatingTokensInstances(true)
+                const tokensInstancesTargetData = await loadAddressData(_chainTokensList.tokensInstances, _targetAddress)
+                if (tokensInstancesTargetData && tokensInstancesTargetData.length) {
+                  _chainTokensList.loadState = EChainTokensListLoadState.targetTransferAbility
+                  _chainTokensList.tokensInstances = tokensInstancesTargetData
+                }
               }
             }
           }
@@ -1575,7 +1609,7 @@ export default function StepsContainer(
         console.error(`updateChainTokensListTokensInstances error: ${error}`);
       }
     },
-    [connectedAddress, loadTargetData, loadTokensOnChainData, setStateErrorLoadingTokensInstances, setStateUpdatingTokensInstances, updateChainTokensListTokensInstancesDisplayProperties]
+    [connectedAddress, loadAddressData, loadTokensOnChainData, setStateErrorLoadingTokensInstances, setStateUpdatingTokensInstances, updateChainTokensListTokensInstancesDisplayProperties, isTokenInstancesUserDataValid]
   )
 
   /**
@@ -1630,20 +1664,38 @@ export default function StepsContainer(
   // ========================================================
 
   /**
+   * Initialize tokens lists
+  */
+  useEffect(() => { initSelectableTokensLists() }, [initSelectableTokensLists]);
+
+  /**
    * Reset to initial step when chainId or connectedAddress changes
    */
   useEffect(() => {
     resetToInitialStepCB()
-    settokensInstances(null)
-    settokensInstancesIndex(new Map())
   },
     [chainId, connectedAddress, resetToInitialStepCB]
   )
 
   /**
-   * Initialize tokens lists
-  */
-  useEffect(() => { initSelectableTokensLists() }, [initSelectableTokensLists]);
+   * Update all selected chain tokensLists
+   */
+  useEffect(
+    () => {
+      const newSelectedChainsTokensList: TChainsTokensListArrayNullUndef = [];
+      const selectedTokenLists = getSelectedTokenLists(selectableTokensLists)
+      selectedTokenLists?.map((selectedTokenList: TSelectableTokensList) => {
+        tokensLists?.forEach((tokensList: TTokensList) => {
+          if (tokensList.id == selectedTokenList.tokensList.id) {
+            const chainTokensList = getChainTokensList(tokensList, chainId)
+            newSelectedChainsTokensList.push(chainTokensList)
+          }
+        })
+      })
+      setselectedChainTokensLists(newSelectedChainsTokensList)
+    },
+    [chainId, getSelectedTokenLists, selectableTokensLists, tokensLists]
+  )
 
   /**
    * Update tokens migration state on step change
@@ -1696,26 +1748,6 @@ export default function StepsContainer(
       }
     },
     [step, tokensInstances, updateTokenInstanceRefs]
-  )
-
-  /**
-   * Update all selected chain tokensLists
-   */
-  useEffect(
-    () => {
-      const newSelectedChainsTokensList: TChainsTokensListArrayNullUndef = [];
-      const selectedTokenLists = getSelectedTokenLists(selectableTokensLists)
-      selectedTokenLists?.map((selectedTokenList: TSelectableTokensList) => {
-        tokensLists?.forEach((tokensList: TTokensList) => {
-          if (tokensList.id == selectedTokenList.tokensList.id) {
-            const chainTokensList = getChainTokensList(tokensList, chainId)
-            newSelectedChainsTokensList.push(chainTokensList)
-          }
-        })
-      })
-      setselectedChainTokensLists(newSelectedChainsTokensList)
-    },
-    [chainId, getSelectedTokenLists, selectableTokensLists, tokensLists]
   )
 
   /**
