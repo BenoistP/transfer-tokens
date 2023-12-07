@@ -308,7 +308,7 @@ export default function TokenInstance({
 						<div
 							className={clsTooltipLeft + 'pl-1 text-info tooltip-info'}
 							data-tip={t('moveTokens.stepAny.token.canTransferTo')}>
-							<ArrowReceive className={clsIconMedium + ' fill-current'} />
+							<ArrowReceive className={clsIconMedium + ' fill-current scale-x-[-1]'} />
 						</div>
 					) : (
 						<div
